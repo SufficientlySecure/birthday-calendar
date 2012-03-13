@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 Sam Steele
- * Copyright (C) 2011 Dominik Schürmann <dominik@dominikschuermann.de>
+ * Copyright (C) 2012 Dominik Schürmann <dominik@dominikschuermann.de>
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,12 @@
 
 package org.birthdayadapter;
 
-import java.io.ByteArrayOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.TimeZone;
 
 import android.accounts.Account;
 import android.accounts.OperationCanceledException;
@@ -30,36 +31,32 @@ import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences.Editor;
 import android.content.SyncResult;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.RemoteException;
-import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.provider.ContactsContract;
-import android.provider.ContactsContract.RawContacts;
-import android.provider.ContactsContract.RawContacts.Entity;
 import android.util.Log;
 
+/**
+ * CalendarSyncAdapter is mainly based on c99koder / lastfm-android SyncAdapter, see
+ * https://github.com
+ * /c99koder/lastfm-android/blob/master/app/src/fm/last/android/sync/CalendarSyncAdapterService.java
+ * 
+ * @author ds1
+ * 
+ */
 public class CalendarSyncAdapterService extends Service {
-    private static final String TAG = "CalendaryncAdapterService";
+    private static final String TAG = "BirthdayCalendarSyncAdapterService";
     private static SyncAdapterImpl sSyncAdapter = null;
     private static ContentResolver mContentResolver = null;
-    private static String UsernameColumn = ContactsContract.RawContacts.SYNC1;
-    private static String PhotoTimestampColumn = ContactsContract.RawContacts.SYNC2;
 
     public CalendarSyncAdapterService() {
         super();
@@ -98,7 +95,7 @@ public class CalendarSyncAdapterService extends Service {
     }
 
     private static long getCalendar(Account account) {
-        // Find the Last.fm calendar if we've got one
+        // Find the calendar if we've got one
         Uri calenderUri = Calendars.CONTENT_URI.buildUpon()
                 .appendQueryParameter(Calendars.ACCOUNT_NAME, account.name)
                 .appendQueryParameter(Calendars.ACCOUNT_TYPE, account.type).build();
@@ -110,14 +107,11 @@ public class CalendarSyncAdapterService extends Service {
             ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
 
             ContentProviderOperation.Builder builder = ContentProviderOperation
-                    .newInsert(Calendars.CONTENT_URI.buildUpon()
-                            .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-                            .appendQueryParameter(Calendars.ACCOUNT_NAME, account.name)
-                            .appendQueryParameter(Calendars.ACCOUNT_TYPE, account.type).build());
+                    .newInsert(getBirthdayAdapterUri(Calendars.CONTENT_URI, account));
             builder.withValue(Calendars.ACCOUNT_NAME, account.name);
             builder.withValue(Calendars.ACCOUNT_TYPE, account.type);
-            builder.withValue(Calendars.NAME, "Last.fm Events");
-            builder.withValue(Calendars.CALENDAR_DISPLAY_NAME, "Last.fm Events");
+            builder.withValue(Calendars.NAME, "Birthdays");
+            builder.withValue(Calendars.CALENDAR_DISPLAY_NAME, "Birthdays");
             builder.withValue(Calendars.CALENDAR_COLOR, 0xD51007);
             builder.withValue(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_READ);
             builder.withValue(Calendars.OWNER_ACCOUNT, account.name);
@@ -126,7 +120,7 @@ public class CalendarSyncAdapterService extends Service {
             try {
                 mContentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
             } catch (Exception e) {
-                // TODO Auto-generated catch block
+                Log.e(TAG, "Error: " + e.getMessage());
                 e.printStackTrace();
                 return -1;
             }
@@ -134,198 +128,177 @@ public class CalendarSyncAdapterService extends Service {
         }
     }
 
-    private static void deleteEvent(Context context, Account account, long rawId) {
-        Uri uri = ContentUris.withAppendedId(Events.CONTENT_URI, rawId).buildUpon()
-                .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
+    // private static void deleteEvent(Context context, Account account, long rawId) {
+    // Uri uri = ContentUris.withAppendedId(getBirthdayAdapterUri(Events.CONTENT_URI, account),
+    // rawId);
+    // ContentProviderClient client = context.getContentResolver().acquireContentProviderClient(
+    // CalendarContract.AUTHORITY);
+    // try {
+    // client.delete(uri, null, null);
+    // } catch (RemoteException e) {
+    // Log.e(TAG, "Error: " + e.getMessage());
+    // e.printStackTrace();
+    // }
+    // client.release();
+    // }
+
+    static Uri getBirthdayAdapterUri(Uri uri, Account account) {
+        return uri.buildUpon().appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
                 .appendQueryParameter(Calendars.ACCOUNT_NAME, account.name)
                 .appendQueryParameter(Calendars.ACCOUNT_TYPE, account.type).build();
-        ContentProviderClient client = context.getContentResolver().acquireContentProviderClient(
-                CalendarContract.AUTHORITY);
-        try {
-            client.delete(uri, null, null);
-        } catch (RemoteException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        client.release();
     }
 
+    /**
+     * raw_id = -1 will insert a new event
+     * 
+     * @param calendar_id
+     * @param account
+     * @param birthday
+     * @param raw_id
+     * @return
+     */
     private static ContentProviderOperation updateEvent(long calendar_id, Account account,
-            Date event, long raw_id) {
+            Date birthday, String name, long raw_id) {
         ContentProviderOperation.Builder builder;
         if (raw_id != -1) {
-            builder = ContentProviderOperation.newUpdate(Events.CONTENT_URI.buildUpon()
-                    .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-                    .appendQueryParameter(Calendars.ACCOUNT_NAME, account.name)
-                    .appendQueryParameter(Calendars.ACCOUNT_TYPE, account.type).build());
+            builder = ContentProviderOperation.newUpdate(getBirthdayAdapterUri(Events.CONTENT_URI,
+                    account));
             builder.withSelection(Events._ID + " = '" + raw_id + "'", null);
         } else {
-            builder = ContentProviderOperation.newInsert(Events.CONTENT_URI.buildUpon()
-                    .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-                    .appendQueryParameter(Calendars.ACCOUNT_NAME, account.name)
-                    .appendQueryParameter(Calendars.ACCOUNT_TYPE, account.type).build());
+            builder = ContentProviderOperation.newInsert(getBirthdayAdapterUri(Events.CONTENT_URI,
+                    account));
         }
-        // long dtstart = event.getStartDate().getTime();
-        // long dtend = dtstart + (1000*60*60);
-        // if(event.getEndDate() != null)
-        // dtend = event.getEndDate().getTime();
-        // builder.withValue(Events.CALENDAR_ID, calendar_id);
-        // builder.withValue(Events.DTSTART, dtstart);
-        // builder.withValue(Events.DTEND, dtend);
-        // builder.withValue(Events.TITLE, event.getTitle());
-        //
-        // String location = "";
-        // if(event.getVenue().getName().length() > 0)
-        // location += event.getVenue().getName() + "\n";
-        // if(event.getVenue().getLocation().getCity().length() > 0)
-        // location += event.getVenue().getLocation().getCity() + "\n";
-        // if(event.getVenue().getLocation().getCountry().length() > 0)
-        // location += event.getVenue().getLocation().getCountry() + "\n";
-        //
-        // builder.withValue(Events.EVENT_LOCATION, location);
-        //
-        // String description = "http://www.last.fm/event/" + event.getId() + "\n\n";
-        //
-        // if(event.getArtists().length > 0) {
-        // description += "LINEUP\n";
-        // for(String artist : event.getArtists()) {
-        // description += artist + "\n";
-        // }
-        // description += "\n";
-        // }
-        //
-        // if(event.getDescription() != null && event.getDescription().length() > 0) {
-        // description += "MORE DETAILS\n";
-        // description += event.getDescription();
-        // }
-        //
-        // builder.withValue(Events.DESCRIPTION, description);
-        //
-        // if(Integer.valueOf(event.getStatus()) == 1)
-        // builder.withValue(Events.STATUS, Events.STATUS_TENTATIVE);
-        // else
-        // builder.withValue(Events.STATUS, Events.STATUS_CONFIRMED);
-        // builder.withValue(Events._SYNC_ID, Long.valueOf(event.getId()));
-        // return builder.build();
-        return null;
+        String title = "Birthday of " + name;
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(birthday);
+        cal.set(Calendar.HOUR, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        // allday events have to be set in UTC!
+        // without UTC it results in:
+        // CalendarProvider2 W insertInTransaction: allDay is true but sec, min, hour were not 0.
+        // http://stackoverflow.com/questions/3440172/getting-exception-when-inserting-events-in-android-calendar
+        cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        long dtstart = cal.getTimeInMillis();
+        long id = raw_id;
+
+        builder.withValue(Events.CALENDAR_ID, calendar_id);
+        builder.withValue(Events.DTSTART, dtstart);
+        builder.withValue(Events.TITLE, title);
+
+        builder.withValue(Events.ALL_DAY, 1);
+
+        // Duration: 1 hour
+        // without:
+        // CalendarProvider2 E Repeating event has no duration -- should not happen.
+        builder.withValue(Events.DURATION, "PT1H");
+
+        // repeat rule: every year
+        builder.withValue(Events.RRULE, "FREQ=YEARLY");
+
+        builder.withValue(Events.STATUS, Events.STATUS_CONFIRMED);
+        builder.withValue(Events._SYNC_ID, Long.valueOf(id));
+        return builder.build();
+
     }
 
-    private static class SyncEntry {
-        public Long raw_id = 0L;
+    /**
+     * method to get name, contact id, and birthday
+     * 
+     * http://stackoverflow.com/questions/8579883/get-birthday-for-each-contact-in-android-
+     * application
+     * 
+     * @return
+     */
+    private static Cursor getContactsBirthdays(Context context) {
+        Uri uri = ContactsContract.Data.CONTENT_URI;
+
+        String[] projection = new String[] { ContactsContract.Contacts.DISPLAY_NAME,
+                ContactsContract.CommonDataKinds.Event.CONTACT_ID,
+                ContactsContract.CommonDataKinds.Event.START_DATE };
+
+        String where = ContactsContract.Data.MIMETYPE + "= ? AND "
+                + ContactsContract.CommonDataKinds.Event.TYPE + "="
+                + ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY;
+        String[] selectionArgs = new String[] { ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE };
+        String sortOrder = null;
+
+        return context.getContentResolver().query(uri, projection, where, selectionArgs, sortOrder);
     }
 
     private static void performSync(Context context, Account account, Bundle extras,
             String authority, ContentProviderClient provider, SyncResult syncResult)
             throws OperationCanceledException {
-        HashMap<Long, SyncEntry> localEvents = new HashMap<Long, SyncEntry>();
-        ArrayList<Long> lastfmEvents = new ArrayList<Long>();
         mContentResolver = context.getContentResolver();
-
-        // If our app has requested a full sync, we're going to delete all our local events and
-        // start over
-        boolean is_full_sync; // =
-                              // PreferenceManager.getDefaultSharedPreferences(LastFMApplication.getInstance()).getBoolean("cal_do_full_sync",
-                              // false);
-
-        // If our schema is out-of-date, do a fresh sync
-        // if(PreferenceManager.getDefaultSharedPreferences(LastFMApplication.getInstance()).getInt("cal_sync_schema",
-        // 0) < syncSchema)
-        is_full_sync = true;
 
         long calendar_id = getCalendar(account);
         if (calendar_id == -1) {
-            Log.e("CalendarSyncAdapter", "Unable to create Last.fm event calendar");
+            Log.e("CalendarSyncAdapter", "Unable to create calendar");
             return;
         }
 
-        // // Load the local Last.fm events
-        // Uri eventsUri = Events.CONTENT_URI.buildUpon().appendQueryParameter(Events.CALENDAR_ID,
-        // String.valueOf(calendar_id)).build();
-        // Cursor c1 = mContentResolver.query(eventsUri, new String[] { Events._ID, Events._SYNC_ID
-        // }, null, null, null);
-        // while (c1 != null && c1.moveToNext()) {
-        // if(is_full_sync) {
-        // deleteEvent(context, account, c1.getLong(0));
-        // } else {
-        // SyncEntry entry = new SyncEntry();
-        // entry.raw_id = c1.getLong(0);
-        // localEvents.put(c1.getLong(1), entry);
-        // }
-        // }
-        // c1.close();
-        //
-        // Editor editor =
-        // PreferenceManager.getDefaultSharedPreferences(LastFMApplication.getInstance()).edit();
-        // editor.remove("cal_do_full_sync");
-        // editor.putInt("cal_sync_schema", syncSchema);
-        // editor.commit();
-        //
-        // LastFmServer server = AndroidLastFmServerFactory.getServer();
-        // try {
-        // Event[] events = server.getUserEvents(account.name);
-        // ArrayList<ContentProviderOperation> operationList = new
-        // ArrayList<ContentProviderOperation>();
-        // for (Event event : events) {
-        // lastfmEvents.add(Long.valueOf(event.getId()));
-        //
-        // if (localEvents.containsKey(Long.valueOf(event.getId()))) {
-        // SyncEntry entry = localEvents.get(Long.valueOf(event.getId()));
-        // operationList.add(updateEvent(calendar_id, account, event, entry.raw_id));
-        // } else {
-        // operationList.add(updateEvent(calendar_id, account, event, -1));
-        // }
-        //
-        // if(operationList.size() >= 50) {
-        // try {
-        // mContentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
-        // } catch (Exception e) {
-        // e.printStackTrace();
-        // }
-        // operationList.clear();
-        // }
-        // }
-        //
-        // events = server.getPastUserEvents(account.name);
-        // for (Event event : events) {
-        // lastfmEvents.add(Long.valueOf(event.getId()));
-        //
-        // if (localEvents.containsKey(Long.valueOf(event.getId()))) {
-        // SyncEntry entry = localEvents.get(Long.valueOf(event.getId()));
-        // operationList.add(updateEvent(calendar_id, account, event, entry.raw_id));
-        // } else {
-        // operationList.add(updateEvent(calendar_id, account, event, -1));
-        // }
-        //
-        // if(operationList.size() >= 50) {
-        // try {
-        // mContentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
-        // } catch (Exception e) {
-        // e.printStackTrace();
-        // }
-        // operationList.clear();
-        // }
-        // }
-        //
-        // if(operationList.size() > 0) {
-        // try {
-        // mContentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
-        // } catch (Exception e) {
-        // e.printStackTrace();
-        // }
-        // }
-        // } catch (IOException e1) {
-        // // TODO Auto-generated catch block
-        // e1.printStackTrace();
-        // } catch (WSError e1) {
-        // // TODO Auto-generated catch block
-        // e1.printStackTrace();
-        // }
+        // Okay, now this works as follows:
+        // 1. Clear events table for this account completely
+        // 2. Get birthdays from contacts
+        // 3. Create event for each birthday
 
-        Iterator<Long> i = localEvents.keySet().iterator();
-        while (i.hasNext()) {
-            Long event = i.next();
-            if (!lastfmEvents.contains(event))
-                deleteEvent(context, account, localEvents.get(event).raw_id);
+        // Known limitations:
+        // - This is not nicely done, I am not doing any updating, just delete everything and then
+        // readd everything
+        // - birtdays may be stored in other ways on some phones
+        // see
+        // http://stackoverflow.com/questions/8579883/get-birthday-for-each-contact-in-android-application
+        // - problems with date format:
+        // http://dmfs.org/carddav/?date_format
+
+        // clear table with workaround: "_id != -1"
+        int delRows = mContentResolver.delete(getBirthdayAdapterUri(Events.CONTENT_URI, account),
+                "_id != -1", null);
+        Log.i(TAG, "number of del rows: " + delRows);
+
+        // collection of birthdays that will later be added to the calendar
+        ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
+
+        // date format
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setTimeZone(TimeZone.getDefault());
+        Date birthdayDate = null;
+
+        // iterate through all Contact's Birthdays and print in log
+        Cursor cursor = getContactsBirthdays(context);
+        int birthdayColumn = cursor
+                .getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
+        int displayNameColumn = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+
+        while (cursor.moveToNext()) {
+            String birthday = cursor.getString(birthdayColumn);
+            String displayName = cursor.getString(displayNameColumn);
+
+            // Log.d(TAG, "Birthday: " + bDay);
+            try {
+                birthdayDate = dateFormat.parse(birthday);
+                Log.d(TAG, "Birthday parsed: " + dateFormat.format(birthdayDate));
+
+                // with raw_id -1 it will make a new one
+                operationList.add(updateEvent(calendar_id, account, birthdayDate, displayName, -1));
+
+            } catch (ParseException e) {
+                Log.e(TAG, "Birthday " + birthday + "  could not be parsed with yyyy-MM-dd!");
+                e.printStackTrace();
+            }
+        }
+
+        /* Create events */
+        if (operationList.size() > 0) {
+            try {
+                mContentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

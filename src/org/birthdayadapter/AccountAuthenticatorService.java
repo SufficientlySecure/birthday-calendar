@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 Sam Steele
- * Copyright (C) 2011 Dominik Schürmann <dominik@dominikschuermann.de>
+ * Copyright (C) 2012 Dominik Schürmann <dominik@dominikschuermann.de>
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
