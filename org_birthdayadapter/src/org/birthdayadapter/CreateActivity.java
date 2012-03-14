@@ -24,12 +24,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 
 public class CreateActivity extends AccountAuthenticatorActivity {
-    Button mCreateButton;
+    // Button mCreateButton;
 
     /** Called when the activity is first created. */
     @Override
@@ -37,16 +34,20 @@ public class CreateActivity extends AccountAuthenticatorActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        mCreateButton = (Button) findViewById(R.id.main_create);
-        mCreateButton.setOnClickListener(new OnClickListener() {
+        // mCreateButton = (Button) findViewById(R.id.main_create);
+        // mCreateButton.setOnClickListener(new OnClickListener() {
+        //
+        // public void onClick(View v) {
+        //
+        // CreateTask t = new CreateTask(CreateActivity.this);
+        // t.execute();
+        // }
+        //
+        // });
 
-            public void onClick(View v) {
-
-                CreateTask t = new CreateTask(CreateActivity.this);
-                t.execute();
-            }
-
-        });
+        // create directly, there are no options
+        CreateTask t = new CreateTask(CreateActivity.this);
+        t.execute();
     }
 
     private class CreateTask extends AsyncTask<String, Void, Boolean> {
@@ -55,9 +56,9 @@ public class CreateActivity extends AccountAuthenticatorActivity {
 
         CreateTask(Context c) {
             mContext = c;
-            mCreateButton.setEnabled(false);
+            // mCreateButton.setEnabled(false);
 
-            mDialog = ProgressDialog.show(c, "", getString(R.string.main_creating), true, false);
+            mDialog = ProgressDialog.show(c, "", getString(R.string.creating), true, false);
             mDialog.setCancelable(true);
         }
 
@@ -65,14 +66,13 @@ public class CreateActivity extends AccountAuthenticatorActivity {
         public Boolean doInBackground(String... params) {
             // String user = params[0];
             // String pass = params[1];
-            String user = "default";
+            String user = getString(R.string.app_name);
             String pass = "no";
 
             // Do something internetty
             try {
                 Thread.sleep(2000);
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 
@@ -92,7 +92,7 @@ public class CreateActivity extends AccountAuthenticatorActivity {
 
         @Override
         public void onPostExecute(Boolean result) {
-            mCreateButton.setEnabled(true);
+            // mCreateButton.setEnabled(true);
             mDialog.dismiss();
             if (result)
                 finish();

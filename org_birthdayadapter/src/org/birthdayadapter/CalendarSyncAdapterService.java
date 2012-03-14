@@ -50,8 +50,6 @@ import android.util.Log;
  * https://github.com
  * /c99koder/lastfm-android/blob/master/app/src/fm/last/android/sync/CalendarSyncAdapterService.java
  * 
- * @author ds1
- * 
  */
 public class CalendarSyncAdapterService extends Service {
     private static final String TAG = "BirthdayCalendarSyncAdapterService";
@@ -157,8 +155,8 @@ public class CalendarSyncAdapterService extends Service {
      * @param raw_id
      * @return
      */
-    private static ContentProviderOperation updateEvent(long calendar_id, Account account,
-            Date birthday, String name, long raw_id) {
+    private static ContentProviderOperation updateEvent(Context context, long calendar_id,
+            Account account, Date birthday, String name, long raw_id) {
         ContentProviderOperation.Builder builder;
         if (raw_id != -1) {
             builder = ContentProviderOperation.newUpdate(getBirthdayAdapterUri(Events.CONTENT_URI,
@@ -168,7 +166,7 @@ public class CalendarSyncAdapterService extends Service {
             builder = ContentProviderOperation.newInsert(getBirthdayAdapterUri(Events.CONTENT_URI,
                     account));
         }
-        String title = "Birthday of " + name;
+        String title = String.format(context.getString(R.string.event_title), name);
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(birthday);
@@ -281,13 +279,16 @@ public class CalendarSyncAdapterService extends Service {
             // Log.d(TAG, "Birthday: " + bDay);
             try {
                 birthdayDate = dateFormat.parse(birthday);
-                Log.d(TAG, "Birthday parsed: " + dateFormat.format(birthdayDate));
+                // Log.d(TAG, "Birthday of " + displayName + " parsed: " +
+                // dateFormat.format(birthdayDate));
 
                 // with raw_id -1 it will make a new one
-                operationList.add(updateEvent(calendar_id, account, birthdayDate, displayName, -1));
+                operationList.add(updateEvent(context, calendar_id, account, birthdayDate,
+                        displayName, -1));
 
             } catch (ParseException e) {
-                Log.e(TAG, "Birthday " + birthday + "  could not be parsed with yyyy-MM-dd!");
+                Log.e(TAG, "Birthday " + birthday + " of " + displayName
+                        + " could not be parsed with yyyy-MM-dd!");
                 e.printStackTrace();
             }
         }
