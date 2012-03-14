@@ -92,7 +92,7 @@ public class CalendarSyncAdapterService extends Service {
         return sSyncAdapter;
     }
 
-    private static long getCalendar(Account account) {
+    private static long getCalendar(Context context, Account account) {
         // Find the calendar if we've got one
         Uri calenderUri = Calendars.CONTENT_URI.buildUpon()
                 .appendQueryParameter(Calendars.ACCOUNT_NAME, account.name)
@@ -109,7 +109,8 @@ public class CalendarSyncAdapterService extends Service {
             builder.withValue(Calendars.ACCOUNT_NAME, account.name);
             builder.withValue(Calendars.ACCOUNT_TYPE, account.type);
             builder.withValue(Calendars.NAME, "Birthdays");
-            builder.withValue(Calendars.CALENDAR_DISPLAY_NAME, "Birthdays");
+            builder.withValue(Calendars.CALENDAR_DISPLAY_NAME,
+                    context.getString(R.string.calendar_display_name));
             builder.withValue(Calendars.CALENDAR_COLOR, 0xD51007);
             builder.withValue(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_READ);
             builder.withValue(Calendars.OWNER_ACCOUNT, account.name);
@@ -122,7 +123,7 @@ public class CalendarSyncAdapterService extends Service {
                 e.printStackTrace();
                 return -1;
             }
-            return getCalendar(account);
+            return getCalendar(context, account);
         }
     }
 
@@ -233,7 +234,7 @@ public class CalendarSyncAdapterService extends Service {
             throws OperationCanceledException {
         mContentResolver = context.getContentResolver();
 
-        long calendar_id = getCalendar(account);
+        long calendar_id = getCalendar(context, account);
         if (calendar_id == -1) {
             Log.e("CalendarSyncAdapter", "Unable to create calendar");
             return;

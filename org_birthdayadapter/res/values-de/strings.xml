@@ -1,6 +1,7 @@
 <resources>
 
     <string name="creating">Erstelle Adapter...</string>
+    <string name="calendar_display_name">Geburtstage</string>
     <string name="event_title">Geburtstag von %s</string>
 
 </resources>
