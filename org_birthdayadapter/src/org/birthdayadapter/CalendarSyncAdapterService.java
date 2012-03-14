@@ -56,6 +56,8 @@ public class CalendarSyncAdapterService extends Service {
     private static SyncAdapterImpl sSyncAdapter = null;
     private static ContentResolver mContentResolver = null;
 
+    private static String CALENDAR_COLUMN_NAME = "birthdays";
+
     public CalendarSyncAdapterService() {
         super();
     }
@@ -108,7 +110,7 @@ public class CalendarSyncAdapterService extends Service {
                     .newInsert(getBirthdayAdapterUri(Calendars.CONTENT_URI, account));
             builder.withValue(Calendars.ACCOUNT_NAME, account.name);
             builder.withValue(Calendars.ACCOUNT_TYPE, account.type);
-            builder.withValue(Calendars.NAME, "Birthdays");
+            builder.withValue(Calendars.NAME, CALENDAR_COLUMN_NAME);
             builder.withValue(Calendars.CALENDAR_DISPLAY_NAME,
                     context.getString(R.string.calendar_display_name));
             builder.withValue(Calendars.CALENDAR_COLOR, 0xD51007);

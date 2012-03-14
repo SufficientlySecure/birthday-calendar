@@ -1,6 +1,7 @@
 <resources>
 
     <string name="app_name">Birthday Adapter</string>
+    <string name="CONTENT_AUTHORITY">com.android.calendar</string>
     <string name="ACCOUNT_TYPE">org.birthdayadapter.account</string>
-    
+
 </resources>

@@ -46,7 +46,8 @@
         android:label="@string/app_name" >
         <activity
             android:name=".CreateActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>

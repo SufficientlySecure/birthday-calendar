@@ -21,6 +21,7 @@ import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,7 +33,7 @@ public class CreateActivity extends AccountAuthenticatorActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+//        setContentView(R.layout.main);
 
         // mCreateButton = (Button) findViewById(R.id.main_create);
         // mCreateButton.setOnClickListener(new OnClickListener() {
@@ -50,7 +51,7 @@ public class CreateActivity extends AccountAuthenticatorActivity {
         t.execute();
     }
 
-    private class CreateTask extends AsyncTask<String, Void, Boolean> {
+    public class CreateTask extends AsyncTask<String, Void, Boolean> {
         Context mContext;
         ProgressDialog mDialog;
 
@@ -78,6 +79,12 @@ public class CreateActivity extends AccountAuthenticatorActivity {
 
             Bundle result = null;
             Account account = new Account(user, mContext.getString(R.string.ACCOUNT_TYPE));
+
+            // enable automatically
+            ContentResolver.setSyncAutomatically(account, getString(R.string.CONTENT_AUTHORITY),
+                    true);
+            ContentResolver.setIsSyncable(account, getString(R.string.CONTENT_AUTHORITY), 1);
+
             AccountManager am = AccountManager.get(mContext);
             if (am.addAccountExplicitly(account, pass, null)) {
                 result = new Bundle();
