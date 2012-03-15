@@ -21,6 +21,8 @@
 
 package org.birthdayadapter;
 
+import org.birthdayadapter.ui.CreateActivity;
+
 import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorResponse;
@@ -34,7 +36,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 public class AccountAuthenticatorService extends Service {
-    private static final String TAG = "AccountAuthenticatorService";
+    private static final String TAG = "Birthday Adapter";
     private static AccountAuthenticatorImpl sAccountAuthenticator = null;
 
     public AccountAuthenticatorService() {

@@ -1,7 +1,17 @@
 <resources>
 
-    <string name="app_name">Birthday Adapter</string>
-    <string name="CONTENT_AUTHORITY">com.android.calendar</string>
-    <string name="ACCOUNT_TYPE">org.birthdayadapter.account</string>
+    <string name="app_name" translate="false">Birthday Adapter</string>
+    <string name="about_url" translate="false">http://code.google.com/p/birthday-adapter</string>
+    <string name="pref_first_run_key" translate="false">firstRun</string>
+
+    <item name="pref_first_run_def" format="boolean" type="string">true</item>
+
+    <string name="pref_enabled_key" translate="false">enabled</string>
+    <string name="pref_help_key" translate="false">help</string>
+    <string name="pref_about_key" translate="false">about</string>
+    <string name="pref_color_key" translate="false">color</string>
+
+    <!-- The first two hex numbers are for opacity and must be FF -->
+    <integer name="pref_color_def">0xFFA70000</integer>
 
 </resources>

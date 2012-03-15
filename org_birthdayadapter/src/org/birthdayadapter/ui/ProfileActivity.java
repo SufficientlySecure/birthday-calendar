@@ -19,7 +19,9 @@
  *
  */
 
-package org.birthdayadapter;
+package org.birthdayadapter.ui;
+
+import org.birthdayadapter.R;
 
 import android.app.Activity;
 import android.database.Cursor;

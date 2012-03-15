@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/pref_settings" >
+        <CheckBoxPreference
+            android:key="@string/pref_enabled_key"
+            android:persistent="false"
+            android:summary="@string/pref_enable_summary"
+            android:title="@string/pref_enable" />
+    </PreferenceCategory>
+
+    <net.margaritov.preference.colorpicker.ColorPickerPreference
+        android:defaultValue="@integer/pref_color_def"
+        android:key="@string/pref_color_key"
+        android:persistent="true"
+        android:summary="@string/pref_color_summary"
+        android:title="@string/pref_color" />
+
+    <PreferenceCategory android:title="@string/pref_help" >
+        <Preference
+            android:key="@string/pref_help_key"
+            android:persistent="false"
+            android:title="@string/pref_help" />
+        <Preference
+            android:key="@string/pref_about_key"
+            android:title="@string/pref_about" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

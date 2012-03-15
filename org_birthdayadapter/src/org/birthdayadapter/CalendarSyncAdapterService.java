@@ -29,6 +29,9 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.birthdayadapter.util.Constants;
+import org.birthdayadapter.util.PreferencesHelper;
+
 import android.accounts.Account;
 import android.accounts.OperationCanceledException;
 import android.app.Service;
@@ -36,6 +39,8 @@ import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SyncResult;
@@ -43,6 +48,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.provider.BaseColumns;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
@@ -50,14 +56,7 @@ import android.provider.CalendarContract.Events;
 import android.provider.ContactsContract;
 import android.util.Log;
 
-/**
- * CalendarSyncAdapter is mainly based on c99koder / lastfm-android SyncAdapter, see
- * https://github.com
- * /c99koder/lastfm-android/blob/master/app/src/fm/last/android/sync/CalendarSyncAdapterService.java
- * 
- */
 public class CalendarSyncAdapterService extends Service {
-    private static final String TAG = "BirthdayCalendarSyncAdapterService";
     private static SyncAdapterImpl sSyncAdapter = null;
     private static ContentResolver mContentResolver = null;
 
@@ -99,11 +98,35 @@ public class CalendarSyncAdapterService extends Service {
         return sSyncAdapter;
     }
 
-    private static long getCalendar(Context context, Account account) {
+    public static void updateCalendarColor(Context context, int color) {
+        // TODO: IMPORTANT mContentResolver is needed, if null no exception is thrown!
+        // we need it every time we use a method from the adapter!
+        mContentResolver = context.getContentResolver();
+
+        Uri uri = ContentUris.withAppendedId(getBirthdayAdapterUri(Calendars.CONTENT_URI),
+                getCalendar(context));
+
+        Log.d(Constants.TAG, "Updating calendar color to " + color + " with uri " + uri.toString());
+
+        ContentProviderClient client = context.getContentResolver().acquireContentProviderClient(
+                CalendarContract.AUTHORITY);
+
+        ContentValues values = new ContentValues();
+        values.put(Calendars.CALENDAR_COLOR, color);
+        try {
+            client.update(uri, values, null, null);
+        } catch (RemoteException e) {
+            Log.e(Constants.TAG, "Error while updating calendar color!");
+            e.printStackTrace();
+        }
+        client.release();
+    }
+
+    private static long getCalendar(Context context) {
+        Log.d(Constants.TAG, "get calendar!");
         // Find the calendar if we've got one
-        Uri calenderUri = Calendars.CONTENT_URI.buildUpon()
-                .appendQueryParameter(Calendars.ACCOUNT_NAME, account.name)
-                .appendQueryParameter(Calendars.ACCOUNT_TYPE, account.type).build();
+        Uri calenderUri = getBirthdayAdapterUri(Calendars.CONTENT_URI);
+
         Cursor c1 = mContentResolver.query(calenderUri, new String[] { BaseColumns._ID }, null,
                 null, null);
         if (c1.moveToNext()) {
@@ -112,25 +135,25 @@ public class CalendarSyncAdapterService extends Service {
             ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
 
             ContentProviderOperation.Builder builder = ContentProviderOperation
-                    .newInsert(getBirthdayAdapterUri(Calendars.CONTENT_URI, account));
-            builder.withValue(Calendars.ACCOUNT_NAME, account.name);
-            builder.withValue(Calendars.ACCOUNT_TYPE, account.type);
+                    .newInsert(getBirthdayAdapterUri(Calendars.CONTENT_URI));
+            builder.withValue(Calendars.ACCOUNT_NAME, Constants.ACCOUNT_NAME);
+            builder.withValue(Calendars.ACCOUNT_TYPE, Constants.ACCOUNT_TYPE);
             builder.withValue(Calendars.NAME, CALENDAR_COLUMN_NAME);
             builder.withValue(Calendars.CALENDAR_DISPLAY_NAME,
                     context.getString(R.string.calendar_display_name));
-            builder.withValue(Calendars.CALENDAR_COLOR, 0xD51007);
+            builder.withValue(Calendars.CALENDAR_COLOR, PreferencesHelper.getColor(context));
             builder.withValue(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_READ);
-            builder.withValue(Calendars.OWNER_ACCOUNT, account.name);
+            builder.withValue(Calendars.OWNER_ACCOUNT, Constants.ACCOUNT_NAME);
             builder.withValue(Calendars.SYNC_EVENTS, 1);
             operationList.add(builder.build());
             try {
                 mContentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
             } catch (Exception e) {
-                Log.e(TAG, "Error: " + e.getMessage());
+                Log.e(Constants.TAG, "Error: " + e.getMessage());
                 e.printStackTrace();
                 return -1;
             }
-            return getCalendar(context, account);
+            return getCalendar(context);
         }
     }
 
@@ -148,10 +171,10 @@ public class CalendarSyncAdapterService extends Service {
     // client.release();
     // }
 
-    static Uri getBirthdayAdapterUri(Uri uri, Account account) {
+    public static Uri getBirthdayAdapterUri(Uri uri) {
         return uri.buildUpon().appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-                .appendQueryParameter(Calendars.ACCOUNT_NAME, account.name)
-                .appendQueryParameter(Calendars.ACCOUNT_TYPE, account.type).build();
+                .appendQueryParameter(Calendars.ACCOUNT_NAME, Constants.ACCOUNT_NAME)
+                .appendQueryParameter(Calendars.ACCOUNT_TYPE, Constants.ACCOUNT_TYPE).build();
     }
 
     /**
@@ -164,15 +187,13 @@ public class CalendarSyncAdapterService extends Service {
      * @return
      */
     private static ContentProviderOperation updateEvent(Context context, long calendar_id,
-            Account account, Date eventDate, String title, long raw_id) {
+            Date eventDate, String title, long raw_id) {
         ContentProviderOperation.Builder builder;
         if (raw_id != -1) {
-            builder = ContentProviderOperation.newUpdate(getBirthdayAdapterUri(Events.CONTENT_URI,
-                    account));
+            builder = ContentProviderOperation.newUpdate(getBirthdayAdapterUri(Events.CONTENT_URI));
             builder.withSelection(Events._ID + " = '" + raw_id + "'", null);
         } else {
-            builder = ContentProviderOperation.newInsert(getBirthdayAdapterUri(Events.CONTENT_URI,
-                    account));
+            builder = ContentProviderOperation.newInsert(getBirthdayAdapterUri(Events.CONTENT_URI));
         }
 
         Calendar cal = Calendar.getInstance();
@@ -231,19 +252,19 @@ public class CalendarSyncAdapterService extends Service {
             eventDate = dateFormat1.parse(eventDateString);
 
         } catch (ParseException e) {
-            Log.e(TAG, "Event Date String " + eventDateString
+            Log.e(Constants.TAG, "Event Date String " + eventDateString
                     + " could not be parsed with yyyy-MM-dd! Falling back to yyyyMMdd!");
             try {
                 eventDate = dateFormat2.parse(eventDateString);
 
             } catch (ParseException e2) {
-                Log.e(TAG, "Event Date String " + eventDateString
+                Log.e(Constants.TAG, "Event Date String " + eventDateString
                         + " could not be parsed with yyyyMMdd! Falling back to timestamp!");
                 try {
                     eventDate = new Date(Long.parseLong(eventDateString));
 
                 } catch (NumberFormatException e3) {
-                    Log.e(TAG, "Event Date String " + eventDateString
+                    Log.e(Constants.TAG, "Event Date String " + eventDateString
                             + " could not be parsed as a timestamp! Parsing failed!");
 
                     eventDate = null;
@@ -284,7 +305,7 @@ public class CalendarSyncAdapterService extends Service {
             throws OperationCanceledException {
         mContentResolver = context.getContentResolver();
 
-        long calendar_id = getCalendar(context, account);
+        long calendar_id = getCalendar(context);
         if (calendar_id == -1) {
             Log.e("CalendarSyncAdapter", "Unable to create calendar");
             return;
@@ -303,9 +324,9 @@ public class CalendarSyncAdapterService extends Service {
         // http://stackoverflow.com/questions/8579883/get-birthday-for-each-contact-in-android-application
 
         // clear table with workaround: "_id != -1"
-        int delRows = mContentResolver.delete(getBirthdayAdapterUri(Events.CONTENT_URI, account),
+        int delRows = mContentResolver.delete(getBirthdayAdapterUri(Events.CONTENT_URI),
                 "_id != -1", null);
-        Log.i(TAG, "number of del rows: " + delRows);
+        Log.i(Constants.TAG, "number of del rows: " + delRows);
 
         // collection of birthdays that will later be added to the calendar
         ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
@@ -355,7 +376,7 @@ public class CalendarSyncAdapterService extends Service {
 
             if (eventDate != null) {
                 // with raw_id -1 it will make a new one
-                operationList.add(updateEvent(context, calendar_id, account, eventDate, title, -1));
+                operationList.add(updateEvent(context, calendar_id, eventDate, title, -1));
             }
 
         }

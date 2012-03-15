@@ -45,7 +45,17 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name" >
         <activity
-            android:name=".CreateActivity"
+            android:name=".ui.BaseActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleInstance" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.CreateActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
             <intent-filter>
@@ -53,16 +63,25 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ProfileActivity"
+            android:name=".ui.ProfileActivity"
             android:label="Profile" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
 
-                <data android:mimeType="vnd.android.cursor.item/vnd.org.c99.SyncProviderDemo.profile" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.org.birthdayadapter.profile" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.HelpActivity"
+            android:excludeFromRecents="true"
+            android:label="@string/activity_about" />
+        <activity
+            android:name=".ui.AboutActivity"
+            android:excludeFromRecents="true"
+            android:label="@string/activity_about"
+            android:theme="@android:style/Theme.Dialog" />
 
         <service
             android:name=".AccountAuthenticatorService"
