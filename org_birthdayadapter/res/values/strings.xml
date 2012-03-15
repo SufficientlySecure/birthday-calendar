@@ -2,6 +2,9 @@
 
     <string name="creating">Creating adapter...</string>
     <string name="calendar_display_name">Birthdays</string>
-    <string name="event_title">Birthday of %s</string>
+    <string name="event_title_birthday">Birthday of %1$s</string>
+    <string name="event_title_anniversary">Anniversary with %1$s</string>
+    <string name="event_title_other">Other Event with %1$s</string>
+    <string name="event_title_custom">%1$s with %2$s</string>
 
 </resources>

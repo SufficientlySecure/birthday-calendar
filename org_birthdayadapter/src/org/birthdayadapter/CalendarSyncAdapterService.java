@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import android.accounts.Account;
@@ -158,12 +159,12 @@ public class CalendarSyncAdapterService extends Service {
      * 
      * @param calendar_id
      * @param account
-     * @param birthday
+     * @param eventDate
      * @param raw_id
      * @return
      */
     private static ContentProviderOperation updateEvent(Context context, long calendar_id,
-            Account account, Date birthday, String name, long raw_id) {
+            Account account, Date eventDate, String title, long raw_id) {
         ContentProviderOperation.Builder builder;
         if (raw_id != -1) {
             builder = ContentProviderOperation.newUpdate(getBirthdayAdapterUri(Events.CONTENT_URI,
@@ -173,10 +174,9 @@ public class CalendarSyncAdapterService extends Service {
             builder = ContentProviderOperation.newInsert(getBirthdayAdapterUri(Events.CONTENT_URI,
                     account));
         }
-        String title = String.format(context.getString(R.string.event_title), name);
 
         Calendar cal = Calendar.getInstance();
-        cal.setTime(birthday);
+        cal.setTime(eventDate);
         cal.set(Calendar.HOUR, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
@@ -212,23 +212,67 @@ public class CalendarSyncAdapterService extends Service {
     }
 
     /**
-     * method to get name, contact id, and birthday
+     * The date format in the contact events is not standardized! See
+     * http://dmfs.org/carddav/?date_format . This method will try to parse it by first using
+     * yyyy-MM-dd, then yyyyMMdd and then timestamp.
+     * 
+     * @param eventDateString
+     * @return eventDate as Date object
+     */
+    private static Date parseEventDateString(String eventDateString) {
+        SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        dateFormat1.setTimeZone(TimeZone.getDefault());
+        SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyyMMdd", Locale.US);
+        dateFormat2.setTimeZone(TimeZone.getDefault());
+
+        Date eventDate = null;
+
+        try {
+            eventDate = dateFormat1.parse(eventDateString);
+
+        } catch (ParseException e) {
+            Log.e(TAG, "Event Date String " + eventDateString
+                    + " could not be parsed with yyyy-MM-dd! Falling back to yyyyMMdd!");
+            try {
+                eventDate = dateFormat2.parse(eventDateString);
+
+            } catch (ParseException e2) {
+                Log.e(TAG, "Event Date String " + eventDateString
+                        + " could not be parsed with yyyyMMdd! Falling back to timestamp!");
+                try {
+                    eventDate = new Date(Long.parseLong(eventDateString));
+
+                } catch (NumberFormatException e3) {
+                    Log.e(TAG, "Event Date String " + eventDateString
+                            + " could not be parsed as a timestamp! Parsing failed!");
+
+                    eventDate = null;
+                }
+            }
+        }
+
+        return eventDate;
+    }
+
+    /**
+     * Get Cursor with name, contact id, date of event, and type columns
      * 
      * http://stackoverflow.com/questions/8579883/get-birthday-for-each-contact-in-android-
      * application
      * 
      * @return
      */
-    private static Cursor getContactsBirthdays(Context context) {
+    private static Cursor getContactsEvents(Context context) {
         Uri uri = ContactsContract.Data.CONTENT_URI;
 
         String[] projection = new String[] { ContactsContract.Contacts.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Event.CONTACT_ID,
-                ContactsContract.CommonDataKinds.Event.START_DATE };
+                ContactsContract.CommonDataKinds.Event.START_DATE,
+                ContactsContract.CommonDataKinds.Event.TYPE,
+                ContactsContract.CommonDataKinds.Event.LABEL };
 
         String where = ContactsContract.Data.MIMETYPE + "= ? AND "
-                + ContactsContract.CommonDataKinds.Event.TYPE + "="
-                + ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY;
+                + ContactsContract.CommonDataKinds.Event.TYPE + " IS NOT NULL";
         String[] selectionArgs = new String[] { ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE };
         String sortOrder = null;
 
@@ -257,8 +301,6 @@ public class CalendarSyncAdapterService extends Service {
         // - birtdays may be stored in other ways on some phones
         // see
         // http://stackoverflow.com/questions/8579883/get-birthday-for-each-contact-in-android-application
-        // - problems with date format:
-        // http://dmfs.org/carddav/?date_format
 
         // clear table with workaround: "_id != -1"
         int delRows = mContentResolver.delete(getBirthdayAdapterUri(Events.CONTENT_URI, account),
@@ -268,36 +310,54 @@ public class CalendarSyncAdapterService extends Service {
         // collection of birthdays that will later be added to the calendar
         ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
 
-        // date format
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        dateFormat.setTimeZone(TimeZone.getDefault());
-        Date birthdayDate = null;
+        // iterate through all Contact Events and print in log
+        Cursor cursor = getContactsEvents(context);
+        int eventTypeColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE);
+        // int eventTypeColumn = cursor
+        // .getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM);
 
-        // iterate through all Contact's Birthdays and print in log
-        Cursor cursor = getContactsBirthdays(context);
-        int birthdayColumn = cursor
+        int eventDateColumn = cursor
                 .getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
         int displayNameColumn = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+        int eventCustomLabelColumn = cursor
+                .getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL);
 
         while (cursor.moveToNext()) {
-            String birthday = cursor.getString(birthdayColumn);
+            String eventDateString = cursor.getString(eventDateColumn);
             String displayName = cursor.getString(displayNameColumn);
+            int eventType = cursor.getInt(eventTypeColumn);
 
-            // Log.d(TAG, "Birthday: " + bDay);
-            try {
-                birthdayDate = dateFormat.parse(birthday);
-                // Log.d(TAG, "Birthday of " + displayName + " parsed: " +
-                // dateFormat.format(birthdayDate));
+            Date eventDate = parseEventDateString(eventDateString);
 
-                // with raw_id -1 it will make a new one
-                operationList.add(updateEvent(context, calendar_id, account, birthdayDate,
-                        displayName, -1));
+            String title = null;
+            switch (eventType) {
+            case ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM:
+                String eventCustomLabel = cursor.getString(eventCustomLabelColumn);
 
-            } catch (ParseException e) {
-                Log.e(TAG, "Birthday " + birthday + " of " + displayName
-                        + " could not be parsed with yyyy-MM-dd!");
-                e.printStackTrace();
+                title = String.format(context.getString(R.string.event_title_custom),
+                        eventCustomLabel, displayName);
+                break;
+            case ContactsContract.CommonDataKinds.Event.TYPE_ANNIVERSARY:
+                title = String.format(context.getString(R.string.event_title_anniversary),
+                        displayName);
+                break;
+            case ContactsContract.CommonDataKinds.Event.TYPE_OTHER:
+                title = String.format(context.getString(R.string.event_title_other), displayName);
+                break;
+            case ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY:
+                title = String
+                        .format(context.getString(R.string.event_title_birthday), displayName);
+                break;
+            default:
+                title = String.format(context.getString(R.string.event_title_other), displayName);
+                break;
             }
+
+            if (eventDate != null) {
+                // with raw_id -1 it will make a new one
+                operationList.add(updateEvent(context, calendar_id, account, eventDate, title, -1));
+            }
+
         }
 
         /* Create events */
