@@ -16,6 +16,12 @@
         android:summary="@string/pref_color_summary"
         android:title="@string/pref_color" />
 
+    <Preference
+        android:key="@string/pref_force_sync_key"
+        android:persistent="false"
+        android:summary="@string/pref_force_sync_summary"
+        android:title="@string/pref_force_sync" />
+
     <PreferenceCategory android:title="@string/pref_help" >
         <Preference
             android:key="@string/pref_help_key"
@@ -23,6 +29,7 @@
             android:title="@string/pref_help" />
         <Preference
             android:key="@string/pref_about_key"
+            android:persistent="false"
             android:title="@string/pref_about" />
     </PreferenceCategory>
 

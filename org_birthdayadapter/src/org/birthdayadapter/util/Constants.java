@@ -20,8 +20,6 @@
 
 package org.birthdayadapter.util;
 
-import android.accounts.Account;
-
 public class Constants {
     public static final boolean DEBUG = false;
 

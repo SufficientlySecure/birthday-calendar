@@ -14,4 +14,6 @@
     <!-- The first two hex numbers are for opacity and must be FF -->
     <integer name="pref_color_def">0xFFA70000</integer>
 
+    <string name="pref_force_sync_key" translate="false">forceSync</string>
+
 </resources>

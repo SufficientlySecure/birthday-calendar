@@ -21,7 +21,7 @@
 
 package org.birthdayadapter;
 
-import org.birthdayadapter.ui.CreateActivity;
+import org.birthdayadapter.ui.CreateAccountActivity;
 
 import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;
@@ -77,7 +77,7 @@ public class AccountAuthenticatorService extends Service {
                 String authTokenType, String[] requiredFeatures, Bundle options)
                 throws NetworkErrorException {
             Bundle result = new Bundle();
-            Intent i = new Intent(mContext, CreateActivity.class);
+            Intent i = new Intent(mContext, CreateAccountActivity.class);
             i.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
             result.putParcelable(AccountManager.KEY_INTENT, i);
             return result;

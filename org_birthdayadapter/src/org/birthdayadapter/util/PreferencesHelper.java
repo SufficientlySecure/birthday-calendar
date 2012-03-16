@@ -25,7 +25,6 @@ import org.birthdayadapter.R;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.util.Log;
 
 public class PreferencesHelper {
     public static boolean getFirstRun(Context context) {

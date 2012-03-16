@@ -24,12 +24,15 @@ import net.margaritov.preference.colorpicker.ColorPickerPreference;
 
 import org.birthdayadapter.CalendarSyncAdapterService;
 import org.birthdayadapter.R;
+import org.birthdayadapter.util.AccountUtils;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.PreferencesHelper;
 
+import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -46,6 +49,7 @@ public class BaseActivity extends PreferenceActivity {
 
     private CheckBoxPreference mEnabled;
     private ColorPickerPreference mColor;
+    private Preference mForceSync;
 
     private Preference mHelp;
     private Preference mAbout;
@@ -58,11 +62,12 @@ public class BaseActivity extends PreferenceActivity {
         super.onCreate(savedInstanceState);
 
         // load preferences from xml
-        addPreferencesFromResource(R.xml.base_preference);
+        addPreferencesFromResource(R.xml.base_preferences);
 
         mActivity = this;
         mEnabled = (CheckBoxPreference) findPreference(getString(R.string.pref_enabled_key));
         mColor = (ColorPickerPreference) findPreference(getString(R.string.pref_color_key));
+        mForceSync = (Preference) findPreference(getString(R.string.pref_force_sync_key));
 
         mHelp = (Preference) findPreference(getString(R.string.pref_help_key));
         mAbout = (Preference) findPreference(getString(R.string.pref_about_key));
@@ -75,7 +80,7 @@ public class BaseActivity extends PreferenceActivity {
         }
 
         // If account is activated check the preference
-        if (CreateActivity.isAccountActivated(mActivity)) {
+        if (AccountUtils.isAccountActivated(mActivity)) {
             mEnabled.setChecked(true);
         } else {
             mEnabled.setChecked(false);
@@ -102,12 +107,8 @@ public class BaseActivity extends PreferenceActivity {
         });
 
         mColor.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                // preference.setSummary(ColorPickerPreference.convertToARGB(Integer.valueOf(String
-                // .valueOf(newValue))));
-
                 int newColor = Integer.valueOf(String.valueOf(newValue));
                 Log.d(Constants.TAG, "color changed to " + newColor);
 
@@ -115,47 +116,62 @@ public class BaseActivity extends PreferenceActivity {
 
                 return true;
             }
+        });
 
+        mForceSync.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                // force sync
+                SyncTask t = new SyncTask(mActivity);
+                t.execute();
+
+                return false;
+            }
         });
 
         mHelp.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 startActivity(new Intent(mActivity, HelpActivity.class));
 
                 return false;
             }
-
         });
 
         mAbout.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 startActivity(new Intent(mActivity, AboutActivity.class));
 
                 return false;
             }
-
         });
 
     }
 
-    public class CreateTask extends AsyncTask<String, Void, Boolean> {
+    public class SyncTask extends AsyncTask<Void, Void, Void> {
         Context mContext;
         ProgressDialog mDialog;
 
-        CreateTask(Context context) {
+        SyncTask(Context context) {
             mContext = context;
+        }
 
-            mDialog = ProgressDialog.show(context, "", mContext.getString(R.string.creating), true,
-                    false);
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            mDialog = ProgressDialog.show(mContext, "", mContext.getString(R.string.synchronizing),
+                    true, false);
             mDialog.setCancelable(false);
         }
 
         @Override
-        public Boolean doInBackground(String... params) {
+        protected Void doInBackground(Void... unused) {
+
+            // force sync now!
+            Account account = new Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE);
+            ContentResolver.requestSync(account, Constants.CONTENT_AUTHORITY, new Bundle());
 
             // Wait while asynchronous android background operations finish
             try {
@@ -164,8 +180,47 @@ public class BaseActivity extends PreferenceActivity {
                 e.printStackTrace();
             }
 
+            // return nothing as type is Void
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            super.onPostExecute(unused);
+
+            mDialog.dismiss();
+        }
+    }
+
+    public class CreateTask extends AsyncTask<String, Void, Boolean> {
+        Context mContext;
+        ProgressDialog mDialog;
+
+        CreateTask(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            mDialog = ProgressDialog.show(mContext, "", mContext.getString(R.string.creating),
+                    true, false);
+            mDialog.setCancelable(false);
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+
             // add account
-            Bundle result = CreateActivity.addAccount(mContext);
+            Bundle result = AccountUtils.addAccount(mContext);
+
+            // Wait while asynchronous android background operations finish
+            try {
+                Thread.sleep(5000);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             if (result != null) {
                 if (result.containsKey(AccountManager.KEY_ACCOUNT_NAME)) {
@@ -179,7 +234,9 @@ public class BaseActivity extends PreferenceActivity {
         }
 
         @Override
-        public void onPostExecute(Boolean result) {
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+
             mDialog.dismiss();
             if (result) {
                 mEnabled.setEnabled(true);
@@ -193,14 +250,21 @@ public class BaseActivity extends PreferenceActivity {
 
         RemoveTask(Context context) {
             mContext = context;
+        }
 
-            mDialog = ProgressDialog.show(context, "", mContext.getString(R.string.removing), true,
-                    false);
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            mDialog = ProgressDialog.show(mContext, "", mContext.getString(R.string.removing),
+                    true, false);
             mDialog.setCancelable(false);
         }
 
         @Override
-        public Boolean doInBackground(String... params) {
+        protected Boolean doInBackground(String... params) {
+            // remove account
+            boolean result = AccountUtils.removeAccount(mContext);
 
             // Wait while asynchronous android background operations finish
             try {
@@ -209,14 +273,13 @@ public class BaseActivity extends PreferenceActivity {
                 e.printStackTrace();
             }
 
-            // remove account
-            boolean result = CreateActivity.removeAccount(mContext);
-
             return result;
         }
 
         @Override
-        public void onPostExecute(Boolean result) {
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+
             mDialog.dismiss();
             if (result) {
                 mEnabled.setEnabled(false);

@@ -1,5 +1,4 @@
 /*
- * Copyright (C) 2010 Sam Steele
  * Copyright (C) 2012 Dominik Schürmann <dominik@dominikschuermann.de>
  *
  * This file is part of Birthday Adapter.
@@ -19,49 +18,22 @@
  *
  */
 
-package org.birthdayadapter.ui;
-
-import org.birthdayadapter.R;
-import org.birthdayadapter.util.Constants;
+package org.birthdayadapter.util;
 
 import android.accounts.Account;
-import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerFuture;
 import android.app.AlarmManager;
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
-public class CreateActivity extends AccountAuthenticatorActivity {
-    // Button mCreateButton;
-
-    /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // setContentView(R.layout.main);
-
-        // mCreateButton = (Button) findViewById(R.id.main_create);
-        // mCreateButton.setOnClickListener(new OnClickListener() {
-        //
-        // public void onClick(View v) {
-        //
-        // CreateTask t = new CreateTask(CreateActivity.this);
-        // t.execute();
-        // }
-        //
-        // });
-
-        // create directly, there are no options
-        CreateTask t = new CreateTask(this);
-        t.execute();
-    }
+public class AccountUtils {
 
     public static Bundle addAccount(Context context) {
+        Log.d(Constants.TAG, "Adding account...");
+
         Account account = new Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE);
 
         // enable automatic sync once per day
@@ -84,6 +56,8 @@ public class CreateActivity extends AccountAuthenticatorActivity {
     }
 
     public static boolean removeAccount(Context context) {
+        Log.d(Constants.TAG, "Removing account...");
+
         Account account = new Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE);
         AccountManager am = AccountManager.get(context);
 
@@ -91,7 +65,7 @@ public class CreateActivity extends AccountAuthenticatorActivity {
         AccountManagerFuture<Boolean> future = am.removeAccount(account, null, null);
         if (future.isDone()) {
             try {
-                boolean result = future.getResult();
+                future.getResult();
 
                 return true;
             } catch (Exception e) {
@@ -115,50 +89,5 @@ public class CreateActivity extends AccountAuthenticatorActivity {
         }
 
         return false;
-    }
-
-    public class CreateTask extends AsyncTask<String, Void, Boolean> {
-        Context mContext;
-        ProgressDialog mDialog;
-
-        CreateTask(Context c) {
-            mContext = c;
-
-            mDialog = ProgressDialog
-                    .show(c, "", mContext.getString(R.string.creating), true, false);
-            mDialog.setCancelable(false);
-        }
-
-        @Override
-        public Boolean doInBackground(String... params) {
-
-            // Wait while asynchronous android background operations finish
-            try {
-                Thread.sleep(5000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            // add account
-            Bundle result = addAccount(mContext);
-
-            if (result != null) {
-                if (result.containsKey(AccountManager.KEY_ACCOUNT_NAME)) {
-                    setAccountAuthenticatorResult(result);
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        }
-
-        @Override
-        public void onPostExecute(Boolean result) {
-            mDialog.dismiss();
-            if (result)
-                finish();
-        }
     }
 }
