@@ -13,9 +13,10 @@
     <string name="event_title_custom">%1$s with %2$s</string>
 
     <!-- About -->
-    <string name="about_description"></string>
+    <string name="about_description">Birthday Adapter is the first implementation that displays all birthdays from your contact list automatically in your standard Android calendar without hassle.</string>
     <string name="about_license">License: GPL v3+</string>
     <string name="about_version">Version:</string>
+    <string name="about_libs">Birthday Adapter is based on Sam Steele\'s tutorial how to build a SyncAdapter. It also uses the ColorPicker by Daniel Nilsson and Sergey Margaritov</string>
     <string name="about_developer">Developer: Dominik Schürmann</string>
 
     <!-- Activity names -->

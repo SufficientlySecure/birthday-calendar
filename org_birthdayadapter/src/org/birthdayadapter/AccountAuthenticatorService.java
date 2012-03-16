@@ -22,6 +22,7 @@
 package org.birthdayadapter;
 
 import org.birthdayadapter.ui.CreateAccountActivity;
+import org.birthdayadapter.util.Constants;
 
 import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;
@@ -36,7 +37,6 @@ import android.os.IBinder;
 import android.util.Log;
 
 public class AccountAuthenticatorService extends Service {
-    private static final String TAG = "Birthday Adapter";
     private static AccountAuthenticatorImpl sAccountAuthenticator = null;
 
     public AccountAuthenticatorService() {
@@ -93,8 +93,7 @@ public class AccountAuthenticatorService extends Service {
         @Override
         public Bundle confirmCredentials(AccountAuthenticatorResponse response, Account account,
                 Bundle options) {
-            // TODO Auto-generated method stub
-            Log.i(TAG, "confirmCredentials");
+            Log.i(Constants.TAG, "confirmCredentials");
             return null;
         }
 
@@ -106,8 +105,7 @@ public class AccountAuthenticatorService extends Service {
          */
         @Override
         public Bundle editProperties(AccountAuthenticatorResponse response, String accountType) {
-            // TODO Auto-generated method stub
-            Log.i(TAG, "editProperties");
+            Log.i(Constants.TAG, "editProperties");
             return null;
         }
 
@@ -121,8 +119,7 @@ public class AccountAuthenticatorService extends Service {
         @Override
         public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account,
                 String authTokenType, Bundle options) throws NetworkErrorException {
-            // TODO Auto-generated method stub
-            Log.i(TAG, "getAuthToken");
+            Log.i(Constants.TAG, "getAuthToken");
             return null;
         }
 
@@ -133,8 +130,7 @@ public class AccountAuthenticatorService extends Service {
          */
         @Override
         public String getAuthTokenLabel(String authTokenType) {
-            // TODO Auto-generated method stub
-            Log.i(TAG, "getAuthTokenLabel");
+            Log.i(Constants.TAG, "getAuthTokenLabel");
             return null;
         }
 
@@ -147,8 +143,7 @@ public class AccountAuthenticatorService extends Service {
         @Override
         public Bundle hasFeatures(AccountAuthenticatorResponse response, Account account,
                 String[] features) throws NetworkErrorException {
-            // TODO Auto-generated method stub
-            Log.i(TAG, "hasFeatures: " + features);
+            Log.i(Constants.TAG, "hasFeatures: " + features);
             return null;
         }
 
@@ -162,8 +157,7 @@ public class AccountAuthenticatorService extends Service {
         @Override
         public Bundle updateCredentials(AccountAuthenticatorResponse response, Account account,
                 String authTokenType, Bundle options) {
-            // TODO Auto-generated method stub
-            Log.i(TAG, "updateCredentials");
+            Log.i(Constants.TAG, "updateCredentials");
             return null;
         }
     }

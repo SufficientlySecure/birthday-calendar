@@ -58,7 +58,6 @@ import android.util.Log;
 
 public class CalendarSyncAdapterService extends Service {
     private static SyncAdapterImpl sSyncAdapter = null;
-    private static ContentResolver mContentResolver = null;
 
     private static String CALENDAR_COLUMN_NAME = "birthdays";
 
@@ -99,17 +98,15 @@ public class CalendarSyncAdapterService extends Service {
     }
 
     public static void updateCalendarColor(Context context, int color) {
-        // TODO: IMPORTANT mContentResolver is needed, if null no exception is thrown!
-        // we need it every time we use a method from the adapter!
-        mContentResolver = context.getContentResolver();
+        ContentResolver contentResolver = context.getContentResolver();
 
         Uri uri = ContentUris.withAppendedId(getBirthdayAdapterUri(Calendars.CONTENT_URI),
                 getCalendar(context));
 
         Log.d(Constants.TAG, "Updating calendar color to " + color + " with uri " + uri.toString());
 
-        ContentProviderClient client = context.getContentResolver().acquireContentProviderClient(
-                CalendarContract.AUTHORITY);
+        ContentProviderClient client = contentResolver
+                .acquireContentProviderClient(CalendarContract.AUTHORITY);
 
         ContentValues values = new ContentValues();
         values.put(Calendars.CALENDAR_COLOR, color);
@@ -123,11 +120,13 @@ public class CalendarSyncAdapterService extends Service {
     }
 
     private static long getCalendar(Context context) {
+        ContentResolver contentResolver = context.getContentResolver();
+
         Log.d(Constants.TAG, "get calendar!");
         // Find the calendar if we've got one
         Uri calenderUri = getBirthdayAdapterUri(Calendars.CONTENT_URI);
 
-        Cursor c1 = mContentResolver.query(calenderUri, new String[] { BaseColumns._ID }, null,
+        Cursor c1 = contentResolver.query(calenderUri, new String[] { BaseColumns._ID }, null,
                 null, null);
         if (c1.moveToNext()) {
             return c1.getLong(0);
@@ -147,7 +146,7 @@ public class CalendarSyncAdapterService extends Service {
             builder.withValue(Calendars.SYNC_EVENTS, 1);
             operationList.add(builder.build());
             try {
-                mContentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
+                contentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
             } catch (Exception e) {
                 Log.e(Constants.TAG, "Error: " + e.getMessage());
                 e.printStackTrace();
@@ -303,7 +302,7 @@ public class CalendarSyncAdapterService extends Service {
     private static void performSync(Context context, Account account, Bundle extras,
             String authority, ContentProviderClient provider, SyncResult syncResult)
             throws OperationCanceledException {
-        mContentResolver = context.getContentResolver();
+        ContentResolver contentResolver = context.getContentResolver();
 
         long calendar_id = getCalendar(context);
         if (calendar_id == -1) {
@@ -324,7 +323,7 @@ public class CalendarSyncAdapterService extends Service {
         // http://stackoverflow.com/questions/8579883/get-birthday-for-each-contact-in-android-application
 
         // clear table with workaround: "_id != -1"
-        int delRows = mContentResolver.delete(getBirthdayAdapterUri(Events.CONTENT_URI),
+        int delRows = contentResolver.delete(getBirthdayAdapterUri(Events.CONTENT_URI),
                 "_id != -1", null);
         Log.i(Constants.TAG, "number of del rows: " + delRows);
 
@@ -333,13 +332,10 @@ public class CalendarSyncAdapterService extends Service {
 
         // iterate through all Contact Events and print in log
         Cursor cursor = getContactsEvents(context);
-        int eventTypeColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE);
-        // int eventTypeColumn = cursor
-        // .getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM);
-
         int eventDateColumn = cursor
                 .getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
         int displayNameColumn = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+        int eventTypeColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE);
         int eventCustomLabelColumn = cursor
                 .getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL);
 
@@ -384,7 +380,7 @@ public class CalendarSyncAdapterService extends Service {
         /* Create events */
         if (operationList.size() > 0) {
             try {
-                mContentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
+                contentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
             } catch (Exception e) {
                 e.printStackTrace();
             }

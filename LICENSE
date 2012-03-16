@@ -1,3 +1,9 @@
+The following open source projects are used in AdAway:
+
+  * android-ColorPickerPreference
+    https://github.com/attenzione/android-ColorPickerPreference
+    Apache License v2
+
 Images:
 
   * icon.svg
