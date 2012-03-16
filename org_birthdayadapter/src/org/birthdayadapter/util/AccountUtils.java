@@ -27,7 +27,6 @@ import android.app.AlarmManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 
 public class AccountUtils {
 

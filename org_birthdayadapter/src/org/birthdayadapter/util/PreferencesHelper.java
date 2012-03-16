@@ -52,4 +52,18 @@ public class PreferencesHelper {
 
         return result;
     }
+
+    public static int getReminder(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
+                Context.MODE_PRIVATE);
+        return Integer.parseInt(prefs.getString(context.getString(R.string.pref_reminder_key),
+                context.getString(R.string.pref_reminder_def)));
+    }
+
+    public static boolean getDebugEnabled(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
+                Context.MODE_PRIVATE);
+        return prefs.getBoolean(context.getString(R.string.pref_enable_debug_key),
+                Boolean.parseBoolean(context.getString(R.string.pref_enable_debug_def)));
+    }
 }

@@ -26,7 +26,9 @@ import org.birthdayadapter.CalendarSyncAdapterService;
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.AccountUtils;
 import org.birthdayadapter.util.Constants;
+import org.birthdayadapter.util.Log;
 import org.birthdayadapter.util.PreferencesHelper;
+import org.birthdayadapter.util.Utils;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -43,7 +45,6 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
-import android.util.Log;
 
 public class BaseActivity extends PreferenceActivity {
     private Activity mActivity;
@@ -63,10 +64,14 @@ public class BaseActivity extends PreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mActivity = this;
+
+        // Set Debug level based on preference
+        Utils.setDebugBasedOnPreference(mActivity);
+
         // load preferences from xml
         addPreferencesFromResource(R.xml.base_preferences);
 
-        mActivity = this;
         mEnabled = (CheckBoxPreference) findPreference(getString(R.string.pref_enabled_key));
         mColor = (ColorPickerPreference) findPreference(getString(R.string.pref_color_key));
         mReminder = (ListPreference) findPreference(getString(R.string.pref_reminder_key));

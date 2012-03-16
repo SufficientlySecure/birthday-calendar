@@ -30,7 +30,9 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import org.birthdayadapter.util.Constants;
+import org.birthdayadapter.util.Log;
 import org.birthdayadapter.util.PreferencesHelper;
+import org.birthdayadapter.util.Utils;
 
 import android.accounts.Account;
 import android.accounts.OperationCanceledException;
@@ -55,7 +57,6 @@ import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
 import android.provider.ContactsContract;
-import android.util.Log;
 
 public class CalendarSyncAdapterService extends Service {
     private static SyncAdapterImpl sSyncAdapter = null;
@@ -199,7 +200,7 @@ public class CalendarSyncAdapterService extends Service {
 
                 builder.withValue(Reminders.MINUTES, minutesBefore);
             } else {
-                Log.d(Constants.TAG, "Disable reminder with uri " + uri.toString());
+                Log.d(Constants.TAG, "Delete reminder with uri " + uri.toString());
 
                 builder = ContentProviderOperation.newDelete(uri);
             }
@@ -289,10 +290,10 @@ public class CalendarSyncAdapterService extends Service {
 
         builder = ContentProviderOperation.newInsert(getBirthdayAdapterUri(Reminders.CONTENT_URI));
 
-        // add reminder to lastly added event
+        // add reminder to last added event identified by backRef
         // see http://stackoverflow.com/questions/4655291/semantics-of-withvaluebackreference
         builder.withValueBackReference(Reminders.EVENT_ID, backRef);
-        builder.withValue(Reminders.MINUTES, 10);
+        builder.withValue(Reminders.MINUTES, PreferencesHelper.getReminder(context));
         builder.withValue(Reminders.METHOD, Reminders.METHOD_ALERT);
 
         return builder.build();
@@ -369,6 +370,9 @@ public class CalendarSyncAdapterService extends Service {
     private static void performSync(Context context, Account account, Bundle extras,
             String authority, ContentProviderClient provider, SyncResult syncResult)
             throws OperationCanceledException {
+        // Set Debug level based on preference
+        Utils.setDebugBasedOnPreference(context);
+
         ContentResolver contentResolver = context.getContentResolver();
 
         long calendarId = getCalendar(context);

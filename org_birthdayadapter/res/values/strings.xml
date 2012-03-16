@@ -43,6 +43,10 @@
         <item>3 day before</item>
     </string-array>
 
+    <string name="pref_debug">Debug</string>
+    <string name="pref_enable_debug">Debug Logging</string>
+    <string name="pref_enable_debug_summary">You need to restart Birthday Adapter for this setting to take effect.</string>
+
     <!-- Adapter Screen -->
     <string name="pref_account_header">Settings</string>
     <string name="pref_account_settings">Configure Birthday Adapter</string>

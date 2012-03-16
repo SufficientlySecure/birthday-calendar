@@ -21,7 +21,7 @@
 package org.birthdayadapter.util;
 
 public class Constants {
-    public static final boolean DEBUG = false;
+    public static boolean DEBUG = true;
 
     public static final String TAG = "Birthday Adapter";
 
@@ -30,5 +30,4 @@ public class Constants {
     public static final String CONTENT_AUTHORITY = "com.android.calendar";
 
     public static final String PREFS_NAME = "preferences";
-
 }
