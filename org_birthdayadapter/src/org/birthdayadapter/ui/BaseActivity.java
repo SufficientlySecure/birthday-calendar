@@ -38,6 +38,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
@@ -49,6 +50,7 @@ public class BaseActivity extends PreferenceActivity {
 
     private CheckBoxPreference mEnabled;
     private ColorPickerPreference mColor;
+    private ListPreference mReminder;
     private Preference mForceSync;
 
     private Preference mHelp;
@@ -67,6 +69,7 @@ public class BaseActivity extends PreferenceActivity {
         mActivity = this;
         mEnabled = (CheckBoxPreference) findPreference(getString(R.string.pref_enabled_key));
         mColor = (ColorPickerPreference) findPreference(getString(R.string.pref_color_key));
+        mReminder = (ListPreference) findPreference(getString(R.string.pref_reminder_key));
         mForceSync = (Preference) findPreference(getString(R.string.pref_force_sync_key));
 
         mHelp = (Preference) findPreference(getString(R.string.pref_help_key));
@@ -113,6 +116,21 @@ public class BaseActivity extends PreferenceActivity {
                 Log.d(Constants.TAG, "color changed to " + newColor);
 
                 CalendarSyncAdapterService.updateCalendarColor(mActivity, newColor);
+
+                return true;
+            }
+        });
+
+        mReminder.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                if (newValue instanceof String) {
+                    String stringVal = (String) newValue;
+                    int intVal = Integer.parseInt(stringVal);
+
+                    // Update all reminders to new minutes, intVal=-1 will delete all
+                    CalendarSyncAdapterService.updateAllReminders(mActivity, intVal);
+                }
 
                 return true;
             }

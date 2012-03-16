@@ -16,6 +16,15 @@
         android:summary="@string/pref_color_summary"
         android:title="@string/pref_color" />
 
+    <ListPreference
+        android:defaultValue="@string/pref_reminder_def"
+        android:entries="@array/pref_reminder_entries"
+        android:entryValues="@array/pref_reminder_entries_values"
+        android:key="@string/pref_reminder_key"
+        android:summary="@string/pref_reminder_summary"
+        android:title="@string/pref_reminder" >
+    </ListPreference>
+
     <Preference
         android:key="@string/pref_force_sync_key"
         android:persistent="false"

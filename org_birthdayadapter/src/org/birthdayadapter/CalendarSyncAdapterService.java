@@ -53,6 +53,7 @@ import android.provider.BaseColumns;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
+import android.provider.CalendarContract.Reminders;
 import android.provider.ContactsContract;
 import android.util.Log;
 
@@ -97,6 +98,12 @@ public class CalendarSyncAdapterService extends Service {
         return sSyncAdapter;
     }
 
+    /**
+     * Updates calendar color
+     * 
+     * @param context
+     * @param color
+     */
     public static void updateCalendarColor(Context context, int color) {
         ContentResolver contentResolver = context.getContentResolver();
 
@@ -119,6 +126,12 @@ public class CalendarSyncAdapterService extends Service {
         client.release();
     }
 
+    /**
+     * Gets calendar id, when no calendar is present, create one!
+     * 
+     * @param context
+     * @return
+     */
     private static long getCalendar(Context context) {
         ContentResolver contentResolver = context.getContentResolver();
 
@@ -156,20 +169,58 @@ public class CalendarSyncAdapterService extends Service {
         }
     }
 
-    // private static void deleteEvent(Context context, Account account, long rawId) {
-    // Uri uri = ContentUris.withAppendedId(getBirthdayAdapterUri(Events.CONTENT_URI, account),
-    // rawId);
-    // ContentProviderClient client = context.getContentResolver().acquireContentProviderClient(
-    // CalendarContract.AUTHORITY);
-    // try {
-    // client.delete(uri, null, null);
-    // } catch (RemoteException e) {
-    // Log.e(TAG, "Error: " + e.getMessage());
-    // e.printStackTrace();
-    // }
-    // client.release();
-    // }
+    /**
+     * Set new minutes to all reminders in birthday calendar. minutesBefore=-1 will delete all
+     * reminders!
+     * 
+     * @param context
+     * @param minutesBefore
+     */
+    public static void updateAllReminders(Context context, int minutesBefore) {
+        ContentResolver contentResolver = context.getContentResolver();
 
+        Uri remindersUri = getBirthdayAdapterUri(Reminders.CONTENT_URI);
+
+        Cursor cursor = contentResolver.query(remindersUri, new String[] { Reminders._ID,
+                Reminders.MINUTES }, null, null, null);
+
+        ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
+
+        while (cursor.moveToNext()) {
+            Uri uri = ContentUris.withAppendedId(remindersUri,
+                    cursor.getLong(cursor.getColumnIndex(Reminders._ID)));
+
+            ContentProviderOperation.Builder builder;
+            if (minutesBefore >= 1) {
+                Log.d(Constants.TAG, "Updating reminder minutes to " + minutesBefore + " with uri "
+                        + uri.toString());
+
+                builder = ContentProviderOperation.newUpdate(uri);
+
+                builder.withValue(Reminders.MINUTES, minutesBefore);
+            } else {
+                Log.d(Constants.TAG, "Disable reminder with uri " + uri.toString());
+
+                builder = ContentProviderOperation.newDelete(uri);
+            }
+
+            operationList.add(builder.build());
+        }
+
+        try {
+            contentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
+        } catch (Exception e) {
+            Log.e(Constants.TAG, "Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Builds URI for Birthday Adapter based on account
+     * 
+     * @param uri
+     * @return
+     */
     public static Uri getBirthdayAdapterUri(Uri uri) {
         return uri.buildUpon().appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
                 .appendQueryParameter(Calendars.ACCOUNT_NAME, Constants.ACCOUNT_NAME)
@@ -177,23 +228,20 @@ public class CalendarSyncAdapterService extends Service {
     }
 
     /**
-     * raw_id = -1 will insert a new event
+     * Get a new ContentProviderOperation to insert a event
      * 
-     * @param calendar_id
-     * @param account
+     * @param context
+     * @param calendarId
      * @param eventDate
-     * @param raw_id
+     * @param title
      * @return
      */
-    private static ContentProviderOperation updateEvent(Context context, long calendar_id,
-            Date eventDate, String title, long raw_id) {
+    private static ContentProviderOperation insertEvent(Context context, long calendarId,
+            Date eventDate, String title) {
         ContentProviderOperation.Builder builder;
-        if (raw_id != -1) {
-            builder = ContentProviderOperation.newUpdate(getBirthdayAdapterUri(Events.CONTENT_URI));
-            builder.withSelection(Events._ID + " = '" + raw_id + "'", null);
-        } else {
-            builder = ContentProviderOperation.newInsert(getBirthdayAdapterUri(Events.CONTENT_URI));
-        }
+
+        builder = ContentProviderOperation.newInsert(getBirthdayAdapterUri(Events.CONTENT_URI));
+        // builder.withValue(Events._SYNC_ID, Long.valueOf(newEventId));
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(eventDate);
@@ -209,9 +257,8 @@ public class CalendarSyncAdapterService extends Service {
         cal.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         long dtstart = cal.getTimeInMillis();
-        long id = raw_id;
 
-        builder.withValue(Events.CALENDAR_ID, calendar_id);
+        builder.withValue(Events.CALENDAR_ID, calendarId);
         builder.withValue(Events.DTSTART, dtstart);
         builder.withValue(Events.TITLE, title);
 
@@ -226,9 +273,29 @@ public class CalendarSyncAdapterService extends Service {
         builder.withValue(Events.RRULE, "FREQ=YEARLY");
 
         builder.withValue(Events.STATUS, Events.STATUS_CONFIRMED);
-        builder.withValue(Events._SYNC_ID, Long.valueOf(id));
         return builder.build();
+    }
 
+    /**
+     * Gets ContentProviderOperation to insert new reminder to the ContentProviderOperation with the
+     * given backRef. This is done using "withValueBackReference"
+     * 
+     * @param context
+     * @param backRef
+     * @return
+     */
+    private static ContentProviderOperation insertReminder(Context context, int backRef) {
+        ContentProviderOperation.Builder builder;
+
+        builder = ContentProviderOperation.newInsert(getBirthdayAdapterUri(Reminders.CONTENT_URI));
+
+        // add reminder to lastly added event
+        // see http://stackoverflow.com/questions/4655291/semantics-of-withvaluebackreference
+        builder.withValueBackReference(Reminders.EVENT_ID, backRef);
+        builder.withValue(Reminders.MINUTES, 10);
+        builder.withValue(Reminders.METHOD, Reminders.METHOD_ALERT);
+
+        return builder.build();
     }
 
     /**
@@ -304,8 +371,8 @@ public class CalendarSyncAdapterService extends Service {
             throws OperationCanceledException {
         ContentResolver contentResolver = context.getContentResolver();
 
-        long calendar_id = getCalendar(context);
-        if (calendar_id == -1) {
+        long calendarId = getCalendar(context);
+        if (calendarId == -1) {
             Log.e("CalendarSyncAdapter", "Unable to create calendar");
             return;
         }
@@ -316,21 +383,20 @@ public class CalendarSyncAdapterService extends Service {
         // 3. Create event for each birthday
 
         // Known limitations:
-        // - This is not nicely done, I am not doing any updating, just delete everything and then
-        // readd everything
-        // - birtdays may be stored in other ways on some phones
+        // - I am not doing any updating, just delete everything and then recreate everything
+        // - birthdays may be stored in other ways on some phones
         // see
         // http://stackoverflow.com/questions/8579883/get-birthday-for-each-contact-in-android-application
 
         // clear table with workaround: "_id != -1"
         int delRows = contentResolver.delete(getBirthdayAdapterUri(Events.CONTENT_URI),
                 "_id != -1", null);
-        Log.i(Constants.TAG, "number of del rows: " + delRows);
+        Log.i(Constants.TAG, "Birthdays calendar is now cleared, deleted " + delRows + " rows!");
 
         // collection of birthdays that will later be added to the calendar
         ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
 
-        // iterate through all Contact Events and print in log
+        // iterate through all Contact Events
         Cursor cursor = getContactsEvents(context);
         int eventDateColumn = cursor
                 .getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
@@ -339,6 +405,7 @@ public class CalendarSyncAdapterService extends Service {
         int eventCustomLabelColumn = cursor
                 .getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL);
 
+        int backRef = 0;
         while (cursor.moveToNext()) {
             String eventDateString = cursor.getString(eventDateColumn);
             String displayName = cursor.getString(displayNameColumn);
@@ -371,8 +438,11 @@ public class CalendarSyncAdapterService extends Service {
             }
 
             if (eventDate != null) {
-                // with raw_id -1 it will make a new one
-                operationList.add(updateEvent(context, calendar_id, eventDate, title, -1));
+                Log.d(Constants.TAG, "BackRef is " + backRef);
+
+                operationList.add(insertEvent(context, calendarId, eventDate, title));
+                operationList.add(insertReminder(context, backRef));
+                backRef += 2;
             }
 
         }
@@ -380,7 +450,9 @@ public class CalendarSyncAdapterService extends Service {
         /* Create events */
         if (operationList.size() > 0) {
             try {
+                Log.d(Constants.TAG, "Start applying the batch...");
                 contentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
+                Log.d(Constants.TAG, "Applying the batch was successful!");
             } catch (Exception e) {
                 e.printStackTrace();
             }
