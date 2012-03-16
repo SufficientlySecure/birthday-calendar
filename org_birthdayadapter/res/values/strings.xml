@@ -16,7 +16,7 @@
     <string name="about_description">Birthday Adapter is the first implementation that displays all birthdays from your contact list automatically in your standard Android calendar without hassle.</string>
     <string name="about_license">License: GPL v3+</string>
     <string name="about_version">Version:</string>
-    <string name="about_libs">Birthday Adapter is based on Sam Steele\'s tutorial how to build a SyncAdapter. It also uses the ColorPicker by Daniel Nilsson and Sergey Margaritov</string>
+    <string name="about_libs">Birthday Adapter is based on Sam Steele\'s tutorial how to build a SyncAdapter. It also uses the ColorPicker by Daniel Nilsson and Sergey Margaritov. The icon is based and on the Tango Icon Library (Public Domain) and the Tango Pidgin Icon Theme (GPL)</string>
     <string name="about_developer">Developer: Dominik Schürmann</string>
 
     <!-- Activity names -->
@@ -42,10 +42,6 @@
         <item>2 day before</item>
         <item>3 day before</item>
     </string-array>
-
-    <string name="pref_debug">Debug</string>
-    <string name="pref_enable_debug">Debug Logging</string>
-    <string name="pref_enable_debug_summary">You need to restart Birthday Adapter for this setting to take effect.</string>
 
     <!-- Adapter Screen -->
     <string name="pref_account_header">Settings</string>

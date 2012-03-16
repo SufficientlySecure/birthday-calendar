@@ -28,7 +28,6 @@ import org.birthdayadapter.util.AccountUtils;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
 import org.birthdayadapter.util.PreferencesHelper;
-import org.birthdayadapter.util.Utils;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -66,9 +65,8 @@ public class BaseActivity extends PreferenceActivity {
 
         mActivity = this;
 
-        // Set Debug level based on preference
-        Utils.setDebugBasedOnPreference(mActivity);
-
+        // save prefs here
+        getPreferenceManager().setSharedPreferencesName(Constants.PREFS_NAME);
         // load preferences from xml
         addPreferencesFromResource(R.xml.base_preferences);
 
@@ -130,11 +128,16 @@ public class BaseActivity extends PreferenceActivity {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 if (newValue instanceof String) {
-                    String stringVal = (String) newValue;
-                    int intVal = Integer.parseInt(stringVal);
+                    String stringValue = (String) newValue;
+                    int newMinutes = Integer.parseInt(stringValue);
+                    int oldMinutes = PreferencesHelper.getReminder(mActivity);
 
-                    // Update all reminders to new minutes, intVal=-1 will delete all
-                    CalendarSyncAdapterService.updateAllReminders(mActivity, intVal);
+                    Log.d(Constants.TAG, "Setting all reminders to " + newMinutes
+                            + ", oldMinutes are " + oldMinutes);
+
+                    // Update all reminders to new minutes, newMinutes=-1 will delete all
+                    CalendarSyncAdapterService
+                            .updateAllReminders(mActivity, newMinutes, oldMinutes);
                 }
 
                 return true;
@@ -262,7 +265,7 @@ public class BaseActivity extends PreferenceActivity {
 
             mDialog.dismiss();
             if (result) {
-                mEnabled.setEnabled(true);
+                mEnabled.setChecked(true);
             }
         }
     }
@@ -305,7 +308,7 @@ public class BaseActivity extends PreferenceActivity {
 
             mDialog.dismiss();
             if (result) {
-                mEnabled.setEnabled(false);
+                mEnabled.setChecked(false);
             }
         }
     }

@@ -93,7 +93,7 @@ public class AccountAuthenticatorService extends Service {
         @Override
         public Bundle confirmCredentials(AccountAuthenticatorResponse response, Account account,
                 Bundle options) {
-            Log.i(Constants.TAG, "confirmCredentials");
+            Log.e(Constants.TAG, "confirmCredentials not implemented for Birthday Adapter!");
             return null;
         }
 
@@ -105,7 +105,7 @@ public class AccountAuthenticatorService extends Service {
          */
         @Override
         public Bundle editProperties(AccountAuthenticatorResponse response, String accountType) {
-            Log.i(Constants.TAG, "editProperties");
+            Log.e(Constants.TAG, "editProperties not implemented for Birthday Adapter!");
             return null;
         }
 
@@ -119,7 +119,7 @@ public class AccountAuthenticatorService extends Service {
         @Override
         public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account,
                 String authTokenType, Bundle options) throws NetworkErrorException {
-            Log.i(Constants.TAG, "getAuthToken");
+            Log.e(Constants.TAG, "getAuthToken not implemented for Birthday Adapter!");
             return null;
         }
 
@@ -130,7 +130,7 @@ public class AccountAuthenticatorService extends Service {
          */
         @Override
         public String getAuthTokenLabel(String authTokenType) {
-            Log.i(Constants.TAG, "getAuthTokenLabel");
+            Log.e(Constants.TAG, "getAuthTokenLabel not implemented for Birthday Adapter!");
             return null;
         }
 
@@ -143,7 +143,7 @@ public class AccountAuthenticatorService extends Service {
         @Override
         public Bundle hasFeatures(AccountAuthenticatorResponse response, Account account,
                 String[] features) throws NetworkErrorException {
-            Log.i(Constants.TAG, "hasFeatures: " + features);
+            Log.e(Constants.TAG, "hasFeatures: " + features);
             return null;
         }
 
@@ -157,7 +157,7 @@ public class AccountAuthenticatorService extends Service {
         @Override
         public Bundle updateCredentials(AccountAuthenticatorResponse response, Account account,
                 String authTokenType, Bundle options) {
-            Log.i(Constants.TAG, "updateCredentials");
+            Log.e(Constants.TAG, "updateCredentials not implemented for Birthday Adapter!");
             return null;
         }
     }

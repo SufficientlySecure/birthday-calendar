@@ -32,7 +32,6 @@ import java.util.TimeZone;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
 import org.birthdayadapter.util.PreferencesHelper;
-import org.birthdayadapter.util.Utils;
 
 import android.accounts.Account;
 import android.accounts.OperationCanceledException;
@@ -175,37 +174,87 @@ public class CalendarSyncAdapterService extends Service {
      * reminders!
      * 
      * @param context
-     * @param minutesBefore
+     * @param newMinutes
      */
-    public static void updateAllReminders(Context context, int minutesBefore) {
+    public static void updateAllReminders(Context context, int newMinutes, int oldMinutes) {
         ContentResolver contentResolver = context.getContentResolver();
 
-        Uri remindersUri = getBirthdayAdapterUri(Reminders.CONTENT_URI);
-
-        Cursor cursor = contentResolver.query(remindersUri, new String[] { Reminders._ID,
-                Reminders.MINUTES }, null, null, null);
+        // get cursor for all events
+        Cursor eventCursor = contentResolver.query(getBirthdayAdapterUri(Events.CONTENT_URI),
+                new String[] { Events._ID }, null, null, null);
+        int eventIdColumn = eventCursor.getColumnIndex(Events._ID);
 
         ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
 
-        while (cursor.moveToNext()) {
-            Uri uri = ContentUris.withAppendedId(remindersUri,
-                    cursor.getLong(cursor.getColumnIndex(Reminders._ID)));
+        Uri remindersUri = getBirthdayAdapterUri(Reminders.CONTENT_URI);
 
-            ContentProviderOperation.Builder builder;
-            if (minutesBefore >= 1) {
-                Log.d(Constants.TAG, "Updating reminder minutes to " + minutesBefore + " with uri "
-                        + uri.toString());
+        // go through all events
+        while (eventCursor.moveToNext()) {
+            long eventId = eventCursor.getLong(eventIdColumn);
 
-                builder = ContentProviderOperation.newUpdate(uri);
+            Log.d(Constants.TAG, "Event id: " + eventId);
 
-                builder.withValue(Reminders.MINUTES, minutesBefore);
+            ContentProviderOperation.Builder builder = null;
+
+            // get all reminders for this specific event
+            String[] remindersProjection = new String[] { Reminders._ID, Reminders.MINUTES };
+            String remindersWhere = Reminders.EVENT_ID + "= ?";
+            String[] remindersSelectionArgs = new String[] { String.valueOf(eventId) };
+
+            Cursor remindersCursor = contentResolver.query(remindersUri, remindersProjection,
+                    remindersWhere, remindersSelectionArgs, null);
+            int remindersIdColumn = remindersCursor.getColumnIndex(Reminders._ID);
+            int remindersMinutesColumn = remindersCursor.getColumnIndex(Reminders.MINUTES);
+
+            // if reminder already exist update it, else create new
+            // get only the first reminder
+            if (remindersCursor.moveToFirst()) {
+                // reminder exists...
+                long currentReminderId = remindersCursor.getLong(remindersIdColumn);
+                int currentReminderMinutes = remindersCursor.getInt(remindersMinutesColumn);
+                Uri currentReminderUri = ContentUris
+                        .withAppendedId(remindersUri, currentReminderId);
+
+                if (newMinutes >= 1) {
+                    // if we set minutes >=1 update existing reminder
+
+                    // update only if user has not set any other value than the one from the
+                    // preferences of Birthday Adapter
+                    if (currentReminderMinutes == oldMinutes) {
+                        Log.d(Constants.TAG, "Updating reminder minutes to " + newMinutes
+                                + " with uri " + currentReminderUri.toString());
+                        builder = ContentProviderOperation.newUpdate(currentReminderUri);
+                        builder.withValue(Reminders.MINUTES, newMinutes);
+                    } else {
+                        Log.d(Constants.TAG,
+                                "Nothing done for this reminder, because oldMinutes where differently. This happens when the user sets the reminder for that event manually!");
+                    }
+                } else {
+                    // else delete existing reminder
+
+                    // delete only if user has not set any other value than the one from the
+                    // preferences of Birthday Adapter
+                    if (currentReminderMinutes == oldMinutes) {
+                        Log.d(Constants.TAG, "Delete reminder with uri " + remindersUri.toString());
+                        builder = ContentProviderOperation.newDelete(currentReminderUri);
+                    } else {
+                        Log.d(Constants.TAG,
+                                "Nothing done for this reminder, because oldMinutes where differently. This happens when the user sets the reminder for that event manually!");
+                    }
+                }
             } else {
-                Log.d(Constants.TAG, "Delete reminder with uri " + uri.toString());
+                // create new
 
-                builder = ContentProviderOperation.newDelete(uri);
+                Log.d(Constants.TAG, "Create new reminder with uri " + remindersUri.toString());
+                builder = ContentProviderOperation.newInsert(remindersUri);
+                builder.withValue(Reminders.EVENT_ID, eventId);
+                builder.withValue(Reminders.MINUTES, newMinutes);
             }
 
-            operationList.add(builder.build());
+            // add operation to list, later executed
+            if (builder != null) {
+                operationList.add(builder.build());
+            }
         }
 
         try {
@@ -286,17 +335,22 @@ public class CalendarSyncAdapterService extends Service {
      * @return
      */
     private static ContentProviderOperation insertReminder(Context context, int backRef) {
-        ContentProviderOperation.Builder builder;
+        if (PreferencesHelper.getReminder(context) != -1) {
+            ContentProviderOperation.Builder builder;
 
-        builder = ContentProviderOperation.newInsert(getBirthdayAdapterUri(Reminders.CONTENT_URI));
+            builder = ContentProviderOperation
+                    .newInsert(getBirthdayAdapterUri(Reminders.CONTENT_URI));
 
-        // add reminder to last added event identified by backRef
-        // see http://stackoverflow.com/questions/4655291/semantics-of-withvaluebackreference
-        builder.withValueBackReference(Reminders.EVENT_ID, backRef);
-        builder.withValue(Reminders.MINUTES, PreferencesHelper.getReminder(context));
-        builder.withValue(Reminders.METHOD, Reminders.METHOD_ALERT);
+            // add reminder to last added event identified by backRef
+            // see http://stackoverflow.com/questions/4655291/semantics-of-withvaluebackreference
+            builder.withValueBackReference(Reminders.EVENT_ID, backRef);
+            builder.withValue(Reminders.MINUTES, PreferencesHelper.getReminder(context));
+            builder.withValue(Reminders.METHOD, Reminders.METHOD_ALERT);
 
-        return builder.build();
+            return builder.build();
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -370,8 +424,6 @@ public class CalendarSyncAdapterService extends Service {
     private static void performSync(Context context, Account account, Bundle extras,
             String authority, ContentProviderClient provider, SyncResult syncResult)
             throws OperationCanceledException {
-        // Set Debug level based on preference
-        Utils.setDebugBasedOnPreference(context);
 
         ContentResolver contentResolver = context.getContentResolver();
 
@@ -445,7 +497,11 @@ public class CalendarSyncAdapterService extends Service {
                 Log.d(Constants.TAG, "BackRef is " + backRef);
 
                 operationList.add(insertEvent(context, calendarId, eventDate, title));
-                operationList.add(insertReminder(context, backRef));
+
+                ContentProviderOperation reminder = insertReminder(context, backRef);
+                if (reminder != null) {
+                    operationList.add(reminder);
+                }
                 backRef += 2;
             }
 

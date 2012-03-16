@@ -74,13 +74,4 @@ public class Utils {
         return stream.toString();
     }
 
-    public static void setDebugBasedOnPreference(Context context) {
-        // Set Debug level based on preference
-        if (PreferencesHelper.getDebugEnabled(context)) {
-            Constants.DEBUG = true;
-            Log.d(Constants.TAG, "Debug set to true by preference!");
-        } else {
-            Constants.DEBUG = false;
-        }
-    }
 }

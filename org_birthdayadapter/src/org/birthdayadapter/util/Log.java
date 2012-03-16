@@ -24,9 +24,15 @@ package org.birthdayadapter.util;
  * Wraps Android Logging to enable or disable debug output using Constants
  * 
  */
+
+/**
+ * Wraps Android Logging to enable or disable debug output using Constants
+ * 
+ */
 public final class Log {
 
     public static void v(String tag, String msg) {
+
         if (Constants.DEBUG) {
             android.util.Log.v(tag, msg);
         }
