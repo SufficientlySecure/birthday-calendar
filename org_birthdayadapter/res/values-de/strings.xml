@@ -1,6 +1,5 @@
 <resources>
 
-    <string name="creating">Erstelle Adapter...</string>
     <string name="calendar_display_name">Geburtstage</string>
     <string name="event_title_birthday">Geburtstag von %1$s</string>
     <string name="event_title_anniversary">Jahrestag mit %1$s</string>

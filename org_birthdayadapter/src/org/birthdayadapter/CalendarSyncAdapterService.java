@@ -180,17 +180,20 @@ public class CalendarSyncAdapterService extends Service {
         ContentResolver contentResolver = context.getContentResolver();
 
         // get cursor for all events
-        Cursor eventCursor = contentResolver.query(getBirthdayAdapterUri(Events.CONTENT_URI),
-                new String[] { Events._ID }, null, null, null);
-        int eventIdColumn = eventCursor.getColumnIndex(Events._ID);
+        String[] eventsProjection = new String[] { Events._ID };
+        String eventsWhere = Events.CALENDAR_ID + "= ?";
+        String[] eventsSelectionArgs = new String[] { String.valueOf(getCalendar(context)) };
+        Cursor eventsCursor = contentResolver.query(getBirthdayAdapterUri(Events.CONTENT_URI),
+                eventsProjection, eventsWhere, eventsSelectionArgs, null);
+        int eventIdColumn = eventsCursor.getColumnIndex(Events._ID);
 
         ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
 
         Uri remindersUri = getBirthdayAdapterUri(Reminders.CONTENT_URI);
 
         // go through all events
-        while (eventCursor.moveToNext()) {
-            long eventId = eventCursor.getLong(eventIdColumn);
+        while (eventsCursor.moveToNext()) {
+            long eventId = eventsCursor.getLong(eventIdColumn);
 
             Log.d(Constants.TAG, "Event id: " + eventId);
 
