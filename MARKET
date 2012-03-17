@@ -1,14 +1,21 @@
 Description:
+One of the most requested features for the Android Operating System is now available!
+Birthday Adapter provides birthdays, anniversaries, and other events from your contacts as a real calendar, which is displayed in your standard Android calendar application.
+To my knowledge, this is the first implementation that implements birthdays as a real calendar integrated in the Android calendar.
+All other apps only displays their own lists but have no real integration!
 
+Features:
+- Total integration of birthdays, anniversaries, and other events as a calendar
+- Color picker for this birthday calendar
+- Default reminder can be set in-app
 
-Website and Issue Tracker:
-http://code.google.com/p/birthday-adapter
+Problems?:
+If you have problems with this app, please report them on the following website:
+http://code.google.com/p/birthday-adapter/issues
+Google Play offers no way to answer to comments on apps, so please report problems on the website. There I can solve your issues.
 
 Translations:
 Help translating Birthday Adapter on https://www.transifex.net/projects/p/birthday-adapter
 
 License:
 GPLv3
-
-Permissions:
-• 
