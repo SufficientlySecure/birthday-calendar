@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2010 Sam Steele
  * Copyright (C) 2012 Dominik Schürmann <dominik@dominikschuermann.de>
+ * Copyright (C) 2010 Sam Steele
  *
  * This file is part of Birthday Adapter.
  * 
