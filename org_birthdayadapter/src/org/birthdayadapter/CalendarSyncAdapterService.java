@@ -452,10 +452,10 @@ public class CalendarSyncAdapterService extends Service {
         // see
         // http://stackoverflow.com/questions/8579883/get-birthday-for-each-contact-in-android-application
 
-        // clear table with workaround: "_id != -1"
+        // empty table with trick: "_id != -1"
         int delRows = contentResolver.delete(getBirthdayAdapterUri(Events.CONTENT_URI),
                 "_id != -1", null);
-        Log.i(Constants.TAG, "Birthdays calendar is now cleared, deleted " + delRows + " rows!");
+        Log.i(Constants.TAG, "Birthday calendar is now empty, deleted " + delRows + " rows!");
 
         // collection of birthdays that will later be added to the calendar
         ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
