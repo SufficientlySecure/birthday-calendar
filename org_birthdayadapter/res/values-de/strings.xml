@@ -1,9 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
 <resources>
-
-    <string name="calendar_display_name">Geburtstage</string>
-    <string name="event_title_birthday">Geburtstag von %1$s</string>
-    <string name="event_title_anniversary">Jahrestag mit %1$s</string>
-    <string name="event_title_other">Anderes Ereignis mit %1$s</string>
-    <string name="event_title_custom">%1$s mit %2$s</string>
-
+  <!--AsyncTask progress dialogs-->
+  <string name="creating">Adapter wird erstellt...</string>
+  <string name="removing">Adapter wird entfernt...</string>
+  <string name="synchronizing">Ereignisse werden synchronisiert...</string>
+  <!--Calendar-->
+  <string name="calendar_display_name">Geburtstage</string>
+  <string name="event_title_birthday">Geburtstag von %1$s</string>
+  <string name="event_title_anniversary">Jahrestag mit %1$s</string>
+  <string name="event_title_other">Anderes Ereignis mit %1$s</string>
+  <string name="event_title_custom">%1$s mit %2$s</string>
+  <!--About-->
+  <string name="about_description">Birthday Adapter ist die erste Implementierung, die alle Geburtstage von den Kontakten automatisch in dem Standard-Android-Kalendar darstellt.</string>
+  <string name="about_license">Lizenz: GPL v3+</string>
+  <string name="about_version">Version:</string>
+  <string name="about_libs">Birthday Adapter basiert auf Sam Steeles Tutorial wie man einen SyncAdapter programmiert. Außerdem wird der ColorPicker von Daniel Nilsson und Sergey Margaritov (Apache License 2.0) genutzt. Das Icon basiert auf der Tango Icon Library (Public Domain) und dem Tango Pidgin Icon Theme (GPL v2).</string>
+  <string name="about_developer">Entwickler: Dominik Schürmann</string>
+  <!--Activity names-->
+  <string name="activity_help">Hilfe</string>
+  <string name="activity_about">Über</string>
+  <!--Preferences-->
+  <string name="pref_settings">Einstellungen</string>
+  <string name="pref_enable">Birthday Adapter aktivieren</string>
+  <string name="pref_enable_summary">Zeigt Geburtstage, Jahrestage und andere Ereignisse, die in den Kontakten hinterlegt sind, als eigenen Kalendar im Android-Kalendar an.</string>
+  <string name="pref_color">Farbe</string>
+  <string name="pref_color_summary">Farbe des Geburtstagskalendar</string>
+  <string name="pref_help">Hilfe</string>
+  <string name="pref_about">Über</string>
+  <string name="pref_force_sync">Jetzt synchronisieren!</string>
+  <string name="pref_force_sync_summary">Normalerweise ist das manuelle Synchronisieren nicht nötig, da der Geburtstagskalendar einmal pro Tag automatisch synchronisiert wird.</string>
+  <string name="pref_reminder">Erinnerung</string>
+  <string name="pref_reminder_summary">Definiert die Erinnerung für alle Geburtstage</string>
+  <string-array name="pref_reminder_entries">
+    <item>Erinnerung deaktivieren</item>
+    <item>1 Tag vorher</item>
+    <item>2 Tage vorher</item>
+    <item>3 Tage vorher</item>
+  </string-array>
+  <!--Adapter Screen-->
+  <string name="pref_account_header">Einstellungen</string>
+  <string name="pref_account_settings">Birthday Adapter konfigurieren</string>
+  <!--Color Picker-->
+  <string name="dialog_color_picker">Farbauswahl</string>
+  <string name="press_color_to_apply">Klicke auf die Farbe um zu bestätigen</string>
 </resources>
