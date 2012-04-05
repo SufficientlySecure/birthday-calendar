@@ -133,9 +133,10 @@ public class CalendarSyncAdapterService extends Service {
      * @return
      */
     private static long getCalendar(Context context) {
+        Log.d(Constants.TAG, "getCalendar Method...");
+
         ContentResolver contentResolver = context.getContentResolver();
 
-        Log.d(Constants.TAG, "get calendar!");
         // Find the calendar if we've got one
         Uri calenderUri = getBirthdayAdapterUri(Calendars.CONTENT_URI);
 
@@ -170,11 +171,12 @@ public class CalendarSyncAdapterService extends Service {
     }
 
     /**
-     * Set new minutes to all reminders in birthday calendar. minutesBefore=-1 will delete all
+     * Set new minutes to all reminders in birthday calendar. newMinutes=-1 will delete all
      * reminders!
      * 
      * @param context
      * @param newMinutes
+     * @param oldMinutes
      */
     public static void updateAllReminders(Context context, int newMinutes, int oldMinutes) {
         ContentResolver contentResolver = context.getContentResolver();
@@ -359,7 +361,7 @@ public class CalendarSyncAdapterService extends Service {
     /**
      * The date format in the contact events is not standardized! See
      * http://dmfs.org/carddav/?date_format . This method will try to parse it by first using
-     * yyyy-MM-dd, then yyyyMMdd and then timestamp.
+     * yyyy-MM-dd, --MM-dd (no year specified), yyyyMMdd, and then timestamp.
      * 
      * @param eventDateString
      * @return eventDate as Date object
@@ -367,8 +369,10 @@ public class CalendarSyncAdapterService extends Service {
     private static Date parseEventDateString(String eventDateString) {
         SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         dateFormat1.setTimeZone(TimeZone.getDefault());
-        SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyyMMdd", Locale.US);
+        SimpleDateFormat dateFormat2 = new SimpleDateFormat("--MM-dd", Locale.US);
         dateFormat2.setTimeZone(TimeZone.getDefault());
+        SimpleDateFormat dateFormat3 = new SimpleDateFormat("yyyyMMdd", Locale.US);
+        dateFormat3.setTimeZone(TimeZone.getDefault());
 
         Date eventDate = null;
 
@@ -376,22 +380,30 @@ public class CalendarSyncAdapterService extends Service {
             eventDate = dateFormat1.parse(eventDateString);
 
         } catch (ParseException e) {
-            Log.e(Constants.TAG, "Event Date String " + eventDateString
-                    + " could not be parsed with yyyy-MM-dd! Falling back to yyyyMMdd!");
+            Log.d(Constants.TAG, "Event Date String " + eventDateString
+                    + " could not be parsed with yyyy-MM-dd! Falling back to --MM-dd!");
+
             try {
                 eventDate = dateFormat2.parse(eventDateString);
 
             } catch (ParseException e2) {
-                Log.e(Constants.TAG, "Event Date String " + eventDateString
-                        + " could not be parsed with yyyyMMdd! Falling back to timestamp!");
+                Log.d(Constants.TAG, "Event Date String " + eventDateString
+                        + " could not be parsed with --MM-dd! Falling back to yyyyMMdd!");
                 try {
-                    eventDate = new Date(Long.parseLong(eventDateString));
+                    eventDate = dateFormat3.parse(eventDateString);
 
-                } catch (NumberFormatException e3) {
-                    Log.e(Constants.TAG, "Event Date String " + eventDateString
-                            + " could not be parsed as a timestamp! Parsing failed!");
+                } catch (ParseException e3) {
+                    Log.d(Constants.TAG, "Event Date String " + eventDateString
+                            + " could not be parsed with yyyyMMdd! Falling back to timestamp!");
+                    try {
+                        eventDate = new Date(Long.parseLong(eventDateString));
 
-                    eventDate = null;
+                    } catch (NumberFormatException e4) {
+                        Log.e(Constants.TAG, "Event Date String " + eventDateString
+                                + " could not be parsed as a timestamp! Parsing failed!");
+
+                        eventDate = null;
+                    }
                 }
             }
         }
