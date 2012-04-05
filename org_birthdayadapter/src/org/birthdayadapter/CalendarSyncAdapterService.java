@@ -407,7 +407,7 @@ public class CalendarSyncAdapterService extends Service {
      * 
      * @return
      */
-    private static Cursor getContactsEvents(Context context) {
+    private static Cursor getContactsEvents(ContentResolver contentResolver) {
         Uri uri = ContactsContract.Data.CONTENT_URI;
 
         String[] projection = new String[] { ContactsContract.Contacts.DISPLAY_NAME,
@@ -421,7 +421,7 @@ public class CalendarSyncAdapterService extends Service {
         String[] selectionArgs = new String[] { ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE };
         String sortOrder = null;
 
-        return context.getContentResolver().query(uri, projection, where, selectionArgs, sortOrder);
+        return contentResolver.query(uri, projection, where, selectionArgs, sortOrder);
     }
 
     private static void performSync(Context context, Account account, Bundle extras,
@@ -429,6 +429,11 @@ public class CalendarSyncAdapterService extends Service {
             throws OperationCanceledException {
 
         ContentResolver contentResolver = context.getContentResolver();
+
+        if (contentResolver == null) {
+            Log.e(Constants.TAG, "Unable to get content resolver!");
+            return;
+        }
 
         long calendarId = getCalendar(context);
         if (calendarId == -1) {
@@ -456,7 +461,13 @@ public class CalendarSyncAdapterService extends Service {
         ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
 
         // iterate through all Contact Events
-        Cursor cursor = getContactsEvents(context);
+        Cursor cursor = getContactsEvents(contentResolver);
+
+        if (cursor == null) {
+            Log.e(Constants.TAG, "Unable to get events from contacts! Cursor returns null!");
+            return;
+        }
+
         int eventDateColumn = cursor
                 .getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
         int displayNameColumn = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
