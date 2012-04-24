@@ -8,13 +8,13 @@
   <string name="calendar_display_name">Cumpleaños</string>
   <string name="event_title_birthday">Cumpleaños de %1$s</string>
   <string name="event_title_anniversary">Aniversario con %1$s</string>
-  <string name="event_title_other">Eventro otro con %1$s</string>
+  <string name="event_title_other">Otro evento con %1$s</string>
   <string name="event_title_custom">%1$s con %2$s</string>
   <!--About-->
-  <string name="about_description">Birthday Adapter es la primera ejecución que mostra todos los cumpleaños de su lista de contactos automáticamente en su calendario de Android sin problema.</string>
-  <string name="about_license">Liciencia: GPL v3+</string>
+  <string name="about_description">Birthday Adapter es la primera ejecución que muestra todos los cumpleaños de su lista de contactos automáticamente en su calendario de Android sin problema.</string>
+  <string name="about_license">Licencia: GPL v3+</string>
   <string name="about_version">Versión:</string>
-  <string name="about_libs">Birthday Adapter se basa en una tutoría por Sam Steele sobre cómo se construye un SyncAdapter. Utiliza el ColorPicker por Daniel Nilsson y Sergey Margaritov (Liciencia Apache 2.0). El icono se basa en el Tango Icon Library (dominio público) y la Tango Pidgin Icon Theme (GPL v2).</string>
+  <string name="about_libs">Birthday Adapter se basa en una tutoría de Sam Steele sobre cómo se construye un SyncAdapter. Utiliza el ColorPicker de Daniel Nilsson y Sergey Margaritov (Liciencia Apache 2.0). El icono se basa en el Tango Icon Library (dominio público) y la Tango Pidgin Icon Theme (GPL v2).</string>
   <string name="about_developer">Desarollador: Dominik Schürmann</string>
   <!--Activity names-->
   <string name="activity_help">Ayuda</string>
@@ -22,24 +22,24 @@
   <!--Preferences-->
   <string name="pref_settings">Ajustes</string>
   <string name="pref_enable">Permitir Calendario de Cumpleaños</string>
-  <string name="pref_enable_summary">Mostra cumpleaños, aniversarios, y otros evento se define en sus contactos como una calendario en su Calendario de Android.</string>
+  <string name="pref_enable_summary">Muestra cumpleaños, aniversarios, y otros eventos definidos en sus contactos como un calendario en su Calendario de Android.</string>
   <string name="pref_color">Color</string>
   <string name="pref_color_summary">Color del calendario de cumpleaños</string>
   <string name="pref_help">Ayuda</string>
-  <string name="pref_about">Sobra</string>
-  <string name="pref_force_sync">Sincronize ahora!</string>
-  <string name="pref_force_sync_summary">Normally you don\'t need to do this, because Birthday Adapter synchronizes automatically once a day.</string>
-  <string name="pref_reminder">Recuerdo</string>
-  <string name="pref_reminder_summary">Sets the reminder for all birthdays</string>
+  <string name="pref_about">Sobre</string>
+  <string name="pref_force_sync">Sincronice ahora!</string>
+  <string name="pref_force_sync_summary">Normalmente no necesitas hacer esto, porque Birthday Adapter sincroniza una vez al día automáticamente.</string>
+  <string name="pref_reminder">Recordatorio</string>
+  <string name="pref_reminder_summary">Define el recordatorio para todos los cumpleaños</string>
   <string-array name="pref_reminder_entries">
-    <item>disable reminders</item>
-    <item>1 day before</item>
-    <item>2 day before</item>
-    <item>3 day before</item>
+    <item>deshabilitar recordatorios</item>
+    <item>1 día antes</item>
+    <item>2 días antes</item>
+    <item>3 días antes</item>
   </string-array>
   <!--Adapter Screen-->
   <string name="pref_account_header">Ajustes</string>
-  <string name="pref_account_settings">Configure Birthday Adapter</string>
+  <string name="pref_account_settings">Configurar Birthday Adapter</string>
   <!--Color Picker-->
   <string name="dialog_color_picker">Selector de color</string>
   <string name="press_color_to_apply">Seleccione Color para aplicar</string>
