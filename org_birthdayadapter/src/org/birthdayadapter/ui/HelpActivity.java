@@ -48,9 +48,11 @@ public class HelpActivity extends Activity {
 
         mActivity = this;
 
-        mActionBar = getActionBar();
-        mActionBar.setDisplayHomeAsUpEnabled(true);
-
+        if (android.os.Build.VERSION.SDK_INT >= 11) {
+        	mActionBar = getActionBar();
+        	mActionBar.setDisplayHomeAsUpEnabled(true);
+        }
+        
         mHelpText = (TextView) findViewById(R.id.help_text);
 
         // load html from html file from /res/raw
