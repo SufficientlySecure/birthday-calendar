@@ -14,6 +14,14 @@
  * limitations under the License.
  */
 
+
+/*
+ * This is the Android 4 CalendarContract.java. It has been modified to work on
+ * Android 2.x and 3.x. However, be aware that not all columns are available in
+ * Android versions < 4.0. Some parts have been removed since we don't need
+ * them here.
+ */
+
 package android.provider;
 
 //unused in birthdayadapter
