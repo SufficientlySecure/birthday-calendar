@@ -140,8 +140,11 @@ public class CalendarSyncAdapterService extends Service {
         // Find the calendar if we've got one
         Uri calenderUri = getBirthdayAdapterUri(Calendars.CONTENT_URI);
 
-        Cursor c1 = contentResolver.query(calenderUri, new String[] { BaseColumns._ID }, null,
-                null, null);
+        // be sure to select the birthday calendar only!
+        Cursor c1 = contentResolver.query(calenderUri, new String[] { BaseColumns._ID },
+        	Calendars.ACCOUNT_NAME+"=? AND "+Calendars.ACCOUNT_TYPE+"=?",
+        	new String[]{Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE}, null);
+
         if (c1.moveToNext()) {
             return c1.getLong(0);
         } else {
@@ -158,6 +161,7 @@ public class CalendarSyncAdapterService extends Service {
             builder.withValue(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_READ);
             builder.withValue(Calendars.OWNER_ACCOUNT, Constants.ACCOUNT_NAME);
             builder.withValue(Calendars.SYNC_EVENTS, 1);
+            builder.withValue(Calendars.VISIBLE, 1);
             operationList.add(builder.build());
             try {
                 contentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
@@ -319,10 +323,8 @@ public class CalendarSyncAdapterService extends Service {
 
         builder.withValue(Events.ALL_DAY, 1);
 
-        // Duration: 1 hour
-        // without:
-        // CalendarProvider2 E Repeating event has no duration -- should not happen.
-        builder.withValue(Events.DURATION, "PT1H");
+        // Duration of the birthday is 1 day
+        builder.withValue(Events.DURATION, "P1D");
 
         // repeat rule: every year
         builder.withValue(Events.RRULE, "FREQ=YEARLY");
@@ -466,7 +468,7 @@ public class CalendarSyncAdapterService extends Service {
 
         // empty table with trick: "_id != -1"
         int delRows = contentResolver.delete(getBirthdayAdapterUri(Events.CONTENT_URI),
-                "_id != -1", null);
+                "_id != -1 and " + Events.CALENDAR_ID + " = " + calendarId, null);
         Log.i(Constants.TAG, "Birthday calendar is now empty, deleted " + delRows + " rows!");
 
         // collection of birthdays that will later be added to the calendar
@@ -529,6 +531,19 @@ public class CalendarSyncAdapterService extends Service {
                     operationList.add(reminder);
                 }
                 backRef += 2;
+                
+                /* intermediate commit - otherwise the binder transaction fails on large address books */
+                if (operationList.size() > 200) {
+                    try {
+                        Log.d(Constants.TAG, "Start applying the batch...");
+                        contentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
+                        Log.d(Constants.TAG, "Applying the batch was successful!");
+                        backRef = 0;
+                        operationList.clear();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
 
         }
