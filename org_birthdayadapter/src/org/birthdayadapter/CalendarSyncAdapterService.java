@@ -153,8 +153,11 @@ public class CalendarSyncAdapterService extends Service {
         // Find the calendar if we've got one
         Uri calenderUri = getBirthdayAdapterUri(Calendars.CONTENT_URI);
 
-        Cursor c1 = contentResolver.query(calenderUri, new String[] { BaseColumns._ID }, null,
-                null, null);
+        // be sure to select the birthday calendar only (additionally to appendQueries in
+        // getBirthdayAdapterUri for Android < 4)
+        Cursor c1 = contentResolver.query(calenderUri, new String[] { BaseColumns._ID },
+                Calendars.ACCOUNT_NAME + "=? AND " + Calendars.ACCOUNT_TYPE + "=?", new String[] {
+                        Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE }, null);
 
         if (c1.moveToNext()) {
             return c1.getLong(0);
@@ -466,7 +469,8 @@ public class CalendarSyncAdapterService extends Service {
         // http://stackoverflow.com/questions/8579883/get-birthday-for-each-contact-in-android-application
 
         // empty table with trick: "_id != -1"
-        // remove events only from birthday calendar (necessary on Android 2.x and 3.x)
+        // with additional selection of calendar id, necessary on Android < 4 to remove events only
+        // from birthday calendar
         int delRows = contentResolver.delete(getBirthdayAdapterUri(Events.CONTENT_URI),
                 "_id != -1 AND " + Events.CALENDAR_ID + " = " + calendarId, null);
         Log.i(Constants.TAG, "Birthday calendar is now empty, deleted " + delRows + " rows!");
