@@ -72,12 +72,59 @@
             android:text="@string/about_license"
             android:textAppearance="@android:style/TextAppearance.Small" />
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/about_developer"
-            android:textAppearance="@android:style/TextAppearance.Small" />
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/about_developer"
+                android:textAppearance="@android:style/TextAppearance.Small" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text=" "
+                android:textAppearance="@android:style/TextAppearance.Small" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/about_developer_value"
+                android:textAppearance="@android:style/TextAppearance.Small" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/about_translators"
+                android:textAppearance="@android:style/TextAppearance.Small" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text=" "
+                android:textAppearance="@android:style/TextAppearance.Small" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/about_translators_value"
+                android:textAppearance="@android:style/TextAppearance.Small" />
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"

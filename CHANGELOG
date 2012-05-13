@@ -1,3 +1,6 @@
+1.2
+* Experimental support for Android 2.2, 2.3 and 3 thanks to Marten Gajda
+
 1.1
 * Translations: German, Estonian, Spanish
 - Birthdays without a year are now working

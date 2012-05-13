@@ -99,6 +99,19 @@ public class CalendarSyncAdapterService extends Service {
     }
 
     /**
+     * Builds URI for Birthday Adapter based on account. Ensures that only the calendar of Birthday
+     * Adapter is chosen.
+     * 
+     * @param uri
+     * @return
+     */
+    public static Uri getBirthdayAdapterUri(Uri uri) {
+        return uri.buildUpon().appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
+                .appendQueryParameter(Calendars.ACCOUNT_NAME, Constants.ACCOUNT_NAME)
+                .appendQueryParameter(Calendars.ACCOUNT_TYPE, Constants.ACCOUNT_TYPE).build();
+    }
+
+    /**
      * Updates calendar color
      * 
      * @param context
@@ -140,10 +153,8 @@ public class CalendarSyncAdapterService extends Service {
         // Find the calendar if we've got one
         Uri calenderUri = getBirthdayAdapterUri(Calendars.CONTENT_URI);
 
-        // be sure to select the birthday calendar only!
-        Cursor c1 = contentResolver.query(calenderUri, new String[] { BaseColumns._ID },
-        	Calendars.ACCOUNT_NAME+"=? AND "+Calendars.ACCOUNT_TYPE+"=?",
-        	new String[]{Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE}, null);
+        Cursor c1 = contentResolver.query(calenderUri, new String[] { BaseColumns._ID }, null,
+                null, null);
 
         if (c1.moveToNext()) {
             return c1.getLong(0);
@@ -272,18 +283,6 @@ public class CalendarSyncAdapterService extends Service {
             Log.e(Constants.TAG, "Error: " + e.getMessage());
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Builds URI for Birthday Adapter based on account
-     * 
-     * @param uri
-     * @return
-     */
-    public static Uri getBirthdayAdapterUri(Uri uri) {
-        return uri.buildUpon().appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-                .appendQueryParameter(Calendars.ACCOUNT_NAME, Constants.ACCOUNT_NAME)
-                .appendQueryParameter(Calendars.ACCOUNT_TYPE, Constants.ACCOUNT_TYPE).build();
     }
 
     /**
@@ -467,8 +466,9 @@ public class CalendarSyncAdapterService extends Service {
         // http://stackoverflow.com/questions/8579883/get-birthday-for-each-contact-in-android-application
 
         // empty table with trick: "_id != -1"
+        // remove events only from birthday calendar (necessary on Android 2.x and 3.x)
         int delRows = contentResolver.delete(getBirthdayAdapterUri(Events.CONTENT_URI),
-                "_id != -1 and " + Events.CALENDAR_ID + " = " + calendarId, null);
+                "_id != -1 AND " + Events.CALENDAR_ID + " = " + calendarId, null);
         Log.i(Constants.TAG, "Birthday calendar is now empty, deleted " + delRows + " rows!");
 
         // collection of birthdays that will later be added to the calendar
@@ -531,8 +531,11 @@ public class CalendarSyncAdapterService extends Service {
                     operationList.add(reminder);
                 }
                 backRef += 2;
-                
-                /* intermediate commit - otherwise the binder transaction fails on large address books */
+
+                /*
+                 * intermediate commit - otherwise the binder transaction fails on large address
+                 * books
+                 */
                 if (operationList.size() > 200) {
                     try {
                         Log.d(Constants.TAG, "Start applying the batch...");
