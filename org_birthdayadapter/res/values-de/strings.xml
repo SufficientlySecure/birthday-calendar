@@ -15,7 +15,7 @@
   <string name="about_license">Lizenz: GPL v3+</string>
   <string name="about_version">Version:</string>
   <string name="about_libs">Birthday Adapter basiert auf Sam Steeles Tutorial wie man einen SyncAdapter programmiert. Außerdem wird der ColorPicker von Daniel Nilsson und Sergey Margaritov (Apache License 2.0) genutzt. Das Icon basiert auf der Tango Icon Library (Public Domain) und dem Tango Pidgin Icon Theme (GPL v2).</string>
-  <string name="about_developer">Entwickler: Dominik Schürmann</string>
+  <string name="about_developer">Entwickler:</string>
   <!--Activity names-->
   <string name="activity_help">Hilfe</string>
   <string name="activity_about">Über</string>

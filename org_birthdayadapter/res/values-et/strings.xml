@@ -15,7 +15,7 @@
   <string name="about_license">Litsents: GPL v3+</string>
   <string name="about_version">Versioon:</string>
   <string name="about_libs">Birthday Adapter põhineb Sam Steele õpetusel, kuidas ehitada sünkroniseerimise adapterit. See kasutab ka Daniel Nilsson ja Sergey Margaritov poolt loodud värvivalijat. Ikoonidena kasutatakse Tango ikoonikogu (Public Domain) ja Tango Pidgini ikoniteemat (GPL)</string>
-  <string name="about_developer">Arendaja: Dominik Schürmann</string>
+  <string name="about_developer">Arendaja:</string>
   <!--Activity names-->
   <string name="activity_help">Abiinfo</string>
   <string name="activity_about">Rakendusest</string>
