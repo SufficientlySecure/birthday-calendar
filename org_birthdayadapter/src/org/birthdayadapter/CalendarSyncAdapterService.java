@@ -156,8 +156,8 @@ public class CalendarSyncAdapterService extends Service {
         // be sure to select the birthday calendar only (additionally to appendQueries in
         // getBirthdayAdapterUri for Android < 4)
         Cursor c1 = contentResolver.query(calenderUri, new String[] { BaseColumns._ID },
-                Calendars.ACCOUNT_NAME + "=? AND " + Calendars.ACCOUNT_TYPE + "=?", new String[] {
-                        Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE }, null);
+                Calendars.ACCOUNT_NAME + " = ? AND " + Calendars.ACCOUNT_TYPE + " = ?",
+                new String[] { Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE }, null);
 
         if (c1.moveToNext()) {
             return c1.getLong(0);
