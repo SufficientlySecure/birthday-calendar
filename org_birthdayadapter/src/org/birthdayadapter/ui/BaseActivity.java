@@ -37,10 +37,12 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.SwitchPreference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
@@ -48,7 +50,7 @@ import android.preference.PreferenceActivity;
 public class BaseActivity extends PreferenceActivity {
     private Activity mActivity;
 
-    private CheckBoxPreference mEnabled;
+    private Preference mEnabled;
     private ColorPickerPreference mColor;
     private ListPreference mReminder;
     private Preference mForceSync;
@@ -57,8 +59,30 @@ public class BaseActivity extends PreferenceActivity {
     private Preference mAbout;
 
     /**
+     * Sets display of status to enabled/disabled based on account
+     */
+    private void setStatusBasedOnAccount() {
+        // If account is activated check the preference
+        if (AccountUtils.isAccountActivated(mActivity)) {
+            // use check box for android < 4, otherwise the new SwitchPreference
+            if (Build.VERSION.SDK_INT < 14) {
+                ((CheckBoxPreference) mEnabled).setChecked(true);
+            } else {
+                ((SwitchPreference) mEnabled).setChecked(true);
+            }
+        } else {
+            if (Build.VERSION.SDK_INT < 14) {
+                ((CheckBoxPreference) mEnabled).setChecked(false);
+            } else {
+                ((SwitchPreference) mEnabled).setChecked(false);
+            }
+        }
+    }
+
+    /**
      * Called when the activity is first created.
      */
+    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +94,7 @@ public class BaseActivity extends PreferenceActivity {
         // load preferences from xml
         addPreferencesFromResource(R.xml.base_preferences);
 
-        mEnabled = (CheckBoxPreference) findPreference(getString(R.string.pref_enabled_key));
+        mEnabled = (Preference) findPreference(getString(R.string.pref_enabled_key));
         mColor = (ColorPickerPreference) findPreference(getString(R.string.pref_color_key));
         mReminder = (ListPreference) findPreference(getString(R.string.pref_reminder_key));
         mForceSync = (Preference) findPreference(getString(R.string.pref_force_sync_key));
@@ -86,11 +110,7 @@ public class BaseActivity extends PreferenceActivity {
         }
 
         // If account is activated check the preference
-        if (AccountUtils.isAccountActivated(mActivity)) {
-            mEnabled.setChecked(true);
-        } else {
-            mEnabled.setChecked(false);
-        }
+        setStatusBasedOnAccount();
 
         mEnabled.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
             @Override
@@ -265,7 +285,7 @@ public class BaseActivity extends PreferenceActivity {
 
             mDialog.dismiss();
             if (result) {
-                mEnabled.setChecked(true);
+                setStatusBasedOnAccount();
             }
         }
     }
@@ -308,7 +328,7 @@ public class BaseActivity extends PreferenceActivity {
 
             mDialog.dismiss();
             if (result) {
-                mEnabled.setChecked(false);
+                setStatusBasedOnAccount();
             }
         }
     }
