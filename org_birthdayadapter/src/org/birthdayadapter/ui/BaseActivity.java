@@ -217,7 +217,11 @@ public class BaseActivity extends PreferenceActivity {
 
             // force sync now!
             Account account = new Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE);
-            ContentResolver.requestSync(account, Constants.CONTENT_AUTHORITY, new Bundle());
+
+            Bundle extras = new Bundle();
+            // force resync!
+            extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+            ContentResolver.requestSync(account, Constants.CONTENT_AUTHORITY, extras);
 
             // Wait while asynchronous android background operations finish
             try {

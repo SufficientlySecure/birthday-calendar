@@ -497,73 +497,80 @@ public class CalendarSyncAdapterService extends Service {
             return;
         }
 
-        int eventDateColumn = cursor
-                .getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
-        int displayNameColumn = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
-        int eventTypeColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE);
-        int eventCustomLabelColumn = cursor
-                .getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL);
+        try {
+            int eventDateColumn = cursor
+                    .getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
+            int displayNameColumn = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+            int eventTypeColumn = cursor
+                    .getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE);
+            int eventCustomLabelColumn = cursor
+                    .getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL);
 
-        int backRef = 0;
-        while (cursor.moveToNext()) {
-            String eventDateString = cursor.getString(eventDateColumn);
-            String displayName = cursor.getString(displayNameColumn);
-            int eventType = cursor.getInt(eventTypeColumn);
+            int backRef = 0;
+            while (cursor.moveToNext()) {
+                String eventDateString = cursor.getString(eventDateColumn);
+                String displayName = cursor.getString(displayNameColumn);
+                int eventType = cursor.getInt(eventTypeColumn);
 
-            Date eventDate = parseEventDateString(eventDateString);
+                Date eventDate = parseEventDateString(eventDateString);
 
-            String title = null;
-            switch (eventType) {
-            case ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM:
-                String eventCustomLabel = cursor.getString(eventCustomLabelColumn);
+                String title = null;
+                switch (eventType) {
+                case ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM:
+                    String eventCustomLabel = cursor.getString(eventCustomLabelColumn);
 
-                title = String.format(context.getString(R.string.event_title_custom),
-                        eventCustomLabel, displayName);
-                break;
-            case ContactsContract.CommonDataKinds.Event.TYPE_ANNIVERSARY:
-                title = String.format(context.getString(R.string.event_title_anniversary),
-                        displayName);
-                break;
-            case ContactsContract.CommonDataKinds.Event.TYPE_OTHER:
-                title = String.format(context.getString(R.string.event_title_other), displayName);
-                break;
-            case ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY:
-                title = String
-                        .format(context.getString(R.string.event_title_birthday), displayName);
-                break;
-            default:
-                title = String.format(context.getString(R.string.event_title_other), displayName);
-                break;
-            }
-
-            if (eventDate != null) {
-                Log.d(Constants.TAG, "BackRef is " + backRef);
-
-                operationList.add(insertEvent(context, calendarId, eventDate, title));
-
-                ContentProviderOperation reminder = insertReminder(context, backRef);
-                if (reminder != null) {
-                    operationList.add(reminder);
+                    title = String.format(context.getString(R.string.event_title_custom),
+                            eventCustomLabel, displayName);
+                    break;
+                case ContactsContract.CommonDataKinds.Event.TYPE_ANNIVERSARY:
+                    title = String.format(context.getString(R.string.event_title_anniversary),
+                            displayName);
+                    break;
+                case ContactsContract.CommonDataKinds.Event.TYPE_OTHER:
+                    title = String.format(context.getString(R.string.event_title_other),
+                            displayName);
+                    break;
+                case ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY:
+                    title = String.format(context.getString(R.string.event_title_birthday),
+                            displayName);
+                    break;
+                default:
+                    title = String.format(context.getString(R.string.event_title_other),
+                            displayName);
+                    break;
                 }
-                backRef += 2;
 
-                /*
-                 * intermediate commit - otherwise the binder transaction fails on large address
-                 * books
-                 */
-                if (operationList.size() > 200) {
-                    try {
-                        Log.d(Constants.TAG, "Start applying the batch...");
-                        contentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
-                        Log.d(Constants.TAG, "Applying the batch was successful!");
-                        backRef = 0;
-                        operationList.clear();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                if (eventDate != null) {
+                    Log.d(Constants.TAG, "BackRef is " + backRef);
+
+                    operationList.add(insertEvent(context, calendarId, eventDate, title));
+
+                    ContentProviderOperation reminder = insertReminder(context, backRef);
+                    if (reminder != null) {
+                        operationList.add(reminder);
+                    }
+                    backRef += 2;
+
+                    /*
+                     * intermediate commit - otherwise the binder transaction fails on large address
+                     * books
+                     */
+                    if (operationList.size() > 200) {
+                        try {
+                            Log.d(Constants.TAG, "Start applying the batch...");
+                            contentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
+                            Log.d(Constants.TAG, "Applying the batch was successful!");
+                            backRef = 0;
+                            operationList.clear();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-            }
 
+            }
+        } finally {
+            cursor.close();
         }
 
         /* Create events */
