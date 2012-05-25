@@ -41,6 +41,7 @@
 
     <string-array name="pref_reminder_entries">
         <item>disable reminders</item>
+        <item>At the day of event</item>
         <item>1 day before</item>
         <item>2 day before</item>
         <item>3 day before</item>

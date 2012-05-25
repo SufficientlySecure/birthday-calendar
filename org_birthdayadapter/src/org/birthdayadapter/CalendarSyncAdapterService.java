@@ -212,72 +212,83 @@ public class CalendarSyncAdapterService extends Service {
         Uri remindersUri = getBirthdayAdapterUri(Reminders.CONTENT_URI);
 
         // go through all events
-        while (eventsCursor.moveToNext()) {
-            long eventId = eventsCursor.getLong(eventIdColumn);
+        try {
+            while (eventsCursor.moveToNext()) {
+                long eventId = eventsCursor.getLong(eventIdColumn);
 
-            Log.d(Constants.TAG, "Event id: " + eventId);
+                Log.d(Constants.TAG, "Event id: " + eventId);
 
-            ContentProviderOperation.Builder builder = null;
+                ContentProviderOperation.Builder builder = null;
 
-            // get all reminders for this specific event
-            String[] remindersProjection = new String[] { Reminders._ID, Reminders.MINUTES };
-            String remindersWhere = Reminders.EVENT_ID + "= ?";
-            String[] remindersSelectionArgs = new String[] { String.valueOf(eventId) };
+                // get all reminders for this specific event
+                String[] remindersProjection = new String[] { Reminders._ID, Reminders.MINUTES };
+                String remindersWhere = Reminders.EVENT_ID + "= ?";
+                String[] remindersSelectionArgs = new String[] { String.valueOf(eventId) };
 
-            Cursor remindersCursor = contentResolver.query(remindersUri, remindersProjection,
-                    remindersWhere, remindersSelectionArgs, null);
-            int remindersIdColumn = remindersCursor.getColumnIndex(Reminders._ID);
-            int remindersMinutesColumn = remindersCursor.getColumnIndex(Reminders.MINUTES);
+                Cursor remindersCursor = contentResolver.query(remindersUri, remindersProjection,
+                        remindersWhere, remindersSelectionArgs, null);
+                int remindersIdColumn = remindersCursor.getColumnIndex(Reminders._ID);
+                int remindersMinutesColumn = remindersCursor.getColumnIndex(Reminders.MINUTES);
 
-            // if reminder already exist update it, else create new
-            // get only the first reminder
-            if (remindersCursor.moveToFirst()) {
-                // reminder exists...
-                long currentReminderId = remindersCursor.getLong(remindersIdColumn);
-                int currentReminderMinutes = remindersCursor.getInt(remindersMinutesColumn);
-                Uri currentReminderUri = ContentUris
-                        .withAppendedId(remindersUri, currentReminderId);
+                // if reminder already exist update it, else create new
+                // get only the first reminder
+                try {
+                    if (remindersCursor.moveToFirst()) {
+                        // reminder exists...
+                        long currentReminderId = remindersCursor.getLong(remindersIdColumn);
+                        int currentReminderMinutes = remindersCursor.getInt(remindersMinutesColumn);
+                        Uri currentReminderUri = ContentUris.withAppendedId(remindersUri,
+                                currentReminderId);
 
-                if (newMinutes >= 1) {
-                    // if we set minutes >=1 update existing reminder
+                        if (newMinutes > -1000) {
+                            // if we set minutes > -1000 update existing reminder
 
-                    // update only if user has not set any other value than the one from the
-                    // preferences of Birthday Adapter
-                    if (currentReminderMinutes == oldMinutes) {
-                        Log.d(Constants.TAG, "Updating reminder minutes to " + newMinutes
-                                + " with uri " + currentReminderUri.toString());
-                        builder = ContentProviderOperation.newUpdate(currentReminderUri);
+                            // update only if user has not set any other value than the one from the
+                            // preferences of Birthday Adapter
+                            if (currentReminderMinutes == oldMinutes) {
+                                Log.d(Constants.TAG, "Updating reminder minutes to " + newMinutes
+                                        + " with uri " + currentReminderUri.toString());
+                                builder = ContentProviderOperation.newUpdate(currentReminderUri);
+                                builder.withValue(Reminders.MINUTES, newMinutes);
+                            } else {
+                                Log.d(Constants.TAG,
+                                        "Nothing done for this reminder, because oldMinutes where differently. This happens when the user sets the reminder for that event manually!");
+                            }
+                        } else {
+                            // else delete all existing reminder
+
+                            // delete only if user has not set any other value than the one from the
+                            // preferences of Birthday Adapter
+                            if (currentReminderMinutes == oldMinutes) {
+                                Log.d(Constants.TAG,
+                                        "Delete reminder with uri " + remindersUri.toString());
+                                builder = ContentProviderOperation.newDelete(currentReminderUri);
+                            } else {
+                                Log.d(Constants.TAG,
+                                        "Nothing done for this reminder, because oldMinutes where differently. This happens when the user sets the reminder for that event manually!");
+                            }
+                        }
+                    } else {
+                        // create new reminders
+
+                        Log.d(Constants.TAG,
+                                "Create new reminder with uri " + remindersUri.toString());
+                        builder = ContentProviderOperation.newInsert(remindersUri);
+                        builder.withValue(Reminders.EVENT_ID, eventId);
                         builder.withValue(Reminders.MINUTES, newMinutes);
-                    } else {
-                        Log.d(Constants.TAG,
-                                "Nothing done for this reminder, because oldMinutes where differently. This happens when the user sets the reminder for that event manually!");
                     }
-                } else {
-                    // else delete existing reminder
 
-                    // delete only if user has not set any other value than the one from the
-                    // preferences of Birthday Adapter
-                    if (currentReminderMinutes == oldMinutes) {
-                        Log.d(Constants.TAG, "Delete reminder with uri " + remindersUri.toString());
-                        builder = ContentProviderOperation.newDelete(currentReminderUri);
-                    } else {
-                        Log.d(Constants.TAG,
-                                "Nothing done for this reminder, because oldMinutes where differently. This happens when the user sets the reminder for that event manually!");
+                    // add operation to list, later executed
+                    if (builder != null) {
+                        operationList.add(builder.build());
                     }
+
+                } finally {
+                    remindersCursor.close();
                 }
-            } else {
-                // create new
-
-                Log.d(Constants.TAG, "Create new reminder with uri " + remindersUri.toString());
-                builder = ContentProviderOperation.newInsert(remindersUri);
-                builder.withValue(Reminders.EVENT_ID, eventId);
-                builder.withValue(Reminders.MINUTES, newMinutes);
             }
-
-            // add operation to list, later executed
-            if (builder != null) {
-                operationList.add(builder.build());
-            }
+        } finally {
+            eventsCursor.close();
         }
 
         try {
