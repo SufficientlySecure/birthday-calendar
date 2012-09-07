@@ -36,7 +36,7 @@
   <string name="pref_reminder_summary">Definiert die Erinnerung für alle Geburtstage</string>
   <string-array name="pref_reminder_entries">
     <item>Erinnerung deaktivieren</item>
-    <item>Am Tag des Ereignis</item>
+    <item>Am Ereignistag</item>
     <item>1 Tag vorher</item>
     <item>2 Tage vorher</item>
     <item>3 Tage vorher</item>
