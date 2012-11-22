@@ -8,11 +8,10 @@ For more information visit http://code.google.com/p/birthday-adapter
 
 # Build using Ant
 
-1. Add a file ``local.properties`` in the folder ``Birthday Adapter`` folder with the following lines:
+1. Add a file ``local.properties`` in the folder ``Birthday-Adapter`` folder with the following lines:
 ``sdk.dir=/opt/android-sdk``. Alter these lines to your locations of the Android SDK!
 2. Execute ```ant clear```
-3. Execute ```ant debug -Dtemplates=other```
-4. To disable Flattr and PayPal (not allowed in Google Play), execute ```ant debug -Dtemplates=google```
+3. Execute ```ant debug```
 
 # Contribute
 
