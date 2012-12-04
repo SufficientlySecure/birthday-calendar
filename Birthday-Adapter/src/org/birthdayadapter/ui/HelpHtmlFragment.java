@@ -31,39 +31,26 @@ import net.nightwhistler.htmlspanner.HtmlSpanner;
 import net.nightwhistler.htmlspanner.JellyBeanSpanFixTextView;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class HelpHtmlFragment extends Fragment {
-    private Activity mActivity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.help_fragment, container, false);
 
         // load html from html file from /res/raw
         InputStream inputStreamText = this.getActivity().getResources().openRawResource(R.raw.help);
 
-        mActivity = getActivity();
-
-        LinearLayout layout = new LinearLayout(mActivity);
-
-        JellyBeanSpanFixTextView text = new JellyBeanSpanFixTextView(mActivity);
-
-        // padding
-        int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, mActivity
-                .getResources().getDisplayMetrics());
-        text.setPadding(padding, padding, padding, 0);
-
-        layout.addView(text);
+        JellyBeanSpanFixTextView text = (JellyBeanSpanFixTextView) view
+                .findViewById(R.id.help_text);
 
         // load html into textview
         HtmlSpanner htmlSpanner = new HtmlSpanner();
@@ -80,6 +67,6 @@ public class HelpHtmlFragment extends Fragment {
         // no flickering when clicking textview for Android < 4
         text.setTextColor(getResources().getColor(android.R.color.secondary_text_dark_nodisable));
 
-        return layout;
+        return view;
     }
 }

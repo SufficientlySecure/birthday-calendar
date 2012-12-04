@@ -85,7 +85,7 @@ public class BaseActivity extends FragmentActivity {
                     HelpHtmlFragment.class, null);
 
             mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_about)),
-                    HelpAboutFragment.class, null);
+                    AboutFragment.class, null);
         }
     }
 

@@ -44,21 +44,21 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-public class HelpAboutFragment extends Fragment {
+public class AboutFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.help_fragment_about, container, false);
+        View view = inflater.inflate(R.layout.about_fragment, container, false);
 
         // load html from html file from /res/raw
         InputStream inputStreamText = this.getActivity().getResources()
                 .openRawResource(R.raw.about);
 
-        TextView versionText = (TextView) view.findViewById(R.id.help_about_version);
+        TextView versionText = (TextView) view.findViewById(R.id.about_version);
         versionText.setText(getString(R.string.about_version) + " " + getVersion());
 
         JellyBeanSpanFixTextView aboutTextView = (JellyBeanSpanFixTextView) view
-                .findViewById(R.id.help_about_text);
+                .findViewById(R.id.about_text);
 
         // load html into textview
         HtmlSpanner htmlSpanner = new HtmlSpanner();
