@@ -477,10 +477,10 @@ public class CalendarSyncAdapterService extends Service {
 
             if (hasYear) {
                 title = String.format(context.getString(R.string.event_title_custom_with_age),
-                        eventCustomLabel, displayName, age);
+                        displayName, eventCustomLabel, age);
             } else {
                 title = String.format(context.getString(R.string.event_title_custom_without_age),
-                        eventCustomLabel, displayName);
+                        displayName, eventCustomLabel);
             }
             break;
         case ContactsContract.CommonDataKinds.Event.TYPE_ANNIVERSARY:
