@@ -1,9 +1,6 @@
 <resources>
 
     <string name="app_name" translate="false">Birthday Adapter</string>
-    <string name="about_url" translate="false">http://code.google.com/p/birthday-adapter</string>
-    <string name="about_developer_value" translate="false">Dominik Schürmann, Marten Gajda</string>
-    <string name="about_translators_value" translate="false">see https://www.transifex.net/projects/p/birthday-adapter/</string>
     <string name="pref_first_run_key" translate="false">firstRun</string>
 
     <item name="pref_first_run_def" format="boolean" type="string">true</item>

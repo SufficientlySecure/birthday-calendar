@@ -20,12 +20,16 @@
 
 package org.birthdayadapter.util;
 
+import org.birthdayadapter.R;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerFuture;
 import android.app.AlarmManager;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 public class AccountUtils {
@@ -88,5 +92,147 @@ public class AccountUtils {
         }
 
         return false;
+    }
+
+    public static class SyncTask extends AsyncTask<Void, Void, Void> {
+        Context mContext;
+        ProgressDialog mDialog;
+
+        public SyncTask(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            mDialog = ProgressDialog.show(mContext, "", mContext.getString(R.string.synchronizing),
+                    true, false);
+            mDialog.setCancelable(false);
+        }
+
+        @Override
+        protected Void doInBackground(Void... unused) {
+
+            // force sync now!
+            Account account = new Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE);
+
+            Bundle extras = new Bundle();
+            // force resync!
+            extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+            ContentResolver.requestSync(account, Constants.CONTENT_AUTHORITY, extras);
+
+            // Wait while asynchronous android background operations finish
+            try {
+                Thread.sleep(5000);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // return nothing as type is Void
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            super.onPostExecute(unused);
+
+            mDialog.dismiss();
+        }
+    }
+
+    abstract public static class CreateTask extends AsyncTask<String, Void, Boolean> {
+        protected Context mContext;
+        protected ProgressDialog mDialog;
+
+        protected CreateTask(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            mDialog = ProgressDialog.show(mContext, "", mContext.getString(R.string.creating),
+                    true, false);
+            mDialog.setCancelable(false);
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+
+            // add account
+            Bundle result = AccountUtils.addAccount(mContext);
+
+            // Wait while asynchronous android background operations finish
+            try {
+                Thread.sleep(5000);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            if (result != null) {
+                if (result.containsKey(AccountManager.KEY_ACCOUNT_NAME)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+
+        // @Override
+        // protected void onPostExecute(Boolean result) {
+        // super.onPostExecute(result);
+        //
+        // mDialog.dismiss();
+        // if (result) {
+        // setStatusBasedOnAccount();
+        // }
+        // }
+    }
+
+    abstract public static class RemoveTask extends AsyncTask<String, Void, Boolean> {
+        protected Context mContext;
+        protected ProgressDialog mDialog;
+
+        protected RemoveTask(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            mDialog = ProgressDialog.show(mContext, "", mContext.getString(R.string.removing),
+                    true, false);
+            mDialog.setCancelable(false);
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            // remove account
+            boolean result = AccountUtils.removeAccount(mContext);
+
+            // Wait while asynchronous android background operations finish
+            try {
+                Thread.sleep(5000);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return result;
+        }
+
+        // @Override
+        // protected void onPostExecute(Boolean result) {
+        // super.onPostExecute(result);
+        //
+        // mDialog.dismiss();
+        // if (result) {
+        // setStatusBasedOnAccount();
+        // }
+        // }
     }
 }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory></PreferenceCategory><PreferenceCategory android:title="@string/pref_general" >
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            android:defaultValue="@integer/pref_color_def"
+            android:key="@string/pref_color_key"
+            android:persistent="true"
+            android:summary="@string/pref_color_summary"
+            android:title="@string/pref_color" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_reminders" >
+        <ListPreference
+            android:defaultValue="@string/pref_reminder_def"
+            android:entries="@array/pref_reminder_entries"
+            android:entryValues="@array/pref_reminder_entries_values"
+            android:key="@string/pref_reminder_key"
+            android:summary="@string/pref_reminder_summary"
+            android:title="@string/pref_reminder" >
+        </ListPreference>
+    </PreferenceCategory>
+    
+
+</PreferenceScreen>

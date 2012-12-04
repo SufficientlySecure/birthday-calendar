@@ -63,7 +63,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.HelpActivity"
+            android:name="org.birthdayadapter.ui.HelpActivity2"
             android:label="@string/activity_help" />
         <activity
             android:name=".ui.AboutActivity"

@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- This version is for Android 4 to and contains the new SwitchPreference instead of a CheckBox -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <Preference
-        android:persistent="false"
-        android:selectable="false"
-        android:summary="@string/pref_enable_summary"
-        android:title="@string/pref_description" />
-
-    <SwitchPreference
-        android:icon="@android:drawable/ic_menu_today"
-        android:key="@string/pref_enabled_key"
-        android:persistent="false"
-        android:title="@string/pref_enable_switch" />
-
     <PreferenceCategory android:title="@string/pref_settings" >
+        <CheckBoxPreference
+            android:key="@string/pref_enabled_key"
+            android:persistent="false"
+            android:summary="@string/pref_enable_summary"
+            android:title="@string/pref_enable" />
+
+        <Preference
+            android:key="@string/pref_force_sync_key"
+            android:persistent="false"
+            android:summary="@string/pref_force_sync_summary"
+            android:title="@string/pref_force_sync" />
+
         <net.margaritov.preference.colorpicker.ColorPickerPreference
             android:defaultValue="@integer/pref_color_def"
             android:key="@string/pref_color_key"
@@ -30,22 +29,12 @@
             android:summary="@string/pref_reminder_summary"
             android:title="@string/pref_reminder" >
         </ListPreference>
-
-        <Preference
-            android:key="@string/pref_force_sync_key"
-            android:persistent="false"
-            android:summary="@string/pref_force_sync_summary"
-            android:title="@string/pref_force_sync" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_help" >
         <Preference
             android:key="@string/pref_help_key"
             android:persistent="false"
             android:title="@string/pref_help" />
-        <Preference
-            android:key="@string/pref_about_key"
-            android:persistent="false"
-            android:title="@string/pref_about" />
     </PreferenceCategory>
 
 </PreferenceScreen>
