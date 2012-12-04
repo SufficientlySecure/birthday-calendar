@@ -35,6 +35,7 @@ import org.birthdayadapter.util.PreferencesHelper;
 
 import android.accounts.Account;
 import android.accounts.OperationCanceledException;
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
@@ -57,6 +58,7 @@ import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
 import android.provider.ContactsContract;
 
+@SuppressLint("NewApi")
 public class CalendarSyncAdapterService extends Service {
     private static SyncAdapterImpl sSyncAdapter = null;
 
@@ -165,7 +167,7 @@ public class CalendarSyncAdapterService extends Service {
             ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
 
             ContentProviderOperation.Builder builder = ContentProviderOperation
-                    .newInsert(getBirthdayAdapterUri(Calendars.CONTENT_URI));
+                    .newInsert(calenderUri);
             builder.withValue(Calendars.ACCOUNT_NAME, Constants.ACCOUNT_NAME);
             builder.withValue(Calendars.ACCOUNT_TYPE, Constants.ACCOUNT_TYPE);
             builder.withValue(Calendars.NAME, CALENDAR_COLUMN_NAME);
@@ -305,18 +307,20 @@ public class CalendarSyncAdapterService extends Service {
      * @param context
      * @param calendarId
      * @param eventDate
+     * @param year
+     *            The event is inserted for this year
      * @param title
      * @return
      */
     private static ContentProviderOperation insertEvent(Context context, long calendarId,
-            Date eventDate, String title) {
+            Date eventDate, int year, String title) {
         ContentProviderOperation.Builder builder;
 
         builder = ContentProviderOperation.newInsert(getBirthdayAdapterUri(Events.CONTENT_URI));
-        // builder.withValue(Events._SYNC_ID, Long.valueOf(newEventId));
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(eventDate);
+        cal.set(Calendar.YEAR, year);
         cal.set(Calendar.HOUR, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
@@ -332,15 +336,9 @@ public class CalendarSyncAdapterService extends Service {
 
         builder.withValue(Events.CALENDAR_ID, calendarId);
         builder.withValue(Events.DTSTART, dtstart);
+        builder.withValue(Events.DTEND, dtstart);
         builder.withValue(Events.TITLE, title);
-
         builder.withValue(Events.ALL_DAY, 1);
-
-        // Duration of the birthday is 1 day
-        builder.withValue(Events.DURATION, "P1D");
-
-        // repeat rule: every year
-        builder.withValue(Events.RRULE, "FREQ=YEARLY");
 
         builder.withValue(Events.STATUS, Events.STATUS_CONFIRMED);
         return builder.build();
@@ -401,6 +399,13 @@ public class CalendarSyncAdapterService extends Service {
             try {
                 eventDate = dateFormat2.parse(eventDateString);
 
+                // Becacuse no year is defined in address book, set year to 1700
+                // When year < 1800 it is not displayed in brackets
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(eventDate);
+                cal.set(Calendar.YEAR, 1700);
+                eventDate = cal.getTime();
+
             } catch (ParseException e2) {
                 Log.d(Constants.TAG, "Event Date String " + eventDateString
                         + " could not be parsed with --MM-dd! Falling back to yyyyMMdd!");
@@ -451,6 +456,75 @@ public class CalendarSyncAdapterService extends Service {
         return contentResolver.query(uri, projection, where, selectionArgs, sortOrder);
     }
 
+    /**
+     * Generates title for events
+     * 
+     * @param context
+     * @param eventType
+     * @param cursor
+     * @param eventCustomLabelColumn
+     * @param hasYear
+     * @param displayName
+     * @param age
+     * @return
+     */
+    private static String generateTitle(Context context, int eventType, Cursor cursor,
+            int eventCustomLabelColumn, boolean hasYear, String displayName, int age) {
+        String title = null;
+        switch (eventType) {
+        case ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM:
+            String eventCustomLabel = cursor.getString(eventCustomLabelColumn);
+
+            if (hasYear) {
+                title = String.format(context.getString(R.string.event_title_custom_with_age),
+                        eventCustomLabel, displayName, age);
+            } else {
+                title = String.format(context.getString(R.string.event_title_custom_without_age),
+                        eventCustomLabel, displayName);
+            }
+            break;
+        case ContactsContract.CommonDataKinds.Event.TYPE_ANNIVERSARY:
+            if (hasYear) {
+                title = String.format(context.getString(R.string.event_title_anniversary_with_age),
+                        displayName, age);
+            } else {
+                title = String.format(
+                        context.getString(R.string.event_title_anniversary_without_age),
+                        displayName);
+            }
+            break;
+        case ContactsContract.CommonDataKinds.Event.TYPE_OTHER:
+            if (hasYear) {
+                title = String.format(context.getString(R.string.event_title_other_with_age),
+                        displayName, age);
+            } else {
+                title = String.format(context.getString(R.string.event_title_other_without_age),
+                        displayName);
+            }
+            break;
+        case ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY:
+            if (hasYear) {
+                title = String.format(context.getString(R.string.event_title_birthday_with_age),
+                        displayName, age);
+            } else {
+                title = String.format(context.getString(R.string.event_title_birthday_without_age),
+                        displayName);
+            }
+            break;
+        default:
+            if (hasYear) {
+                title = String.format(context.getString(R.string.event_title_other_with_age),
+                        displayName, age);
+            } else {
+                title = String.format(context.getString(R.string.event_title_other_without_age),
+                        displayName);
+            }
+            break;
+        }
+
+        return title;
+    }
+
     private static void performSync(Context context, Account account, Bundle extras,
             String authority, ContentProviderClient provider, SyncResult syncResult)
             throws OperationCanceledException {
@@ -471,7 +545,7 @@ public class CalendarSyncAdapterService extends Service {
         // Okay, now this works as follows:
         // 1. Clear events table for this account completely
         // 2. Get birthdays from contacts
-        // 3. Create event for each birthday
+        // 3. Create events for each birthday
 
         // Known limitations:
         // - I am not doing any updating, just delete everything and then recreate everything
@@ -514,60 +588,105 @@ public class CalendarSyncAdapterService extends Service {
 
                 Date eventDate = parseEventDateString(eventDateString);
 
-                String title = null;
-                switch (eventType) {
-                case ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM:
-                    String eventCustomLabel = cursor.getString(eventCustomLabelColumn);
-
-                    title = String.format(context.getString(R.string.event_title_custom),
-                            eventCustomLabel, displayName);
-                    break;
-                case ContactsContract.CommonDataKinds.Event.TYPE_ANNIVERSARY:
-                    title = String.format(context.getString(R.string.event_title_anniversary),
-                            displayName);
-                    break;
-                case ContactsContract.CommonDataKinds.Event.TYPE_OTHER:
-                    title = String.format(context.getString(R.string.event_title_other),
-                            displayName);
-                    break;
-                case ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY:
-                    title = String.format(context.getString(R.string.event_title_birthday),
-                            displayName);
-                    break;
-                default:
-                    title = String.format(context.getString(R.string.event_title_other),
-                            displayName);
-                    break;
-                }
-
+                // only proceed when parsing didn't fail
                 if (eventDate != null) {
-                    Log.d(Constants.TAG, "BackRef is " + backRef);
 
-                    operationList.add(insertEvent(context, calendarId, eventDate, title));
-
-                    ContentProviderOperation reminder = insertReminder(context, backRef);
-                    if (reminder != null) {
-                        operationList.add(reminder);
-                    }
-                    backRef += 2;
+                    // get year from event
+                    Calendar eventCal = Calendar.getInstance();
+                    eventCal.setTime(eventDate);
+                    int eventYear = eventCal.get(Calendar.YEAR);
+                    Log.d(Constants.TAG, "Event Year: " + eventYear);
 
                     /*
-                     * intermediate commit - otherwise the binder transaction fails on large address
-                     * books
+                     * If year < 1800 don't show brackets with age behind name.
+                     * 
+                     * When no year is defined parseEventDateString() sets it to 1700
+                     * 
+                     * Also iCloud for example sets year to 1604 if no year is defined in their user
+                     * interface
                      */
-                    if (operationList.size() > 200) {
-                        try {
-                            Log.d(Constants.TAG, "Start applying the batch...");
-                            contentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
-                            Log.d(Constants.TAG, "Applying the batch was successful!");
-                            backRef = 0;
-                            operationList.clear();
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                    boolean hasYear = false;
+                    if (eventYear >= 1800) {
+                        hasYear = true;
+                    }
+
+                    // get current year
+                    Calendar currCal = Calendar.getInstance();
+                    int currYear = currCal.get(Calendar.YEAR);
+
+                    /*
+                     * Insert events for the past 5 years and the next 10 years.
+                     * 
+                     * Events are not inserted as recurring events to have different titles with
+                     * birthday age in it.
+                     */
+                    int startYear = currYear - 5;
+                    int endYear = currYear + 10;
+
+                    for (int iteratedYear = startYear; iteratedYear <= endYear; iteratedYear++) {
+                        Log.d(Constants.TAG, "iteratedYear: " + iteratedYear);
+
+                        // calculate age
+                        int age = iteratedYear - eventYear;
+
+                        // if age < 0, disable display of age again!
+                        if (age < 0) {
+                            hasYear = false;
+                        }
+
+                        String title = generateTitle(context, eventType, cursor,
+                                eventCustomLabelColumn, hasYear, displayName, age);
+                        Log.d(Constants.TAG, "Title: " + title);
+
+                        Log.d(Constants.TAG, "BackRef is " + backRef);
+
+                        /*
+                         * Checking for age is currently disabled:
+                         * 
+                         * - Some people don't use "Without year" in Contacts birthdays. This would
+                         * result in missing birthdays
+                         * 
+                         * - Contact Editor Pro currently does not have a "without year" checkbox
+                         * 
+                         * Instead, if age < 0 it is just not displayed at the moment!
+                         */
+                        // if (hasYear) {
+                        // // don't insert birthdays for years where the person wasn't born :)
+                        // if (age >= 0) {
+                        // operationList.add(insertEvent(context, calendarId, eventDate,
+                        // iteratedYear, title));
+                        // } else {
+                        // Log.d(Constants.TAG, "Event not inserted as age < 0!");
+                        // }
+                        // } else {
+                        operationList.add(insertEvent(context, calendarId, eventDate, iteratedYear,
+                                title));
+                        // }
+
+                        ContentProviderOperation reminder = insertReminder(context, backRef);
+                        if (reminder != null) {
+                            operationList.add(reminder);
+                        }
+                        backRef += 2;
+
+                        /*
+                         * intermediate commit - otherwise the binder transaction fails on large
+                         * operationList
+                         */
+                        if (operationList.size() > 200) {
+                            try {
+                                Log.d(Constants.TAG, "Start applying the batch...");
+                                contentResolver.applyBatch(CalendarContract.AUTHORITY,
+                                        operationList);
+                                Log.d(Constants.TAG, "Applying the batch was successful!");
+                                backRef = 0;
+                                operationList.clear();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
-
             }
         } finally {
             cursor.close();
