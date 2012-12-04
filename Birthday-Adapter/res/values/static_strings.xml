@@ -11,7 +11,7 @@
     <string name="pref_color_key" translate="false">color</string>
 
     <!-- The first two hex numbers are for opacity and must be FF -->
-    <integer name="pref_color_def">0xFFA70000</integer>
+    <color name="pref_color_def">#FFA70000</color>
 
     <string name="pref_force_sync_key" translate="false">forceSync</string>
 

@@ -3,7 +3,7 @@
 
     <PreferenceCategory></PreferenceCategory><PreferenceCategory android:title="@string/pref_general" >
         <net.margaritov.preference.colorpicker.ColorPickerPreference
-            android:defaultValue="@integer/pref_color_def"
+            android:defaultValue="@color/pref_color_def"
             android:key="@string/pref_color_key"
             android:persistent="true"
             android:summary="@string/pref_color_summary"

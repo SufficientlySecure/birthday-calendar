@@ -48,7 +48,7 @@ public class PreferencesHelper {
         SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
                 Context.MODE_PRIVATE);
         int result = prefs.getInt(context.getString(R.string.pref_color_key),
-                res.getInteger(R.integer.pref_color_def));
+                res.getInteger(R.color.pref_color_def));
 
         return result;
     }
