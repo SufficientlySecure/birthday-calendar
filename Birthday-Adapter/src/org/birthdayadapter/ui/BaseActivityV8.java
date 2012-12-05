@@ -22,15 +22,14 @@ package org.birthdayadapter.ui;
 
 import net.margaritov.preference.colorpicker.ColorPickerPreference;
 
+import org.birthdayadapter.AccountHelper;
 import org.birthdayadapter.CalendarSyncAdapterService;
 import org.birthdayadapter.R;
-import org.birthdayadapter.util.AccountUtils;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
 import org.birthdayadapter.util.PreferencesHelper;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -46,6 +45,7 @@ import android.preference.PreferenceActivity;
 @SuppressWarnings("deprecation")
 public class BaseActivityV8 extends PreferenceActivity {
     private Activity mActivity;
+    private AccountHelper mAccountHelper;
 
     private CheckBoxPreference mEnabled;
     private Preference mForceSync;
@@ -56,51 +56,11 @@ public class BaseActivityV8 extends PreferenceActivity {
     private Preference mHelp;
 
     /**
-     * Extend class from AccountUtils to change behavior in onPostExecute
-     */
-    private class createTask extends AccountUtils.CreateTask {
-
-        createTask(Context context) {
-            super(context);
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            super.onPostExecute(result);
-
-            mDialog.dismiss();
-            if (result) {
-                setStatusBasedOnAccount();
-            }
-        }
-    }
-
-    /**
-     * Extend class from AccountUtils to change behavior in onPostExecute
-     */
-    private class removeTask extends AccountUtils.RemoveTask {
-
-        removeTask(Context context) {
-            super(context);
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            super.onPostExecute(result);
-
-            mDialog.dismiss();
-            if (result) {
-                setStatusBasedOnAccount();
-            }
-        }
-    }
-
-    /**
      * Sets display of status to enabled/disabled based on account
      */
     private void setStatusBasedOnAccount() {
         // If account is activated check the preference
-        if (AccountUtils.isAccountActivated(mActivity)) {
+        if (mAccountHelper.isAccountActivated()) {
             mEnabled.setChecked(true);
         } else {
             mEnabled.setChecked(false);
@@ -110,6 +70,8 @@ public class BaseActivityV8 extends PreferenceActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         mActivity = this;
+
+        mAccountHelper = new AccountHelper(mActivity);
 
         // save prefs here
         getPreferenceManager().setSharedPreferencesName(Constants.PREFS_NAME);
@@ -124,11 +86,11 @@ public class BaseActivityV8 extends PreferenceActivity {
 
         mHelp = (Preference) findPreference(getString(R.string.pref_help_key));
 
-        // if this is the first run enable birthday adapter!
+        // if this is the first run, enable and sync birthday adapter!
         if (PreferencesHelper.getFirstRun(mActivity)) {
-            createTask t = new createTask(mActivity);
-            t.execute();
             PreferencesHelper.setFirstRun(mActivity, false);
+
+            mAccountHelper.addAccountAndSync();
         }
 
         // If account is activated check the preference
@@ -141,13 +103,9 @@ public class BaseActivityV8 extends PreferenceActivity {
                     Boolean boolVal = (Boolean) newValue;
 
                     if (boolVal) {
-                        // create adapter
-                        createTask t = new createTask(mActivity);
-                        t.execute();
+                        mAccountHelper.addAccountAndSync();
                     } else {
-                        // remove adapter
-                        removeTask t = new removeTask(mActivity);
-                        t.execute();
+                        mAccountHelper.removeAccount();
                     }
                 }
                 return true;
@@ -157,9 +115,7 @@ public class BaseActivityV8 extends PreferenceActivity {
         mForceSync.setOnPreferenceClickListener(new OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                // force sync
-                AccountUtils.SyncTask t = new AccountUtils.SyncTask(mActivity);
-                t.execute();
+                mAccountHelper.manualSync();
 
                 return false;
             }

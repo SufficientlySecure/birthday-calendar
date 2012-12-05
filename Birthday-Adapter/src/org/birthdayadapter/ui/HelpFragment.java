@@ -40,7 +40,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-public class HelpHtmlFragment extends Fragment {
+public class HelpFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

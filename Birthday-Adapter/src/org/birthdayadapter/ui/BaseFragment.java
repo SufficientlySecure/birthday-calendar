@@ -20,15 +20,15 @@
 
 package org.birthdayadapter.ui;
 
+import org.birthdayadapter.AccountHelper;
 import org.birthdayadapter.R;
-import org.birthdayadapter.util.AccountUtils;
 import org.birthdayadapter.util.Constants;
+import org.birthdayadapter.util.Log;
 import org.birthdayadapter.util.PreferencesHelper;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -40,49 +40,10 @@ import android.preference.Preference.OnPreferenceClickListener;
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class BaseFragment extends PreferenceFragment {
     private Activity mActivity;
+    private AccountHelper mAccountHelper;
 
     private SwitchPreference mEnabled;
     private Preference mForceSync;
-
-    /**
-     * Extend class from AccountUtils to change behavior in onPostExecute
-     */
-    private class createTask extends AccountUtils.CreateTask {
-
-        createTask(Context context) {
-            super(context);
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            super.onPostExecute(result);
-
-            mDialog.dismiss();
-            if (result) {
-                setStatusBasedOnAccount();
-            }
-        }
-    }
-
-    /**
-     * Extend class from AccountUtils to change behavior in onPostExecute
-     */
-    private class removeTask extends AccountUtils.RemoveTask {
-
-        removeTask(Context context) {
-            super(context);
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            super.onPostExecute(result);
-
-            mDialog.dismiss();
-            if (result) {
-                setStatusBasedOnAccount();
-            }
-        }
-    }
 
     /**
      * Sets display of status to enabled/disabled based on account
@@ -90,7 +51,7 @@ public class BaseFragment extends PreferenceFragment {
     @SuppressLint("NewApi")
     private void setStatusBasedOnAccount() {
         // If account is activated check the preference
-        if (AccountUtils.isAccountActivated(mActivity)) {
+        if (mAccountHelper.isAccountActivated()) {
             mEnabled.setChecked(true);
         } else {
             mEnabled.setChecked(false);
@@ -101,7 +62,11 @@ public class BaseFragment extends PreferenceFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        Log.d(Constants.TAG, "onActivityCreated!");
+
         mActivity = getActivity();
+
+        mAccountHelper = new AccountHelper(mActivity);
 
         // save prefs here
         getPreferenceManager().setSharedPreferencesName(Constants.PREFS_NAME);
@@ -111,11 +76,11 @@ public class BaseFragment extends PreferenceFragment {
         mEnabled = (SwitchPreference) findPreference(getString(R.string.pref_enabled_key));
         mForceSync = (Preference) findPreference(getString(R.string.pref_force_sync_key));
 
-        // if this is the first run enable birthday adapter!
+        // if this is the first run, enable and sync birthday adapter!
         if (PreferencesHelper.getFirstRun(mActivity)) {
-            createTask t = new createTask(mActivity);
-            t.execute();
             PreferencesHelper.setFirstRun(mActivity, false);
+
+            mAccountHelper.addAccountAndSync();
         }
 
         // If account is activated check the preference
@@ -128,13 +93,9 @@ public class BaseFragment extends PreferenceFragment {
                     Boolean boolVal = (Boolean) newValue;
 
                     if (boolVal) {
-                        // create adapter
-                        createTask t = new createTask(mActivity);
-                        t.execute();
+                        mAccountHelper.addAccountAndSync();
                     } else {
-                        // remove adapter
-                        removeTask t = new removeTask(mActivity);
-                        t.execute();
+                        mAccountHelper.removeAccount();
                     }
                 }
                 return true;
@@ -144,9 +105,7 @@ public class BaseFragment extends PreferenceFragment {
         mForceSync.setOnPreferenceClickListener(new OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                // force sync
-                AccountUtils.SyncTask t = new AccountUtils.SyncTask(mActivity);
-                t.execute();
+                mAccountHelper.manualSync();
 
                 return false;
             }

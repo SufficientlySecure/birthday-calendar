@@ -62,7 +62,7 @@ import android.provider.ContactsContract;
 public class CalendarSyncAdapterService extends Service {
     private static SyncAdapterImpl sSyncAdapter = null;
 
-    private static String CALENDAR_COLUMN_NAME = "birthdays";
+    private static String CALENDAR_COLUMN_NAME = "birthday_adapter";
 
     public CalendarSyncAdapterService() {
         super();

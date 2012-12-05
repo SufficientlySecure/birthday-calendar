@@ -21,75 +21,48 @@
 
 package org.birthdayadapter.ui;
 
-import org.birthdayadapter.R;
-import org.birthdayadapter.util.AccountUtils;
+import org.birthdayadapter.AccountHelper;
+import org.birthdayadapter.AccountHelper.AfterManualSync;
+import org.birthdayadapter.util.Constants;
+import org.birthdayadapter.util.Log;
 
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
-public class CreateAccountActivity extends AccountAuthenticatorActivity {
-    // Button mCreateButton;
+public class CreateAccountActivity extends AccountAuthenticatorActivity implements AfterManualSync {
 
-    /** Called when the activity is first created. */
+    /**
+     * Called when the activity is first created.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // create directly, there are no options
-        CreateTask t = new CreateTask(this);
-        t.execute();
+        AccountHelper accHelper = new AccountHelper(this, this);
+        Bundle result = accHelper.addAccount();
+
+        if (result != null) {
+            if (result.containsKey(AccountManager.KEY_ACCOUNT_NAME)) {
+                // Force a sync! Even when background sync is disabled, this will force one sync!
+                accHelper.manualSync();
+
+                setAccountAuthenticatorResult(result);
+            } else {
+                Log.e(Constants.TAG,
+                        "Account was not added! result did not contain KEY_ACCOUNT_NAME!");
+            }
+        } else {
+            Log.e(Constants.TAG, "Account was not added! result was null!");
+        }
     }
 
-    public class CreateTask extends AsyncTask<String, Void, Boolean> {
-        Context mContext;
-        ProgressDialog mDialog;
-
-        CreateTask(Context context) {
-            mContext = context;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            mDialog = ProgressDialog.show(mContext, "", mContext.getString(R.string.creating),
-                    true, false);
-            mDialog.setCancelable(false);
-        }
-
-        @Override
-        protected Boolean doInBackground(String... params) {
-            // add account
-            Bundle result = AccountUtils.addAccount(mContext);
-
-            // Wait while asynchronous android background operations finish
-            try {
-                Thread.sleep(5000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            if (result != null) {
-                if (result.containsKey(AccountManager.KEY_ACCOUNT_NAME)) {
-                    setAccountAuthenticatorResult(result);
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            mDialog.dismiss();
-
-            finish();
-        }
+    /**
+     * This callback is defined in AccountHelper and executed after manual sync is completed
+     */
+    @Override
+    public void afterManualSync() {
+        // stop activity after sync is completed
+        finish();
     }
 }

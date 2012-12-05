@@ -20,6 +20,8 @@
 
 package org.birthdayadapter.util;
 
+import android.accounts.Account;
+
 public class Constants {
     public static final boolean DEBUG = true;
 
@@ -28,6 +30,9 @@ public class Constants {
     public static final String ACCOUNT_NAME = "Birthday Adapter";
     public static final String ACCOUNT_TYPE = "org.birthdayadapter.account";
     public static final String CONTENT_AUTHORITY = "com.android.calendar";
+
+    public static final Account ACCOUNT = new Account(Constants.ACCOUNT_NAME,
+            Constants.ACCOUNT_TYPE);
 
     public static final String PREFS_NAME = "preferences";
 }

@@ -68,6 +68,7 @@ public class BaseActivity extends FragmentActivity {
             mViewPager.setId(R.id.pager);
 
             setContentView(mViewPager);
+
             ActionBar actionBar = getActionBar();
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
             actionBar.setDisplayShowTitleEnabled(true);
@@ -82,7 +83,7 @@ public class BaseActivity extends FragmentActivity {
                     PreferencesFragment.class, null);
 
             mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_help)),
-                    HelpHtmlFragment.class, null);
+                    HelpFragment.class, null);
 
             mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_about)),
                     AboutFragment.class, null);
