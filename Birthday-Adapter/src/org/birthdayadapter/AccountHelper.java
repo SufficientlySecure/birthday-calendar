@@ -49,8 +49,10 @@ public class AccountHelper {
         mAfterManualSync = afterManualSync;
     }
 
-    // implement this callback to execute after mStatusObserver finds out that manual sync is
-    // finished
+    /*
+     * implement this callback to execute after mStatusObserver finds out that manual sync is
+     * finished
+     */
     public interface AfterManualSync {
         public void afterManualSync();
     }
@@ -79,7 +81,9 @@ public class AccountHelper {
                         }
 
                         // execute callback after manual sync
-                        mAfterManualSync.afterManualSync();
+                        if (mAfterManualSync != null) {
+                            mAfterManualSync.afterManualSync();
+                        }
                     }
                 }
             });
