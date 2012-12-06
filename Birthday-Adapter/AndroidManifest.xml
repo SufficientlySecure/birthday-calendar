@@ -57,6 +57,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.BaseActivityV8"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
             android:name=".ui.CreateAccountActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.Transparent" >
