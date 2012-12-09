@@ -35,4 +35,7 @@ public class Constants {
             Constants.ACCOUNT_TYPE);
 
     public static final String PREFS_NAME = "preferences";
+    
+    public static final int DISABLED_REMINDER = -99999;
+
 }

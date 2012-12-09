@@ -44,7 +44,6 @@ public class PreferencesHelper {
 
     public static int getColor(Context context) {
         Resources res = context.getResources();
-
         SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
                 Context.MODE_PRIVATE);
         int result = prefs.getInt(context.getString(R.string.pref_color_key),
@@ -56,12 +55,9 @@ public class PreferencesHelper {
     public static int getReminder(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
                 Context.MODE_PRIVATE);
-
-        String reminder = prefs.getString(context.getString(R.string.pref_reminder_key),
+        String reminderStr = prefs.getString(context.getString(R.string.pref_reminder_key),
                 context.getString(R.string.pref_reminder_def));
 
-        Log.d(Constants.TAG, "getReminder: " + reminder);
-
-        return Integer.parseInt(reminder);
+        return Integer.valueOf(reminderStr);
     }
 }

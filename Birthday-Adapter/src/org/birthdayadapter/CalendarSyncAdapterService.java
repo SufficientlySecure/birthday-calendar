@@ -242,8 +242,8 @@ public class CalendarSyncAdapterService extends Service {
                         Uri currentReminderUri = ContentUris.withAppendedId(remindersUri,
                                 currentReminderId);
 
-                        if (newMinutes > -1000) {
-                            // if we set minutes > -1000 update existing reminder
+                        if (newMinutes != Constants.DISABLED_REMINDER) {
+                            // update existing reminder
 
                             // update only if user has not set any other value than the one from the
                             // preferences of Birthday Adapter
@@ -257,7 +257,8 @@ public class CalendarSyncAdapterService extends Service {
                                         "Nothing done for this reminder, because oldMinutes where differently. This happens when the user sets the reminder for that event manually!");
                             }
                         } else {
-                            // else delete all existing reminder
+                            // else delete all existing reminder (newMinutes are null when user
+                            // disables reminder
 
                             // delete only if user has not set any other value than the one from the
                             // preferences of Birthday Adapter
@@ -353,7 +354,7 @@ public class CalendarSyncAdapterService extends Service {
      * @return
      */
     private static ContentProviderOperation insertReminder(Context context, int backRef) {
-        if (PreferencesHelper.getReminder(context) != -1) {
+        if (PreferencesHelper.getReminder(context) != Constants.DISABLED_REMINDER) {
             ContentProviderOperation.Builder builder;
 
             builder = ContentProviderOperation

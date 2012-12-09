@@ -16,15 +16,15 @@
     <string name="pref_force_sync_key" translate="false">forceSync</string>
 
     <string-array name="pref_reminder_entries_values" translate="false">
-        <item>-1000</item> <!-- disabled -->
+        <item>-99999</item> <!-- disabled -->
         <item>-540</item> <!-- at 9:00 of the birthday -->
         <item>900</item> <!-- 15 hours before 24:00 when birthday starts -> 9:00 the day before -->
         <item>2340</item> <!-- + 24*60 -->
         <item>3780</item> <!-- + 24*60 -->
     </string-array>
 
+    <string name="pref_reminder_def" translate="false">-99999</string>
     <string name="pref_reminder_key" translate="false">reminder</string>
-    <string name="pref_reminder_def" translate="false">-540</string>
     <string name="pref_enable_debug_key" translate="false">debugEnabled</string>
 
     <item name="pref_enable_debug_def" format="boolean" type="string">false</item>
