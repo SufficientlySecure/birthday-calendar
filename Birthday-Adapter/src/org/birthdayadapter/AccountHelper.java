@@ -57,12 +57,15 @@ public class AccountHelper {
         public void afterManualSync();
     }
 
-    private SyncStatusObserver mStatusObserver = new SyncStatusObserver() {
+    private class MySyncStatusObserver implements SyncStatusObserver {
+        private boolean mySyncStarted = false;
+
         @Override
         public void onStatusChanged(int which) {
             mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    Log.d(Constants.TAG, "SyncStatusObserver, onStatusChanged");
                     Account account = new Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE);
 
                     boolean syncActive = ContentResolver.isSyncActive(account,
@@ -70,7 +73,18 @@ public class AccountHelper {
                     boolean syncPending = ContentResolver.isSyncPending(account,
                             Constants.CONTENT_AUTHORITY);
 
-                    if (!syncActive && !syncPending) {
+                    String mySyncStartedStr = mySyncStarted ? "true" : "false";
+                    Log.d(Constants.TAG, "mySyncStarted: " + mySyncStartedStr);
+                    String syncActiveStr = syncActive ? "true" : "false";
+                    Log.d(Constants.TAG, "syncActive: " + syncActiveStr);
+                    String syncPendingStr = syncPending ? "true" : "false";
+                    Log.d(Constants.TAG, "syncPending: " + syncPendingStr);
+
+                    if (syncActive) {
+                        // the first time the mStatusObserver sees my account actively synced, set
+                        // mySyncStarted to true
+                        mySyncStarted = true;
+                    } else if (!syncActive && !syncPending && mySyncStarted) {
                         if (mSyncProgressDialog != null) {
                             mSyncProgressDialog.dismiss();
                         }
@@ -175,15 +189,15 @@ public class AccountHelper {
                 mActivity.getString(R.string.synchronizing), true, false);
         mSyncProgressDialog.setCancelable(false);
 
-        // register observer to know when sync is finished
-        mSyncObserveHandle = ContentResolver.addStatusChangeListener(
-                ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE
-                        | ContentResolver.SYNC_OBSERVER_TYPE_PENDING, mStatusObserver);
-
         // force resync!
         Bundle extras = new Bundle();
         extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         ContentResolver.requestSync(Constants.ACCOUNT, Constants.CONTENT_AUTHORITY, extras);
+
+        // register observer to know when sync is finished
+        mSyncObserveHandle = ContentResolver.addStatusChangeListener(
+                ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE
+                        | ContentResolver.SYNC_OBSERVER_TYPE_PENDING, new MySyncStatusObserver());
     }
 
     /**
