@@ -69,6 +69,8 @@ public class BaseActivityV8 extends PreferenceActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         mActivity = this;
 
         mAccountHelper = new AccountHelper(mActivity);

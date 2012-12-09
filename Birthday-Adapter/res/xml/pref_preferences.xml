@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <PreferenceCategory></PreferenceCategory><PreferenceCategory android:title="@string/pref_general" >
+    <PreferenceCategory>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_general" >
         <net.margaritov.preference.colorpicker.ColorPickerPreference
             android:defaultValue="@color/pref_color_def"
             android:key="@string/pref_color_key"
@@ -19,6 +21,5 @@
             android:title="@string/pref_reminder" >
         </ListPreference>
     </PreferenceCategory>
-    
 
 </PreferenceScreen>

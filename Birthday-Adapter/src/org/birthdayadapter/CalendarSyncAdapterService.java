@@ -428,6 +428,9 @@ public class CalendarSyncAdapterService extends Service {
             }
         }
 
+        Log.d(Constants.TAG,
+                "Event Date String " + eventDateString + " was parsed as " + eventDate.toString());
+
         return eventDate;
     }
 
@@ -632,6 +635,8 @@ public class CalendarSyncAdapterService extends Service {
                         // if age < 0, disable display of age again!
                         if (age < 0) {
                             hasYear = false;
+                        } else {
+                            hasYear = true;
                         }
 
                         String title = generateTitle(context, eventType, cursor,

@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <PreferenceCategory android:title="@string/pref_settings" >
-        <CheckBoxPreference
-            android:key="@string/pref_enabled_key"
-            android:persistent="false"
-            android:summary="@string/pref_enable_summary"
-            android:title="@string/pref_enable" />
+    <CheckBoxPreference
+        android:key="@string/pref_enabled_key"
+        android:persistent="false"
+        android:summary="@string/pref_enable_summary"
+        android:title="@string/pref_enable" />
 
-        <Preference
-            android:key="@string/pref_force_sync_key"
-            android:persistent="false"
-            android:summary="@string/pref_force_sync_summary"
-            android:title="@string/pref_force_sync" />
+    <Preference
+        android:key="@string/pref_force_sync_key"
+        android:persistent="false"
+        android:summary="@string/pref_force_sync_summary"
+        android:title="@string/pref_force_sync" />
 
+    <PreferenceCategory android:title="@string/pref_general" >
         <net.margaritov.preference.colorpicker.ColorPickerPreference
             android:defaultValue="@color/pref_color_def"
             android:key="@string/pref_color_key"
             android:persistent="true"
             android:summary="@string/pref_color_summary"
             android:title="@string/pref_color" />
-
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_reminders" >
         <ListPreference
             android:defaultValue="@string/pref_reminder_def"
             android:entries="@array/pref_reminder_entries"
