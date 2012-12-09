@@ -56,12 +56,9 @@ public class BaseActivity extends FragmentActivity {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             // Load Activity for Android < 3
             Intent oldActivity = new Intent(mActivity, BaseActivityV8.class);
-            oldActivity.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION
-                    | Intent.FLAG_ACTIVITY_TASK_ON_HOME | Intent.FLAG_ACTIVITY_NEW_TASK);
+            oldActivity.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(oldActivity);
-
-            // TODO: working?
-            overridePendingTransition(0, 0);
+            finish();
         } else {
             // Load new design with tabs
             mViewPager = new ViewPager(this);

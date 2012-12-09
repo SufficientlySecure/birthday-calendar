@@ -31,6 +31,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
+ * This is a "native" version of the FragmentStatePagerAdapter from Androids support lib. 
+ * It uses Fragemnts from API 14 instead of Fragments from the support lib.
+ */
+/**
  * Implementation of {@link android.support.v4.view.PagerAdapter} that uses a {@link Fragment} to
  * manage each page. This class also handles saving and restoring of fragment's state.
  * 

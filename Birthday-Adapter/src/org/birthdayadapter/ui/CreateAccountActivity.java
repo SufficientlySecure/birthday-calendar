@@ -51,9 +51,11 @@ public class CreateAccountActivity extends AccountAuthenticatorActivity implemen
             } else {
                 Log.e(Constants.TAG,
                         "Account was not added! result did not contain KEY_ACCOUNT_NAME!");
+                finish();
             }
         } else {
             Log.e(Constants.TAG, "Account was not added! result was null!");
+            finish();
         }
     }
 
