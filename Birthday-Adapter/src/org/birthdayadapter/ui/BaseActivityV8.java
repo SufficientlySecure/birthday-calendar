@@ -27,9 +27,11 @@ import org.birthdayadapter.CalendarSyncAdapterService;
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
+import org.birthdayadapter.util.MySyncStatusObserver;
 import org.birthdayadapter.util.PreferencesHelper;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -38,6 +40,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
+import android.view.Window;
 
 /**
  * This BaseActivity uses the old Layout for Android < 3
@@ -55,6 +58,8 @@ public class BaseActivityV8 extends PreferenceActivity {
 
     private Preference mHelp;
 
+    Object mSyncObserveHandle;
+
     /**
      * Sets display of status to enabled/disabled based on account
      */
@@ -69,6 +74,8 @@ public class BaseActivityV8 extends PreferenceActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
         super.onCreate(savedInstanceState);
 
         mActivity = this;
@@ -79,6 +86,12 @@ public class BaseActivityV8 extends PreferenceActivity {
         getPreferenceManager().setSharedPreferencesName(Constants.PREFS_NAME);
         // load preferences from xml
         addPreferencesFromResource(R.xml.base_preferences_v8);
+
+        // register observer to know when sync is running
+        mSyncObserveHandle = ContentResolver.addStatusChangeListener(
+                ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE
+                        | ContentResolver.SYNC_OBSERVER_TYPE_PENDING, new MySyncStatusObserver(
+                        mActivity));
 
         mEnabled = (CheckBoxPreference) findPreference(getString(R.string.pref_enabled_key));
         mForceSync = (Preference) findPreference(getString(R.string.pref_force_sync_key));
@@ -165,4 +178,15 @@ public class BaseActivityV8 extends PreferenceActivity {
         });
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // remove observer
+        if (mSyncObserveHandle != null) {
+            ContentResolver.removeStatusChangeListener(mSyncObserveHandle);
+        }
+    }
+
 }

@@ -23,7 +23,7 @@ package org.birthdayadapter.util;
 import android.accounts.Account;
 
 public class Constants {
-    public static final boolean DEBUG = true;
+    public static boolean DEBUG = true;
 
     public static final String TAG = "Birthday Adapter";
 

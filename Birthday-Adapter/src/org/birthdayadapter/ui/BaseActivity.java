@@ -23,6 +23,7 @@ package org.birthdayadapter.ui;
 import java.util.ArrayList;
 
 import org.birthdayadapter.R;
+import org.birthdayadapter.util.MySyncStatusObserver;
 import org.birthdayadapter.util.FragmentStatePagerAdapterV14;
 
 import android.annotation.TargetApi;
@@ -30,12 +31,14 @@ import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.view.Window;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class BaseActivity extends FragmentActivity {
@@ -43,6 +46,8 @@ public class BaseActivity extends FragmentActivity {
 
     private ViewPager mViewPager;
     private TabsAdapter mTabsAdapter;
+
+    Object mSyncObserveHandle;
 
     /**
      * Called when the activity is first created.
@@ -60,6 +65,8 @@ public class BaseActivity extends FragmentActivity {
             startActivity(oldActivity);
             finish();
         } else {
+            requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
             // Load new design with tabs
             mViewPager = new ViewPager(this);
             mViewPager.setId(R.id.pager);
@@ -84,6 +91,22 @@ public class BaseActivity extends FragmentActivity {
 
             mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_about)),
                     AboutFragment.class, null);
+
+            // register observer to know when sync is running
+            mSyncObserveHandle = ContentResolver.addStatusChangeListener(
+                    ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE
+                            | ContentResolver.SYNC_OBSERVER_TYPE_PENDING, new MySyncStatusObserver(
+                            mActivity));
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // remove observer
+        if (mSyncObserveHandle != null) {
+            ContentResolver.removeStatusChangeListener(mSyncObserveHandle);
         }
     }
 

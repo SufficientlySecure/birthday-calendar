@@ -22,7 +22,6 @@
 package org.birthdayadapter.ui;
 
 import org.birthdayadapter.AccountHelper;
-import org.birthdayadapter.AccountHelper.AfterManualSync;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
 
@@ -30,7 +29,7 @@ import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
 import android.os.Bundle;
 
-public class CreateAccountActivity extends AccountAuthenticatorActivity implements AfterManualSync {
+public class CreateAccountActivity extends AccountAuthenticatorActivity {
 
     /**
      * Called when the activity is first created.
@@ -39,7 +38,7 @@ public class CreateAccountActivity extends AccountAuthenticatorActivity implemen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        AccountHelper accHelper = new AccountHelper(this, this);
+        AccountHelper accHelper = new AccountHelper(this);
         Bundle result = accHelper.addAccount();
 
         if (result != null) {
@@ -51,20 +50,12 @@ public class CreateAccountActivity extends AccountAuthenticatorActivity implemen
             } else {
                 Log.e(Constants.TAG,
                         "Account was not added! result did not contain KEY_ACCOUNT_NAME!");
-                finish();
             }
         } else {
             Log.e(Constants.TAG, "Account was not added! result was null!");
-            finish();
         }
-    }
 
-    /**
-     * This callback is defined in AccountHelper and executed after manual sync is completed
-     */
-    @Override
-    public void afterManualSync() {
-        // stop activity after sync is completed
         finish();
     }
+
 }

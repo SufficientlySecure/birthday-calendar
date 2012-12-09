@@ -20,7 +20,6 @@
 
 package org.birthdayadapter;
 
-import org.birthdayadapter.R;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
 
@@ -29,80 +28,16 @@ import android.accounts.AccountManager;
 import android.accounts.AccountManagerFuture;
 import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
-import android.content.SyncStatusObserver;
 import android.os.Bundle;
 
 public class AccountHelper {
     Activity mActivity;
-    ProgressDialog mSyncProgressDialog;
     Object mSyncObserveHandle;
-    AfterManualSync mAfterManualSync;
 
     public AccountHelper(Activity activity) {
         mActivity = activity;
     }
-
-    public AccountHelper(Activity activity, AfterManualSync afterManualSync) {
-        mActivity = activity;
-        mAfterManualSync = afterManualSync;
-    }
-
-    /*
-     * implement this callback to execute after mStatusObserver finds out that manual sync is
-     * finished
-     */
-    public interface AfterManualSync {
-        public void afterManualSync();
-    }
-
-    private class MySyncStatusObserver implements SyncStatusObserver {
-        private boolean mySyncStarted = false;
-
-        @Override
-        public void onStatusChanged(int which) {
-            mActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Log.d(Constants.TAG, "SyncStatusObserver, onStatusChanged");
-                    Account account = new Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE);
-
-                    boolean syncActive = ContentResolver.isSyncActive(account,
-                            Constants.CONTENT_AUTHORITY);
-                    boolean syncPending = ContentResolver.isSyncPending(account,
-                            Constants.CONTENT_AUTHORITY);
-
-                    String mySyncStartedStr = mySyncStarted ? "true" : "false";
-                    Log.d(Constants.TAG, "mySyncStarted: " + mySyncStartedStr);
-                    String syncActiveStr = syncActive ? "true" : "false";
-                    Log.d(Constants.TAG, "syncActive: " + syncActiveStr);
-                    String syncPendingStr = syncPending ? "true" : "false";
-                    Log.d(Constants.TAG, "syncPending: " + syncPendingStr);
-
-                    if (syncActive) {
-                        // the first time the mStatusObserver sees my account actively synced, set
-                        // mySyncStarted to true
-                        mySyncStarted = true;
-                    } else if (!syncActive && !syncPending && mySyncStarted) {
-                        if (mSyncProgressDialog != null) {
-                            mSyncProgressDialog.dismiss();
-                        }
-
-                        // remove own handler from listening
-                        if (mSyncObserveHandle != null) {
-                            ContentResolver.removeStatusChangeListener(mSyncObserveHandle);
-                        }
-
-                        // execute callback after manual sync
-                        if (mAfterManualSync != null) {
-                            mAfterManualSync.afterManualSync();
-                        }
-                    }
-                }
-            });
-        }
-    };
 
     /**
      * Add account for Birthday Adapter to Android system
@@ -185,19 +120,10 @@ public class AccountHelper {
     public void manualSync() {
         Log.d(Constants.TAG, "Force manual sync...");
 
-        mSyncProgressDialog = ProgressDialog.show(mActivity, "",
-                mActivity.getString(R.string.synchronizing), true, false);
-        mSyncProgressDialog.setCancelable(false);
-
         // force resync!
         Bundle extras = new Bundle();
         extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         ContentResolver.requestSync(Constants.ACCOUNT, Constants.CONTENT_AUTHORITY, extras);
-
-        // register observer to know when sync is finished
-        mSyncObserveHandle = ContentResolver.addStatusChangeListener(
-                ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE
-                        | ContentResolver.SYNC_OBSERVER_TYPE_PENDING, new MySyncStatusObserver());
     }
 
     /**
