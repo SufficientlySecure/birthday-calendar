@@ -6,24 +6,10 @@
   <string name="synchronizing">Sünkroniseerimine...</string>
   <!--Calendar-->
   <string name="calendar_display_name">Sünnipäevad</string>
-  <string name="event_title_birthday">%1$s sünnipäev</string>
-  <string name="event_title_anniversary">%1$s aastapäev</string>
-  <string name="event_title_other">Muu %1$s üritus</string>
-  <string name="event_title_custom">%1$s koos %2$s</string>
   <!--About-->
-  <string name="about_description">Birthday Adapter on esimene rakendus, mis näitab kõikisinu kontaktides olevaid sünnipäevasid Androidi kalendris ilma liigse jändamiseta.</string>
-  <string name="about_license">Litsents: GPL v3+</string>
   <string name="about_version">Versioon:</string>
-  <string name="about_libs">Birthday Adapter põhineb Sam Steele õpetusel, kuidas ehitada sünkroniseerimise adapterit. See kasutab ka Daniel Nilsson ja Sergey Margaritov poolt loodud värvivalijat. Ikoonidena kasutatakse Tango ikoonikogu (Public Domain) ja Tango Pidgini ikoniteemat (GPL)</string>
-  <string name="about_developer">Arendaja:</string>
-  <string name="about_translators">Translators:</string>
-  <!--Activity names-->
-  <string name="activity_help">Abiinfo</string>
-  <string name="activity_about">Rakendusest</string>
+  <!--Tabs-->
   <!--Preferences-->
-  <string name="pref_settings">Seaded</string>
-  <string name="pref_description">Description</string>
-  <string name="pref_enable_switch">Calendar</string>
   <string name="pref_enable">Sünnipäevade kalendri lubamine</string>
   <string name="pref_enable_summary">Näitab sünnipäevasid, aastapäevasid ja muid kontaktides märatud sündmusi sinu Androidi kalendris.</string>
   <string name="pref_color">Värv</string>

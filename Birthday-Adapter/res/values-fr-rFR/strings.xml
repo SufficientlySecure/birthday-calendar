@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--AsyncTask progress dialogs-->
+  <string name="creating">Création de l\'adapteur...</string>
+  <string name="removing">Suppression de l\'adapteur...</string>
+  <string name="synchronizing">Synchronisation en cours...</string>
+  <!--Calendar-->
+  <string name="calendar_display_name">Anniversaires</string>
+  <!--About-->
+  <string name="about_version">Version :</string>
+  <!--Tabs-->
+  <!--Preferences-->
+  <string name="pref_description">Description</string>
+  <string name="pref_enable_switch">Calendrier</string>
+  <string name="pref_enable">Activer le Calendrier des Anniversaires</string>
+  <string name="pref_enable_summary">Affiche les anniversaires, fêtes et autres événements définis dans vos contacts dans un calendrier standard qui s\'affiche dans votre Agenda Android.</string>
+  <string name="pref_color">Couleur</string>
+  <string name="pref_color_summary">Couleur du Calendrier des Anniversaires</string>
+  <string name="pref_help">Aide</string>
+  <string name="pref_about">À propos</string>
+  <string name="pref_force_sync">Synchroniser maintenant !</string>
+  <string name="pref_force_sync_summary">Il est généralement inutile de synchroniser manuellement, car Birthday Adapter synchronise automatiquement une fois par jour.</string>
+  <string name="pref_reminder">Rappel</string>
+  <string name="pref_reminder_summary">Configurer les rappels pour tous les anniversaires</string>
+  <string-array name="pref_reminder_entries">
+    <item>pas de rappels</item>
+    <item>le jour de l\'événement</item>
+    <item>1 jour avant</item>
+    <item>2 jours avant</item>
+    <item>3 jours avant</item>
+  </string-array>
+  <!--Adapter Screen-->
+  <string name="pref_account_header">Paramètres</string>
+  <string name="pref_account_settings">Configurer Birthday Adapter</string>
+  <!--Color Picker-->
+  <string name="dialog_color_picker">Choix de la couleur</string>
+  <string name="press_color_to_apply">Choisissez la couleur à appliquer</string>
+</resources>

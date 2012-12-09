@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--AsyncTask progress dialogs-->
+  <string name="creating">Создается адаптер...</string>
+  <string name="removing">Удаляется адаптер...</string>
+  <string name="synchronizing">Синхронизация...</string>
+  <!--Calendar-->
+  <string name="calendar_display_name">Дни рождения</string>
+  <!--About-->
+  <string name="about_version">Версия:</string>
+  <!--Tabs-->
+  <!--Preferences-->
+  <string name="pref_description">Описание</string>
+  <string name="pref_enable_switch">Календарь</string>
+  <string name="pref_enable">Включить календарь с днями рождения</string>
+  <string name="pref_enable_summary">Отображает дни рождения, юбилеи и другие события ваших контактов в календаре Android.</string>
+  <string name="pref_color">Цвет</string>
+  <string name="pref_color_summary">Цвет календаря с днями рождения</string>
+  <string name="pref_help">Помощь</string>
+  <string name="pref_about">О приложении</string>
+  <string name="pref_force_sync">Синхронизировать сейчас!</string>
+  <string name="pref_force_sync_summary">Обычно нет необходимости в этом, т.к. Birthday Adapter синхронизируется автоматически раз в день.</string>
+  <string name="pref_reminder">Напоминание</string>
+  <string name="pref_reminder_summary">Устанавливает напоминание для всех дней рождения</string>
+  <string-array name="pref_reminder_entries">
+    <item>Отключить напоминания</item>
+    <item>В день события</item>
+    <item>За день</item>
+    <item>За 2 дня</item>
+    <item>За 3 дня</item>
+  </string-array>
+  <!--Adapter Screen-->
+  <string name="pref_account_header">Настройки</string>
+  <string name="pref_account_settings">Настройки Birthday Adapter</string>
+  <!--Color Picker-->
+  <string name="dialog_color_picker">Выбор цвета</string>
+  <string name="press_color_to_apply">Чтобы применить, нажмите на цвет</string>
+</resources>
