@@ -72,14 +72,6 @@
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="org.birthdayadapter.ui.HelpActivity2"
-            android:label="@string/activity_help" />
-        <activity
-            android:name=".ui.AboutActivity"
-            android:excludeFromRecents="true"
-            android:label="@string/activity_about"
-            android:theme="@android:style/Theme.Dialog" />
 
         <service
             android:name=".AccountAuthenticatorService"
