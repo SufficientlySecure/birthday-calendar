@@ -52,12 +52,13 @@ public class PreferencesHelper {
         return result;
     }
 
-    public static int getReminder(Context context) {
+    public static int getReminder(Context context, int reminderNo) {
         SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
                 Context.MODE_PRIVATE);
-        String reminderStr = prefs.getString(context.getString(R.string.pref_reminder_key),
-                context.getString(R.string.pref_reminder_def));
+        String key = context.getString(R.string.pref_reminder_key) + reminderNo;
+        String reminderStr = prefs.getString(key, context.getString(R.string.pref_reminder_def));
 
         return Integer.valueOf(reminderStr);
     }
+
 }

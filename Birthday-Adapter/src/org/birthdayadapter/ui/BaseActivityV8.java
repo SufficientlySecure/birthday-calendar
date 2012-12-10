@@ -154,7 +154,7 @@ public class BaseActivityV8 extends PreferenceActivity {
                 if (newValue instanceof String) {
                     String stringValue = (String) newValue;
                     int newMinutes = Integer.valueOf(stringValue);
-                    int oldMinutes = PreferencesHelper.getReminder(mActivity);
+                    int oldMinutes = PreferencesHelper.getReminder(mActivity, 0);
 
                     Log.d(Constants.TAG, "Setting all reminders to " + newMinutes
                             + ", oldMinutes are " + oldMinutes);

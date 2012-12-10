@@ -1,21 +1,21 @@
 <resources>
 
-    <string name="app_name" translate="false">Birthday Adapter</string>
-    <string name="pref_first_run_key" translate="false">firstRun</string>
+    <string name="app_name" translatable="false">Birthday Adapter</string>
+    <string name="pref_first_run_key" translatable="false">firstRun</string>
 
     <item name="pref_first_run_def" format="boolean" type="string">true</item>
 
-    <string name="pref_enabled_key" translate="false">enabled</string>
-    <string name="pref_help_key" translate="false">help</string>
-    <string name="pref_about_key" translate="false">about</string>
-    <string name="pref_color_key" translate="false">color</string>
+    <string name="pref_enabled_key" translatable="false">enabled</string>
+    <string name="pref_help_key" translatable="false">help</string>
+    <string name="pref_about_key" translatable="false">about</string>
+    <string name="pref_color_key" translatable="false">color</string>
 
     <!-- The first two hex numbers are for opacity and must be FF -->
     <color name="pref_color_def">#FFA70000</color>
 
-    <string name="pref_force_sync_key" translate="false">forceSync</string>
+    <string name="pref_force_sync_key" translatable="false">forceSync</string>
 
-    <string-array name="pref_reminder_entries_values" translate="false">
+    <string-array name="pref_reminder_entries_values" translatable="false">
         <item>-99999</item> <!-- disabled -->
         <item>-540</item> <!-- at 9:00 of the birthday -->
         <item>900</item> <!-- 15 hours before 24:00 when birthday starts -> 9:00 the day before -->
@@ -23,9 +23,12 @@
         <item>3780</item> <!-- + 24*60 -->
     </string-array>
 
-    <string name="pref_reminder_def" translate="false">-99999</string>
-    <string name="pref_reminder_key" translate="false">reminder</string>
-    <string name="pref_enable_debug_key" translate="false">debugEnabled</string>
+    <string name="pref_reminder_def" translata="false">-99999</string>
+    <string name="pref_reminder_key" translatable="false">reminder</string>
+    <string name="pref_reminder_key0" translatable="false">reminder0</string>
+    <string name="pref_reminder_key1" translatable="false">reminder1</string>
+    <string name="pref_reminder_key2" translatable="false">reminder2</string>
+    <string name="pref_enable_debug_key" translatable="false">debugEnabled</string>
 
     <item name="pref_enable_debug_def" format="boolean" type="string">false</item>
 

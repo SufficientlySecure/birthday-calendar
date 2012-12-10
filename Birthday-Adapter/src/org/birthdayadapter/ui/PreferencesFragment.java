@@ -42,7 +42,36 @@ public class PreferencesFragment extends PreferenceFragment {
     Activity mActivity;
 
     private ColorPickerPreference mColor;
-    private ListPreference mReminder;
+    private ListPreference mReminder0;
+    private ListPreference mReminder1;
+    private ListPreference mReminder2;
+
+    private class ReminderOnPreferenceChange implements OnPreferenceChangeListener {
+        int reminderNo;
+
+        public ReminderOnPreferenceChange(int reminderNo) {
+            super();
+            this.reminderNo = reminderNo;
+        }
+
+        @Override
+        public boolean onPreferenceChange(Preference preference, Object newValue) {
+            if (newValue instanceof String) {
+                String stringValue = (String) newValue;
+                int newMinutes = Integer.valueOf(stringValue);
+                int oldMinutes = PreferencesHelper.getReminder(mActivity, reminderNo);
+
+                Log.d(Constants.TAG, "Setting all reminders to " + newMinutes + ", oldMinutes are "
+                        + oldMinutes);
+
+                // Update all reminders to new minutes, newMinutes=-1 will delete all
+                CalendarSyncAdapterService.updateAllReminders(mActivity, newMinutes, oldMinutes);
+            }
+
+            return true;
+        }
+
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,7 +85,9 @@ public class PreferencesFragment extends PreferenceFragment {
         addPreferencesFromResource(R.xml.pref_preferences);
 
         mColor = (ColorPickerPreference) findPreference(getString(R.string.pref_color_key));
-        mReminder = (ListPreference) findPreference(getString(R.string.pref_reminder_key));
+        mReminder0 = (ListPreference) findPreference(getString(R.string.pref_reminder_key0));
+        mReminder1 = (ListPreference) findPreference(getString(R.string.pref_reminder_key1));
+        mReminder2 = (ListPreference) findPreference(getString(R.string.pref_reminder_key2));
 
         mColor.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
             @Override
@@ -70,25 +101,9 @@ public class PreferencesFragment extends PreferenceFragment {
             }
         });
 
-        mReminder.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (newValue instanceof String) {
-                    String stringValue = (String) newValue;
-                    int newMinutes = Integer.valueOf(stringValue);
-                    int oldMinutes = PreferencesHelper.getReminder(mActivity);
-
-                    Log.d(Constants.TAG, "Setting all reminders to " + newMinutes
-                            + ", oldMinutes are " + oldMinutes);
-
-                    // Update all reminders to new minutes, newMinutes=-1 will delete all
-                    CalendarSyncAdapterService
-                            .updateAllReminders(mActivity, newMinutes, oldMinutes);
-                }
-
-                return true;
-            }
-        });
+        mReminder0.setOnPreferenceChangeListener(new ReminderOnPreferenceChange(0));
+        mReminder1.setOnPreferenceChangeListener(new ReminderOnPreferenceChange(1));
+        mReminder2.setOnPreferenceChangeListener(new ReminderOnPreferenceChange(2));
     }
 
 }

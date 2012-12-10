@@ -232,8 +232,9 @@ public class CalendarSyncAdapterService extends Service {
                 int remindersIdColumn = remindersCursor.getColumnIndex(Reminders._ID);
                 int remindersMinutesColumn = remindersCursor.getColumnIndex(Reminders.MINUTES);
 
-                // if reminder already exist update it, else create new
-                // get only the first reminder
+                boolean alreadyExistingReminder = false;
+
+                /* Change reminders for this event */
                 try {
                     if (remindersCursor.moveToFirst()) {
                         // reminder exists...
@@ -242,37 +243,30 @@ public class CalendarSyncAdapterService extends Service {
                         Uri currentReminderUri = ContentUris.withAppendedId(remindersUri,
                                 currentReminderId);
 
-                        if (newMinutes != Constants.DISABLED_REMINDER) {
-                            // update existing reminder
+                        // Change only those reminders that correspond to this reminder
+                        // preference
+                        if (currentReminderMinutes == oldMinutes) {
+                            alreadyExistingReminder = true;
+                            if (newMinutes == Constants.DISABLED_REMINDER) {
+                                /* Delete all existing reminder */
 
-                            // update only if user has not set any other value than the one from the
-                            // preferences of Birthday Adapter
-                            if (currentReminderMinutes == oldMinutes) {
-                                Log.d(Constants.TAG, "Updating reminder minutes to " + newMinutes
-                                        + " with uri " + currentReminderUri.toString());
-                                builder = ContentProviderOperation.newUpdate(currentReminderUri);
-                                builder.withValue(Reminders.MINUTES, newMinutes);
-                            } else {
-                                Log.d(Constants.TAG,
-                                        "Nothing done for this reminder, because oldMinutes where differently. This happens when the user sets the reminder for that event manually!");
-                            }
-                        } else {
-                            // else delete all existing reminder (newMinutes are null when user
-                            // disables reminder
-
-                            // delete only if user has not set any other value than the one from the
-                            // preferences of Birthday Adapter
-                            if (currentReminderMinutes == oldMinutes) {
                                 Log.d(Constants.TAG,
                                         "Delete reminder with uri " + remindersUri.toString());
                                 builder = ContentProviderOperation.newDelete(currentReminderUri);
                             } else {
-                                Log.d(Constants.TAG,
-                                        "Nothing done for this reminder, because oldMinutes where differently. This happens when the user sets the reminder for that event manually!");
+                                /* Update existing reminder */
+
+                                Log.d(Constants.TAG, "Updating reminder minutes to " + newMinutes
+                                        + " with uri " + currentReminderUri.toString());
+                                builder = ContentProviderOperation.newUpdate(currentReminderUri);
+                                builder.withValue(Reminders.MINUTES, newMinutes);
                             }
                         }
-                    } else {
-                        // create new reminders
+                    }
+
+                    // If reminder was not updated it didn't exist before
+                    if (!alreadyExistingReminder && newMinutes != Constants.DISABLED_REMINDER) {
+                        /* Create new reminders */
 
                         Log.d(Constants.TAG,
                                 "Create new reminder with uri " + remindersUri.toString());
@@ -353,8 +347,9 @@ public class CalendarSyncAdapterService extends Service {
      * @param backRef
      * @return
      */
-    private static ContentProviderOperation insertReminder(Context context, int backRef) {
-        if (PreferencesHelper.getReminder(context) != Constants.DISABLED_REMINDER) {
+    private static ContentProviderOperation insertReminder(Context context, int reminderNo,
+            int backRef) {
+        if (PreferencesHelper.getReminder(context, reminderNo) != Constants.DISABLED_REMINDER) {
             ContentProviderOperation.Builder builder;
 
             builder = ContentProviderOperation
@@ -363,7 +358,7 @@ public class CalendarSyncAdapterService extends Service {
             // add reminder to last added event identified by backRef
             // see http://stackoverflow.com/questions/4655291/semantics-of-withvaluebackreference
             builder.withValueBackReference(Reminders.EVENT_ID, backRef);
-            builder.withValue(Reminders.MINUTES, PreferencesHelper.getReminder(context));
+            builder.withValue(Reminders.MINUTES, PreferencesHelper.getReminder(context, reminderNo));
             builder.withValue(Reminders.METHOD, Reminders.METHOD_ALERT);
 
             return builder.build();
@@ -619,13 +614,13 @@ public class CalendarSyncAdapterService extends Service {
                     int currYear = currCal.get(Calendar.YEAR);
 
                     /*
-                     * Insert events for the past 5 years and the next 10 years.
+                     * Insert events for the past 3 years and the next 5 years.
                      * 
                      * Events are not inserted as recurring events to have different titles with
                      * birthday age in it.
                      */
-                    int startYear = currYear - 5;
-                    int endYear = currYear + 10;
+                    int startYear = currYear - 3;
+                    int endYear = currYear + 5;
 
                     for (int iteratedYear = startYear; iteratedYear <= endYear; iteratedYear++) {
                         Log.d(Constants.TAG, "iteratedYear: " + iteratedYear);
@@ -669,9 +664,11 @@ public class CalendarSyncAdapterService extends Service {
                                 title));
                         // }
 
-                        ContentProviderOperation reminder = insertReminder(context, backRef);
-                        if (reminder != null) {
-                            operationList.add(reminder);
+                        for (int i = 0; i < 3; i++) {
+                            ContentProviderOperation reminder = insertReminder(context, i, backRef);
+                            if (reminder != null) {
+                                operationList.add(reminder);
+                            }
                         }
                         backRef += 2;
 
