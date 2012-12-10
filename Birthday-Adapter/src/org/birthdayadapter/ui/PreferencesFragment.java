@@ -22,62 +22,29 @@ package org.birthdayadapter.ui;
 
 import net.margaritov.preference.colorpicker.ColorPickerPreference;
 
-import org.birthdayadapter.CalendarSyncAdapterService;
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.Constants;
-import org.birthdayadapter.util.Log;
-import org.birthdayadapter.util.PreferencesHelper;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
-import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.preference.Preference.OnPreferenceChangeListener;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class PreferencesFragment extends PreferenceFragment {
-    Activity mActivity;
+    BaseActivity mActivity;
 
     private ColorPickerPreference mColor;
     private ListPreference mReminder0;
     private ListPreference mReminder1;
     private ListPreference mReminder2;
 
-    private class ReminderOnPreferenceChange implements OnPreferenceChangeListener {
-        int reminderNo;
-
-        public ReminderOnPreferenceChange(int reminderNo) {
-            super();
-            this.reminderNo = reminderNo;
-        }
-
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object newValue) {
-            if (newValue instanceof String) {
-                String stringValue = (String) newValue;
-                int newMinutes = Integer.valueOf(stringValue);
-                int oldMinutes = PreferencesHelper.getReminder(mActivity, reminderNo);
-
-                Log.d(Constants.TAG, "Setting all reminders to " + newMinutes + ", oldMinutes are "
-                        + oldMinutes);
-
-                // Update all reminders to new minutes, newMinutes=-1 will delete all
-                CalendarSyncAdapterService.updateAllReminders(mActivity, newMinutes, oldMinutes);
-            }
-
-            return true;
-        }
-
-    };
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mActivity = getActivity();
+        mActivity = (BaseActivity) getActivity();
 
         // save prefs here
         getPreferenceManager().setSharedPreferencesName(Constants.PREFS_NAME);
@@ -89,21 +56,18 @@ public class PreferencesFragment extends PreferenceFragment {
         mReminder1 = (ListPreference) findPreference(getString(R.string.pref_reminder_key1));
         mReminder2 = (ListPreference) findPreference(getString(R.string.pref_reminder_key2));
 
-        mColor.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                int newColor = Integer.valueOf(String.valueOf(newValue));
-                Log.d(Constants.TAG, "color changed to " + newColor);
+        /*
+         * Functionality is defined in PreferenceImpl
+         */
+        mColor.setOnPreferenceChangeListener(new PreferenceImpl.ColorOnChange(mActivity,
+                mActivity.mBackgroundStatusHandler));
 
-                CalendarSyncAdapterService.updateCalendarColor(mActivity, newColor);
-
-                return true;
-            }
-        });
-
-        mReminder0.setOnPreferenceChangeListener(new ReminderOnPreferenceChange(0));
-        mReminder1.setOnPreferenceChangeListener(new ReminderOnPreferenceChange(1));
-        mReminder2.setOnPreferenceChangeListener(new ReminderOnPreferenceChange(2));
+        mReminder0.setOnPreferenceChangeListener(new PreferenceImpl.ReminderOnChange(mActivity,
+                mActivity.mBackgroundStatusHandler, 0));
+        mReminder1.setOnPreferenceChangeListener(new PreferenceImpl.ReminderOnChange(mActivity,
+                mActivity.mBackgroundStatusHandler, 1));
+        mReminder2.setOnPreferenceChangeListener(new PreferenceImpl.ReminderOnChange(mActivity,
+                mActivity.mBackgroundStatusHandler, 2));
     }
 
 }

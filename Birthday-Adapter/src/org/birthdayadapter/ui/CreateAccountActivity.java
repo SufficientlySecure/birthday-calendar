@@ -21,7 +21,7 @@
 
 package org.birthdayadapter.ui;
 
-import org.birthdayadapter.AccountHelper;
+import org.birthdayadapter.service.AccountHelper;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
 

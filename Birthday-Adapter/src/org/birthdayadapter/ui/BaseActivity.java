@@ -23,7 +23,7 @@ package org.birthdayadapter.ui;
 import java.util.ArrayList;
 
 import org.birthdayadapter.R;
-import org.birthdayadapter.util.MySyncStatusObserver;
+import org.birthdayadapter.util.BackgroundStatusHandler;
 import org.birthdayadapter.util.FragmentStatePagerAdapterV14;
 
 import android.annotation.TargetApi;
@@ -31,7 +31,6 @@ import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -47,7 +46,7 @@ public class BaseActivity extends FragmentActivity {
     private ViewPager mViewPager;
     private TabsAdapter mTabsAdapter;
 
-    Object mSyncObserveHandle;
+    public BackgroundStatusHandler mBackgroundStatusHandler;
 
     /**
      * Called when the activity is first created.
@@ -92,11 +91,7 @@ public class BaseActivity extends FragmentActivity {
             mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_about)),
                     AboutFragment.class, null);
 
-            // register observer to know when sync is running
-            mSyncObserveHandle = ContentResolver.addStatusChangeListener(
-                    ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE
-                            | ContentResolver.SYNC_OBSERVER_TYPE_PENDING, new MySyncStatusObserver(
-                            mActivity));
+            mBackgroundStatusHandler = new BackgroundStatusHandler(mActivity);
         }
     }
 
@@ -104,10 +99,7 @@ public class BaseActivity extends FragmentActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        // remove observer
-        if (mSyncObserveHandle != null) {
-            ContentResolver.removeStatusChangeListener(mSyncObserveHandle);
-        }
+        mBackgroundStatusHandler.removeObserver();
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -183,4 +175,5 @@ public class BaseActivity extends FragmentActivity {
         }
 
     }
+
 }

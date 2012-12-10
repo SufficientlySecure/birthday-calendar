@@ -22,16 +22,13 @@ package org.birthdayadapter.ui;
 
 import net.margaritov.preference.colorpicker.ColorPickerPreference;
 
-import org.birthdayadapter.AccountHelper;
-import org.birthdayadapter.CalendarSyncAdapterService;
 import org.birthdayadapter.R;
+import org.birthdayadapter.service.AccountHelper;
+import org.birthdayadapter.util.BackgroundStatusHandler;
 import org.birthdayadapter.util.Constants;
-import org.birthdayadapter.util.Log;
-import org.birthdayadapter.util.MySyncStatusObserver;
 import org.birthdayadapter.util.PreferencesHelper;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -50,15 +47,17 @@ public class BaseActivityV8 extends PreferenceActivity {
     private Activity mActivity;
     private AccountHelper mAccountHelper;
 
+    public BackgroundStatusHandler mBackgroundStatusHandler;
+
     private CheckBoxPreference mEnabled;
     private Preference mForceSync;
 
     private ColorPickerPreference mColor;
-    private ListPreference mReminder;
+    private ListPreference mReminder0;
+    private ListPreference mReminder1;
+    private ListPreference mReminder2;
 
     private Preference mHelp;
-
-    Object mSyncObserveHandle;
 
     /**
      * Sets display of status to enabled/disabled based on account
@@ -87,17 +86,15 @@ public class BaseActivityV8 extends PreferenceActivity {
         // load preferences from xml
         addPreferencesFromResource(R.xml.base_preferences_v8);
 
-        // register observer to know when sync is running
-        mSyncObserveHandle = ContentResolver.addStatusChangeListener(
-                ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE
-                        | ContentResolver.SYNC_OBSERVER_TYPE_PENDING, new MySyncStatusObserver(
-                        mActivity));
+        mBackgroundStatusHandler = new BackgroundStatusHandler(mActivity);
 
         mEnabled = (CheckBoxPreference) findPreference(getString(R.string.pref_enabled_key));
         mForceSync = (Preference) findPreference(getString(R.string.pref_force_sync_key));
 
         mColor = (ColorPickerPreference) findPreference(getString(R.string.pref_color_key));
-        mReminder = (ListPreference) findPreference(getString(R.string.pref_reminder_key));
+        mReminder0 = (ListPreference) findPreference(getString(R.string.pref_reminder_key0));
+        mReminder1 = (ListPreference) findPreference(getString(R.string.pref_reminder_key1));
+        mReminder2 = (ListPreference) findPreference(getString(R.string.pref_reminder_key2));
 
         mHelp = (Preference) findPreference(getString(R.string.pref_help_key));
 
@@ -136,37 +133,18 @@ public class BaseActivityV8 extends PreferenceActivity {
             }
         });
 
-        mColor.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                int newColor = Integer.valueOf(String.valueOf(newValue));
-                Log.d(Constants.TAG, "color changed to " + newColor);
+        /*
+         * Functionality is defined in PreferenceImpl
+         */
+        mColor.setOnPreferenceChangeListener(new PreferenceImpl.ColorOnChange(mActivity,
+                mBackgroundStatusHandler));
 
-                CalendarSyncAdapterService.updateCalendarColor(mActivity, newColor);
-
-                return true;
-            }
-        });
-
-        mReminder.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (newValue instanceof String) {
-                    String stringValue = (String) newValue;
-                    int newMinutes = Integer.valueOf(stringValue);
-                    int oldMinutes = PreferencesHelper.getReminder(mActivity, 0);
-
-                    Log.d(Constants.TAG, "Setting all reminders to " + newMinutes
-                            + ", oldMinutes are " + oldMinutes);
-
-                    // Update all reminders to new minutes, newMinutes=-1 will delete all
-                    CalendarSyncAdapterService
-                            .updateAllReminders(mActivity, newMinutes, oldMinutes);
-                }
-
-                return true;
-            }
-        });
+        mReminder0.setOnPreferenceChangeListener(new PreferenceImpl.ReminderOnChange(mActivity,
+                mBackgroundStatusHandler, 0));
+        mReminder1.setOnPreferenceChangeListener(new PreferenceImpl.ReminderOnChange(mActivity,
+                mBackgroundStatusHandler, 1));
+        mReminder2.setOnPreferenceChangeListener(new PreferenceImpl.ReminderOnChange(mActivity,
+                mBackgroundStatusHandler, 2));
 
         mHelp.setOnPreferenceClickListener(new OnPreferenceClickListener() {
             @Override
@@ -183,10 +161,7 @@ public class BaseActivityV8 extends PreferenceActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        // remove observer
-        if (mSyncObserveHandle != null) {
-            ContentResolver.removeStatusChangeListener(mSyncObserveHandle);
-        }
+        mBackgroundStatusHandler.removeObserver();
     }
 
 }

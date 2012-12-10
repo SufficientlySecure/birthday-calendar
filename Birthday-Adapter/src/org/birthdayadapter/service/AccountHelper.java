@@ -18,7 +18,7 @@
  *
  */
 
-package org.birthdayadapter;
+package org.birthdayadapter.service;
 
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;

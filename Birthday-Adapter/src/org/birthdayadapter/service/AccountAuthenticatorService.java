@@ -19,7 +19,7 @@
  *
  */
 
-package org.birthdayadapter;
+package org.birthdayadapter.service;
 
 import org.birthdayadapter.ui.CreateAccountActivity;
 import org.birthdayadapter.util.Constants;

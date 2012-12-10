@@ -20,8 +20,8 @@
 
 package org.birthdayadapter.ui;
 
-import org.birthdayadapter.AccountHelper;
 import org.birthdayadapter.R;
+import org.birthdayadapter.service.AccountHelper;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
 import org.birthdayadapter.util.PreferencesHelper;

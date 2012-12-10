@@ -19,7 +19,7 @@
  *
  */
 
-package org.birthdayadapter;
+package org.birthdayadapter.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.birthdayadapter.R;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
 import org.birthdayadapter.util.PreferencesHelper;

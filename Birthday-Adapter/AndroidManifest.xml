@@ -73,8 +73,9 @@
             </intent-filter>
         </activity>
 
+        <service android:name=".service.PreferenceIntentService" />
         <service
-            android:name=".AccountAuthenticatorService"
+            android:name=".service.AccountAuthenticatorService"
             android:exported="true"
             android:process=":auth" >
             <intent-filter>
@@ -86,7 +87,7 @@
                 android:resource="@xml/authenticator" />
         </service>
         <service
-            android:name=".CalendarSyncAdapterService"
+            android:name=".service.CalendarSyncAdapterService"
             android:exported="true"
             android:process=":calendar" >
             <intent-filter>
