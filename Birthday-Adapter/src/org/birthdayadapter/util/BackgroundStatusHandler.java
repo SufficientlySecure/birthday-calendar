@@ -29,6 +29,7 @@ import android.os.Message;
 public class BackgroundStatusHandler extends Handler {
     Activity mActivity;
     Object mSyncObserveHandle;
+    boolean syncing = false;
 
     SyncStatusObserver mMySyncStatusObserver = new SyncStatusObserver() {
 
@@ -47,9 +48,15 @@ public class BackgroundStatusHandler extends Handler {
             Log.d(Constants.TAG, "syncPending: " + syncPendingStr);
 
             if (syncActive || syncPending) {
-                BackgroundStatusHandler.this.sendEmptyMessage(CIRCLE_HANDLER_ENABLE);
+                if (!syncing) {
+                    syncing = true;
+                    BackgroundStatusHandler.this.sendEmptyMessage(CIRCLE_HANDLER_ENABLE);
+                }
             } else {
-                BackgroundStatusHandler.this.sendEmptyMessage(CIRCLE_HANDLER_DISABLE);
+                if (syncing) {
+                    syncing = false;
+                    BackgroundStatusHandler.this.sendEmptyMessage(CIRCLE_HANDLER_DISABLE);
+                }
             }
         }
     };

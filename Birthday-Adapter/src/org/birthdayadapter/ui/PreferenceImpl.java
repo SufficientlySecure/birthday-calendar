@@ -23,7 +23,6 @@ package org.birthdayadapter.ui;
 import org.birthdayadapter.service.PreferenceIntentService;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
-import org.birthdayadapter.util.PreferencesHelper;
 
 import android.content.Context;
 import android.content.Intent;
@@ -88,10 +87,6 @@ public class PreferenceImpl {
             if (newValue instanceof String) {
                 String stringValue = (String) newValue;
                 final int newMinutes = Integer.valueOf(stringValue);
-                final int oldMinutes = PreferencesHelper.getReminder(context, reminderNo);
-
-                Log.d(Constants.TAG, "Setting all reminders to " + newMinutes + ", oldMinutes are "
-                        + oldMinutes);
 
                 // Send all information needed to service to do in other thread
                 Intent intent = new Intent(context, PreferenceIntentService.class);
@@ -105,7 +100,7 @@ public class PreferenceImpl {
                 // fill values for this action
                 Bundle data = new Bundle();
                 data.putInt(PreferenceIntentService.CHANGE_REMINDER_NEW_MINUTES, newMinutes);
-                data.putInt(PreferenceIntentService.CHANGE_REMINDER_OLD_MINUTES, oldMinutes);
+                data.putInt(PreferenceIntentService.CHANGE_REMINDER_NO, reminderNo);
                 intent.putExtra(PreferenceIntentService.EXTRA_DATA, data);
 
                 // start service with intent

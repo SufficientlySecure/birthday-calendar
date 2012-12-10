@@ -58,6 +58,8 @@ public class PreferencesHelper {
         String key = context.getString(R.string.pref_reminder_key) + reminderNo;
         String reminderStr = prefs.getString(key, context.getString(R.string.pref_reminder_def));
 
+        Log.d(Constants.TAG, "Reminder minutes in prefs: " + reminderStr);
+
         return Integer.valueOf(reminderStr);
     }
 

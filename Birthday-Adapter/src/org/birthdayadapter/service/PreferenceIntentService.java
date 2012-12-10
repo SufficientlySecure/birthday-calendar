@@ -76,10 +76,10 @@ public class PreferenceIntentService extends IntentService {
 
         case ACTION_CHANGE_REMINDER:
             int newMinutes = data.getInt(CHANGE_REMINDER_NEW_MINUTES);
-            int oldMinutes = data.getInt(CHANGE_REMINDER_OLD_MINUTES);
+            int reminderNo = data.getInt(CHANGE_REMINDER_NO);
 
             // Update all reminders to new minutes
-            CalendarSyncAdapterService.updateAllReminders(this, newMinutes, oldMinutes);
+            CalendarSyncAdapterService.updateAllReminders(this, reminderNo, newMinutes);
             break;
 
         default:
