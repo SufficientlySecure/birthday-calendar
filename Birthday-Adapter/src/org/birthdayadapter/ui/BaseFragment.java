@@ -26,7 +26,6 @@ import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
 import org.birthdayadapter.util.PreferencesHelper;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,19 +42,6 @@ public class BaseFragment extends PreferenceFragment {
 
     private SwitchPreference mEnabled;
     private Preference mForceSync;
-
-    /**
-     * Sets display of status to enabled/disabled based on account
-     */
-    @SuppressLint("NewApi")
-    private void setStatusBasedOnAccount() {
-        // If account is activated check the preference
-        if (mAccountHelper.isAccountActivated()) {
-            mEnabled.setChecked(true);
-        } else {
-            mEnabled.setChecked(false);
-        }
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -81,15 +67,6 @@ public class BaseFragment extends PreferenceFragment {
 
             mAccountHelper.addAccountAndSync();
         }
-
-        if (mEnabled.isChecked()) {
-            mForceSync.setEnabled(true);
-        } else {
-            mForceSync.setEnabled(false);
-        }
-
-        // If account is activated check the preference
-        setStatusBasedOnAccount();
 
         mEnabled.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
             @Override
@@ -117,6 +94,20 @@ public class BaseFragment extends PreferenceFragment {
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // If account is activated check the preference
+        if (mAccountHelper.isAccountActivated()) {
+            mEnabled.setChecked(true);
+            mForceSync.setEnabled(true);
+        } else {
+            mEnabled.setChecked(false);
+            mForceSync.setEnabled(false);
+        }
     }
 
 }

@@ -132,12 +132,12 @@ public class PreferenceIntentService extends IntentService {
             msg.what = BackgroundStatusHandler.CIRCLE_HANDLER_DISABLE;
         }
 
-        try {
-            mMessenger.send(msg);
-        } catch (RemoteException e) {
-            Log.w(Constants.TAG, "Exception sending message, Is handler present?", e);
-        } catch (NullPointerException e) {
-            Log.w(Constants.TAG, "Messenger is null!", e);
+        if (mMessenger != null) {
+            try {
+                mMessenger.send(msg);
+            } catch (RemoteException e) {
+                Log.w(Constants.TAG, "Exception sending message, Is handler present?", e);
+            }
         }
     }
 
