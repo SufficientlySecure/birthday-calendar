@@ -198,14 +198,14 @@ public class CalendarSyncAdapterService extends Service {
      * @param context
      */
     private static void deleteAllReminders(Context context) {
+        Log.d(Constants.TAG, "Going through all events and deleting all reminders...");
+
         ContentResolver contentResolver = context.getContentResolver();
 
         // get cursor for all events
-        String[] eventsProjection = new String[] { Events._ID };
-        String eventsWhere = Events.CALENDAR_ID + "= ?";
-        String[] eventsSelectionArgs = new String[] { String.valueOf(getCalendar(context)) };
         Cursor eventsCursor = contentResolver.query(getBirthdayAdapterUri(Events.CONTENT_URI),
-                eventsProjection, eventsWhere, eventsSelectionArgs, null);
+                new String[] { Events._ID }, Events.CALENDAR_ID + "= ?",
+                new String[] { String.valueOf(getCalendar(context)) }, null);
         int eventIdColumn = eventsCursor.getColumnIndex(Events._ID);
 
         ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
@@ -219,15 +219,12 @@ public class CalendarSyncAdapterService extends Service {
             while (eventsCursor.moveToNext()) {
                 long eventId = eventsCursor.getLong(eventIdColumn);
 
-                Log.d(Constants.TAG, "Delete remninders for event id: " + eventId);
+                Log.d(Constants.TAG, "Delete reminders for event id: " + eventId);
 
                 // get all reminders for this specific event
-                String[] remindersProjection = new String[] { Reminders._ID, Reminders.MINUTES };
-                String remindersWhere = Reminders.EVENT_ID + "= ?";
-                String[] remindersSelectionArgs = new String[] { String.valueOf(eventId) };
-
-                Cursor remindersCursor = contentResolver.query(remindersUri, remindersProjection,
-                        remindersWhere, remindersSelectionArgs, null);
+                Cursor remindersCursor = contentResolver.query(remindersUri, new String[] {
+                        Reminders._ID, Reminders.MINUTES }, Reminders.EVENT_ID + "= ?",
+                        new String[] { String.valueOf(eventId) }, null);
                 int remindersIdColumn = remindersCursor.getColumnIndex(Reminders._ID);
 
                 /* Delete reminders for this event */
@@ -295,7 +292,7 @@ public class CalendarSyncAdapterService extends Service {
 
         // get cursor for all events
         String[] eventsProjection = new String[] { Events._ID };
-        String eventsWhere = Events.CALENDAR_ID + "= ?";
+        String eventsWhere = Events.CALENDAR_ID + " = ?";
         String[] eventsSelectionArgs = new String[] { String.valueOf(getCalendar(context)) };
         Cursor eventsCursor = contentResolver.query(getBirthdayAdapterUri(Events.CONTENT_URI),
                 eventsProjection, eventsWhere, eventsSelectionArgs, null);
@@ -562,6 +559,7 @@ public class CalendarSyncAdapterService extends Service {
     private static void performSync(Context context, Account account, Bundle extras,
             String authority, ContentProviderClient provider, SyncResult syncResult)
             throws OperationCanceledException {
+        Log.d(Constants.TAG, "Starting sync...");
 
         ContentResolver contentResolver = context.getContentResolver();
 
@@ -587,14 +585,13 @@ public class CalendarSyncAdapterService extends Service {
         // see
         // http://stackoverflow.com/questions/8579883/get-birthday-for-each-contact-in-android-application
 
-        // empty table with trick: "_id != -1"
+        // empty table
         // with additional selection of calendar id, necessary on Android < 4 to remove events only
         // from birthday calendar
         int delEventsRows = contentResolver.delete(getBirthdayAdapterUri(Events.CONTENT_URI),
-                "_id != -1 AND " + Events.CALENDAR_ID + " = " + calendarId, null);
+                Events.CALENDAR_ID + " = ?", new String[] { String.valueOf(calendarId) });
         Log.i(Constants.TAG, "Events of birthday calendar is now empty, deleted " + delEventsRows
                 + " rows!");
-        deleteAllReminders(context);
         Log.i(Constants.TAG, "Reminders of birthday calendar is now empty!");
 
         int[] reminderMinutes = getReminderMinutes(context);
@@ -689,7 +686,7 @@ public class CalendarSyncAdapterService extends Service {
                          * ContentProviderOperation with the given backRef. This is done using
                          * "withValueBackReference"
                          */
-                        int reminderBackRefs = 0;
+                        int noOfReminderOperations = 0;
                         for (int i = 0; i < 3; i++) {
                             if (reminderMinutes[i] != Constants.DISABLED_REMINDER) {
                                 ContentProviderOperation.Builder builder = ContentProviderOperation
@@ -703,12 +700,12 @@ public class CalendarSyncAdapterService extends Service {
                                 builder.withValue(Reminders.METHOD, Reminders.METHOD_ALERT);
                                 operationList.add(builder.build());
 
-                                reminderBackRefs += 1;
+                                noOfReminderOperations += 1;
                             }
                         }
 
                         // for the next...
-                        backRef += 1 + reminderBackRefs;
+                        backRef += 1 + noOfReminderOperations;
 
                         /*
                          * intermediate commit - otherwise the binder transaction fails on large

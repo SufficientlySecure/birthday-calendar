@@ -17,6 +17,7 @@
             android:entries="@array/pref_reminder_entries"
             android:entryValues="@array/pref_reminder_entries_values"
             android:key="@string/pref_reminder_key0"
+            android:persistent="true"
             android:summary="@string/pref_reminder_summary"
             android:title="@string/pref_reminder0" >
         </ListPreference>
@@ -25,6 +26,7 @@
             android:entries="@array/pref_reminder_entries"
             android:entryValues="@array/pref_reminder_entries_values"
             android:key="@string/pref_reminder_key1"
+            android:persistent="true"
             android:summary="@string/pref_reminder_summary"
             android:title="@string/pref_reminder1" >
         </ListPreference>
@@ -33,6 +35,7 @@
             android:entries="@array/pref_reminder_entries"
             android:entryValues="@array/pref_reminder_entries_values"
             android:key="@string/pref_reminder_key2"
+            android:persistent="true"
             android:summary="@string/pref_reminder_summary"
             android:title="@string/pref_reminder2" >
         </ListPreference>

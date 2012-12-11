@@ -90,9 +90,9 @@ public class BaseActivity extends FragmentActivity {
 
             mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_about)),
                     AboutFragment.class, null);
-
-            mBackgroundStatusHandler = new BackgroundStatusHandler(mActivity);
         }
+
+        mBackgroundStatusHandler = new BackgroundStatusHandler(mActivity);
     }
 
     @Override

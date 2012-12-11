@@ -26,17 +26,17 @@ import org.birthdayadapter.util.Log;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerFuture;
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.os.Bundle;
 
 public class AccountHelper {
-    Activity mActivity;
+    Context mContext;
     Object mSyncObserveHandle;
 
-    public AccountHelper(Activity activity) {
-        mActivity = activity;
+    public AccountHelper(Context context) {
+        mContext = context;
     }
 
     /**
@@ -57,7 +57,7 @@ public class AccountHelper {
         ContentResolver.addPeriodicSync(Constants.ACCOUNT, Constants.ACCOUNT_TYPE, new Bundle(),
                 freq);
 
-        AccountManager am = AccountManager.get(mActivity);
+        AccountManager am = AccountManager.get(mContext);
         if (am.addAccountExplicitly(Constants.ACCOUNT, null, null)) {
             Bundle result = new Bundle();
             result.putString(AccountManager.KEY_ACCOUNT_NAME, Constants.ACCOUNT.name);
@@ -96,7 +96,7 @@ public class AccountHelper {
     public boolean removeAccount() {
         Log.d(Constants.TAG, "Removing account...");
 
-        AccountManager am = AccountManager.get(mActivity);
+        AccountManager am = AccountManager.get(mContext);
 
         // remove account
         AccountManagerFuture<Boolean> future = am.removeAccount(Constants.ACCOUNT, null, null);
@@ -133,7 +133,7 @@ public class AccountHelper {
      * @return
      */
     public boolean isAccountActivated() {
-        AccountManager am = AccountManager.get(mActivity);
+        AccountManager am = AccountManager.get(mContext);
 
         Account[] availableAccounts = am.getAccountsByType(Constants.ACCOUNT_TYPE);
         for (Account currentAccount : availableAccounts) {

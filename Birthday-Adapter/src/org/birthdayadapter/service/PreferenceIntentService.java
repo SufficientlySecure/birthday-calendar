@@ -1,3 +1,23 @@
+/*
+ * Copyright (C) 2012 Dominik Schürmann <dominik@dominikschuermann.de>
+ *
+ * This file is part of Birthday Adapter.
+ * 
+ * Birthday Adapter is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Birthday Adapter is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package org.birthdayadapter.service;
 
 import android.app.IntentService;
@@ -27,7 +47,6 @@ public class PreferenceIntentService extends IntentService {
     // change reminder
     public static final String CHANGE_REMINDER_NO = "reminderNo";
     public static final String CHANGE_REMINDER_NEW_MINUTES = "reminderNewMinutes";
-    public static final String CHANGE_REMINDER_OLD_MINUTES = "reminderOldMinutes";
 
     // change color
     public static final String CHANGE_COLOR_NEW_COLOR = "colorNewColor";
@@ -63,13 +82,14 @@ public class PreferenceIntentService extends IntentService {
 
         int action = extras.getInt(EXTRA_ACTION);
 
-        setCircleWithHandler(true);
+        setProgressCircleWithHandler(true);
 
         // execute action from extra bundle
         switch (action) {
         case ACTION_CHANGE_COLOR:
             int newColor = data.getInt(CHANGE_COLOR_NEW_COLOR);
 
+            // update calendar color
             CalendarSyncAdapterService.updateCalendarColor(this, newColor);
 
             break;
@@ -86,10 +106,10 @@ public class PreferenceIntentService extends IntentService {
             break;
         }
 
-        setCircleWithHandler(false);
+        setProgressCircleWithHandler(false);
     }
 
-    private void setCircleWithHandler(boolean value) {
+    private void setProgressCircleWithHandler(boolean value) {
         Message msg = Message.obtain();
 
         if (value) {
