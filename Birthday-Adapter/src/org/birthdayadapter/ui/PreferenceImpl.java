@@ -20,7 +20,7 @@
 
 package org.birthdayadapter.ui;
 
-import org.birthdayadapter.service.PreferenceIntentService;
+import org.birthdayadapter.service.MainIntentService;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
 
@@ -50,18 +50,18 @@ public class PreferenceImpl {
             Log.d(Constants.TAG, "color changed to " + newColor);
 
             // Send all information needed to service to do in other thread
-            Intent intent = new Intent(context, PreferenceIntentService.class);
+            Intent intent = new Intent(context, MainIntentService.class);
 
             // Create a new Messenger for the communication back
             Messenger messenger = new Messenger(handler);
-            intent.putExtra(PreferenceIntentService.EXTRA_MESSENGER, messenger);
-            intent.putExtra(PreferenceIntentService.EXTRA_ACTION,
-                    PreferenceIntentService.ACTION_CHANGE_COLOR);
+            intent.putExtra(MainIntentService.EXTRA_MESSENGER, messenger);
+            intent.putExtra(MainIntentService.EXTRA_ACTION,
+                    MainIntentService.ACTION_CHANGE_COLOR);
 
             // fill values for this action
             Bundle data = new Bundle();
-            data.putInt(PreferenceIntentService.CHANGE_COLOR_NEW_COLOR, newColor);
-            intent.putExtra(PreferenceIntentService.EXTRA_DATA, data);
+            data.putInt(MainIntentService.CHANGE_COLOR_NEW_COLOR, newColor);
+            intent.putExtra(MainIntentService.EXTRA_DATA, data);
 
             // start service with intent
             context.startService(intent);
@@ -89,19 +89,19 @@ public class PreferenceImpl {
                 final int newMinutes = Integer.valueOf(stringValue);
 
                 // Send all information needed to service to do in other thread
-                Intent intent = new Intent(context, PreferenceIntentService.class);
+                Intent intent = new Intent(context, MainIntentService.class);
 
                 // Create a new Messenger for the communication back
                 Messenger messenger = new Messenger(handler);
-                intent.putExtra(PreferenceIntentService.EXTRA_MESSENGER, messenger);
-                intent.putExtra(PreferenceIntentService.EXTRA_ACTION,
-                        PreferenceIntentService.ACTION_CHANGE_REMINDER);
+                intent.putExtra(MainIntentService.EXTRA_MESSENGER, messenger);
+                intent.putExtra(MainIntentService.EXTRA_ACTION,
+                        MainIntentService.ACTION_CHANGE_REMINDER);
 
                 // fill values for this action
                 Bundle data = new Bundle();
-                data.putInt(PreferenceIntentService.CHANGE_REMINDER_NEW_MINUTES, newMinutes);
-                data.putInt(PreferenceIntentService.CHANGE_REMINDER_NO, reminderNo);
-                intent.putExtra(PreferenceIntentService.EXTRA_DATA, data);
+                data.putInt(MainIntentService.CHANGE_REMINDER_NEW_MINUTES, newMinutes);
+                data.putInt(MainIntentService.CHANGE_REMINDER_NO, reminderNo);
+                intent.putExtra(MainIntentService.EXTRA_DATA, data);
 
                 // start service with intent
                 context.startService(intent);

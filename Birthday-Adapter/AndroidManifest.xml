@@ -42,7 +42,7 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name" >
         <activity
-            android:name=".ui.BaseActivity"
+            android:name="org.birthdayadapter.ui.BaseActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -56,15 +56,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.BaseActivityV8"
+            android:name="org.birthdayadapter.ui.BaseActivityV8"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".ui.HelpActivityV8"
+            android:name="org.birthdayadapter.ui.HelpActivityV8"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".ui.CreateAccountActivity"
+            android:name="org.birthdayadapter.ui.CreateAccountActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.Transparent" >
             <intent-filter>
@@ -72,9 +72,9 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".service.PreferenceIntentService" />
+        <service android:name="org.birthdayadapter.service.MainIntentService" />
         <service
-            android:name=".service.AccountAuthenticatorService"
+            android:name="org.birthdayadapter.service.AccountAuthenticatorService"
             android:exported="true"
             android:process=":auth" >
             <intent-filter>
@@ -86,7 +86,7 @@
                 android:resource="@xml/authenticator" />
         </service>
         <service
-            android:name=".service.CalendarSyncAdapterService"
+            android:name="org.birthdayadapter.service.CalendarSyncAdapterService"
             android:exported="true"
             android:process=":calendar" >
             <intent-filter>

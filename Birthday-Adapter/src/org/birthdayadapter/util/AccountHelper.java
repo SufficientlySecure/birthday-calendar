@@ -18,10 +18,9 @@
  *
  */
 
-package org.birthdayadapter.service;
+package org.birthdayadapter.util;
 
-import org.birthdayadapter.util.Constants;
-import org.birthdayadapter.util.Log;
+import org.birthdayadapter.service.MainIntentService;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -135,19 +134,19 @@ public class AccountHelper {
 
         // Enabled: Force resync in own thread:
         // Send all information needed to service to do in other thread
-        Intent intent = new Intent(mContext, PreferenceIntentService.class);
+        Intent intent = new Intent(mContext, MainIntentService.class);
 
         // Create a new Messenger for the communication back
         if (mBackgroundStatusHandler != null) {
             Messenger messenger = new Messenger(mBackgroundStatusHandler);
-            intent.putExtra(PreferenceIntentService.EXTRA_MESSENGER, messenger);
+            intent.putExtra(MainIntentService.EXTRA_MESSENGER, messenger);
         }
-        intent.putExtra(PreferenceIntentService.EXTRA_ACTION,
-                PreferenceIntentService.ACTION_MANUAL_SYNC);
+        intent.putExtra(MainIntentService.EXTRA_ACTION,
+                MainIntentService.ACTION_MANUAL_SYNC);
 
         // fill values for this action
         Bundle data = new Bundle();
-        intent.putExtra(PreferenceIntentService.EXTRA_DATA, data);
+        intent.putExtra(MainIntentService.EXTRA_DATA, data);
 
         // start service with intent
         mContext.startService(intent);

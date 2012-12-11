@@ -27,11 +27,12 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 
+import org.birthdayadapter.util.AccountHelper;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
 import org.birthdayadapter.util.BackgroundStatusHandler;
 
-public class PreferenceIntentService extends IntentService {
+public class MainIntentService extends IntentService {
 
     /* extras that can be given by intent */
     public static final String EXTRA_MESSENGER = "messenger";
@@ -54,8 +55,8 @@ public class PreferenceIntentService extends IntentService {
 
     Messenger mMessenger;
 
-    public PreferenceIntentService() {
-        super("BirthdayAdapterPreferenceIntentService");
+    public MainIntentService() {
+        super("BirthdayAdapterMainIntentService");
     }
 
     /**
@@ -112,8 +113,9 @@ public class PreferenceIntentService extends IntentService {
 
         case ACTION_MANUAL_SYNC:
 
-            // Update all reminders to new minutes
+            // Force synchronous sync
             CalendarSyncAdapterService.performSync(this);
+
             break;
 
         default:
@@ -127,9 +129,9 @@ public class PreferenceIntentService extends IntentService {
         Message msg = Message.obtain();
 
         if (value) {
-            msg.what = BackgroundStatusHandler.CIRCLE_HANDLER_ENABLE;
+            msg.what = BackgroundStatusHandler.BACKGROUND_STATUS_HANDLER_ENABLE;
         } else {
-            msg.what = BackgroundStatusHandler.CIRCLE_HANDLER_DISABLE;
+            msg.what = BackgroundStatusHandler.BACKGROUND_STATUS_HANDLER_DISABLE;
         }
 
         if (mMessenger != null) {

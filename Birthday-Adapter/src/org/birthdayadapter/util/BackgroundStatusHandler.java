@@ -27,8 +27,8 @@ import android.os.Message;
 public class BackgroundStatusHandler extends Handler {
     Activity mActivity;
 
-    public static final int CIRCLE_HANDLER_DISABLE = 0;
-    public static final int CIRCLE_HANDLER_ENABLE = 1;
+    public static final int BACKGROUND_STATUS_HANDLER_DISABLE = 0;
+    public static final int BACKGROUND_STATUS_HANDLER_ENABLE = 1;
 
     int noOfRunningBackgroundThreads;
 
@@ -46,14 +46,14 @@ public class BackgroundStatusHandler extends Handler {
         final int what = msg.what;
 
         switch (what) {
-        case CIRCLE_HANDLER_ENABLE:
+        case BACKGROUND_STATUS_HANDLER_ENABLE:
             noOfRunningBackgroundThreads++;
 
             mActivity.setProgressBarIndeterminateVisibility(Boolean.TRUE);
 
             break;
 
-        case CIRCLE_HANDLER_DISABLE:
+        case BACKGROUND_STATUS_HANDLER_DISABLE:
             noOfRunningBackgroundThreads--;
 
             if (noOfRunningBackgroundThreads <= 0) {

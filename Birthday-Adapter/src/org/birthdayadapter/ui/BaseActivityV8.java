@@ -23,7 +23,7 @@ package org.birthdayadapter.ui;
 import net.margaritov.preference.colorpicker.ColorPickerPreference;
 
 import org.birthdayadapter.R;
-import org.birthdayadapter.service.AccountHelper;
+import org.birthdayadapter.util.AccountHelper;
 import org.birthdayadapter.util.BackgroundStatusHandler;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.PreferencesHelper;
