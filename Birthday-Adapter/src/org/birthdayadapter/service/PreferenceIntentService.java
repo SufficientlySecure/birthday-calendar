@@ -41,6 +41,7 @@ public class PreferenceIntentService extends IntentService {
     /* possible EXTRA_ACTIONs */
     public static final int ACTION_CHANGE_REMINDER = 0;
     public static final int ACTION_CHANGE_COLOR = 1;
+    public static final int ACTION_MANUAL_SYNC = 2;
 
     /* keys for data bundle */
 
@@ -70,14 +71,14 @@ public class PreferenceIntentService extends IntentService {
             return;
         }
 
-        if (!(extras.containsKey(EXTRA_MESSENGER) || extras.containsKey(EXTRA_DATA) || extras
-                .containsKey(EXTRA_ACTION))) {
-            Log.e(Constants.TAG,
-                    "Extra bundle must contain a messenger, a data bundle, and an action!");
+        if (!(extras.containsKey(EXTRA_ACTION))) {
+            Log.e(Constants.TAG, "Extra bundle must contain an action!");
             return;
         }
 
-        mMessenger = (Messenger) extras.get(EXTRA_MESSENGER);
+        if (extras.containsKey(EXTRA_MESSENGER)) {
+            mMessenger = (Messenger) extras.get(EXTRA_MESSENGER);
+        }
         Bundle data = extras.getBundle(EXTRA_DATA);
 
         int action = extras.getInt(EXTRA_ACTION);
@@ -89,8 +90,11 @@ public class PreferenceIntentService extends IntentService {
         case ACTION_CHANGE_COLOR:
             int newColor = data.getInt(CHANGE_COLOR_NEW_COLOR);
 
-            // update calendar color
-            CalendarSyncAdapterService.updateCalendarColor(this, newColor);
+            // only if enabled
+            if (new AccountHelper(this).isAccountActivated()) {
+                // update calendar color
+                CalendarSyncAdapterService.updateCalendarColor(this, newColor);
+            }
 
             break;
 
@@ -98,8 +102,18 @@ public class PreferenceIntentService extends IntentService {
             int newMinutes = data.getInt(CHANGE_REMINDER_NEW_MINUTES);
             int reminderNo = data.getInt(CHANGE_REMINDER_NO);
 
+            // only if enabled
+            if (new AccountHelper(this).isAccountActivated()) {
+                // Update all reminders to new minutes
+                CalendarSyncAdapterService.updateAllReminders(this, reminderNo, newMinutes);
+            }
+
+            break;
+
+        case ACTION_MANUAL_SYNC:
+
             // Update all reminders to new minutes
-            CalendarSyncAdapterService.updateAllReminders(this, reminderNo, newMinutes);
+            CalendarSyncAdapterService.performSync(this);
             break;
 
         default:

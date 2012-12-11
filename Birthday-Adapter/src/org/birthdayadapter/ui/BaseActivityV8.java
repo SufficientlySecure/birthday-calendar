@@ -79,14 +79,14 @@ public class BaseActivityV8 extends PreferenceActivity {
 
         mActivity = this;
 
-        mAccountHelper = new AccountHelper(mActivity);
-
         // save prefs here
         getPreferenceManager().setSharedPreferencesName(Constants.PREFS_NAME);
         // load preferences from xml
         addPreferencesFromResource(R.xml.base_preferences_v8);
 
         mBackgroundStatusHandler = new BackgroundStatusHandler(mActivity);
+
+        mAccountHelper = new AccountHelper(mActivity, mBackgroundStatusHandler);
 
         mEnabled = (CheckBoxPreference) findPreference(getString(R.string.pref_enabled_key));
         mForceSync = (Preference) findPreference(getString(R.string.pref_force_sync_key));
@@ -105,6 +105,12 @@ public class BaseActivityV8 extends PreferenceActivity {
             mAccountHelper.addAccountAndSync();
         }
 
+        if (mEnabled.isChecked()) {
+            mForceSync.setEnabled(true);
+        } else {
+            mForceSync.setEnabled(false);
+        }
+
         // If account is activated check the preference
         setStatusBasedOnAccount();
 
@@ -116,8 +122,10 @@ public class BaseActivityV8 extends PreferenceActivity {
 
                     if (boolVal) {
                         mAccountHelper.addAccountAndSync();
+                        mForceSync.setEnabled(true);
                     } else {
                         mAccountHelper.removeAccount();
+                        mForceSync.setEnabled(false);
                     }
                 }
                 return true;
@@ -155,13 +163,6 @@ public class BaseActivityV8 extends PreferenceActivity {
             }
         });
 
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        mBackgroundStatusHandler.removeObserver();
     }
 
 }

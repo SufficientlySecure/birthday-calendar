@@ -564,6 +564,10 @@ public class CalendarSyncAdapterService extends Service {
     private static void performSync(Context context, Account account, Bundle extras,
             String authority, ContentProviderClient provider, SyncResult syncResult)
             throws OperationCanceledException {
+        performSync(context);
+    }
+
+    public static void performSync(Context context) {
         Log.d(Constants.TAG, "Starting sync...");
 
         ContentResolver contentResolver = context.getContentResolver();

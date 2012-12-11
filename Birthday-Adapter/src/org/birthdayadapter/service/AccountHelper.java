@@ -29,11 +29,19 @@ import android.accounts.AccountManagerFuture;
 import android.app.AlarmManager;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Messenger;
 
 public class AccountHelper {
     Context mContext;
-    Object mSyncObserveHandle;
+    Handler mBackgroundStatusHandler;
+
+    public AccountHelper(Context context, Handler handler) {
+        mContext = context;
+        mBackgroundStatusHandler = handler;
+    }
 
     public AccountHelper(Context context) {
         mContext = context;
@@ -120,10 +128,30 @@ public class AccountHelper {
     public void manualSync() {
         Log.d(Constants.TAG, "Force manual sync...");
 
-        // force resync!
-        Bundle extras = new Bundle();
-        extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-        ContentResolver.requestSync(Constants.ACCOUNT, Constants.CONTENT_AUTHORITY, extras);
+        // Disabled: Force resync in Android OS
+        // Bundle extras = new Bundle();
+        // extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        // ContentResolver.requestSync(Constants.ACCOUNT, Constants.CONTENT_AUTHORITY, extras);
+
+        // Enabled: Force resync in own thread:
+        // Send all information needed to service to do in other thread
+        Intent intent = new Intent(mContext, PreferenceIntentService.class);
+
+        // Create a new Messenger for the communication back
+        if (mBackgroundStatusHandler != null) {
+            Messenger messenger = new Messenger(mBackgroundStatusHandler);
+            intent.putExtra(PreferenceIntentService.EXTRA_MESSENGER, messenger);
+        }
+        intent.putExtra(PreferenceIntentService.EXTRA_ACTION,
+                PreferenceIntentService.ACTION_MANUAL_SYNC);
+
+        // fill values for this action
+        Bundle data = new Bundle();
+        intent.putExtra(PreferenceIntentService.EXTRA_DATA, data);
+
+        // start service with intent
+        mContext.startService(intent);
+
     }
 
     /**

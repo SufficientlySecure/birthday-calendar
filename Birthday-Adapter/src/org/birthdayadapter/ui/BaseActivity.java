@@ -57,7 +57,7 @@ public class BaseActivity extends FragmentActivity {
 
         mActivity = this;
 
-        mBackgroundStatusHandler = new BackgroundStatusHandler(mActivity);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             // Load Activity for Android < 3
@@ -66,8 +66,6 @@ public class BaseActivity extends FragmentActivity {
             startActivity(oldActivity);
             finish();
         } else {
-            requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
             // Load new design with tabs
             mViewPager = new ViewPager(this);
             mViewPager.setId(R.id.pager);
@@ -92,14 +90,9 @@ public class BaseActivity extends FragmentActivity {
 
             mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_about)),
                     AboutFragment.class, null);
+
+            mBackgroundStatusHandler = new BackgroundStatusHandler(mActivity);
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        mBackgroundStatusHandler.removeObserver();
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)

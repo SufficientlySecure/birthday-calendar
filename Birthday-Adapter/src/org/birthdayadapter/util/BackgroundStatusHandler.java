@@ -21,45 +21,11 @@
 package org.birthdayadapter.util;
 
 import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.SyncStatusObserver;
 import android.os.Handler;
 import android.os.Message;
 
 public class BackgroundStatusHandler extends Handler {
     Activity mActivity;
-    Object mSyncObserveHandle;
-    boolean syncing = false;
-
-    SyncStatusObserver mMySyncStatusObserver = new SyncStatusObserver() {
-
-        @Override
-        public void onStatusChanged(int which) {
-            Log.d(Constants.TAG, "SyncStatusObserver, onStatusChanged");
-
-            boolean syncActive = ContentResolver.isSyncActive(Constants.ACCOUNT,
-                    Constants.CONTENT_AUTHORITY);
-            boolean syncPending = ContentResolver.isSyncPending(Constants.ACCOUNT,
-                    Constants.CONTENT_AUTHORITY);
-
-            String syncActiveStr = syncActive ? "true" : "false";
-            Log.d(Constants.TAG, "syncActive: " + syncActiveStr);
-            String syncPendingStr = syncPending ? "true" : "false";
-            Log.d(Constants.TAG, "syncPending: " + syncPendingStr);
-
-            if (syncActive || syncPending) {
-                if (!syncing) {
-                    syncing = true;
-                    BackgroundStatusHandler.this.sendEmptyMessage(CIRCLE_HANDLER_ENABLE);
-                }
-            } else {
-                if (syncing) {
-                    syncing = false;
-                    BackgroundStatusHandler.this.sendEmptyMessage(CIRCLE_HANDLER_DISABLE);
-                }
-            }
-        }
-    };
 
     public static final int CIRCLE_HANDLER_DISABLE = 0;
     public static final int CIRCLE_HANDLER_ENABLE = 1;
@@ -70,17 +36,9 @@ public class BackgroundStatusHandler extends Handler {
         super();
         this.mActivity = activity;
         noOfRunningBackgroundThreads = 0;
-        // register observer to know when sync is running
-        mSyncObserveHandle = ContentResolver.addStatusChangeListener(
-                ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE
-                        | ContentResolver.SYNC_OBSERVER_TYPE_PENDING, mMySyncStatusObserver);
-    }
 
-    public void removeObserver() {
-        // remove observer
-        if (mSyncObserveHandle != null) {
-            ContentResolver.removeStatusChangeListener(mSyncObserveHandle);
-        }
+        // default is disabled:
+        mActivity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
     }
 
     @Override

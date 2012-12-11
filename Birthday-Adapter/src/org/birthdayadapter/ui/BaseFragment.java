@@ -28,7 +28,6 @@ import org.birthdayadapter.util.PreferencesHelper;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -39,7 +38,7 @@ import android.preference.Preference.OnPreferenceClickListener;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class BaseFragment extends PreferenceFragment {
-    private Activity mActivity;
+    private BaseActivity mActivity;
     private AccountHelper mAccountHelper;
 
     private SwitchPreference mEnabled;
@@ -64,9 +63,9 @@ public class BaseFragment extends PreferenceFragment {
 
         Log.d(Constants.TAG, "onActivityCreated!");
 
-        mActivity = getActivity();
+        mActivity = (BaseActivity) getActivity();
 
-        mAccountHelper = new AccountHelper(mActivity);
+        mAccountHelper = new AccountHelper(mActivity, mActivity.mBackgroundStatusHandler);
 
         // save prefs here
         getPreferenceManager().setSharedPreferencesName(Constants.PREFS_NAME);
@@ -83,6 +82,12 @@ public class BaseFragment extends PreferenceFragment {
             mAccountHelper.addAccountAndSync();
         }
 
+        if (mEnabled.isChecked()) {
+            mForceSync.setEnabled(true);
+        } else {
+            mForceSync.setEnabled(false);
+        }
+
         // If account is activated check the preference
         setStatusBasedOnAccount();
 
@@ -94,8 +99,10 @@ public class BaseFragment extends PreferenceFragment {
 
                     if (boolVal) {
                         mAccountHelper.addAccountAndSync();
+                        mForceSync.setEnabled(true);
                     } else {
                         mAccountHelper.removeAccount();
+                        mForceSync.setEnabled(false);
                     }
                 }
                 return true;
