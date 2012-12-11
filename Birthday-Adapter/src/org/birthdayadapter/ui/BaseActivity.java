@@ -57,6 +57,8 @@ public class BaseActivity extends FragmentActivity {
 
         mActivity = this;
 
+        mBackgroundStatusHandler = new BackgroundStatusHandler(mActivity);
+
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             // Load Activity for Android < 3
             Intent oldActivity = new Intent(mActivity, BaseActivityV8.class);
@@ -91,8 +93,6 @@ public class BaseActivity extends FragmentActivity {
             mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_about)),
                     AboutFragment.class, null);
         }
-
-        mBackgroundStatusHandler = new BackgroundStatusHandler(mActivity);
     }
 
     @Override
