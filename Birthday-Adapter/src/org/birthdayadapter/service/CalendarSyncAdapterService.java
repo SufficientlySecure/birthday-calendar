@@ -84,6 +84,7 @@ public class CalendarSyncAdapterService extends Service {
                 CalendarSyncAdapterService.performSync(mContext, account, extras, authority,
                         provider, syncResult);
             } catch (OperationCanceledException e) {
+                Log.e(Constants.TAG, "OperationCanceledException", e);
             }
         }
     }
@@ -162,32 +163,36 @@ public class CalendarSyncAdapterService extends Service {
                 Calendars.ACCOUNT_NAME + " = ? AND " + Calendars.ACCOUNT_TYPE + " = ?",
                 new String[] { Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE }, null);
 
-        if (c1.moveToNext()) {
-            return c1.getLong(0);
-        } else {
-            ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
+        try {
+            if (c1.moveToNext()) {
+                return c1.getLong(0);
+            } else {
+                ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
 
-            ContentProviderOperation.Builder builder = ContentProviderOperation
-                    .newInsert(calenderUri);
-            builder.withValue(Calendars.ACCOUNT_NAME, Constants.ACCOUNT_NAME);
-            builder.withValue(Calendars.ACCOUNT_TYPE, Constants.ACCOUNT_TYPE);
-            builder.withValue(Calendars.NAME, CALENDAR_COLUMN_NAME);
-            builder.withValue(Calendars.CALENDAR_DISPLAY_NAME,
-                    context.getString(R.string.calendar_display_name));
-            builder.withValue(Calendars.CALENDAR_COLOR, PreferencesHelper.getColor(context));
-            builder.withValue(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_READ);
-            builder.withValue(Calendars.OWNER_ACCOUNT, Constants.ACCOUNT_NAME);
-            builder.withValue(Calendars.SYNC_EVENTS, 1);
-            builder.withValue(Calendars.VISIBLE, 1);
-            operationList.add(builder.build());
-            try {
-                contentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
-            } catch (Exception e) {
-                Log.e(Constants.TAG, "Error: " + e.getMessage());
-                e.printStackTrace();
-                return -1;
+                ContentProviderOperation.Builder builder = ContentProviderOperation
+                        .newInsert(calenderUri);
+                builder.withValue(Calendars.ACCOUNT_NAME, Constants.ACCOUNT_NAME);
+                builder.withValue(Calendars.ACCOUNT_TYPE, Constants.ACCOUNT_TYPE);
+                builder.withValue(Calendars.NAME, CALENDAR_COLUMN_NAME);
+                builder.withValue(Calendars.CALENDAR_DISPLAY_NAME,
+                        context.getString(R.string.calendar_display_name));
+                builder.withValue(Calendars.CALENDAR_COLOR, PreferencesHelper.getColor(context));
+                builder.withValue(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_READ);
+                builder.withValue(Calendars.OWNER_ACCOUNT, Constants.ACCOUNT_NAME);
+                builder.withValue(Calendars.SYNC_EVENTS, 1);
+                builder.withValue(Calendars.VISIBLE, 1);
+                operationList.add(builder.build());
+                try {
+                    contentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
+                } catch (Exception e) {
+                    Log.e(Constants.TAG, "Error: " + e.getMessage());
+                    e.printStackTrace();
+                    return -1;
+                }
+                return getCalendar(context);
             }
-            return getCalendar(context);
+        } finally {
+            c1.close();
         }
     }
 

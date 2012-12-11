@@ -20,7 +20,6 @@
   <string name="pref_about">О приложении</string>
   <string name="pref_force_sync">Синхронизировать сейчас!</string>
   <string name="pref_force_sync_summary">Обычно нет необходимости в этом, т.к. Birthday Adapter синхронизируется автоматически раз в день.</string>
-  <string name="pref_reminder">Напоминание</string>
   <string name="pref_reminder_summary">Устанавливает напоминание для всех дней рождения</string>
   <string-array name="pref_reminder_entries">
     <item>Отключить напоминания</item>
