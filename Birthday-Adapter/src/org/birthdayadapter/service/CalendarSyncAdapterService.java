@@ -432,7 +432,7 @@ public class CalendarSyncAdapterService extends Service {
             try {
                 eventDate = dateFormat2.parse(eventDateString);
 
-                // Becacuse no year is defined in address book, set year to 1700
+                // Because no year is defined in address book, set year to 1700
                 // When year < 1800 it is not displayed in brackets
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(eventDate);
@@ -499,19 +499,19 @@ public class CalendarSyncAdapterService extends Service {
      * @param eventType
      * @param cursor
      * @param eventCustomLabelColumn
-     * @param hasYear
+     * @param includeAge
      * @param displayName
      * @param age
      * @return
      */
     private static String generateTitle(Context context, int eventType, Cursor cursor,
-            int eventCustomLabelColumn, boolean hasYear, String displayName, int age) {
+            int eventCustomLabelColumn, boolean includeAge, String displayName, int age) {
         String title = null;
         switch (eventType) {
         case ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM:
             String eventCustomLabel = cursor.getString(eventCustomLabelColumn);
 
-            if (hasYear) {
+            if (includeAge) {
                 title = String.format(context.getString(R.string.event_title_custom_with_age),
                         displayName, eventCustomLabel, age);
             } else {
@@ -520,7 +520,7 @@ public class CalendarSyncAdapterService extends Service {
             }
             break;
         case ContactsContract.CommonDataKinds.Event.TYPE_ANNIVERSARY:
-            if (hasYear) {
+            if (includeAge) {
                 title = String.format(context.getString(R.string.event_title_anniversary_with_age),
                         displayName, age);
             } else {
@@ -530,7 +530,7 @@ public class CalendarSyncAdapterService extends Service {
             }
             break;
         case ContactsContract.CommonDataKinds.Event.TYPE_OTHER:
-            if (hasYear) {
+            if (includeAge) {
                 title = String.format(context.getString(R.string.event_title_other_with_age),
                         displayName, age);
             } else {
@@ -539,7 +539,7 @@ public class CalendarSyncAdapterService extends Service {
             }
             break;
         case ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY:
-            if (hasYear) {
+            if (includeAge) {
                 title = String.format(context.getString(R.string.event_title_birthday_with_age),
                         displayName, age);
             } else {
@@ -548,7 +548,7 @@ public class CalendarSyncAdapterService extends Service {
             }
             break;
         default:
-            if (hasYear) {
+            if (includeAge) {
                 title = String.format(context.getString(R.string.event_title_other_with_age),
                         displayName, age);
             } else {
@@ -674,15 +674,14 @@ public class CalendarSyncAdapterService extends Service {
                         // calculate age
                         int age = iteratedYear - eventYear;
 
-                        // if age < 0, disable display of age again!
-                        if (age < 0) {
-                            hasYear = false;
-                        } else {
-                            hasYear = true;
+                        // if birthday has year and age of this event >= 0, display age in title
+                        boolean includeAge = false;
+                        if (hasYear && age >= 0) {
+                            includeAge = true;
                         }
 
                         String title = generateTitle(context, eventType, cursor,
-                                eventCustomLabelColumn, hasYear, displayName, age);
+                                eventCustomLabelColumn, includeAge, displayName, age);
                         Log.d(Constants.TAG, "Title: " + title);
 
                         Log.d(Constants.TAG, "BackRef is " + backRef);
