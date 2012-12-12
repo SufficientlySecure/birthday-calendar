@@ -1,8 +1,12 @@
 <b>Description</b>
-One of the most requested features for the Android Operating System is now available!
 Birthday Adapter provides birthdays, anniversaries, and other events from your contacts as a real calendar, which is displayed in your standard Android calendar application.
 To my knowledge, this is the first implementation that implements birthdays as a real calendar integrated in the Android calendar.
 All other apps only displays their own lists but have no real integration!
+
+<b>Known bugs</b>
+Jelly Bean Workaround: Android 4.1 alias Jelly Bean has a bug which causes Birthday Adapter to disable after reboots. Please install https://play.google.com/store/apps/details?id=org.birthdayadapter.jb.workaround as a workaround!
+
+Reminder on Android < 4: Reminder do not work on Android < 4. If anyone knows why, write a bug report.
 
 <b>Features</b>
 • Total integration of birthdays, anniversaries, and other events as a calendar
