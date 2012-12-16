@@ -6,10 +6,23 @@
   <string name="synchronizing">Синхронизация...</string>
   <!--Calendar-->
   <string name="calendar_display_name">Дни рождения</string>
+  <string name="event_title_birthday_with_age">День рождения у %1$s (%2$d)</string>
+  <string name="event_title_birthday_without_age">День рождения у %1$s</string>
+  <string name="event_title_anniversary_with_age">Годовщина у %1$s (%2$d)</string>
+  <string name="event_title_anniversary_without_age">Годовщина у %1$s</string>
+  <string name="event_title_other_with_age">Событие у %1$s (%2$d)</string>
+  <string name="event_title_other_without_age">Событие у %1$s</string>
+  <string name="event_title_custom_with_age">%2$s у %1$s (%3$d)</string>
+  <string name="event_title_custom_without_age">%2$s у %1$s</string>
   <!--About-->
   <string name="about_version">Версия:</string>
   <!--Tabs-->
+  <string name="tab_main">Главное</string>
+  <string name="tab_preferences">Настройки</string>
+  <string name="tab_help">Помощь</string>
+  <string name="tab_about">О приложении</string>
   <!--Preferences-->
+  <string name="pref_general">Основные</string>
   <string name="pref_description">Описание</string>
   <string name="pref_enable_switch">Календарь</string>
   <string name="pref_enable">Включить календарь с днями рождения</string>
@@ -20,6 +33,10 @@
   <string name="pref_about">О приложении</string>
   <string name="pref_force_sync">Синхронизировать сейчас!</string>
   <string name="pref_force_sync_summary">Обычно нет необходимости в этом, т.к. Birthday Adapter синхронизируется автоматически раз в день.</string>
+  <string name="pref_reminders">Напоминания</string>
+  <string name="pref_reminder0">Напоминание 1</string>
+  <string name="pref_reminder1">Напоминание 2</string>
+  <string name="pref_reminder2">Напоминание 3</string>
   <string name="pref_reminder_summary">Устанавливает напоминание для всех дней рождения</string>
   <string-array name="pref_reminder_entries">
     <item>Отключить напоминания</item>
