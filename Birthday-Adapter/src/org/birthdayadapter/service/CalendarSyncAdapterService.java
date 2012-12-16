@@ -461,8 +461,12 @@ public class CalendarSyncAdapterService extends Service {
             }
         }
 
-        Log.d(Constants.TAG,
-                "Event Date String " + eventDateString + " was parsed as " + eventDate.toString());
+        if (eventDate != null) {
+            Log.d(Constants.TAG, "Event Date String " + eventDateString + " was parsed as "
+                    + eventDate.toString());
+        } else {
+            Log.d(Constants.TAG, "Event Date String " + eventDateString + " was parsed as null");
+        }
 
         return eventDate;
     }
