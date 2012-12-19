@@ -50,7 +50,7 @@ See http://source.android.com/source/code-style.html
 
 See http://www.androidpolice.com/2009/11/04/auto-formatting-android-xml-files-with-eclipse/
 
-# Licenses
+# Licenses of included source code
 
 ## Libraries
 * ColorPickerPreference  
