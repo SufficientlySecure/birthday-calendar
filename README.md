@@ -49,3 +49,27 @@ See http://source.android.com/source/code-style.html
 * XML: Indent using spaces with Indention size 4 (Eclipse: Properties -> XML -> XML Files -> Editor)
 
 See http://www.androidpolice.com/2009/11/04/auto-formatting-android-xml-files-with-eclipse/
+
+# Licenses
+
+## Libraries
+* android-ColorPickerPreference
+  https://github.com/attenzione/android-ColorPickerPreference
+  Apache License v2
+
+* CalendarProvider from Original Android 4 Source
+  Apache License v2
+
+* HTMLCleander
+  http://htmlcleaner.sourceforge.net/
+  BSD License
+
+* HtmlSpanner
+  Apache License v2
+
+## Images
+
+* icon.svg
+  Based on Tango Icon Library and Tango Pidgin Icon Theme
+  http://tango.freedesktop.org/
+  Public Domain (Tango Icon Library) and GPL (Tango Pidgin Icon Theme)
