@@ -8,7 +8,7 @@ For more information visit http://code.google.com/p/birthday-adapter
 
 # Build using Ant
 
-1. Have Android SDK "tools" directory in your PATH
+1. Have Android SDK "tools" directory in your PATH (http://developer.android.com/sdk/index.html)
 2. Change to "Birthday-Adapter" directory with ``cd Birthday-Adapter``
 3. Execute ``android update project -p .``
 4. Execute ``ant clean``
