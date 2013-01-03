@@ -26,7 +26,7 @@ All JAR-Libraries are provided in this repository under "libs".
 
 Translations are hosted on Transifex, which is configured by ".tx/config".
 
-1. To pull newest translations install transifex client (e.g. aptitude install transifex-client)
+1. To pull newest translations install transifex client (e.g. ``apt-get install transifex-client``)
 2. Config Transifex client with "~/.transifexrc"
 3. Go into root folder of git repo
 4. execute ``tx pull`` (``tx pull -a`` to get all languages)
