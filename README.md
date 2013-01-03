@@ -8,10 +8,11 @@ For more information visit http://code.google.com/p/birthday-adapter
 
 # Build using Ant
 
-1. Add a file ``local.properties`` in the folder ``Birthday-Adapter`` folder with the following lines:
-``sdk.dir=/opt/android-sdk``. Alter these lines to your locations of the Android SDK!
-2. Execute ```ant clear```
-3. Execute ```ant debug```
+1. Have Android SDK "tools" directory and NDK directory in your PATH
+2. Change to "Birthday-Adapter" directory with ``cd Birthday-Adapter``
+3. Execute ``android update project -p .``
+4. Execute ``ant clean``
+5. Execute ``ant debug``
 
 # Contribute
 
@@ -28,7 +29,7 @@ Translations are hosted on Transifex, which is configured by ``.tx/config``
 1. To pull newest translations install transifex client (e.g. aptitude install transifex-client)
 2. Config Transifex client with ``~/.transifexrc``
 3. Go into root folder of git repo
-4. execute ```tx pull``` (```tx pull -a``` to get all languages)
+4. execute ``tx pull`` (``tx pull -a`` to get all languages)
 
 see http://help.transifex.net/features/client/index.html#user-client
 
