@@ -11,8 +11,7 @@ For more information visit http://code.google.com/p/birthday-adapter
 1. Have Android SDK "tools" directory in your PATH (http://developer.android.com/sdk/index.html)
 2. Change to "Birthday-Adapter" directory with ``cd Birthday-Adapter``
 3. Execute ``android update project -p .``
-4. Execute ``ant clean``
-5. Execute ``ant debug``
+4. Execute ``ant debug``
 
 # Contribute
 
