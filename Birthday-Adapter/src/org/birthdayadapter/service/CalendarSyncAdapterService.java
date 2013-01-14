@@ -415,22 +415,27 @@ public class CalendarSyncAdapterService extends Service {
      * @return eventDate as Date object
      */
     private static Date parseEventDateString(String eventDateString) {
+        Date eventDate = null;
+        boolean success = false;
+
+        /* yyyy-MM-dd */
+        Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
+                + " with yyyy-MM-dd!");
         SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         dateFormat1.setTimeZone(TimeZone.getDefault());
-        SimpleDateFormat dateFormat2 = new SimpleDateFormat("--MM-dd", Locale.US);
-        dateFormat2.setTimeZone(TimeZone.getDefault());
-        SimpleDateFormat dateFormat3 = new SimpleDateFormat("yyyyMMdd", Locale.US);
-        dateFormat3.setTimeZone(TimeZone.getDefault());
-
-        Date eventDate = null;
-
         try {
             eventDate = dateFormat1.parse(eventDateString);
-
+            success = true;
         } catch (ParseException e) {
-            Log.d(Constants.TAG, "Event Date String " + eventDateString
-                    + " could not be parsed with yyyy-MM-dd! Falling back to --MM-dd!");
+            Log.d(Constants.TAG, "Parsing failed!");
+        }
 
+        /* --MM-dd */
+        if (!success) {
+            Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
+                    + " with --MM-dd!");
+            SimpleDateFormat dateFormat2 = new SimpleDateFormat("--MM-dd", Locale.US);
+            dateFormat2.setTimeZone(TimeZone.getDefault());
             try {
                 eventDate = dateFormat2.parse(eventDateString);
 
@@ -441,36 +446,53 @@ public class CalendarSyncAdapterService extends Service {
                 cal.set(Calendar.YEAR, 1700);
                 eventDate = cal.getTime();
 
-            } catch (ParseException e2) {
-                Log.d(Constants.TAG, "Event Date String " + eventDateString
-                        + " could not be parsed with --MM-dd! Falling back to yyyyMMdd!");
-                try {
-                    eventDate = dateFormat3.parse(eventDateString);
-
-                } catch (ParseException e3) {
-                    Log.d(Constants.TAG, "Event Date String " + eventDateString
-                            + " could not be parsed with yyyyMMdd! Falling back to timestamp!");
-                    try {
-                        eventDate = new Date(Long.parseLong(eventDateString));
-
-                    } catch (NumberFormatException e4) {
-                        Log.e(Constants.TAG, "Event Date String " + eventDateString
-                                + " could not be parsed as a timestamp! Parsing failed!");
-
-                        eventDate = null;
-                    }
-                }
+                success = true;
+            } catch (ParseException e) {
+                Log.d(Constants.TAG, "Parsing failed!");
             }
         }
 
-        if (eventDate != null) {
-            Log.d(Constants.TAG, "Event Date String " + eventDateString + " was parsed as "
-                    + eventDate.toString());
+        /* yyyyMMdd */
+        if (!success && eventDateString.length() == 8) {
+            Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
+                    + " with yyyyMMdd!");
+            SimpleDateFormat dateFormat3 = new SimpleDateFormat("yyyyMMdd", Locale.US);
+            dateFormat3.setTimeZone(TimeZone.getDefault());
+            try {
+                eventDate = dateFormat3.parse(eventDateString);
+                success = true;
+            } catch (ParseException e) {
+                Log.d(Constants.TAG, "Parsing failed!");
+            }
         } else {
-            Log.d(Constants.TAG, "Event Date String " + eventDateString + " was parsed as null");
+            Log.d(Constants.TAG, "Event Date String " + eventDateString
+                    + " could not be parsed with yyyyMMdd because length != 8!");
         }
 
-        return eventDate;
+        /* Unix timestamp */
+        if (!success) {
+            Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
+                    + " as a unix timestamp!");
+            try {
+                eventDate = new Date(Long.parseLong(eventDateString));
+                success = true;
+            } catch (NumberFormatException e) {
+                Log.d(Constants.TAG, "Parsing failed!");
+            }
+        }
+
+        /* Return */
+        if (eventDate != null && success) {
+            Log.d(Constants.TAG, "Event Date String " + eventDateString + " was parsed as "
+                    + eventDate.toString());
+
+            return eventDate;
+        } else {
+            Log.e(Constants.TAG, "Event Date String " + eventDateString
+                    + " could NOT be parsed! returning null!");
+
+            return null;
+        }
     }
 
     /**
