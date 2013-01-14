@@ -58,6 +58,7 @@ import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
 import android.provider.ContactsContract;
+import android.text.format.DateUtils;
 
 @SuppressLint("NewApi")
 public class CalendarSyncAdapterService extends Service {
@@ -393,10 +394,11 @@ public class CalendarSyncAdapterService extends Service {
         cal.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         long dtstart = cal.getTimeInMillis();
+        long dtend = dtstart + DateUtils.DAY_IN_MILLIS;
 
         builder.withValue(Events.CALENDAR_ID, calendarId);
         builder.withValue(Events.DTSTART, dtstart);
-        builder.withValue(Events.DTEND, dtstart);
+        builder.withValue(Events.DTEND, dtend);
         builder.withValue(Events.TITLE, title);
         builder.withValue(Events.ALL_DAY, 1);
 

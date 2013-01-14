@@ -1,3 +1,7 @@
+1.7
+- Fix duration of birthdays
+
+
 1.6
 - Fix Nullpointer exception
 - Fix age for events without year
