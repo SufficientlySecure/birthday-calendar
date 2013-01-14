@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--AsyncTask progress dialogs-->
+  <string name="creating">Створюється адаптер…</string>
+  <string name="removing">Вилучається адаптер…</string>
+  <string name="synchronizing">Синхронізація…</string>
+  <!--Calendar-->
+  <string name="calendar_display_name">Дні народження</string>
+  <string name="event_title_birthday_with_age">День народження у %1$s (%2$d)</string>
+  <string name="event_title_birthday_without_age">День народження у %1$s</string>
+  <string name="event_title_anniversary_with_age">Річниця у %1$s (%2$d)</string>
+  <string name="event_title_anniversary_without_age">Річниця у %1$s</string>
+  <string name="event_title_other_with_age">Подія у %1$s (%2$d)</string>
+  <string name="event_title_other_without_age">Подія у %1$s</string>
+  <string name="event_title_custom_with_age">%2$s у %1$s (%3$d)</string>
+  <string name="event_title_custom_without_age">%2$s у %1$s</string>
+  <!--About-->
+  <string name="about_version">Версія:</string>
+  <!--Tabs-->
+  <string name="tab_main">Головне</string>
+  <string name="tab_preferences">Параметри</string>
+  <string name="tab_help">Допомога</string>
+  <string name="tab_about">Про програму</string>
+  <!--Preferences-->
+  <string name="pref_general">Основне</string>
+  <string name="pref_description">Опис</string>
+  <string name="pref_enable_switch">Календар</string>
+  <string name="pref_enable">Увімкнути календар з днями народження</string>
+  <string name="pref_enable_summary">Показує дні народження, ювілеї та інші події ваших контактів у календарі Андроїд.</string>
+  <string name="pref_color">Колір</string>
+  <string name="pref_color_summary">Колір календаря з днями народження</string>
+  <string name="pref_help">Допомога</string>
+  <string name="pref_about">Про програму</string>
+  <string name="pref_force_sync">Синхронізувати зараз!</string>
+  <string name="pref_force_sync_summary">За звичай вам не потрібно робити це, бо Birthday Adapter синхронізується автоматично раз на день.</string>
+  <string name="pref_reminders">Нагадування</string>
+  <string name="pref_reminder0">Нагадування 1</string>
+  <string name="pref_reminder1">Нагадування 2</string>
+  <string name="pref_reminder2">Нагадування 3</string>
+  <string name="pref_reminder_summary">Встановити нагадування для всіх днів народження</string>
+  <string-array name="pref_reminder_entries">
+    <item>вимкнути нагадування</item>
+    <item>В день події</item>
+    <item>За 1 день</item>
+    <item>За 2 дні</item>
+    <item>За 3 дні</item>
+  </string-array>
+  <!--Adapter Screen-->
+  <string name="pref_account_header">Налаштування</string>
+  <string name="pref_account_settings">Налаштувати Birthday Adapter</string>
+  <!--Color Picker-->
+  <string name="dialog_color_picker">Вибір кольору</string>
+  <string name="press_color_to_apply">Щоби застосувати, натисніть на колір</string>
+</resources>

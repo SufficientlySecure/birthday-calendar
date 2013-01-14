@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--AsyncTask progress dialogs-->
+  <string name="creating">Skapar adapter...</string>
+  <string name="removing">Tar bort adapter...</string>
+  <string name="synchronizing">Synkroniserar...</string>
+  <!--Calendar-->
+  <string name="calendar_display_name">Födelsedagar</string>
+  <string name="event_title_birthday_with_age">%1$s\'s Födelsedag (%2$d)</string>
+  <string name="event_title_birthday_without_age">%1$s\'s Födelsedag</string>
+  <string name="event_title_anniversary_with_age">%1$s\'s Bröllopsdag (%2$d)</string>
+  <string name="event_title_anniversary_without_age">%1$s\'s Bröllopsdag</string>
+  <string name="event_title_other_with_age">Andra Händelser med %1$s (%2$d)</string>
+  <string name="event_title_other_without_age">Andra Händelser med %1$s</string>
+  <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
+  <string name="event_title_custom_without_age">%1$s: %2$s</string>
+  <!--About-->
+  <string name="about_version">Version:</string>
+  <!--Tabs-->
+  <string name="tab_main">Huvudsaklig</string>
+  <string name="tab_preferences">Preferens</string>
+  <string name="tab_help">Hjälp</string>
+  <string name="tab_about">Om</string>
+  <!--Preferences-->
+  <string name="pref_general">Allmänt</string>
+  <string name="pref_description">Beskrivning</string>
+  <string name="pref_enable_switch">Kalender</string>
+  <string name="pref_enable">Aktivera Födelsedagskalender</string>
+  <string name="pref_enable_summary">Visa födelsedagar, bröllopsdagar och andra händelser beroende på kontakterna som en kalender i din Android Kalender.</string>
+  <string name="pref_color">Färg</string>
+  <string name="pref_color_summary">Färg på födelsedagskalender</string>
+  <string name="pref_help">Hjälp</string>
+  <string name="pref_about">Om</string>
+  <string name="pref_force_sync">Synkronisera nu !</string>
+  <string name="pref_force_sync_summary">Normalt behöver du inte göra detta, eftersom Födelsedags Adapter synkroniserar automatiskt en gång per dag.</string>
+  <string name="pref_reminders">Påminnelser</string>
+  <string name="pref_reminder0">Påminnelse 1</string>
+  <string name="pref_reminder1">Påminnelse 2</string>
+  <string name="pref_reminder2">Påminnelse 3</string>
+  <string name="pref_reminder_summary">Anger påminnelse för alla födelsedagar</string>
+  <string-array name="pref_reminder_entries">
+    <item>inaktivera påminnelser</item>
+    <item>Vid dagens händelse</item>
+    <item>1 dag innan</item>
+    <item>2 dagar innan</item>
+    <item>3 dagar innan</item>
+  </string-array>
+  <!--Adapter Screen-->
+  <string name="pref_account_header">Inställningar</string>
+  <string name="pref_account_settings">Konfigurera Födelsedags Adapter</string>
+  <!--Color Picker-->
+  <string name="dialog_color_picker">Färgväljare</string>
+  <string name="press_color_to_apply">Klicka på en Färg för att godkänna</string>
+</resources>
