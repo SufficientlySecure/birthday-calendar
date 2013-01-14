@@ -47,7 +47,7 @@ public class BaseActivityV8 extends PreferenceActivity {
     private Activity mActivity;
     private AccountHelper mAccountHelper;
 
-    public BackgroundStatusHandler mBackgroundStatusHandler;
+    public BackgroundStatusHandler mBackgroundStatusHandler = new BackgroundStatusHandler(this);
 
     private CheckBoxPreference mEnabled;
     private Preference mForceSync;
@@ -72,7 +72,8 @@ public class BaseActivityV8 extends PreferenceActivity {
         // load preferences from xml
         addPreferencesFromResource(R.xml.base_preferences_v8);
 
-        mBackgroundStatusHandler = new BackgroundStatusHandler(mActivity);
+        // default is disabled:
+        mActivity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
 
         mAccountHelper = new AccountHelper(mActivity, mBackgroundStatusHandler);
 

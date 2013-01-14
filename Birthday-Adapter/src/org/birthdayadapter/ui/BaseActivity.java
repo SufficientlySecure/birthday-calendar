@@ -46,7 +46,11 @@ public class BaseActivity extends FragmentActivity {
     private ViewPager mViewPager;
     private TabsAdapter mTabsAdapter;
 
-    public BackgroundStatusHandler mBackgroundStatusHandler;
+    public static final int BACKGROUND_STATUS_HANDLER_DISABLE = 0;
+    public static final int BACKGROUND_STATUS_HANDLER_ENABLE = 1;
+
+    public BackgroundStatusHandler mBackgroundStatusHandler = new BackgroundStatusHandler(
+            this);
 
     /**
      * Called when the activity is first created.
@@ -91,7 +95,8 @@ public class BaseActivity extends FragmentActivity {
             mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_about)),
                     AboutFragment.class, null);
 
-            mBackgroundStatusHandler = new BackgroundStatusHandler(mActivity);
+            // default is disabled:
+            mActivity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
         }
     }
 

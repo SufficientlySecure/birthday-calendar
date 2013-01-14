@@ -20,36 +20,35 @@
 
 package org.birthdayadapter.util;
 
+import java.lang.ref.WeakReference;
+
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
 
 public class BackgroundStatusHandler extends Handler {
-    Activity mActivity;
-
     public static final int BACKGROUND_STATUS_HANDLER_DISABLE = 0;
     public static final int BACKGROUND_STATUS_HANDLER_ENABLE = 1;
 
-    int noOfRunningBackgroundThreads;
+    WeakReference<Activity> mActivity;
 
     public BackgroundStatusHandler(Activity activity) {
-        super();
-        this.mActivity = activity;
+        mActivity = new WeakReference<Activity>(activity);
         noOfRunningBackgroundThreads = 0;
-
-        // default is disabled:
-        mActivity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
     }
+
+    int noOfRunningBackgroundThreads;
 
     @Override
     public void handleMessage(Message msg) {
+        Activity activity = mActivity.get();
         final int what = msg.what;
 
         switch (what) {
         case BACKGROUND_STATUS_HANDLER_ENABLE:
             noOfRunningBackgroundThreads++;
 
-            mActivity.setProgressBarIndeterminateVisibility(Boolean.TRUE);
+            activity.setProgressBarIndeterminateVisibility(Boolean.TRUE);
 
             break;
 
@@ -57,7 +56,7 @@ public class BackgroundStatusHandler extends Handler {
             noOfRunningBackgroundThreads--;
 
             if (noOfRunningBackgroundThreads <= 0) {
-                mActivity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
+                activity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
             }
 
             break;
