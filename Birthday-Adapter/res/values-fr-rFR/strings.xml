@@ -6,10 +6,23 @@
   <string name="synchronizing">Synchronisation en cours...</string>
   <!--Calendar-->
   <string name="calendar_display_name">Anniversaires</string>
+  <string name="event_title_birthday_with_age">Anniversaire de %1$s (%2$d)</string>
+  <string name="event_title_birthday_without_age">Anniversaire de %1$s</string>
+  <string name="event_title_anniversary_with_age">Fête de %1$s (%2$d)</string>
+  <string name="event_title_anniversary_without_age">Fête de %1$s</string>
+  <string name="event_title_other_with_age">Autre événement avec %1$s (%2$d)</string>
+  <string name="event_title_other_without_age">Autre événement avec %1$s</string>
+  <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
+  <string name="event_title_custom_without_age">%1$s : %2$s</string>
   <!--About-->
   <string name="about_version">Version :</string>
   <!--Tabs-->
+  <string name="tab_main">Principal</string>
+  <string name="tab_preferences">Préférences</string>
+  <string name="tab_help">Aide</string>
+  <string name="tab_about">À propos</string>
   <!--Preferences-->
+  <string name="pref_general">Général</string>
   <string name="pref_description">Description</string>
   <string name="pref_enable_switch">Calendrier</string>
   <string name="pref_enable">Activer le Calendrier des Anniversaires</string>
@@ -20,6 +33,10 @@
   <string name="pref_about">À propos</string>
   <string name="pref_force_sync">Synchroniser maintenant !</string>
   <string name="pref_force_sync_summary">Il est généralement inutile de synchroniser manuellement, car Birthday Adapter synchronise automatiquement une fois par jour.</string>
+  <string name="pref_reminders">Rappels</string>
+  <string name="pref_reminder0">Rappel 1</string>
+  <string name="pref_reminder1">Rappel 2</string>
+  <string name="pref_reminder2">Rappel 3</string>
   <string name="pref_reminder_summary">Configurer les rappels pour tous les anniversaires</string>
   <string-array name="pref_reminder_entries">
     <item>pas de rappels</item>
