@@ -421,117 +421,123 @@ public class CalendarSyncAdapterService extends Service {
      * @return eventDate as Date object
      */
     private static Date parseEventDateString(String eventDateString) {
-        Date eventDate = null;
-        boolean success = false;
+        if (eventDateString != null) {
+            Date eventDate = null;
+            boolean success = false;
 
-        /* yyyy-MM-dd */
-        Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
-                + " with yyyy-MM-dd!");
-        SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-        dateFormat1.setTimeZone(TimeZone.getDefault());
-        try {
-            eventDate = dateFormat1.parse(eventDateString);
-            success = true;
-        } catch (ParseException e) {
-            Log.d(Constants.TAG, "Parsing failed!");
-        }
-
-        /* --MM-dd */
-        if (!success) {
+            /* yyyy-MM-dd */
             Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
-                    + " with --MM-dd!");
-            SimpleDateFormat dateFormat2 = new SimpleDateFormat("--MM-dd", Locale.US);
-            dateFormat2.setTimeZone(TimeZone.getDefault());
+                    + " with yyyy-MM-dd!");
+            SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+            dateFormat1.setTimeZone(TimeZone.getDefault());
             try {
-                eventDate = dateFormat2.parse(eventDateString);
-
-                // Because no year is defined in address book, set year to 1700
-                // When year < 1800 it is not displayed in brackets
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(eventDate);
-                cal.set(Calendar.YEAR, 1700);
-                eventDate = cal.getTime();
-
+                eventDate = dateFormat1.parse(eventDateString);
                 success = true;
             } catch (ParseException e) {
                 Log.d(Constants.TAG, "Parsing failed!");
             }
-        }
 
-        /* yyyyMMdd */
-        if (!success && eventDateString.length() == 8) {
+            /* --MM-dd */
+            if (!success) {
+                Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
+                        + " with --MM-dd!");
+                SimpleDateFormat dateFormat2 = new SimpleDateFormat("--MM-dd", Locale.US);
+                dateFormat2.setTimeZone(TimeZone.getDefault());
+                try {
+                    eventDate = dateFormat2.parse(eventDateString);
+
+                    // Because no year is defined in address book, set year to 1700
+                    // When year < 1800 it is not displayed in brackets
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(eventDate);
+                    cal.set(Calendar.YEAR, 1700);
+                    eventDate = cal.getTime();
+
+                    success = true;
+                } catch (ParseException e) {
+                    Log.d(Constants.TAG, "Parsing failed!");
+                }
+            }
+
+            /* yyyyMMdd */
+            if (!success && eventDateString.length() == 8) {
+                Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
+                        + " with yyyyMMdd!");
+                SimpleDateFormat dateFormat3 = new SimpleDateFormat("yyyyMMdd", Locale.US);
+                dateFormat3.setTimeZone(TimeZone.getDefault());
+                try {
+                    eventDate = dateFormat3.parse(eventDateString);
+                    success = true;
+                } catch (ParseException e) {
+                    Log.d(Constants.TAG, "Parsing failed!");
+                }
+            } else {
+                Log.d(Constants.TAG, "Event Date String " + eventDateString
+                        + " could not be parsed with yyyyMMdd because length != 8!");
+            }
+
+            /* Unix timestamp */
+            if (!success) {
+                Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
+                        + " as a unix timestamp!");
+                try {
+                    eventDate = new Date(Long.parseLong(eventDateString));
+                    success = true;
+                } catch (NumberFormatException e) {
+                    Log.d(Constants.TAG, "Parsing failed!");
+                }
+            }
+
+            /* dd.MM.yyyy */
             Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
-                    + " with yyyyMMdd!");
-            SimpleDateFormat dateFormat3 = new SimpleDateFormat("yyyyMMdd", Locale.US);
-            dateFormat3.setTimeZone(TimeZone.getDefault());
+                    + " with dd.MM.yyyy!");
+            SimpleDateFormat dateFormat4 = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
+            dateFormat4.setTimeZone(TimeZone.getDefault());
             try {
-                eventDate = dateFormat3.parse(eventDateString);
+                eventDate = dateFormat4.parse(eventDateString);
                 success = true;
             } catch (ParseException e) {
                 Log.d(Constants.TAG, "Parsing failed!");
             }
-        } else {
-            Log.d(Constants.TAG, "Event Date String " + eventDateString
-                    + " could not be parsed with yyyyMMdd because length != 8!");
-        }
 
-        /* Unix timestamp */
-        if (!success) {
+            /* yyyy.MM.dd */
             Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
-                    + " as a unix timestamp!");
+                    + " with yyyy.MM.dd!");
+            SimpleDateFormat dateFormat5 = new SimpleDateFormat("yyyy.MM.dd", Locale.US);
+            dateFormat5.setTimeZone(TimeZone.getDefault());
             try {
-                eventDate = new Date(Long.parseLong(eventDateString));
+                eventDate = dateFormat5.parse(eventDateString);
                 success = true;
-            } catch (NumberFormatException e) {
+            } catch (ParseException e) {
                 Log.d(Constants.TAG, "Parsing failed!");
             }
-        }
 
-        /* dd.MM.yyyy */
-        Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
-                + " with dd.MM.yyyy!");
-        SimpleDateFormat dateFormat4 = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
-        dateFormat4.setTimeZone(TimeZone.getDefault());
-        try {
-            eventDate = dateFormat4.parse(eventDateString);
-            success = true;
-        } catch (ParseException e) {
-            Log.d(Constants.TAG, "Parsing failed!");
-        }
+            /* dd/MM/yyyy */
+            Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
+                    + " with dd/MM/yyyy!");
+            SimpleDateFormat dateFormat6 = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+            dateFormat6.setTimeZone(TimeZone.getDefault());
+            try {
+                eventDate = dateFormat6.parse(eventDateString);
+                success = true;
+            } catch (ParseException e) {
+                Log.d(Constants.TAG, "Parsing failed!");
+            }
 
-        /* yyyy.MM.dd */
-        Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
-                + " with yyyy.MM.dd!");
-        SimpleDateFormat dateFormat5 = new SimpleDateFormat("yyyy.MM.dd", Locale.US);
-        dateFormat5.setTimeZone(TimeZone.getDefault());
-        try {
-            eventDate = dateFormat5.parse(eventDateString);
-            success = true;
-        } catch (ParseException e) {
-            Log.d(Constants.TAG, "Parsing failed!");
-        }
+            /* Return */
+            if (eventDate != null && success) {
+                Log.d(Constants.TAG, "Event Date String " + eventDateString + " was parsed as "
+                        + eventDate.toString());
 
-        /* dd/MM/yyyy */
-        Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
-                + " with dd/MM/yyyy!");
-        SimpleDateFormat dateFormat6 = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
-        dateFormat6.setTimeZone(TimeZone.getDefault());
-        try {
-            eventDate = dateFormat6.parse(eventDateString);
-            success = true;
-        } catch (ParseException e) {
-            Log.d(Constants.TAG, "Parsing failed!");
-        }
+                return eventDate;
+            } else {
+                Log.e(Constants.TAG, "Event Date String " + eventDateString
+                        + " could NOT be parsed! returning null!");
 
-        /* Return */
-        if (eventDate != null && success) {
-            Log.d(Constants.TAG, "Event Date String " + eventDateString + " was parsed as "
-                    + eventDate.toString());
-
-            return eventDate;
+                return null;
+            }
         } else {
-            Log.e(Constants.TAG, "Event Date String " + eventDateString
-                    + " could NOT be parsed! returning null!");
+            Log.d(Constants.TAG, "Event Date String is null!");
 
             return null;
         }
@@ -574,55 +580,74 @@ public class CalendarSyncAdapterService extends Service {
     private static String generateTitle(Context context, int eventType, Cursor cursor,
             int eventCustomLabelColumn, boolean includeAge, String displayName, int age) {
         String title = null;
-        switch (eventType) {
-        case ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM:
-            String eventCustomLabel = cursor.getString(eventCustomLabelColumn);
+        if (displayName != null) {
+            switch (eventType) {
+            case ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM:
+                String eventCustomLabel = cursor.getString(eventCustomLabelColumn);
 
-            if (includeAge) {
-                title = String.format(context.getString(R.string.event_title_custom_with_age),
-                        displayName, eventCustomLabel, age);
-            } else {
-                title = String.format(context.getString(R.string.event_title_custom_without_age),
-                        displayName, eventCustomLabel);
+                if (eventCustomLabel != null) {
+                    if (includeAge) {
+                        title = String.format(
+                                context.getString(R.string.event_title_custom_with_age),
+                                displayName, eventCustomLabel, age);
+                    } else {
+                        title = String.format(
+                                context.getString(R.string.event_title_custom_without_age),
+                                displayName, eventCustomLabel);
+                    }
+                } else {
+                    if (includeAge) {
+                        title = String.format(
+                                context.getString(R.string.event_title_other_with_age),
+                                displayName, age);
+                    } else {
+                        title = String.format(
+                                context.getString(R.string.event_title_other_without_age),
+                                displayName);
+                    }
+                }
+                break;
+            case ContactsContract.CommonDataKinds.Event.TYPE_ANNIVERSARY:
+                if (includeAge) {
+                    title = String.format(
+                            context.getString(R.string.event_title_anniversary_with_age),
+                            displayName, age);
+                } else {
+                    title = String.format(
+                            context.getString(R.string.event_title_anniversary_without_age),
+                            displayName);
+                }
+                break;
+            case ContactsContract.CommonDataKinds.Event.TYPE_OTHER:
+                if (includeAge) {
+                    title = String.format(context.getString(R.string.event_title_other_with_age),
+                            displayName, age);
+                } else {
+                    title = String.format(
+                            context.getString(R.string.event_title_other_without_age), displayName);
+                }
+                break;
+            case ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY:
+                if (includeAge) {
+                    title = String.format(
+                            context.getString(R.string.event_title_birthday_with_age), displayName,
+                            age);
+                } else {
+                    title = String.format(
+                            context.getString(R.string.event_title_birthday_without_age),
+                            displayName);
+                }
+                break;
+            default:
+                if (includeAge) {
+                    title = String.format(context.getString(R.string.event_title_other_with_age),
+                            displayName, age);
+                } else {
+                    title = String.format(
+                            context.getString(R.string.event_title_other_without_age), displayName);
+                }
+                break;
             }
-            break;
-        case ContactsContract.CommonDataKinds.Event.TYPE_ANNIVERSARY:
-            if (includeAge) {
-                title = String.format(context.getString(R.string.event_title_anniversary_with_age),
-                        displayName, age);
-            } else {
-                title = String.format(
-                        context.getString(R.string.event_title_anniversary_without_age),
-                        displayName);
-            }
-            break;
-        case ContactsContract.CommonDataKinds.Event.TYPE_OTHER:
-            if (includeAge) {
-                title = String.format(context.getString(R.string.event_title_other_with_age),
-                        displayName, age);
-            } else {
-                title = String.format(context.getString(R.string.event_title_other_without_age),
-                        displayName);
-            }
-            break;
-        case ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY:
-            if (includeAge) {
-                title = String.format(context.getString(R.string.event_title_birthday_with_age),
-                        displayName, age);
-            } else {
-                title = String.format(context.getString(R.string.event_title_birthday_without_age),
-                        displayName);
-            }
-            break;
-        default:
-            if (includeAge) {
-                title = String.format(context.getString(R.string.event_title_other_with_age),
-                        displayName, age);
-            } else {
-                title = String.format(context.getString(R.string.event_title_other_without_age),
-                        displayName);
-            }
-            break;
         }
 
         return title;
@@ -749,12 +774,18 @@ public class CalendarSyncAdapterService extends Service {
 
                         String title = generateTitle(context, eventType, cursor,
                                 eventCustomLabelColumn, includeAge, displayName, age);
-                        Log.d(Constants.TAG, "Title: " + title);
 
-                        Log.d(Constants.TAG, "BackRef is " + backRef);
+                        int noOfEventOperations = 0;
+                        if (title != null) {
+                            Log.d(Constants.TAG, "Title: " + title);
+                            Log.d(Constants.TAG, "BackRef is " + backRef);
 
-                        operationList.add(insertEvent(context, calendarId, eventDate, iteratedYear,
-                                title));
+                            operationList.add(insertEvent(context, calendarId, eventDate,
+                                    iteratedYear, title));
+                            noOfEventOperations = 1;
+                        } else {
+                            Log.d(Constants.TAG, "Title is null!");
+                        }
 
                         /*
                          * Gets ContentProviderOperation to insert new reminder to the
@@ -780,7 +811,7 @@ public class CalendarSyncAdapterService extends Service {
                         }
 
                         // for the next...
-                        backRef += 1 + noOfReminderOperations;
+                        backRef += noOfEventOperations + noOfReminderOperations;
 
                         /*
                          * intermediate commit - otherwise the binder transaction fails on large
