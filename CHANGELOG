@@ -1,5 +1,6 @@
 1.8
 - Add more date formats into date parser
+- Fix crash on empty dates
 
 1.7
 - Fix duration of birthdays
