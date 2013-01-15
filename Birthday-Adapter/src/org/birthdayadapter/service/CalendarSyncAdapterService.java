@@ -199,7 +199,9 @@ public class CalendarSyncAdapterService extends Service {
 
     /**
      * Delete all reminders of birthday adapter by going through all events and delete corresponding
-     * reminders. This is needed as ContentResolver can not join directly.
+     * reminders.
+     * 
+     * TODO: Can this be done better with a join?
      * 
      * @param context
      */
@@ -280,10 +282,14 @@ public class CalendarSyncAdapterService extends Service {
     }
 
     /**
-     * Set new minutes to all reminders in birthday calendar. newMinutes=-1 will delete all
-     * reminders!
+     * Set all reminders in birthday calendar.
+     * 
+     * newMinutes are given for reminder preference with number reminderNo. All other values are
+     * retrieved from current preferences.
      * 
      * @param context
+     * @param reminderNo
+     * @param newMinutes
      */
     public static void updateAllReminders(Context context, int reminderNo, int newMinutes) {
         // before adding reminders, delete all existing ones
@@ -408,8 +414,8 @@ public class CalendarSyncAdapterService extends Service {
 
     /**
      * The date format in the contact events is not standardized! See
-     * http://dmfs.org/carddav/?date_format . This method will try to parse it by first using
-     * yyyy-MM-dd, --MM-dd (no year specified), yyyyMMdd, and then timestamp.
+     * http://dmfs.org/carddav/?date_format . This method will try to parse it trying different date
+     * formats.
      * 
      * @param eventDateString
      * @return eventDate as Date object
@@ -532,10 +538,7 @@ public class CalendarSyncAdapterService extends Service {
     }
 
     /**
-     * Get Cursor with name, contact id, date of event, and type columns
-     * 
-     * http://stackoverflow.com/questions/8579883/get-birthday-for-each-contact-in-android-
-     * application
+     * Get Cursor of contacts with name, contact id, date of event, and type columns
      * 
      * @return
      */
