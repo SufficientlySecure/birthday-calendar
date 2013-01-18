@@ -31,8 +31,8 @@ public class Constants {
     public static final String ACCOUNT_TYPE = "org.birthdayadapter.account";
     public static final String CONTENT_AUTHORITY = "com.android.calendar";
 
-    public static final Account ACCOUNT = new Account(Constants.ACCOUNT_NAME,
-            Constants.ACCOUNT_TYPE);
+    public static final Account ACCOUNT = new Account(ACCOUNT_NAME,
+            ACCOUNT_TYPE);
 
     public static final String PREFS_NAME = "preferences";
     
