@@ -1,3 +1,6 @@
+1.9
+- Fix conflict with other events on HTC calendar
+
 1.8
 - Add more date formats into date parser
 - Fix crash on empty dates
