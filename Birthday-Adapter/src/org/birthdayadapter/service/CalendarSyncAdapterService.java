@@ -399,6 +399,9 @@ public class CalendarSyncAdapterService extends Service {
         // http://stackoverflow.com/questions/3440172/getting-exception-when-inserting-events-in-android-calendar
         cal.setTimeZone(TimeZone.getTimeZone("UTC"));
 
+        // define over entire day. ALL_DAY is enough on original Android calendar, but some calendar
+        // apps, e.g., Business Calendar, will not display the event if time between dtstart and
+        // dtend is 0
         long dtstart = cal.getTimeInMillis();
         long dtend = dtstart + DateUtils.DAY_IN_MILLIS;
 
@@ -407,6 +410,8 @@ public class CalendarSyncAdapterService extends Service {
         builder.withValue(Events.DTEND, dtend);
         builder.withValue(Events.TITLE, title);
         builder.withValue(Events.ALL_DAY, 1);
+        // set availability to free. If not set HTC calendar will show a conflict with other events
+        builder.withValue(Events.AVAILABILITY, Events.AVAILABILITY_FREE);
 
         builder.withValue(Events.STATUS, Events.STATUS_CONFIRMED);
         return builder.build();
