@@ -14,19 +14,13 @@
  * limitations under the License.
  */
 
-
-/*
- * This is the Android 4 CalendarContract.java. It has been modified to work on
- * Android 2.x and 3.x. However, be aware that not all columns are available in
- * Android versions < 4.0. Some parts have been removed since we don't need
- * them here.
- */
-
 package android.provider;
 
-//unused in birthdayadapter
+
 //import android.annotation.SdkConstant;
 //import android.annotation.SdkConstant.SdkConstantType;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.ContentProviderClient;
@@ -34,7 +28,6 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
-//unused in birthdayadapter
 //import android.content.CursorEntityIterator;
 import android.content.Entity;
 import android.content.EntityIterator;
@@ -42,6 +35,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.net.Uri;
+import android.os.Build;
 import android.os.RemoteException;
 import android.text.format.DateUtils;
 import android.text.format.Time;
@@ -95,23 +89,60 @@ import android.util.Log;
  * </ul>
  *
  */
+@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 public final class CalendarContract {
     private static final String TAG = "Calendar";
-
+    
     /**
      * True if we have to use the legacy API found on 2.x and 3.x
      */
     public static final boolean legacyApi = android.os.Build.VERSION.SDK_INT<14;
 
-    
+
     /**
      * Broadcast Action: This is the intent that gets fired when an alarm
      * notification needs to be posted for a reminder.
      *
      */
-// unused in birthdayadapter
 //    @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
-//    public static final String ACTION_EVENT_REMINDER = "android.intent.action.EVENT_REMINDER";
+    public static final String ACTION_EVENT_REMINDER = "android.intent.action.EVENT_REMINDER";
+
+    /**
+     * Activity Action: Display the event to the user in the custom app as
+     * specified in {@link EventsColumns#CUSTOM_APP_PACKAGE}. The custom app
+     * will be started via {@link Activity#startActivityForResult(Intent, int)}
+     * and it should call {@link Activity#setResult(int)} with
+     * {@link Activity#RESULT_OK} or {@link Activity#RESULT_CANCELED} to
+     * acknowledge whether the action was handled or not.
+     *
+     * The custom app should have an intent-filter like the following
+     * <pre>
+     * {@code
+     * <intent-filter>
+     *    <action android:name="android.provider.calendar.action.HANDLE_CUSTOM_EVENT" />
+     *    <category android:name="android.intent.category.DEFAULT" />
+     *    <data android:mimeType="vnd.android.cursor.item/event" />
+     * </intent-filter>
+     * }
+     * </pre>
+     * <p>
+     * Input: {@link Intent#getData} has the event URI. The extra
+     * {@link #EXTRA_EVENT_BEGIN_TIME} has the start time of the instance. The
+     * extra {@link #EXTRA_CUSTOM_APP_URI} will have the
+     * {@link EventsColumns#CUSTOM_APP_URI}.
+     * <p>
+     * Output: {@link Activity#RESULT_OK} if this was handled; otherwise
+     * {@link Activity#RESULT_CANCELED}
+     */
+//    @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
+    public static final String ACTION_HANDLE_CUSTOM_EVENT =
+        "android.provider.calendar.action.HANDLE_CUSTOM_EVENT";
+
+    /**
+     * Intent Extras key: {@link EventsColumns#CUSTOM_APP_URI} for the event in
+     * the {@link #ACTION_HANDLE_CUSTOM_EVENT} intent
+     */
+    public static final String EXTRA_CUSTOM_APP_URI = "customAppUri";
 
     /**
      * Intent Extras key: The start time of an event or an instance of a
@@ -418,8 +449,8 @@ public final class CalendarContract {
          * A comma separated list of reminder methods supported for this
          * calendar in the format "#,#,#". Valid types are
          * {@link Reminders#METHOD_DEFAULT}, {@link Reminders#METHOD_ALERT},
-         * {@link Reminders#METHOD_EMAIL}, {@link Reminders#METHOD_SMS}. Column
-         * name.
+         * {@link Reminders#METHOD_EMAIL}, {@link Reminders#METHOD_SMS},
+         * {@link Reminders#METHOD_ALARM}. Column name.
          * <P>Type: TEXT</P>
          */
         public static final String ALLOWED_REMINDERS = "allowedReminders";
@@ -465,8 +496,6 @@ public final class CalendarContract {
          */
         private CalendarEntity() {}
 
-        
-// unused in birthdayadapter
 //        /**
 //         * Creates an entity iterator for the given cursor. It assumes the
 //         * cursor contains a calendars query.
@@ -774,6 +803,22 @@ public final class CalendarContract {
         public static final int ATTENDEE_STATUS_DECLINED = 2;
         public static final int ATTENDEE_STATUS_INVITED = 3;
         public static final int ATTENDEE_STATUS_TENTATIVE = 4;
+
+        /**
+         * The identity of the attendee as referenced in
+         * {@link ContactsContract.CommonDataKinds.Identity#IDENTITY}.
+         * This is required only if {@link #ATTENDEE_ID_NAMESPACE} is present. Column name.
+         * <P>Type: STRING</P>
+         */
+        public static final String ATTENDEE_IDENTITY = "attendeeIdentity";
+
+        /**
+         * The identity name space of the attendee as referenced in
+         * {@link ContactsContract.CommonDataKinds.Identity#NAMESPACE}.
+         * This is required only if {@link #ATTENDEE_IDENTITY} is present. Column name.
+         * <P>Type: STRING</P>
+         */
+        public static final String ATTENDEE_ID_NAMESPACE = "attendeeIdNamespace";
     }
 
     /**
@@ -791,6 +836,8 @@ public final class CalendarContract {
      * <li>{@link #ATTENDEE_RELATIONSHIP}</li>
      * <li>{@link #ATTENDEE_TYPE}</li>
      * <li>{@link #ATTENDEE_STATUS}</li>
+     * <li>{@link #ATTENDEE_IDENTITY}</li>
+     * <li>{@link #ATTENDEE_ID_NAMESPACE}</li>
      * </ul>
      */
     public static final class Attendees implements BaseColumns, AttendeesColumns, EventsColumns {
@@ -874,6 +921,17 @@ public final class CalendarContract {
         public static final String EVENT_COLOR_KEY = "eventColor_index";
 
         /**
+         * This will be {@link #EVENT_COLOR} if it is not null; otherwise, this will be
+         * {@link Calendars#CALENDAR_COLOR}.
+         * Read-only value. To modify, write to {@link #EVENT_COLOR} or
+         * {@link Calendars#CALENDAR_COLOR} directly.
+         *<P>
+         *     Type: INTEGER
+         *</P>
+         */
+        public static final String DISPLAY_COLOR = "displayColor";
+
+        /**
          * The event status. Column name.
          * <P>Type: INTEGER (one of {@link #STATUS_TENTATIVE}...)</P>
          */
@@ -897,7 +955,7 @@ public final class CalendarContract {
          * This column is available for use by sync adapters. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String SYNC_DATA1 = "sync_data1";
+        public static final String SYNC_DATA1 = legacyApi? "syncAdapterData": "sync_data1";
 
         /**
          * This column is available for use by sync adapters. Column name.
@@ -1034,7 +1092,7 @@ public final class CalendarContract {
          * {@link #AVAILABILITY_FREE}, {@link #AVAILABILITY_TENTATIVE})
          * </P>
          */
-        public static final String AVAILABILITY = legacyApi? "transparency" : "availability";
+        public static final String AVAILABILITY = "availability";
 
         /**
          * Indicates that this event takes up time and will conflict with other
@@ -1101,7 +1159,7 @@ public final class CalendarContract {
          * this is updated. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String ORIGINAL_SYNC_ID =  legacyApi? "originalEvent" : "original_sync_id";
+        public static final String ORIGINAL_SYNC_ID = legacyApi? "originalEvent" : "original_sync_id";
 
         /**
          * The original instance time of the recurring event for which this
@@ -1165,6 +1223,22 @@ public final class CalendarContract {
          * <P>Type: INTEGER (boolean, readonly)</P>
          */
         public static final String CAN_INVITE_OTHERS = "canInviteOthers";
+
+        /**
+         * The package name of the custom app that can provide a richer
+         * experience for the event. See the ACTION TYPE
+         * {@link CalendarContract#ACTION_HANDLE_CUSTOM_EVENT} for details.
+         * Column name.
+         * <P> Type: TEXT </P>
+         */
+        public static final String CUSTOM_APP_PACKAGE = "customAppPackage";
+
+        /**
+         * The URI used by the custom app for the event. Column name.
+         * <P>Type: TEXT</P>
+         */
+        public static final String CUSTOM_APP_URI = "customAppUri";
+
     }
 
     /**
@@ -1186,7 +1260,6 @@ public final class CalendarContract {
          */
         private EventsEntity() {}
 
-// unused in birthdayadapter
 //        /**
 //         * Creates a new iterator for events
 //         *
@@ -1229,12 +1302,17 @@ public final class CalendarContract {
 //                    Attendees.ATTENDEE_RELATIONSHIP,
 //                    Attendees.ATTENDEE_TYPE,
 //                    Attendees.ATTENDEE_STATUS,
+//                    Attendees.ATTENDEE_IDENTITY,
+//                    Attendees.ATTENDEE_ID_NAMESPACE
 //            };
 //            private static final int COLUMN_ATTENDEE_NAME = 0;
 //            private static final int COLUMN_ATTENDEE_EMAIL = 1;
 //            private static final int COLUMN_ATTENDEE_RELATIONSHIP = 2;
 //            private static final int COLUMN_ATTENDEE_TYPE = 3;
 //            private static final int COLUMN_ATTENDEE_STATUS = 4;
+//            private static final int COLUMN_ATTENDEE_IDENTITY = 5;
+//            private static final int COLUMN_ATTENDEE_ID_NAMESPACE = 6;
+//
 //            private static final String[] EXTENDED_PROJECTION = new String[] {
 //                    ExtendedProperties._ID,
 //                    ExtendedProperties.NAME,
@@ -1296,6 +1374,8 @@ public final class CalendarContract {
 //                        GUESTS_CAN_INVITE_OTHERS);
 //                DatabaseUtils.cursorIntToContentValuesIfPresent(cursor, cv, GUESTS_CAN_MODIFY);
 //                DatabaseUtils.cursorIntToContentValuesIfPresent(cursor, cv, GUESTS_CAN_SEE_GUESTS);
+//                DatabaseUtils.cursorStringToContentValuesIfPresent(cursor, cv, CUSTOM_APP_PACKAGE);
+//                DatabaseUtils.cursorStringToContentValuesIfPresent(cursor, cv, CUSTOM_APP_URI);
 //                DatabaseUtils.cursorStringToContentValuesIfPresent(cursor, cv, ORGANIZER);
 //                DatabaseUtils.cursorStringToContentValuesIfPresent(cursor, cv, _SYNC_ID);
 //                DatabaseUtils.cursorLongToContentValuesIfPresent(cursor, cv, DIRTY);
@@ -1370,6 +1450,10 @@ public final class CalendarContract {
 //                                subCursor.getInt(COLUMN_ATTENDEE_TYPE));
 //                        attendeeValues.put(Attendees.ATTENDEE_STATUS,
 //                                subCursor.getInt(COLUMN_ATTENDEE_STATUS));
+//                        attendeeValues.put(Attendees.ATTENDEE_IDENTITY,
+//                                subCursor.getInt(COLUMN_ATTENDEE_IDENTITY));
+//                        attendeeValues.put(Attendees.ATTENDEE_ID_NAMESPACE,
+//                                subCursor.getInt(COLUMN_ATTENDEE_ID_NAMESPACE));
 //                        entity.addSubValue(Attendees.CONTENT_URI, attendeeValues);
 //                    }
 //                } finally {
@@ -1494,6 +1578,8 @@ public final class CalendarContract {
      * <li>{@link #GUESTS_CAN_MODIFY}</li>
      * <li>{@link #GUESTS_CAN_INVITE_OTHERS}</li>
      * <li>{@link #GUESTS_CAN_SEE_GUESTS}</li>
+     * <li>{@link #CUSTOM_APP_PACKAGE}</li>
+     * <li>{@link #CUSTOM_APP_URI}</li>
      * </ul>
      * The following Events columns are writable only by a sync adapter
      * <ul>
@@ -1949,11 +2035,11 @@ public final class CalendarContract {
 
         /**
          * The alarm method, as set on the server. {@link #METHOD_DEFAULT},
-         * {@link #METHOD_ALERT}, {@link #METHOD_EMAIL}, and {@link #METHOD_SMS}
-         * are possible values; the device will only process
-         * {@link #METHOD_DEFAULT} and {@link #METHOD_ALERT} reminders (the
-         * other types are simply stored so we can send the same reminder info
-         * back to the server when we make changes).
+         * {@link #METHOD_ALERT}, {@link #METHOD_EMAIL}, {@link #METHOD_SMS} and
+         * {@link #METHOD_ALARM} are possible values; the device will only
+         * process {@link #METHOD_DEFAULT} and {@link #METHOD_ALERT} reminders
+         * (the other types are simply stored so we can send the same reminder
+         * info back to the server when we make changes).
          */
         public static final String METHOD = "method";
 
@@ -1961,6 +2047,7 @@ public final class CalendarContract {
         public static final int METHOD_ALERT = 1;
         public static final int METHOD_EMAIL = 2;
         public static final int METHOD_SMS = 3;
+        public static final int METHOD_ALARM = 4;
     }
 
     /**
@@ -2194,92 +2281,91 @@ public final class CalendarContract {
             return alarmTime;
         }
 
-// unised in bithdayadapter
-//        /**
-//         * Searches the CalendarAlerts table for alarms that should have fired
-//         * but have not and then reschedules them. This method can be called at
-//         * boot time to restore alarms that may have been lost due to a phone
-//         * reboot. TODO move to provider
-//         *
-//         * @param cr the ContentResolver
-//         * @param context the Context
-//         * @param manager the AlarmManager
-//         * @hide
-//         */
-//        public static final void rescheduleMissedAlarms(ContentResolver cr,
-//                Context context, AlarmManager manager) {
-//            // Get all the alerts that have been scheduled but have not fired
-//            // and should have fired by now and are not too old.
-//            long now = System.currentTimeMillis();
-//            long ancient = now - DateUtils.DAY_IN_MILLIS;
-//            String[] projection = new String[] {
-//                    ALARM_TIME,
-//            };
-//
-//            // TODO: construct an explicit SQL query so that we can add
-//            // "GROUPBY" instead of doing a sort and de-dup
-//            Cursor cursor = cr.query(CalendarAlerts.CONTENT_URI, projection,
-//                    WHERE_RESCHEDULE_MISSED_ALARMS, (new String[] {
-//                            Long.toString(now), Long.toString(ancient), Long.toString(now)
-//                    }), SORT_ORDER_ALARMTIME_ASC);
-//            if (cursor == null) {
-//                return;
-//            }
-//
-//            if (DEBUG) {
-//                Log.d(TAG, "missed alarms found: " + cursor.getCount());
-//            }
-//
-//            try {
-//                long alarmTime = -1;
-//
-//                while (cursor.moveToNext()) {
-//                    long newAlarmTime = cursor.getLong(0);
-//                    if (alarmTime != newAlarmTime) {
-//                        if (DEBUG) {
-//                            Log.w(TAG, "rescheduling missed alarm. alarmTime: " + newAlarmTime);
-//                        }
-//                        scheduleAlarm(context, manager, newAlarmTime);
-//                        alarmTime = newAlarmTime;
-//                    }
-//                }
-//            } finally {
-//                cursor.close();
-//            }
-//        }
-//
-//        /**
-//         * Schedules an alarm intent with the system AlarmManager that will
-//         * notify listeners when a reminder should be fired. The provider will
-//         * keep scheduled reminders up to date but apps may use this to
-//         * implement snooze functionality without modifying the reminders table.
-//         * Scheduled alarms will generate an intent using
-//         * {@link #ACTION_EVENT_REMINDER}. TODO Move to provider
-//         *
-//         * @param context A context for referencing system resources
-//         * @param manager The AlarmManager to use or null
-//         * @param alarmTime The time to fire the intent in UTC millis since
-//         *            epoch
-//         * @hide
-//         */
-//        public static void scheduleAlarm(Context context, AlarmManager manager, long alarmTime) {
-//            if (DEBUG) {
-//                Time time = new Time();
-//                time.set(alarmTime);
-//                String schedTime = time.format(" %a, %b %d, %Y %I:%M%P");
-//                Log.d(TAG, "Schedule alarm at " + alarmTime + " " + schedTime);
-//            }
-//
-//            if (manager == null) {
-//                manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-//            }
-//
-//            Intent intent = new Intent(ACTION_EVENT_REMINDER);
-//            intent.setData(ContentUris.withAppendedId(CalendarContract.CONTENT_URI, alarmTime));
-//            intent.putExtra(ALARM_TIME, alarmTime);
-//            PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
-//            manager.set(AlarmManager.RTC_WAKEUP, alarmTime, pi);
-//        }
+        /**
+         * Searches the CalendarAlerts table for alarms that should have fired
+         * but have not and then reschedules them. This method can be called at
+         * boot time to restore alarms that may have been lost due to a phone
+         * reboot. TODO move to provider
+         *
+         * @param cr the ContentResolver
+         * @param context the Context
+         * @param manager the AlarmManager
+         * @hide
+         */
+        public static final void rescheduleMissedAlarms(ContentResolver cr,
+                Context context, AlarmManager manager) {
+            // Get all the alerts that have been scheduled but have not fired
+            // and should have fired by now and are not too old.
+            long now = System.currentTimeMillis();
+            long ancient = now - DateUtils.DAY_IN_MILLIS;
+            String[] projection = new String[] {
+                    ALARM_TIME,
+            };
+
+            // TODO: construct an explicit SQL query so that we can add
+            // "GROUPBY" instead of doing a sort and de-dup
+            Cursor cursor = cr.query(CalendarAlerts.CONTENT_URI, projection,
+                    WHERE_RESCHEDULE_MISSED_ALARMS, (new String[] {
+                            Long.toString(now), Long.toString(ancient), Long.toString(now)
+                    }), SORT_ORDER_ALARMTIME_ASC);
+            if (cursor == null) {
+                return;
+            }
+
+            if (DEBUG) {
+                Log.d(TAG, "missed alarms found: " + cursor.getCount());
+            }
+
+            try {
+                long alarmTime = -1;
+
+                while (cursor.moveToNext()) {
+                    long newAlarmTime = cursor.getLong(0);
+                    if (alarmTime != newAlarmTime) {
+                        if (DEBUG) {
+                            Log.w(TAG, "rescheduling missed alarm. alarmTime: " + newAlarmTime);
+                        }
+                        scheduleAlarm(context, manager, newAlarmTime);
+                        alarmTime = newAlarmTime;
+                    }
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+
+        /**
+         * Schedules an alarm intent with the system AlarmManager that will
+         * notify listeners when a reminder should be fired. The provider will
+         * keep scheduled reminders up to date but apps may use this to
+         * implement snooze functionality without modifying the reminders table.
+         * Scheduled alarms will generate an intent using
+         * {@link #ACTION_EVENT_REMINDER}. TODO Move to provider
+         *
+         * @param context A context for referencing system resources
+         * @param manager The AlarmManager to use or null
+         * @param alarmTime The time to fire the intent in UTC millis since
+         *            epoch
+         * @hide
+         */
+        public static void scheduleAlarm(Context context, AlarmManager manager, long alarmTime) {
+            if (DEBUG) {
+                Time time = new Time();
+                time.set(alarmTime);
+                String schedTime = time.format(" %a, %b %d, %Y %I:%M%P");
+                Log.d(TAG, "Schedule alarm at " + alarmTime + " " + schedTime);
+            }
+
+            if (manager == null) {
+                manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            }
+
+            Intent intent = new Intent(ACTION_EVENT_REMINDER);
+            intent.setData(ContentUris.withAppendedId(CalendarContract.CONTENT_URI, alarmTime));
+            intent.putExtra(ALARM_TIME, alarmTime);
+            PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
+            manager.set(AlarmManager.RTC_WAKEUP, alarmTime, pi);
+        }
 
         /**
          * Searches for an entry in the CalendarAlerts table that matches the
