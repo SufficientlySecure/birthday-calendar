@@ -15,7 +15,7 @@
     <string name="event_title_other_without_age">Other Event with %1$s</string>
     <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
     <string name="event_title_custom_without_age">%1$s: %2$s</string>
-
+    
     <!-- About -->
     <string name="about_version">Version:</string>
 

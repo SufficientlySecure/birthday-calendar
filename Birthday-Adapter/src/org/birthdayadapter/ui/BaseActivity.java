@@ -33,6 +33,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -97,6 +98,10 @@ public class BaseActivity extends FragmentActivity {
 
             // default is disabled:
             mActivity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
+            
+            Intent viewIntent = new Intent(Intent.ACTION_VIEW);
+            viewIntent.setData(Uri.parse("content://com.android.calendar/events/41201"));
+            startActivity(viewIntent);
         }
     }
 

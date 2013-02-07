@@ -224,55 +224,55 @@ public final class CalendarContract {
          * Generic column for use by sync adapters. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String CAL_SYNC2 = "cal_sync2";
+        public static final String CAL_SYNC2 = legacyApi? null : "cal_sync2";
 
         /**
          * Generic column for use by sync adapters. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String CAL_SYNC3 = "cal_sync3";
+        public static final String CAL_SYNC3 = legacyApi? null : "cal_sync3";
 
         /**
          * Generic column for use by sync adapters. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String CAL_SYNC4 = "cal_sync4";
+        public static final String CAL_SYNC4 = legacyApi? null : "cal_sync4";
 
         /**
          * Generic column for use by sync adapters. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String CAL_SYNC5 = "cal_sync5";
+        public static final String CAL_SYNC5 = legacyApi? null : "cal_sync5";
 
         /**
          * Generic column for use by sync adapters. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String CAL_SYNC6 = "cal_sync6";
+        public static final String CAL_SYNC6 = legacyApi? null : "cal_sync6";
 
         /**
          * Generic column for use by sync adapters. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String CAL_SYNC7 = "cal_sync7";
+        public static final String CAL_SYNC7 = legacyApi? null : "cal_sync7";
 
         /**
          * Generic column for use by sync adapters. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String CAL_SYNC8 = "cal_sync8";
+        public static final String CAL_SYNC8 = legacyApi? null : "cal_sync8";
 
         /**
          * Generic column for use by sync adapters. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String CAL_SYNC9 = "cal_sync9";
+        public static final String CAL_SYNC9 = legacyApi? null : "cal_sync9";
 
         /**
          * Generic column for use by sync adapters. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String CAL_SYNC10 = "cal_sync10";
+        public static final String CAL_SYNC10 = legacyApi? null : "cal_sync10";
     }
 
     /**
@@ -311,7 +311,7 @@ public final class CalendarContract {
          * Used to indicate that local, unsynced, changes are present.
          * <P>Type: INTEGER (long)</P>
          */
-        public static final String DIRTY = legacyApi ? "_sync_dirty" : "dirty";
+        public static final String DIRTY = legacyApi? "_sync_dirty" : "dirty";
 
         /**
          * Whether the row has been deleted but not synced to the server. A
@@ -331,7 +331,7 @@ public final class CalendarContract {
          * originating event has its dirty flag cleared by the sync adapter.
          * <P>Type: INTEGER (boolean)</P>
          */
-        public static final String CAN_PARTIALLY_UPDATE = "canPartiallyUpdate";
+        public static final String CAN_PARTIALLY_UPDATE = legacyApi? null : "canPartiallyUpdate";
     }
 
     /**
@@ -357,7 +357,7 @@ public final class CalendarContract {
          * Type: TEXT
          * </P>
          */
-        public static final String CALENDAR_COLOR_KEY = "calendar_color_index";
+        public static final String CALENDAR_COLOR_KEY = legacyApi? null : "calendar_color_index";
 
         /**
          * The display name of the calendar. Column name.
@@ -408,7 +408,7 @@ public final class CalendarContract {
          * The time zone the calendar is associated with.
          * <P>Type: TEXT</P>
          */
-        public static final String CALENDAR_TIME_ZONE = "calendar_timezone";
+        public static final String CALENDAR_TIME_ZONE = legacyApi? "timezone" : "calendar_timezone";
 
         /**
          * Is this calendar synced and are its events stored on the device?
@@ -431,19 +431,19 @@ public final class CalendarContract {
          * organizer should not be shown by the UI.  Defaults to 1. Column name.
          * <P>Type: INTEGER (boolean)</P>
          */
-        public static final String CAN_ORGANIZER_RESPOND = "canOrganizerRespond";
+        public static final String CAN_ORGANIZER_RESPOND = legacyApi? "organizerCanRespond" : "canOrganizerRespond";
 
         /**
          * Can the organizer modify the time zone of the event? Column name.
          * <P>Type: INTEGER (boolean)</P>
         */
-        public static final String CAN_MODIFY_TIME_ZONE = "canModifyTimeZone";
+        public static final String CAN_MODIFY_TIME_ZONE = legacyApi? null : "canModifyTimeZone";
 
         /**
          * The maximum number of reminders allowed for an event. Column name.
          * <P>Type: INTEGER</P>
          */
-        public static final String MAX_REMINDERS = "maxReminders";
+        public static final String MAX_REMINDERS = legacyApi? null : "maxReminders";
 
         /**
          * A comma separated list of reminder methods supported for this
@@ -453,7 +453,7 @@ public final class CalendarContract {
          * {@link Reminders#METHOD_ALARM}. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String ALLOWED_REMINDERS = "allowedReminders";
+        public static final String ALLOWED_REMINDERS = legacyApi? null : "allowedReminders";
 
         /**
          * A comma separated list of availability types supported for this
@@ -464,7 +464,7 @@ public final class CalendarContract {
          * changing the availability is not supported.
          *
          */
-        public static final String ALLOWED_AVAILABILITY = "allowedAvailability";
+        public static final String ALLOWED_AVAILABILITY = legacyApi? null : "allowedAvailability";
 
         /**
          * A comma separated list of attendee types supported for this calendar
@@ -475,7 +475,7 @@ public final class CalendarContract {
          * the attendee type is not supported.
          *
          */
-        public static final String ALLOWED_ATTENDEE_TYPES = "allowedAttendeeTypes";
+        public static final String ALLOWED_ATTENDEE_TYPES = legacyApi? null : "allowedAttendeeTypes";
     }
 
     /**
@@ -701,7 +701,7 @@ public final class CalendarContract {
          * The default location for the calendar. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String CALENDAR_LOCATION = "calendar_location";
+        public static final String CALENDAR_LOCATION = legacyApi? "location" : "calendar_location";
 
         /**
          * These fields are only writable by a sync adapter. To modify them the
@@ -810,7 +810,7 @@ public final class CalendarContract {
          * This is required only if {@link #ATTENDEE_ID_NAMESPACE} is present. Column name.
          * <P>Type: STRING</P>
          */
-        public static final String ATTENDEE_IDENTITY = "attendeeIdentity";
+        public static final String ATTENDEE_IDENTITY = legacyApi? null : "attendeeIdentity";
 
         /**
          * The identity name space of the attendee as referenced in
@@ -818,7 +818,7 @@ public final class CalendarContract {
          * This is required only if {@link #ATTENDEE_IDENTITY} is present. Column name.
          * <P>Type: STRING</P>
          */
-        public static final String ATTENDEE_ID_NAMESPACE = "attendeeIdNamespace";
+        public static final String ATTENDEE_ID_NAMESPACE = legacyApi? null : "attendeeIdNamespace";
     }
 
     /**
@@ -905,7 +905,7 @@ public final class CalendarContract {
          * updated by the sync adapter for a given account.
          * <P>Type: INTEGER</P>
          */
-        public static final String EVENT_COLOR = "eventColor";
+        public static final String EVENT_COLOR = legacyApi? null : "eventColor";
 
         /**
          * A secondary color key for the individual event. NULL or an empty
@@ -918,7 +918,7 @@ public final class CalendarContract {
          * Type: TEXT
          * </P>
          */
-        public static final String EVENT_COLOR_KEY = "eventColor_index";
+        public static final String EVENT_COLOR_KEY = legacyApi? null : "eventColor_index";
 
         /**
          * This will be {@link #EVENT_COLOR} if it is not null; otherwise, this will be
@@ -929,7 +929,7 @@ public final class CalendarContract {
          *     Type: INTEGER
          *</P>
          */
-        public static final String DISPLAY_COLOR = "displayColor";
+        public static final String DISPLAY_COLOR = legacyApi? null : "displayColor";
 
         /**
          * The event status. Column name.
@@ -1020,7 +1020,7 @@ public final class CalendarContract {
          * sync adapter.
          * <P>Type: INTEGER (boolean)</P>
          */
-        public static final String LAST_SYNCED = "lastSynced";
+        public static final String LAST_SYNCED = legacyApi? null : "lastSynced";
 
         /**
          * The time the event starts in UTC millis since epoch. Column name.
@@ -1050,7 +1050,7 @@ public final class CalendarContract {
          * The timezone for the end time of the event. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String EVENT_END_TIMEZONE = "eventEndTimezone";
+        public static final String EVENT_END_TIMEZONE = legacyApi? null : "eventEndTimezone";
 
         /**
          * Is the event all day (time zone independent). Column name.
@@ -1092,7 +1092,7 @@ public final class CalendarContract {
          * {@link #AVAILABILITY_FREE}, {@link #AVAILABILITY_TENTATIVE})
          * </P>
          */
-        public static final String AVAILABILITY = "availability";
+        public static final String AVAILABILITY = legacyApi? null : "availability";
 
         /**
          * Indicates that this event takes up time and will conflict with other
@@ -1151,7 +1151,7 @@ public final class CalendarContract {
          * event is an exception. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String ORIGINAL_ID = "original_id";
+        public static final String ORIGINAL_ID = legacyApi? null : "original_id";
 
         /**
          * The _sync_id of the original recurring event for which this event is
@@ -1231,13 +1231,13 @@ public final class CalendarContract {
          * Column name.
          * <P> Type: TEXT </P>
          */
-        public static final String CUSTOM_APP_PACKAGE = "customAppPackage";
+        public static final String CUSTOM_APP_PACKAGE = legacyApi? null : "customAppPackage";
 
         /**
          * The URI used by the custom app for the event. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String CUSTOM_APP_URI = "customAppUri";
+        public static final String CUSTOM_APP_URI = legacyApi? null : "customAppUri";
 
     }
 
@@ -2413,7 +2413,7 @@ public final class CalendarContract {
          * Type: INTEGER (NOT NULL)
          * </P>
          */
-        public static final String COLOR_TYPE = "color_type";
+        public static final String COLOR_TYPE = legacyApi? null : "color_type";
 
         /**
          * This indicateds a color that can be used for calendars.
@@ -2432,7 +2432,7 @@ public final class CalendarContract {
          * Type: TEXT
          * </P>
          */
-        public static final String COLOR_KEY = "color_index";
+        public static final String COLOR_KEY = legacyApi? null : "color_index";
 
         /**
          * The color as an 8-bit ARGB integer value. Colors should specify alpha
@@ -2444,7 +2444,7 @@ public final class CalendarContract {
          * Type: INTEGER (NOT NULL)
          * </P>
          */
-        public static final String COLOR = "color";
+        public static final String COLOR = legacyApi? null : "color";
 
     }
 
@@ -2551,33 +2551,33 @@ public final class CalendarContract {
          * The corresponding event id. Column name.
          * <P>Type: INTEGER (long)</P>
          */
-        public static final String EVENT_ID = "event_id";
+        public static final String EVENT_ID = legacyApi? null : "event_id";
 
         /**
          * The RFC2445 compliant time the event starts. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String DTSTART_2445 = "dtstart2445";
+        public static final String DTSTART_2445 = legacyApi? null : "dtstart2445";
 
         /**
          * The RFC2445 compliant time the event ends. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String DTEND_2445 = "dtend2445";
+        public static final String DTEND_2445 = legacyApi? null : "dtend2445";
 
         /**
          * The RFC2445 compliant original instance time of the recurring event
          * for which this event is an exception. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String ORIGINAL_INSTANCE_TIME_2445 = "originalInstanceTime2445";
+        public static final String ORIGINAL_INSTANCE_TIME_2445 = legacyApi? null : "originalInstanceTime2445";
 
         /**
          * The RFC2445 compliant last date this event repeats on, or NULL if it
          * never ends. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String LAST_DATE_2445 = "lastDate2445";
+        public static final String LAST_DATE_2445 = legacyApi? null : "lastDate2445";
     }
 
     /**

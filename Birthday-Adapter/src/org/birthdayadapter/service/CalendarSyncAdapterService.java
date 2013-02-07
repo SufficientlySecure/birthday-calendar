@@ -49,6 +49,7 @@ import android.content.Intent;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -380,7 +381,7 @@ public class CalendarSyncAdapterService extends Service {
      * @return
      */
     private static ContentProviderOperation insertEvent(Context context, long calendarId,
-            Date eventDate, int year, String title) {
+            Date eventDate, int year, String title, String lookupKey) {
         ContentProviderOperation.Builder builder;
 
         builder = ContentProviderOperation.newInsert(getBirthdayAdapterUri(Events.CONTENT_URI));
@@ -412,8 +413,16 @@ public class CalendarSyncAdapterService extends Service {
         builder.withValue(Events.ALL_DAY, 1);
         // set availability to free. If not set HTC calendar will show a conflict with other events
         builder.withValue(Events.AVAILABILITY, Events.AVAILABILITY_FREE);
-
         builder.withValue(Events.STATUS, Events.STATUS_CONFIRMED);
+
+        // add button to open contact
+        if (Build.VERSION.SDK_INT >= 16 && lookupKey != null) {
+            builder.withValue(Events.CUSTOM_APP_PACKAGE, "org.birthdayadapter");
+            Uri contactLookupUri = Uri.withAppendedPath(
+                    ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
+            builder.withValue(Events.CUSTOM_APP_URI, contactLookupUri.toString());
+        }
+
         return builder.build();
     }
 
@@ -558,6 +567,7 @@ public class CalendarSyncAdapterService extends Service {
 
         String[] projection = new String[] { ContactsContract.Contacts.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Event.CONTACT_ID,
+                ContactsContract.CommonDataKinds.Event.LOOKUP_KEY,
                 ContactsContract.CommonDataKinds.Event.START_DATE,
                 ContactsContract.CommonDataKinds.Event.TYPE,
                 ContactsContract.CommonDataKinds.Event.LABEL };
@@ -721,12 +731,15 @@ public class CalendarSyncAdapterService extends Service {
                     .getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE);
             int eventCustomLabelColumn = cursor
                     .getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL);
+            int eventLookupKeyColumn = cursor
+                    .getColumnIndex(ContactsContract.CommonDataKinds.Event.LOOKUP_KEY);
 
             int backRef = 0;
             while (cursor.moveToNext()) {
                 String eventDateString = cursor.getString(eventDateColumn);
                 String displayName = cursor.getString(displayNameColumn);
                 int eventType = cursor.getInt(eventTypeColumn);
+                String eventLookupKey = cursor.getString(eventLookupKeyColumn);
 
                 Date eventDate = parseEventDateString(eventDateString);
 
@@ -786,7 +799,7 @@ public class CalendarSyncAdapterService extends Service {
                             Log.d(Constants.TAG, "BackRef is " + backRef);
 
                             operationList.add(insertEvent(context, calendarId, eventDate,
-                                    iteratedYear, title));
+                                    iteratedYear, title, eventLookupKey));
                             noOfEventOperations = 1;
                         } else {
                             Log.d(Constants.TAG, "Title is null!");
