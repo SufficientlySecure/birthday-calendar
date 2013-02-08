@@ -63,4 +63,11 @@ public class PreferencesHelper {
         return Integer.valueOf(reminderStr);
     }
 
+    public static boolean getPreferddSlashMM(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
+                Context.MODE_PRIVATE);
+        return prefs.getBoolean(context.getString(R.string.pref_prefer_dd_slash_mm_key),
+                Boolean.parseBoolean(context.getString(R.string.pref_prefer_dd_slash_mm_def)));
+    }
+
 }

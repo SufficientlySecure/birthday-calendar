@@ -427,6 +427,21 @@ public class CalendarSyncAdapterService extends Service {
     }
 
     /**
+     * Because no year is defined in address book, set year to 1700
+     * 
+     * When year < 1800 it is not displayed in brackets in the actual calendar event
+     * 
+     * @param eventDate
+     * @return
+     */
+    private static Date setYearTo1700(Date eventDate) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(eventDate);
+        cal.set(Calendar.YEAR, 1700);
+        return cal.getTime();
+    }
+
+    /**
      * The date format in the contact events is not standardized! See
      * http://dmfs.org/carddav/?date_format . This method will try to parse it trying different date
      * formats.
@@ -434,7 +449,7 @@ public class CalendarSyncAdapterService extends Service {
      * @param eventDateString
      * @return eventDate as Date object
      */
-    private static Date parseEventDateString(String eventDateString) {
+    private static Date parseEventDateString(Context context, String eventDateString) {
         if (eventDateString != null) {
             Date eventDate = null;
             boolean success = false;
@@ -460,12 +475,8 @@ public class CalendarSyncAdapterService extends Service {
                 try {
                     eventDate = dateFormat2.parse(eventDateString);
 
-                    // Because no year is defined in address book, set year to 1700
-                    // When year < 1800 it is not displayed in brackets
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(eventDate);
-                    cal.set(Calendar.YEAR, 1700);
-                    eventDate = cal.getTime();
+                    // dont display year
+                    eventDate = setYearTo1700(eventDate);
 
                     success = true;
                 } catch (ParseException e) {
@@ -474,20 +485,22 @@ public class CalendarSyncAdapterService extends Service {
             }
 
             /* yyyyMMdd */
-            if (!success && eventDateString.length() == 8) {
-                Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
-                        + " with yyyyMMdd!");
-                SimpleDateFormat dateFormat3 = new SimpleDateFormat("yyyyMMdd", Locale.US);
-                dateFormat3.setTimeZone(TimeZone.getDefault());
-                try {
-                    eventDate = dateFormat3.parse(eventDateString);
-                    success = true;
-                } catch (ParseException e) {
-                    Log.d(Constants.TAG, "Parsing failed!");
+            if (!success) {
+                if (eventDateString.length() == 8) {
+                    Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
+                            + " with yyyyMMdd!");
+                    SimpleDateFormat dateFormat3 = new SimpleDateFormat("yyyyMMdd", Locale.US);
+                    dateFormat3.setTimeZone(TimeZone.getDefault());
+                    try {
+                        eventDate = dateFormat3.parse(eventDateString);
+                        success = true;
+                    } catch (ParseException e) {
+                        Log.d(Constants.TAG, "Parsing failed!");
+                    }
+                } else {
+                    Log.d(Constants.TAG, "Event Date String " + eventDateString
+                            + " could not be parsed with yyyyMMdd because length != 8!");
                 }
-            } else {
-                Log.d(Constants.TAG, "Event Date String " + eventDateString
-                        + " could not be parsed with yyyyMMdd because length != 8!");
             }
 
             /* Unix timestamp */
@@ -503,39 +516,108 @@ public class CalendarSyncAdapterService extends Service {
             }
 
             /* dd.MM.yyyy */
-            Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
-                    + " with dd.MM.yyyy!");
-            SimpleDateFormat dateFormat4 = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
-            dateFormat4.setTimeZone(TimeZone.getDefault());
-            try {
-                eventDate = dateFormat4.parse(eventDateString);
-                success = true;
-            } catch (ParseException e) {
-                Log.d(Constants.TAG, "Parsing failed!");
+            if (!success) {
+                Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
+                        + " with dd.MM.yyyy!");
+                SimpleDateFormat dateFormat4 = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
+                dateFormat4.setTimeZone(TimeZone.getDefault());
+                try {
+                    eventDate = dateFormat4.parse(eventDateString);
+                    success = true;
+                } catch (ParseException e) {
+                    Log.d(Constants.TAG, "Parsing failed!");
+                }
             }
 
             /* yyyy.MM.dd */
-            Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
-                    + " with yyyy.MM.dd!");
-            SimpleDateFormat dateFormat5 = new SimpleDateFormat("yyyy.MM.dd", Locale.US);
-            dateFormat5.setTimeZone(TimeZone.getDefault());
-            try {
-                eventDate = dateFormat5.parse(eventDateString);
-                success = true;
-            } catch (ParseException e) {
-                Log.d(Constants.TAG, "Parsing failed!");
+            if (!success) {
+                Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
+                        + " with yyyy.MM.dd!");
+                SimpleDateFormat dateFormat5 = new SimpleDateFormat("yyyy.MM.dd", Locale.US);
+                dateFormat5.setTimeZone(TimeZone.getDefault());
+                try {
+                    eventDate = dateFormat5.parse(eventDateString);
+                    success = true;
+                } catch (ParseException e) {
+                    Log.d(Constants.TAG, "Parsing failed!");
+                }
             }
 
-            /* dd/MM/yyyy */
-            Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
-                    + " with dd/MM/yyyy!");
-            SimpleDateFormat dateFormat6 = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
-            dateFormat6.setTimeZone(TimeZone.getDefault());
-            try {
-                eventDate = dateFormat6.parse(eventDateString);
-                success = true;
-            } catch (ParseException e) {
-                Log.d(Constants.TAG, "Parsing failed!");
+            /**
+             * Prefer dd/MM/yyyy over MM/dd/yyyy ?
+             */
+            if (PreferencesHelper.getPreferddSlashMM(context)) {
+                /* dd/MM/yyyy */
+                if (!success) {
+                    Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
+                            + " with dd/MM/yyyy!");
+                    SimpleDateFormat dateFormat6 = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+                    dateFormat6.setTimeZone(TimeZone.getDefault());
+                    try {
+                        eventDate = dateFormat6.parse(eventDateString);
+                        success = true;
+                    } catch (ParseException e) {
+                        Log.d(Constants.TAG, "Parsing failed!");
+                    }
+                }
+
+                /* dd/MM */
+                if (!success) {
+                    Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
+                            + " with dd/MM!");
+                    SimpleDateFormat dateFormat7 = new SimpleDateFormat("dd/MM", Locale.US);
+                    dateFormat7.setTimeZone(TimeZone.getDefault());
+                    try {
+                        eventDate = dateFormat7.parse(eventDateString);
+
+                        // dont display year
+                        eventDate = setYearTo1700(eventDate);
+
+                        success = true;
+                    } catch (ParseException e) {
+                        Log.d(Constants.TAG, "Parsing failed!");
+                    }
+                }
+            } else {
+                /*
+                 * MM/dd/yyyy
+                 * 
+                 * Used by Facebook!
+                 */
+                if (!success) {
+                    Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
+                            + " with MM/dd/yyyy!");
+                    SimpleDateFormat dateFormat6 = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+                    dateFormat6.setTimeZone(TimeZone.getDefault());
+                    try {
+                        eventDate = dateFormat6.parse(eventDateString);
+                        success = true;
+                    } catch (ParseException e) {
+                        Log.d(Constants.TAG, "Parsing failed!");
+                    }
+                }
+
+                /*
+                 * MM/dd
+                 * 
+                 * Used by Facebook!
+                 */
+                if (!success) {
+                    Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
+                            + " with MM/dd!");
+                    SimpleDateFormat dateFormat7 = new SimpleDateFormat("MM/dd", Locale.US);
+                    dateFormat7.setTimeZone(TimeZone.getDefault());
+                    try {
+                        eventDate = dateFormat7.parse(eventDateString);
+
+                        // dont display year
+                        eventDate = setYearTo1700(eventDate);
+
+                        success = true;
+                    } catch (ParseException e) {
+                        Log.d(Constants.TAG, "Parsing failed!");
+                    }
+                }
             }
 
             /* Return */
@@ -741,7 +823,7 @@ public class CalendarSyncAdapterService extends Service {
                 int eventType = cursor.getInt(eventTypeColumn);
                 String eventLookupKey = cursor.getString(eventLookupKeyColumn);
 
-                Date eventDate = parseEventDateString(eventDateString);
+                Date eventDate = parseEventDateString(context, eventDateString);
 
                 // only proceed when parsing didn't fail
                 if (eventDate != null) {

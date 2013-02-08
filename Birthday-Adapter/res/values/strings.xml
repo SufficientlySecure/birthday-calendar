@@ -15,7 +15,7 @@
     <string name="event_title_other_without_age">Other Event with %1$s</string>
     <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
     <string name="event_title_custom_without_age">%1$s: %2$s</string>
-    
+
     <!-- About -->
     <string name="about_version">Version:</string>
 
@@ -50,6 +50,10 @@
         <item>2 day before</item>
         <item>3 day before</item>
     </string-array>
+
+    <string name="pref_advanced">Advanced Settings</string>
+    <string name="pref_prefer_dd_slash_mm">Prefer dd/MM/yyyy format</string>
+    <string name="pref_prefer_dd_slash_mm_summary">Prefer dd/MM/yyyy to MM/dd/yyyy when parsing date formats</string>
 
     <!-- Adapter Screen -->
     <string name="pref_account_header">Settings</string>

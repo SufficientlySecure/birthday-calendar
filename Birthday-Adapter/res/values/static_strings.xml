@@ -28,5 +28,8 @@
     <string name="pref_reminder_key0" translatable="false">reminder0</string>
     <string name="pref_reminder_key1" translatable="false">reminder1</string>
     <string name="pref_reminder_key2" translatable="false">reminder2</string>
+    <string name="pref_prefer_dd_slash_mm_key" translatable="false">preferddSlashMM</string>
+
+    <item name="pref_prefer_dd_slash_mm_def" format="boolean" type="string">false</item>
 
 </resources>
