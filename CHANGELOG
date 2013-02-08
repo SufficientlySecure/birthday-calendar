@@ -1,3 +1,7 @@
+1.10
+* On Android 4.1 and above: Open contact from calendar event with a button
+- Fix parsing of birthdays from facebook contacts
+
 1.9
 - Fix conflict with other events on HTC calendar
 
