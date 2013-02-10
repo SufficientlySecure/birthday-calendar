@@ -50,6 +50,15 @@
             android:title="@string/pref_reminder2" >
         </ListPreference>
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_advanced" >
+        <CheckBoxPreference
+            android:defaultValue="@string/pref_prefer_dd_slash_mm_def"
+            android:key="@string/pref_prefer_dd_slash_mm_key"
+            android:persistent="true"
+            android:summary="@string/pref_prefer_dd_slash_mm_summary"
+            android:title="@string/pref_prefer_dd_slash_mm" >
+        </CheckBoxPreference>
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_help" >
         <Preference
             android:key="@string/pref_help_key"

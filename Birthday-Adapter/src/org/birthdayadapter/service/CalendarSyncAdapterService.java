@@ -267,22 +267,6 @@ public class CalendarSyncAdapterService extends Service {
     }
 
     /**
-     * Get all reminder minutes from preferences as int array
-     * 
-     * @param context
-     * @return
-     */
-    private static int[] getReminderMinutes(Context context) {
-        // get all reminders
-        int[] minutes = new int[3];
-        for (int i = 0; i < 3; i++) {
-            minutes[i] = PreferencesHelper.getReminder(context, i);
-        }
-
-        return minutes;
-    }
-
-    /**
      * Set all reminders in birthday calendar.
      * 
      * newMinutes are given for reminder preference with number reminderNo. All other values are
@@ -299,7 +283,7 @@ public class CalendarSyncAdapterService extends Service {
         ContentResolver contentResolver = context.getContentResolver();
 
         // get all reminder minutes from prefs
-        int[] minutes = getReminderMinutes(context);
+        int[] minutes = PreferencesHelper.getAllReminderMinutes(context);
         // override reminder with new value from preference
         minutes[reminderNo] = newMinutes;
 
@@ -394,26 +378,41 @@ public class CalendarSyncAdapterService extends Service {
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
 
-        // allday events have to be set in UTC!
-        // without UTC it results in:
-        // CalendarProvider2 W insertInTransaction: allDay is true but sec, min, hour were not 0.
-        // http://stackoverflow.com/questions/3440172/getting-exception-when-inserting-events-in-android-calendar
+        /*
+         * Allday events have to be set in UTC!
+         * 
+         * Without UTC it results in: CalendarProvider2 W insertInTransaction: allDay is true but
+         * sec, min, hour were not 0.
+         * http://stackoverflow.com/questions/3440172/getting-exception-when
+         * -inserting-events-in-android-calendar
+         */
         cal.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        // define over entire day. ALL_DAY is enough on original Android calendar, but some calendar
-        // apps, e.g., Business Calendar, will not display the event if time between dtstart and
-        // dtend is 0
+        /*
+         * Define over entire day.
+         * 
+         * Note: ALL_DAY is enough on original Android calendar, but some calendar apps (Business
+         * Calendar) do not display the event if time between dtstart and dtend is 0
+         */
         long dtstart = cal.getTimeInMillis();
         long dtend = dtstart + DateUtils.DAY_IN_MILLIS;
 
         builder.withValue(Events.CALENDAR_ID, calendarId);
         builder.withValue(Events.DTSTART, dtstart);
         builder.withValue(Events.DTEND, dtend);
-        builder.withValue(Events.TITLE, title);
         builder.withValue(Events.ALL_DAY, 1);
-        // set availability to free. If not set HTC calendar will show a conflict with other events
-        builder.withValue(Events.AVAILABILITY, Events.AVAILABILITY_FREE);
+        builder.withValue(Events.TITLE, title);
         builder.withValue(Events.STATUS, Events.STATUS_CONFIRMED);
+
+        /*
+         * Set availability to free.
+         * 
+         * Note: HTC calendar (4.0.3 Android + HTC Sense 4.0) will show a conflict with other events
+         * if availability is not set to free!
+         */
+        if (Build.VERSION.SDK_INT >= 14) {
+            builder.withValue(Events.AVAILABILITY, Events.AVAILABILITY_FREE);
+        }
 
         // add button to open contact
         if (Build.VERSION.SDK_INT >= 16 && lookupKey != null) {
@@ -442,10 +441,12 @@ public class CalendarSyncAdapterService extends Service {
     }
 
     /**
-     * The date format in the contact events is not standardized! See
-     * http://dmfs.org/carddav/?date_format . This method will try to parse it trying different date
-     * formats.
+     * The date format in the contact events is not standardized! This method will try to parse it
+     * trying different date formats.
      * 
+     * See also: http://dmfs.org/carddav/?date_format
+     * 
+     * @param context
      * @param eventDateString
      * @return eventDate as Date object
      */
@@ -454,7 +455,11 @@ public class CalendarSyncAdapterService extends Service {
             Date eventDate = null;
             boolean success = false;
 
-            /* yyyy-MM-dd */
+            /*
+             * yyyy-MM-dd
+             * 
+             * Note: Most used format!
+             */
             Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
                     + " with yyyy-MM-dd!");
             SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
@@ -466,7 +471,11 @@ public class CalendarSyncAdapterService extends Service {
                 Log.d(Constants.TAG, "Parsing failed!");
             }
 
-            /* --MM-dd */
+            /*
+             * --MM-dd
+             * 
+             * Note: Most used format without year!
+             */
             if (!success) {
                 Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
                         + " with --MM-dd!");
@@ -484,7 +493,11 @@ public class CalendarSyncAdapterService extends Service {
                 }
             }
 
-            /* yyyyMMdd */
+            /*
+             * yyyyMMdd
+             * 
+             * Note: HTC Desire
+             */
             if (!success) {
                 if (eventDateString.length() == 8) {
                     Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
@@ -503,7 +516,11 @@ public class CalendarSyncAdapterService extends Service {
                 }
             }
 
-            /* Unix timestamp */
+            /*
+             * Unix timestamp
+             * 
+             * Note: Some Motorola devices
+             */
             if (!success) {
                 Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
                         + " as a unix timestamp!");
@@ -582,7 +599,7 @@ public class CalendarSyncAdapterService extends Service {
                 /*
                  * MM/dd/yyyy
                  * 
-                 * Used by Facebook!
+                 * Note: Used by Facebook
                  */
                 if (!success) {
                     Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
@@ -600,7 +617,7 @@ public class CalendarSyncAdapterService extends Service {
                 /*
                  * MM/dd
                  * 
-                 * Used by Facebook!
+                 * Note: Used by Facebook
                  */
                 if (!success) {
                     Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
@@ -792,7 +809,7 @@ public class CalendarSyncAdapterService extends Service {
                 + " rows!");
         Log.i(Constants.TAG, "Reminders of birthday calendar is now empty!");
 
-        int[] reminderMinutes = getReminderMinutes(context);
+        int[] reminderMinutes = PreferencesHelper.getAllReminderMinutes(context);
 
         // collection of birthdays that will later be added to the calendar
         ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
@@ -898,9 +915,12 @@ public class CalendarSyncAdapterService extends Service {
                                 ContentProviderOperation.Builder builder = ContentProviderOperation
                                         .newInsert(getBirthdayAdapterUri(Reminders.CONTENT_URI));
 
-                                // add reminder to last added event identified by backRef
-                                // see
-                                // http://stackoverflow.com/questions/4655291/semantics-of-withvaluebackreference
+                                /*
+                                 * add reminder to last added event identified by backRef
+                                 * 
+                                 * see http://stackoverflow.com/questions/4655291/semantics-of-
+                                 * withvaluebackreference
+                                 */
                                 builder.withValueBackReference(Reminders.EVENT_ID, backRef);
                                 builder.withValue(Reminders.MINUTES, reminderMinutes[i]);
                                 builder.withValue(Reminders.METHOD, Reminders.METHOD_ALERT);

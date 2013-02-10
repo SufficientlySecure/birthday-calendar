@@ -63,6 +63,22 @@ public class PreferencesHelper {
         return Integer.valueOf(reminderStr);
     }
 
+    /**
+     * Get all reminder minutes from preferences as int array
+     * 
+     * @param context
+     * @return
+     */
+    public static int[] getAllReminderMinutes(Context context) {
+        // get all reminders
+        int[] minutes = new int[3];
+        for (int i = 0; i < 3; i++) {
+            minutes[i] = getReminder(context, i);
+        }
+
+        return minutes;
+    }
+
     public static boolean getPreferddSlashMM(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
                 Context.MODE_PRIVATE);

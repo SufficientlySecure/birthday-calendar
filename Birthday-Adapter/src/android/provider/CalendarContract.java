@@ -961,55 +961,55 @@ public final class CalendarContract {
          * This column is available for use by sync adapters. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String SYNC_DATA2 = "sync_data2";
+        public static final String SYNC_DATA2 = legacyApi? null : "sync_data2";
 
         /**
          * This column is available for use by sync adapters. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String SYNC_DATA3 = "sync_data3";
+        public static final String SYNC_DATA3 = legacyApi? null : "sync_data3";
 
         /**
          * This column is available for use by sync adapters. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String SYNC_DATA4 = "sync_data4";
+        public static final String SYNC_DATA4 = legacyApi? null : "sync_data4";
 
         /**
          * This column is available for use by sync adapters. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String SYNC_DATA5 = "sync_data5";
+        public static final String SYNC_DATA5 = legacyApi? null : "sync_data5";
 
         /**
          * This column is available for use by sync adapters. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String SYNC_DATA6 = "sync_data6";
+        public static final String SYNC_DATA6 = legacyApi? null : "sync_data6";
 
         /**
          * This column is available for use by sync adapters. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String SYNC_DATA7 = "sync_data7";
+        public static final String SYNC_DATA7 = legacyApi? null : "sync_data7";
 
         /**
          * This column is available for use by sync adapters. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String SYNC_DATA8 = "sync_data8";
+        public static final String SYNC_DATA8 = legacyApi? null : "sync_data8";
 
         /**
          * This column is available for use by sync adapters. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String SYNC_DATA9 = "sync_data9";
+        public static final String SYNC_DATA9 = legacyApi? null : "sync_data9";
 
         /**
          * This column is available for use by sync adapters. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String SYNC_DATA10 = "sync_data10";
+        public static final String SYNC_DATA10 = legacyApi? null : "sync_data10";
 
         /**
          * Used to indicate that a row is not a real event but an original copy of a locally
