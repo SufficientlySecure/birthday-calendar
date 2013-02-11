@@ -1,3 +1,6 @@
+1.11
+- Fix sync on Android < 4
+
 1.10
 * On Android 4.1 and above: Open contact from calendar event with a button
 - Fix parsing of birthdays from facebook contacts
