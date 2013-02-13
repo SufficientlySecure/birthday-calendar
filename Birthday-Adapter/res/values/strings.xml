@@ -7,12 +7,12 @@
 
     <!-- Calendar -->
     <string name="calendar_display_name">Birthdays</string>
-    <string name="event_title_birthday_with_age">%1$s\'s Birthday (%2$d)</string>
-    <string name="event_title_birthday_without_age">%1$s\'s Birthday</string>
-    <string name="event_title_anniversary_with_age">%1$s\'s Anniversary (%2$d)</string>
-    <string name="event_title_anniversary_without_age">%1$s\'s Anniversary</string>
-    <string name="event_title_other_with_age">Other Event with %1$s (%2$d)</string>
-    <string name="event_title_other_without_age">Other Event with %1$s</string>
+    <string name="event_title_birthday_with_age">%1$s: Birthday (%2$d)</string>
+    <string name="event_title_birthday_without_age">%1$s: Birthday</string>
+    <string name="event_title_anniversary_with_age">%1$s: Anniversary (%2$d)</string>
+    <string name="event_title_anniversary_without_age">%1$s: Anniversary</string>
+    <string name="event_title_other_with_age">%1$s: Other Event (%2$d)</string>
+    <string name="event_title_other_without_age">%1$s: Other Event</string>
     <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
     <string name="event_title_custom_without_age">%1$s: %2$s</string>
 
