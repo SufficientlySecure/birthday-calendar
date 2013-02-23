@@ -14,22 +14,37 @@
     <color name="pref_color_def">#FFA70000</color>
 
     <string name="pref_force_sync_key" translatable="false">forceSync</string>
+    <string name="pref_reminder_enable_key" translatable="false">reminderEnable</string>
+    <string name="pref_reminder_enable_key0" translatable="false">reminderEnable0</string>
+    <string name="pref_reminder_enable_key1" translatable="false">reminderEnable1</string>
+    <string name="pref_reminder_enable_key2" translatable="false">reminderEnable2</string>
 
-    <string-array name="pref_reminder_entries_values" translatable="false">
-        <item>-99999</item> <!-- disabled -->
-        <item>-540</item> <!-- at 9:00 of the birthday -->
-        <item>900</item> <!-- 15 hours before 24:00 when birthday starts -> 9:00 the day before -->
-        <item>2340</item> <!-- + 24*60 -->
-        <item>3780</item> <!-- + 24*60 -->
-    </string-array>
+    <item name="pref_reminder_enable_def0" format="boolean" type="string">true</item>
+    <item name="pref_reminder_enable_def1" format="boolean" type="string">false</item>
+    <item name="pref_reminder_enable_def2" format="boolean" type="string">false</item>
 
-    <string name="pref_reminder_def" translata="false">-99999</string>
-    <string name="pref_reminder_key" translatable="false">reminder</string>
-    <string name="pref_reminder_key0" translatable="false">reminder0</string>
-    <string name="pref_reminder_key1" translatable="false">reminder1</string>
-    <string name="pref_reminder_key2" translatable="false">reminder2</string>
+    <string name="pref_reminder_time_key" translatable="false">reminderTime</string>
+    <string name="pref_reminder_time_key0" translatable="false">reminderTime0</string>
+    <string name="pref_reminder_time_key1" translatable="false">reminderTime1</string>
+    <string name="pref_reminder_time_key2" translatable="false">reminderTime2</string>
+
+    <item name="pref_reminder_time_def" format="string" type="integer">-540</item>
+
     <string name="pref_prefer_dd_slash_mm_key" translatable="false">preferddSlashMM</string>
 
     <item name="pref_prefer_dd_slash_mm_def" format="boolean" type="string">false</item>
+
+    <string name="pref_title_enable_key" translatable="false">titlesEnable</string>
+
+    <item name="pref_title_enable_def" format="boolean" type="string">false</item>
+
+    <string name="pref_title_birthday_without_age_key">birthday</string>
+    <string name="pref_title_birthday_with_age_key">birthdayAge</string>
+    <string name="pref_title_anniversary_without_age_key">anniversary</string>
+    <string name="pref_title_anniversary_with_age_key">anniversaryAge</string>
+    <string name="pref_title_other_without_age_key">other</string>
+    <string name="pref_title_other_with_age_key">otherAge</string>
+    <string name="pref_title_custom_without_age_key">custom</string>
+    <string name="pref_title_custom_with_age_key">customAge</string>
 
 </resources>

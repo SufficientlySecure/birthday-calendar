@@ -37,12 +37,12 @@ public class MainIntentService extends IntentService {
     /* extras that can be given by intent */
     public static final String EXTRA_MESSENGER = "messenger";
     public static final String EXTRA_ACTION = "action";
-    public static final String EXTRA_DATA = "data";
 
     /* possible EXTRA_ACTIONs */
-    public static final int ACTION_CHANGE_REMINDER = 0;
-    public static final int ACTION_CHANGE_COLOR = 1;
-    public static final int ACTION_MANUAL_SYNC = 2;
+    public static final int ACTION_CHANGE_REMINDER_ENABLED = 0;
+    public static final int ACTION_CHANGE_REMINDER_TIME = 1;
+    public static final int ACTION_CHANGE_COLOR = 2;
+    public static final int ACTION_MANUAL_SYNC = 3;
 
     /* keys for data bundle */
 
@@ -80,7 +80,6 @@ public class MainIntentService extends IntentService {
         if (extras.containsKey(EXTRA_MESSENGER)) {
             mMessenger = (Messenger) extras.get(EXTRA_MESSENGER);
         }
-        Bundle data = extras.getBundle(EXTRA_DATA);
 
         int action = extras.getInt(EXTRA_ACTION);
 
@@ -89,24 +88,21 @@ public class MainIntentService extends IntentService {
         // execute action from extra bundle
         switch (action) {
         case ACTION_CHANGE_COLOR:
-            int newColor = data.getInt(CHANGE_COLOR_NEW_COLOR);
 
             // only if enabled
             if (new AccountHelper(this).isAccountActivated()) {
                 // update calendar color
-                CalendarSyncAdapterService.updateCalendarColor(this, newColor);
+                CalendarSyncAdapterService.updateCalendarColor(this);
             }
 
             break;
 
-        case ACTION_CHANGE_REMINDER:
-            int newMinutes = data.getInt(CHANGE_REMINDER_NEW_MINUTES);
-            int reminderNo = data.getInt(CHANGE_REMINDER_NO);
+        case ACTION_CHANGE_REMINDER_ENABLED:
 
             // only if enabled
             if (new AccountHelper(this).isAccountActivated()) {
                 // Update all reminders to new minutes
-                CalendarSyncAdapterService.updateAllReminders(this, reminderNo, newMinutes);
+                CalendarSyncAdapterService.updateAllReminders(this);
             }
 
             break;

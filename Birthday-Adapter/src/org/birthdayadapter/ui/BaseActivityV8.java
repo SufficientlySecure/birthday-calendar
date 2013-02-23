@@ -20,19 +20,17 @@
 
 package org.birthdayadapter.ui;
 
-import net.margaritov.preference.colorpicker.ColorPickerPreference;
-
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.AccountHelper;
 import org.birthdayadapter.util.BackgroundStatusHandler;
 import org.birthdayadapter.util.Constants;
+import org.birthdayadapter.util.MySharedPreferenceChangeListener;
 import org.birthdayadapter.util.PreferencesHelper;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
@@ -52,12 +50,9 @@ public class BaseActivityV8 extends PreferenceActivity {
     private CheckBoxPreference mEnabled;
     private Preference mForceSync;
 
-    private ColorPickerPreference mColor;
-    private ListPreference mReminder0;
-    private ListPreference mReminder1;
-    private ListPreference mReminder2;
-
     private Preference mHelp;
+
+    MySharedPreferenceChangeListener mySharedPreferenceChangeListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +61,9 @@ public class BaseActivityV8 extends PreferenceActivity {
         super.onCreate(savedInstanceState);
 
         mActivity = this;
+
+        mySharedPreferenceChangeListener = new MySharedPreferenceChangeListener(mActivity,
+                mBackgroundStatusHandler);
 
         // save prefs here
         getPreferenceManager().setSharedPreferencesName(Constants.PREFS_NAME);
@@ -79,11 +77,6 @@ public class BaseActivityV8 extends PreferenceActivity {
 
         mEnabled = (CheckBoxPreference) findPreference(getString(R.string.pref_enabled_key));
         mForceSync = (Preference) findPreference(getString(R.string.pref_force_sync_key));
-
-        mColor = (ColorPickerPreference) findPreference(getString(R.string.pref_color_key));
-        mReminder0 = (ListPreference) findPreference(getString(R.string.pref_reminder_key0));
-        mReminder1 = (ListPreference) findPreference(getString(R.string.pref_reminder_key1));
-        mReminder2 = (ListPreference) findPreference(getString(R.string.pref_reminder_key2));
 
         mHelp = (Preference) findPreference(getString(R.string.pref_help_key));
 
@@ -121,19 +114,6 @@ public class BaseActivityV8 extends PreferenceActivity {
             }
         });
 
-        /*
-         * Functionality is defined in PreferenceImpl
-         */
-        mColor.setOnPreferenceChangeListener(new PreferenceImpl.ColorOnChange(mActivity,
-                mBackgroundStatusHandler));
-
-        mReminder0.setOnPreferenceChangeListener(new PreferenceImpl.ReminderOnChange(mActivity,
-                mBackgroundStatusHandler, 0));
-        mReminder1.setOnPreferenceChangeListener(new PreferenceImpl.ReminderOnChange(mActivity,
-                mBackgroundStatusHandler, 1));
-        mReminder2.setOnPreferenceChangeListener(new PreferenceImpl.ReminderOnChange(mActivity,
-                mBackgroundStatusHandler, 2));
-
         mHelp.setOnPreferenceClickListener(new OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -157,6 +137,18 @@ public class BaseActivityV8 extends PreferenceActivity {
             mEnabled.setChecked(false);
             mForceSync.setEnabled(false);
         }
+
+        // Set up a listener whenever a key changes
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(
+                mySharedPreferenceChangeListener);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        // Unregister the listener whenever a key changes
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(
+                mySharedPreferenceChangeListener);
     }
 
 }

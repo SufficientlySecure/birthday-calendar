@@ -123,7 +123,8 @@ public class CalendarSyncAdapterService extends Service {
      * @param context
      * @param color
      */
-    public static void updateCalendarColor(Context context, int color) {
+    public static void updateCalendarColor(Context context) {
+        int color = PreferencesHelper.getColor(context);
         ContentResolver contentResolver = context.getContentResolver();
 
         Uri uri = ContentUris.withAppendedId(getBirthdayAdapterUri(Calendars.CONTENT_URI),
@@ -269,23 +270,26 @@ public class CalendarSyncAdapterService extends Service {
     /**
      * Set all reminders in birthday calendar.
      * 
-     * newMinutes are given for reminder preference with number reminderNo. All other values are
-     * retrieved from current preferences.
+     * @param context
+     */
+    public static void updateAllReminders(Context context) {
+        // get all reminder minutes from prefs
+        int[] minutes = PreferencesHelper.getAllReminderMinutes(context);
+
+        updateAllReminders(context, minutes);
+    }
+
+    /**
+     * Update all reminders based with int array minutes
      * 
      * @param context
-     * @param reminderNo
-     * @param newMinutes
+     * @param minutes
      */
-    public static void updateAllReminders(Context context, int reminderNo, int newMinutes) {
+    public static void updateAllReminders(Context context, int[] minutes) {
         // before adding reminders, delete all existing ones
         deleteAllReminders(context);
 
         ContentResolver contentResolver = context.getContentResolver();
-
-        // get all reminder minutes from prefs
-        int[] minutes = PreferencesHelper.getAllReminderMinutes(context);
-        // override reminder with new value from preference
-        minutes[reminderNo] = newMinutes;
 
         // get cursor for all events
         String[] eventsProjection = new String[] { Events._ID };
@@ -308,7 +312,7 @@ public class CalendarSyncAdapterService extends Service {
 
                 Log.d(Constants.TAG, "Insert reminders for event id: " + eventId);
 
-                for (int i = 0; i < 3; i++) {
+                for (int i = 0; i < minutes.length; i++) {
                     if (minutes[i] != Constants.DISABLED_REMINDER) {
                         Log.d(Constants.TAG,
                                 "Create new reminder with uri " + remindersUri.toString());
@@ -403,6 +407,13 @@ public class CalendarSyncAdapterService extends Service {
         builder.withValue(Events.ALL_DAY, 1);
         builder.withValue(Events.TITLE, title);
         builder.withValue(Events.STATUS, Events.STATUS_CONFIRMED);
+
+        /*
+         * Enable reminders for this event
+         * 
+         * Note: Needs to be explicitly set on Android < 4 to enable reminders
+         */
+        builder.withValue(Events.HAS_ALARM, 1);
 
         /*
          * Set availability to free.
@@ -700,66 +711,30 @@ public class CalendarSyncAdapterService extends Service {
                 String eventCustomLabel = cursor.getString(eventCustomLabelColumn);
 
                 if (eventCustomLabel != null) {
-                    if (includeAge) {
-                        title = String.format(
-                                context.getString(R.string.event_title_custom_with_age),
-                                displayName, eventCustomLabel, age);
-                    } else {
-                        title = String.format(
-                                context.getString(R.string.event_title_custom_without_age),
-                                displayName, eventCustomLabel);
-                    }
+                    title = String.format(PreferencesHelper.getLabel(context,
+                            ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM, includeAge),
+                            displayName, eventCustomLabel, age);
                 } else {
-                    if (includeAge) {
-                        title = String.format(
-                                context.getString(R.string.event_title_other_with_age),
-                                displayName, age);
-                    } else {
-                        title = String.format(
-                                context.getString(R.string.event_title_other_without_age),
-                                displayName);
-                    }
+                    title = String.format(PreferencesHelper.getLabel(context,
+                            ContactsContract.CommonDataKinds.Event.TYPE_OTHER, includeAge),
+                            displayName, age);
                 }
                 break;
             case ContactsContract.CommonDataKinds.Event.TYPE_ANNIVERSARY:
-                if (includeAge) {
-                    title = String.format(
-                            context.getString(R.string.event_title_anniversary_with_age),
-                            displayName, age);
-                } else {
-                    title = String.format(
-                            context.getString(R.string.event_title_anniversary_without_age),
-                            displayName);
-                }
-                break;
-            case ContactsContract.CommonDataKinds.Event.TYPE_OTHER:
-                if (includeAge) {
-                    title = String.format(context.getString(R.string.event_title_other_with_age),
-                            displayName, age);
-                } else {
-                    title = String.format(
-                            context.getString(R.string.event_title_other_without_age), displayName);
-                }
+                title = String.format(PreferencesHelper.getLabel(context,
+                        ContactsContract.CommonDataKinds.Event.TYPE_ANNIVERSARY, includeAge),
+                        displayName, age);
                 break;
             case ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY:
-                if (includeAge) {
-                    title = String.format(
-                            context.getString(R.string.event_title_birthday_with_age), displayName,
-                            age);
-                } else {
-                    title = String.format(
-                            context.getString(R.string.event_title_birthday_without_age),
-                            displayName);
-                }
+                title = String.format(PreferencesHelper.getLabel(context,
+                        ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY, includeAge),
+                        displayName, age);
                 break;
             default:
-                if (includeAge) {
-                    title = String.format(context.getString(R.string.event_title_other_with_age),
-                            displayName, age);
-                } else {
-                    title = String.format(
-                            context.getString(R.string.event_title_other_without_age), displayName);
-                }
+                // also ContactsContract.CommonDataKinds.Event.TYPE_OTHER
+                title = String.format(PreferencesHelper.getLabel(context,
+                        ContactsContract.CommonDataKinds.Event.TYPE_OTHER, includeAge),
+                        displayName, age);
                 break;
             }
         }

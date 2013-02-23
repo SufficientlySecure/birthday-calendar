@@ -20,25 +20,19 @@
 
 package org.birthdayadapter.ui;
 
-import net.margaritov.preference.colorpicker.ColorPickerPreference;
-
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.Constants;
+import org.birthdayadapter.util.MySharedPreferenceChangeListener;
 
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.ListPreference;
 import android.preference.PreferenceFragment;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class PreferencesFragment extends PreferenceFragment {
     BaseActivity mActivity;
-
-    private ColorPickerPreference mColor;
-    private ListPreference mReminder0;
-    private ListPreference mReminder1;
-    private ListPreference mReminder2;
+    MySharedPreferenceChangeListener mySharedPreferenceChangeListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,28 +40,29 @@ public class PreferencesFragment extends PreferenceFragment {
 
         mActivity = (BaseActivity) getActivity();
 
+        mySharedPreferenceChangeListener = new MySharedPreferenceChangeListener(mActivity,
+                mActivity.mBackgroundStatusHandler);
+
         // save prefs here
         getPreferenceManager().setSharedPreferencesName(Constants.PREFS_NAME);
         // load preferences from xml
         addPreferencesFromResource(R.xml.pref_preferences);
+    }
 
-        mColor = (ColorPickerPreference) findPreference(getString(R.string.pref_color_key));
-        mReminder0 = (ListPreference) findPreference(getString(R.string.pref_reminder_key0));
-        mReminder1 = (ListPreference) findPreference(getString(R.string.pref_reminder_key1));
-        mReminder2 = (ListPreference) findPreference(getString(R.string.pref_reminder_key2));
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Set up a listener whenever a key changes
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(
+                mySharedPreferenceChangeListener);
+    }
 
-        /*
-         * Functionality is defined in PreferenceImpl
-         */
-        mColor.setOnPreferenceChangeListener(new PreferenceImpl.ColorOnChange(mActivity,
-                mActivity.mBackgroundStatusHandler));
-
-        mReminder0.setOnPreferenceChangeListener(new PreferenceImpl.ReminderOnChange(mActivity,
-                mActivity.mBackgroundStatusHandler, 0));
-        mReminder1.setOnPreferenceChangeListener(new PreferenceImpl.ReminderOnChange(mActivity,
-                mActivity.mBackgroundStatusHandler, 1));
-        mReminder2.setOnPreferenceChangeListener(new PreferenceImpl.ReminderOnChange(mActivity,
-                mActivity.mBackgroundStatusHandler, 2));
+    @Override
+    public void onPause() {
+        super.onPause();
+        // Unregister the listener whenever a key changes
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(
+                mySharedPreferenceChangeListener);
     }
 
 }
