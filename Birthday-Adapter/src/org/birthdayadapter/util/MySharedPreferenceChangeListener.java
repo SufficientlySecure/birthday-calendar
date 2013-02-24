@@ -40,10 +40,10 @@ public class MySharedPreferenceChangeListener implements OnSharedPreferenceChang
                 || context.getString(R.string.pref_reminder_time_key2).equals(key)) {
             // sync reminders
             intent.putExtra(MainIntentService.EXTRA_ACTION,
-                    MainIntentService.ACTION_CHANGE_REMINDER_ENABLED);
+                    MainIntentService.ACTION_CHANGE_REMINDER);
         } else {
             // resync all events
-            intent.putExtra(MainIntentService.EXTRA_ACTION, MainIntentService.ACTION_MANUAL_SYNC);
+            intent.putExtra(MainIntentService.EXTRA_ACTION, MainIntentService.ACTION_MANUAL_COMPLETE_SYNC);
         }
 
         // start service with intent

@@ -273,23 +273,13 @@ public class CalendarSyncAdapterService extends Service {
      * @param context
      */
     public static void updateAllReminders(Context context) {
-        // get all reminder minutes from prefs
-        int[] minutes = PreferencesHelper.getAllReminderMinutes(context);
-
-        updateAllReminders(context, minutes);
-    }
-
-    /**
-     * Update all reminders based with int array minutes
-     * 
-     * @param context
-     * @param minutes
-     */
-    public static void updateAllReminders(Context context, int[] minutes) {
         // before adding reminders, delete all existing ones
         deleteAllReminders(context);
 
         ContentResolver contentResolver = context.getContentResolver();
+
+        // get all reminder minutes from prefs
+        int[] minutes = PreferencesHelper.getAllReminderMinutes(context);
 
         // get cursor for all events
         String[] eventsProjection = new String[] { Events._ID };

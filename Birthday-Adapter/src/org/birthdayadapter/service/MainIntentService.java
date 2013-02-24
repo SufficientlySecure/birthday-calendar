@@ -39,19 +39,9 @@ public class MainIntentService extends IntentService {
     public static final String EXTRA_ACTION = "action";
 
     /* possible EXTRA_ACTIONs */
-    public static final int ACTION_CHANGE_REMINDER_ENABLED = 0;
-    public static final int ACTION_CHANGE_REMINDER_TIME = 1;
-    public static final int ACTION_CHANGE_COLOR = 2;
-    public static final int ACTION_MANUAL_SYNC = 3;
-
-    /* keys for data bundle */
-
-    // change reminder
-    public static final String CHANGE_REMINDER_NO = "reminderNo";
-    public static final String CHANGE_REMINDER_NEW_MINUTES = "reminderNewMinutes";
-
-    // change color
-    public static final String CHANGE_COLOR_NEW_COLOR = "colorNewColor";
+    public static final int ACTION_MANUAL_COMPLETE_SYNC = 0;
+    public static final int ACTION_CHANGE_COLOR = 1;
+    public static final int ACTION_CHANGE_REMINDER = 2;
 
     Messenger mMessenger;
 
@@ -97,7 +87,7 @@ public class MainIntentService extends IntentService {
 
             break;
 
-        case ACTION_CHANGE_REMINDER_ENABLED:
+        case ACTION_CHANGE_REMINDER:
 
             // only if enabled
             if (new AccountHelper(this).isAccountActivated()) {
@@ -107,7 +97,7 @@ public class MainIntentService extends IntentService {
 
             break;
 
-        case ACTION_MANUAL_SYNC:
+        case ACTION_MANUAL_COMPLETE_SYNC:
 
             // Force synchronous sync
             CalendarSyncAdapterService.performSync(this);
