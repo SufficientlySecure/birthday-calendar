@@ -98,10 +98,6 @@ public class BaseActivity extends FragmentActivity {
 
             // default is disabled:
             mActivity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
-            
-            Intent viewIntent = new Intent(Intent.ACTION_VIEW);
-            viewIntent.setData(Uri.parse("content://com.android.calendar/events/41201"));
-            startActivity(viewIntent);
         }
     }
 
