@@ -34,17 +34,6 @@
   <string name="pref_force_sync">Синхронизировать сейчас!</string>
   <string name="pref_force_sync_summary">Обычно нет необходимости в этом, т.к. Birthday Adapter синхронизируется автоматически раз в день.</string>
   <string name="pref_reminders">Напоминания</string>
-  <string name="pref_reminder0">Напоминание 1</string>
-  <string name="pref_reminder1">Напоминание 2</string>
-  <string name="pref_reminder2">Напоминание 3</string>
-  <string name="pref_reminder_summary">Устанавливает напоминание для всех дней рождения</string>
-  <string-array name="pref_reminder_entries">
-    <item>Отключить напоминания</item>
-    <item>В день события</item>
-    <item>За день</item>
-    <item>За 2 дня</item>
-    <item>За 3 дня</item>
-  </string-array>
   <!--Adapter Screen-->
   <string name="pref_account_header">Настройки</string>
   <string name="pref_account_settings">Настройки Birthday Adapter</string>

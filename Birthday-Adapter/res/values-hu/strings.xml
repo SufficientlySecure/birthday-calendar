@@ -20,14 +20,6 @@
   <string name="pref_about">Rólunk</string>
   <string name="pref_force_sync">Szinkronizáljon most!</string>
   <string name="pref_force_sync_summary">Általában nincs szükség erre , mert a Birthday Adapter automatikusan szinkronizál naponta egyszer.</string>
-  <string name="pref_reminder_summary">Emlékeztető beállítása minden születésnaphoz</string>
-  <string-array name="pref_reminder_entries">
-    <item>Emlékeztetők tiltása</item>
-    <item>Az esemény napján</item>
-    <item>1 nappal előtte</item>
-    <item>2 nappal előtte</item>
-    <item>3 nappal előtte</item>
-  </string-array>
   <!--Adapter Screen-->
   <string name="pref_account_header">Beállítások</string>
   <string name="pref_account_settings">Birthday Adapter beállítása</string>

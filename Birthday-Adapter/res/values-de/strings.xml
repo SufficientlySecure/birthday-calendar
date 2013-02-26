@@ -34,17 +34,34 @@
   <string name="pref_force_sync">Jetzt synchronisieren!</string>
   <string name="pref_force_sync_summary">Normalerweise ist das manuelle Synchronisieren nicht nötig, da der Geburtstagskalender einmal pro Tag automatisch synchronisiert wird.</string>
   <string name="pref_reminders">Erinnerungen</string>
-  <string name="pref_reminder0">Erinnerung 1</string>
-  <string name="pref_reminder1">Erinnerung 2</string>
-  <string name="pref_reminder2">Erinnerung 3</string>
-  <string name="pref_reminder_summary">Definiert die Erinnerung für alle Geburtstage</string>
-  <string-array name="pref_reminder_entries">
-    <item>Erinnerung deaktivieren</item>
-    <item>Am Ereignistag</item>
-    <item>1 Tag vorher</item>
-    <item>2 Tage vorher</item>
-    <item>3 Tage vorher</item>
+  <string name="pref_reminder_enable0">Erinnerung 1 aktivieren</string>
+  <string name="pref_reminder_enable1">Erinnerung 2 aktivieren</string>
+  <string name="pref_reminder_enable2">Erinnerung 3 aktivieren</string>
+  <string name="pref_reminder_enable_summary">Diese Erinnerung aktivieren</string>
+  <string name="pref_reminder_time0">Erinnerung 1</string>
+  <string name="pref_reminder_time1">Erinnerung 2</string>
+  <string name="pref_reminder_time2">Erinnerung 3</string>
+  <string name="pref_reminder_time_summary">Tag und Uhrzeit dieser Erinnerung einstellen</string>
+  <string-array name="pref_reminder_time_drop_down">
+    <item>Am Tag des Ereignisses</item>
+    <item>1 Tag davor</item>
+    <item>2 Tage davor</item>
+    <item>3 Tage davor</item>
   </string-array>
+  <string name="pref_title">Benutzerdefinierte Bezeichnungen</string>
+  <string name="pref_title_enable">Benutzerdefinierte Bezeichnungen aktivieren</string>
+  <string name="pref_title_birthday_without_age">Geburtstag</string>
+  <string name="pref_title_birthday_with_age">Geburtstag mit Alter</string>
+  <string name="pref_title_anniversary_without_age">Jahrestag</string>
+  <string name="pref_title_anniversary_with_age">Jahrestag mit Alter</string>
+  <string name="pref_title_other_without_age">Anderes Ereignis</string>
+  <string name="pref_title_other_with_age">Anderes Ereignis mit Alter</string>
+  <string name="pref_title_custom_without_age">Benutzerdefiniert</string>
+  <string name="pref_title_custom_with_age">Benutzerdefiniert mit Alter</string>
+  <string name="pref_title_summary_without_age">Benutze %1$s um den Kontaktnamen einzufügen.</string>
+  <string name="pref_title_summary_with_age">Benutze %1$s um den Kontaktnamen und %2$d um das Alter einzufügen.</string>
+  <string name="pref_title_summary_custom_without_age">Benutze %1$s um den Kontaktnamen und %2$s um den benutzerdefinierten Titel einzufügen.</string>
+  <string name="pref_title_summary_custom_with_age">Benutze %1$s um den Kontaktnamen, %2$s um den benutzerdefinierten Titel und %3$d um das Alter einzufügen.</string>
   <string name="pref_advanced">Erweiterte Einstellungen</string>
   <string name="pref_prefer_dd_slash_mm">dd/MM/yyyy Format bevorzugen</string>
   <string name="pref_prefer_dd_slash_mm_summary">Bevorzuge dd/MM/yyyy gegenüber MM/dd/yyyy beim Parsen von Datumsformaten</string>

@@ -20,14 +20,6 @@
   <string name="pref_about">Sobre</string>
   <string name="pref_force_sync">Sincronizar agora!</string>
   <string name="pref_force_sync_summary">Normalmente você não precisa fazer isso, porque o Birthday Adapter sincroniza automaticamente uma vez ao dia.</string>
-  <string name="pref_reminder_summary">Ajusta o lembrete para todos os aniversários</string>
-  <string-array name="pref_reminder_entries">
-    <item>desativar lembretes</item>
-    <item>No dia do evento</item>
-    <item>1 dia antes</item>
-    <item>2 dias antes</item>
-    <item>3 dias antes</item>
-  </string-array>
   <!--Adapter Screen-->
   <string name="pref_account_header">Configurações</string>
   <string name="pref_account_settings">Configure o Birthday Adapter</string>
