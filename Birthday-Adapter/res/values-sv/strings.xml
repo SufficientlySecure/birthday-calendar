@@ -42,12 +42,16 @@
   <string name="pref_reminder_time1">Påminnelse 2</string>
   <string name="pref_reminder_time2">Påminnelse 3</string>
   <string name="pref_reminder_time_summary">Ange tid för denna påminnelse</string>
-  <string-array name="pref_reminder_time_drop_down">
-    <item>Vid dagens händelse</item>
-    <item>1 dag innan</item>
-    <item>2 dagar innan</item>
-    <item>3 dagar innan</item>
-  </string-array>
+    <string-array name="pref_reminder_time_drop_down">
+        <item>At the day of event</item>
+        <item>1 day before</item>
+        <item>2 days before</item>
+        <item>3 days before</item>
+        <item>5 days before</item>
+        <item>7 days before</item>
+        <item>10 days before</item>
+        <item>14 days before</item>
+    </string-array>
   <string name="pref_title">Anpassade etiketter</string>
   <string name="pref_title_enable">Aktivera anpassade etiketter</string>
   <string name="pref_title_birthday_without_age">Födelsedag</string>

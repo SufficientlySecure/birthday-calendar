@@ -42,12 +42,16 @@
   <string name="pref_reminder_time1">Erinnerung 2</string>
   <string name="pref_reminder_time2">Erinnerung 3</string>
   <string name="pref_reminder_time_summary">Tag und Uhrzeit dieser Erinnerung einstellen</string>
-  <string-array name="pref_reminder_time_drop_down">
-    <item>Am Tag des Ereignisses</item>
-    <item>1 Tag davor</item>
-    <item>2 Tage davor</item>
-    <item>3 Tage davor</item>
-  </string-array>
+    <string-array name="pref_reminder_time_drop_down">
+        <item>At the day of event</item>
+        <item>1 day before</item>
+        <item>2 days before</item>
+        <item>3 days before</item>
+        <item>5 days before</item>
+        <item>7 days before</item>
+        <item>10 days before</item>
+        <item>14 days before</item>
+    </string-array>
   <string name="pref_title">Benutzerdefinierte Bezeichnungen</string>
   <string name="pref_title_enable">Benutzerdefinierte Bezeichnungen aktivieren</string>
   <string name="pref_title_birthday_without_age">Geburtstag</string>
