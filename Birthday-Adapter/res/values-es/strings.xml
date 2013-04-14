@@ -6,18 +6,64 @@
   <string name="synchronizing">Sincronizando...</string>
   <!--Calendar-->
   <string name="calendar_display_name">Cumpleaños</string>
+  <string name="event_title_birthday_with_age">%1$s: Cumpleaños (%2$d)</string>
+  <string name="event_title_birthday_without_age">%1$s: Cumpleaños</string>
+  <string name="event_title_anniversary_with_age">%1$s: Aniversario (%2$d)</string>
+  <string name="event_title_anniversary_without_age">%1$s: Aniversario</string>
+  <string name="event_title_other_with_age">%1$s: Otro evento (%2$d)</string>
+  <string name="event_title_other_without_age">%1$s: Otro evento</string>
+  <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
+  <string name="event_title_custom_without_age">%1$s: %2$s</string>
   <!--About-->
   <string name="about_version">Versión:</string>
   <!--Tabs-->
+  <string name="tab_main">Principal</string>
+  <string name="tab_preferences">Preferencias</string>
+  <string name="tab_help">Ayuda</string>
+  <string name="tab_about">Sobre</string>
   <!--Preferences-->
-  <string name="pref_enable">Permitir Calendario de Cumpleaños</string>
-  <string name="pref_enable_summary">Muestra cumpleaños, aniversarios, y otros eventos definidos en sus contactos como un calendario en su Calendario de Android.</string>
+  <string name="pref_general">General</string>
+  <string name="pref_description">Descripción</string>
+  <string name="pref_enable_switch">Calendario</string>
+  <string name="pref_enable">Activar calendario de cumpleaños</string>
+  <string name="pref_enable_summary">Muestra cumpleaños, aniversarios, y otros eventos definidos en sus contactos como un calendario en su calendario de Android.</string>
   <string name="pref_color">Color</string>
   <string name="pref_color_summary">Color del calendario de cumpleaños</string>
   <string name="pref_help">Ayuda</string>
   <string name="pref_about">Sobre</string>
   <string name="pref_force_sync">Sincronice ahora!</string>
   <string name="pref_force_sync_summary">Normalmente no necesitas hacer esto, porque Birthday Adapter sincroniza una vez al día automáticamente.</string>
+  <string name="pref_reminders">Recordatorio</string>
+  <string name="pref_reminder_enable0">Activar recordatorio 1</string>
+  <string name="pref_reminder_enable1">Activar recordatorio 2</string>
+  <string name="pref_reminder_enable2">Activar recordatorio 3</string>
+  <string name="pref_reminder_enable_summary">Activar este recordatorio</string>
+  <string name="pref_reminder_time0">Recordatorio 1</string>
+  <string name="pref_reminder_time1">Recordatorio 2</string>
+  <string name="pref_reminder_time2">Recordatorio 3</string>
+  <string name="pref_reminder_time_summary">Ajustar la hora de este recordatorio</string>
+  <string-array name="pref_reminder_time_drop_down">
+    <item>En el día del evento</item>
+    <item>1 día antes</item>
+    <item>2 dias antes</item>
+    <item>3 dias antes</item>
+  </string-array>
+  <string name="pref_title">Etiqueta personalizada</string>
+  <string name="pref_title_enable">Activar etiquetas personalizadas</string>
+  <string name="pref_title_birthday_without_age">Cumpleaños</string>
+  <string name="pref_title_birthday_with_age">Cumpleaños con edad</string>
+  <string name="pref_title_anniversary_without_age">Aniversario</string>
+  <string name="pref_title_anniversary_with_age">Aniversario con edad</string>
+  <string name="pref_title_other_without_age">otro evento</string>
+  <string name="pref_title_other_with_age">Otro evento con edad</string>
+  <string name="pref_title_custom_without_age">Personalizado</string>
+  <string name="pref_title_custom_with_age">Personalizado con edad</string>
+  <string name="pref_title_summary_without_age">Ingresar %1$s para el nombre del contacto.</string>
+  <string name="pref_title_summary_with_age">Ingresar %1$s para el nombre del contacto y %2$d para la edad.</string>
+  <string name="pref_title_summary_custom_without_age">Ingresar %1$s para el nombre del contacto y %2$s para la etiqueta personalizada de este evento</string>
+  <string name="pref_title_summary_custom_with_age">Ingresar %1$s para el nombre del contacto y %2$s para la etiqueta personalizada de este evento y %3$d para la edad.</string>
+  <string name="pref_advanced">Preferencias avanzadas.</string>
+  <string name="pref_prefer_dd_slash_mm">Preferir dd/MM/yyyy formato</string>
   <!--Adapter Screen-->
   <string name="pref_account_header">Ajustes</string>
   <string name="pref_account_settings">Configurar Birthday Adapter</string>

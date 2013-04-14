@@ -34,6 +34,34 @@
   <string name="pref_force_sync">Синхронізувати зараз!</string>
   <string name="pref_force_sync_summary">За звичай вам не потрібно робити це, бо Birthday Adapter синхронізується автоматично раз на день.</string>
   <string name="pref_reminders">Нагадування</string>
+  <string name="pref_reminder_enable0">Увімкнути Нагадування 1</string>
+  <string name="pref_reminder_enable1">Увімкнути Нагадування 2</string>
+  <string name="pref_reminder_enable2">Увімкнути Нагадування 3</string>
+  <string name="pref_reminder_enable_summary">Увімкнути це Нагадування</string>
+  <string name="pref_reminder_time0">Нагадування 1</string>
+  <string name="pref_reminder_time1">Нагадування 2</string>
+  <string name="pref_reminder_time2">Нагадування 3</string>
+  <string name="pref_reminder_time_summary">Установка часу цього Нагадування</string>
+  <string-array name="pref_reminder_time_drop_down">
+    <item>В день події</item>
+    <item>За 1 день до події</item>
+    <item>За 2 дні до події</item>
+    <item>За 3 дні до події</item>
+  </string-array>
+  <string name="pref_title">Власні Мітки</string>
+  <string name="pref_title_enable">Увімкнути власні Мітки</string>
+  <string name="pref_title_birthday_without_age">День народження</string>
+  <string name="pref_title_birthday_with_age">День народження з віком</string>
+  <string name="pref_title_anniversary_without_age">Річниця</string>
+  <string name="pref_title_anniversary_with_age">Річниця з віком</string>
+  <string name="pref_title_other_without_age">Інша подія</string>
+  <string name="pref_title_other_with_age">Інша подія з віком</string>
+  <string name="pref_title_custom_without_age">Звичай</string>
+  <string name="pref_title_custom_with_age">Звичай з віком</string>
+  <string name="pref_title_summary_without_age">Вставити %1$s для імені контакту.</string>
+  <string name="pref_title_summary_with_age">Вставити %1$s для імені контакті та %2$d для віку.</string>
+  <string name="pref_title_summary_custom_without_age">Вставити %1$s для імені контакту та %2$s для власної мітки цієї події.</string>
+  <string name="pref_title_summary_custom_with_age">Вставити %1$s для імені контакту, %2$s для власної мітки цієї події і %3$d для віку.</string>
   <string name="pref_advanced">Додаткові параметри</string>
   <string name="pref_prefer_dd_slash_mm">Формат дати dd/MM/yyyy</string>
   <string name="pref_prefer_dd_slash_mm_summary">Віддає перевагу dd/MM/yyyy над MM/dd/yyyy при аналізі формату дати</string>

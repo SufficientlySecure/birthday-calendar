@@ -1,3 +1,6 @@
+1.13
+*  Allow reminders also 5, 7, 10, and 14 days before
+
 1.12
 * Reminders can be set with time of day
 * Labels can be customized
