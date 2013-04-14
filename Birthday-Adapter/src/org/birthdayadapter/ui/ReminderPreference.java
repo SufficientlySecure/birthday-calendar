@@ -42,7 +42,8 @@ public class ReminderPreference extends DialogPreference {
 
     private static final int ONE_DAY_MINUTES = 24 * 60;
     private static final int[] DAY_BASE_MINUTES = { -ONE_DAY_MINUTES, 0, ONE_DAY_MINUTES,
-            2 * ONE_DAY_MINUTES };
+            2 * ONE_DAY_MINUTES, 4 * ONE_DAY_MINUTES, 6 * ONE_DAY_MINUTES, 9 * ONE_DAY_MINUTES,
+            13 * ONE_DAY_MINUTES };
 
     public ReminderPreference(Context ctxt, AttributeSet attrs) {
         super(ctxt, attrs);

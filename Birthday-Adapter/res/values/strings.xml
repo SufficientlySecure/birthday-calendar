@@ -52,6 +52,10 @@
         <item>1 day before</item>
         <item>2 days before</item>
         <item>3 days before</item>
+        <item>5 days before</item>
+        <item>7 days before</item>
+        <item>10 days before</item>
+        <item>14 days before</item>
     </string-array>
 
     <string name="pref_title">Custom Labels</string>

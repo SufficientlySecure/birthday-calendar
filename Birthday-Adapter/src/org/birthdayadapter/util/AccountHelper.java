@@ -141,7 +141,8 @@ public class AccountHelper {
             Messenger messenger = new Messenger(mBackgroundStatusHandler);
             intent.putExtra(MainIntentService.EXTRA_MESSENGER, messenger);
         }
-        intent.putExtra(MainIntentService.EXTRA_ACTION, MainIntentService.ACTION_MANUAL_COMPLETE_SYNC);
+        intent.putExtra(MainIntentService.EXTRA_ACTION,
+                MainIntentService.ACTION_MANUAL_COMPLETE_SYNC);
 
         // start service with intent
         mContext.startService(intent);

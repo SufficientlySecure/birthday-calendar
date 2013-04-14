@@ -36,7 +36,7 @@ import android.provider.ContactsContract.QuickContact;
  * contactLookupUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI,
  * lookupKey);
  * 
- * code related to the buton is here:
+ * Code related to the button is here:
  * https://github.com/CyanogenMod/android_packages_apps_Calendar
  * /blob/jellybean-stable/src/com/android/calendar/EventInfoFragment.java in
  * updateCustomAppButton()
