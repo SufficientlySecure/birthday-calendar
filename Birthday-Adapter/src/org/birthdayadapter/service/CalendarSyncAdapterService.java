@@ -60,6 +60,7 @@ import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
 import android.provider.ContactsContract;
 import android.text.format.DateUtils;
+import android.text.format.Time;
 
 @SuppressLint("NewApi")
 public class CalendarSyncAdapterService extends Service {
@@ -180,7 +181,11 @@ public class CalendarSyncAdapterService extends Service {
                 builder.withValue(Calendars.CALENDAR_DISPLAY_NAME,
                         context.getString(R.string.calendar_display_name));
                 builder.withValue(Calendars.CALENDAR_COLOR, PreferencesHelper.getColor(context));
-                builder.withValue(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_READ);
+                if (Constants.DEBUG) {
+                    builder.withValue(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_EDITOR);
+                } else {
+                    builder.withValue(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_READ);
+                }
                 builder.withValue(Calendars.OWNER_ACCOUNT, Constants.ACCOUNT_NAME);
                 builder.withValue(Calendars.SYNC_EVENTS, 1);
                 builder.withValue(Calendars.VISIBLE, 1);
@@ -381,6 +386,7 @@ public class CalendarSyncAdapterService extends Service {
          * -inserting-events-in-android-calendar
          */
         cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+        // cal.setTimeZone(TimeZone.getTimeZone(Time.getCurrentTimezone()));
 
         /*
          * Define over entire day.
@@ -394,6 +400,9 @@ public class CalendarSyncAdapterService extends Service {
         builder.withValue(Events.CALENDAR_ID, calendarId);
         builder.withValue(Events.DTSTART, dtstart);
         builder.withValue(Events.DTEND, dtend);
+        builder.withValue(Events.EVENT_TIMEZONE, Time.TIMEZONE_UTC);
+        // builder.withValue(Events.EVENT_TIMEZONE, Time.getCurrentTimezone());
+
         builder.withValue(Events.ALL_DAY, 1);
         builder.withValue(Events.TITLE, title);
         builder.withValue(Events.STATUS, Events.STATUS_CONFIRMED);
