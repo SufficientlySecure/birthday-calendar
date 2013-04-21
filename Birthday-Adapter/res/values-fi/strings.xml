@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--AsyncTask progress dialogs-->
+  <string name="creating">Luodaan liitos...</string>
+  <string name="removing">Poistetaan liitos...</string>
+  <string name="synchronizing">Synkronoidaan...</string>
+  <!--Calendar-->
+  <string name="calendar_display_name">Syntymäpäivät</string>
+  <string name="event_title_birthday_with_age">%1$s: Syntymäpäivä (%2$d)</string>
+  <string name="event_title_birthday_without_age">%1$s: Syntymäpäivä</string>
+  <string name="event_title_anniversary_with_age">%1$s: Vuosipäivä (%2$d)</string>
+  <string name="event_title_anniversary_without_age">%1$s: Vuosipäivä</string>
+  <string name="event_title_other_with_age">%1$s: Muu tapahtuma (%2$d)</string>
+  <string name="event_title_other_without_age">%1$s: Muu tapahtuma</string>
+  <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
+  <string name="event_title_custom_without_age">%1$s: %2$s</string>
+  <!--About-->
+  <string name="about_version">Versio:</string>
+  <!--Tabs-->
+  <string name="tab_main">Päätaso</string>
+  <string name="tab_preferences">Asetukset</string>
+  <string name="tab_help">Apua</string>
+  <string name="tab_about">Tietoja</string>
+  <!--Preferences-->
+  <string name="pref_general">Yleiset</string>
+  <string name="pref_description">Kuvaus</string>
+  <string name="pref_enable_switch">Kalenteri</string>
+  <string name="pref_enable">Aktivoi Birthday Calendar</string>
+  <string name="pref_enable_summary">Näyttää syntymäpäivät, vuosipäivät ja muut yhteystietoihin määritellyt tapahtumat Android-kalenterissa.</string>
+  <string name="pref_color">Väri</string>
+  <string name="pref_color_summary">Syntymäpäiväkalenterin väri</string>
+  <string name="pref_help">Apua</string>
+  <string name="pref_about">Tietoja</string>
+  <string name="pref_force_sync">Synkronoi nyt!</string>
+  <string name="pref_force_sync_summary">Yleensä tätä ei tarvitse tehdä, koska Birthday Adapter synkronoi tiedot automaattisesti kerran päivässä.</string>
+  <string name="pref_reminders">Muistutukset</string>
+  <string name="pref_reminder_enable0">Aktivoi muistutus 1</string>
+  <string name="pref_reminder_enable1">Aktivoi muistutus 2</string>
+  <string name="pref_reminder_enable2">Aktivoi muistutus 3</string>
+  <string name="pref_reminder_enable_summary">Aktivoi tämä muistutus</string>
+  <string name="pref_reminder_time0">Muistutus 1</string>
+  <string name="pref_reminder_time1">Muistutus 2</string>
+  <string name="pref_reminder_time2">Muistutus 3</string>
+  <string name="pref_reminder_time_summary">Aseta tämän muistutuksen ajankohta</string>
+  <string name="pref_title_birthday_without_age">Syntymäpäivä</string>
+  <string name="pref_title_birthday_with_age">Syntymäpäivä ja ikä</string>
+  <string name="pref_title_anniversary_without_age">Vuosipäivä</string>
+  <string name="pref_title_anniversary_with_age">Vuosipäivä ja ikä</string>
+  <string name="pref_title_other_without_age">Muu tapahtuma</string>
+  <string name="pref_title_other_with_age">Muu tapahtuma ja ikä</string>
+  <string name="pref_title_summary_without_age">Lisää %1$s yhteystiedon nimeen.</string>
+  <string name="pref_title_summary_with_age">Lisää %1$s yhteystiedon nimeen ja %2$d ikään.</string>
+  <string name="pref_advanced">Lisäasetukset</string>
+  <string name="pref_prefer_dd_slash_mm">Käytä muotoa pp/KK/vvv</string>
+  <string name="pref_prefer_dd_slash_mm_summary">Käytä muotoa pp/KK/vvvv muodon KK/pp/vvvv sijaan päiväyksiä käsiteltäessä.</string>
+  <!--Adapter Screen-->
+  <string name="pref_account_header">Asetukset</string>
+  <string name="pref_account_settings">Määritä Birthday Adapterin ominaisuudet</string>
+  <!--Color Picker-->
+  <string name="dialog_color_picker">Värin valinta</string>
+  <string name="press_color_to_apply">Paina väriä valitaksesi</string>
+</resources>

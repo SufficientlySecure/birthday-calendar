@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--AsyncTask progress dialogs-->
+  <string name="creating">Sortzen...</string>
+  <string name="removing">Ezabatzen...</string>
+  <string name="synchronizing">Sinkronizatzen...</string>
+  <!--Calendar-->
+  <string name="calendar_display_name">Urtebetetzea</string>
+  <string name="event_title_birthday_with_age">%1$s: Urtebetetzea (%2$d)</string>
+  <string name="event_title_birthday_without_age">%1$s: Urtebetetzea</string>
+  <string name="event_title_anniversary_with_age">%1$s: Urteurrena (%2$d)</string>
+  <string name="event_title_anniversary_without_age">%1$s: Urteurrena</string>
+  <string name="event_title_other_with_age">%1$s: Beste gertaerak (%2$d)</string>
+  <string name="event_title_other_without_age">%1$s: Beste gertaerak</string>
+  <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
+  <string name="event_title_custom_without_age">%1$s: %2$s</string>
+  <!--About-->
+  <string name="about_version">Bertsioa:</string>
+  <!--Tabs-->
+  <string name="tab_main">Nagusia</string>
+  <string name="tab_preferences">Hobespenak</string>
+  <string name="tab_help">Laguntza</string>
+  <string name="tab_about">Honi buruz</string>
+  <!--Preferences-->
+  <string name="pref_general">Orokorra</string>
+  <string name="pref_description">Deskribapena</string>
+  <string name="pref_enable_switch">Egutegia</string>
+  <string name="pref_enable">Urtebetetze egutegia baimendu</string>
+  <string name="pref_enable_summary">Kontaktuetan egutegi bezala ezarririk dauden urtebetetze, urteurren eta beste gertaera batzuk Google Calendarren erakusten ditu.</string>
+  <string name="pref_color">Kolorea</string>
+  <string name="pref_color_summary">Urtebetetze egutegiaren kolorea</string>
+  <string name="pref_help">Laguntza</string>
+  <string name="pref_about">Honi buruz</string>
+  <string name="pref_force_sync">Sinkronizatu orain!</string>
+  <string name="pref_force_sync_summary">Egunerokoan ez da beharrezkoa hau egitea, Birthday Adapter automatikoki sinkronizatzen bait da egunean behin.</string>
+  <string name="pref_reminders">Jakinarazpenak</string>
+  <string name="pref_reminder_enable0">1. jakinarazpena gaitu</string>
+  <string name="pref_reminder_enable1">2. jakinarazpena gaitu</string>
+  <string name="pref_reminder_enable2">3. jakinarazpena gaitu</string>
+  <string name="pref_reminder_enable_summary">Jakinarazpenhau gaitu</string>
+  <string name="pref_reminder_time0">1. jakinarazpena</string>
+  <string name="pref_reminder_time1">2. jakinarazpena</string>
+  <string name="pref_reminder_time2">3. jakinarazpena</string>
+  <string name="pref_reminder_time_summary">jakinarazpen ordua sartu</string>
+  <string name="pref_title">Hobetsitako etiketak</string>
+  <string name="pref_title_enable">Hobetsitako etiketak gaitu</string>
+  <string name="pref_title_birthday_without_age">Urtebetetzea</string>
+  <string name="pref_title_birthday_with_age">Urtebetetzea adinaren arabera</string>
+  <string name="pref_title_anniversary_without_age">Urteurrena</string>
+  <string name="pref_title_anniversary_with_age">Urteurrena  adinaren arabera</string>
+  <string name="pref_title_other_without_age">Beste gertaerak</string>
+  <string name="pref_title_other_with_age">Beste gertaerak  adinaren arabera</string>
+  <string name="pref_title_custom_without_age">Hobespena</string>
+  <string name="pref_title_custom_with_age">Hobespena  adinaren arabera</string>
+  <string name="pref_title_summary_without_age"> %1$s gehitu kontaktuaren izenari</string>
+  <string name="pref_title_summary_with_age"> %1$s gehitu kontaktuaren izenari eta %2$s adinari</string>
+  <string name="pref_title_summary_custom_without_age"> %1$s gehitu kontaktuaren izenari eta %2$s gertaera honetan hobetsitako etiketari</string>
+  <string name="pref_title_summary_custom_with_age">%1$s gehitu kontaktuaren izenari, %2$s gertaera honetan hobetsitako etiketari eta %3$s adinari</string>
+  <string name="pref_advanced">Ezarpen aurreratuak</string>
+  <string name="pref_prefer_dd_slash_mm">Ikuspegi gogokoena dd/MM/yyyy</string>
+  <string name="pref_prefer_dd_slash_mm_summary">MM/dd/yyyy baino dd/MM/yyyy ikuspegia nahigo datak aztertzerakoan</string>
+  <!--Adapter Screen-->
+  <string name="pref_account_header">Ezarpenak</string>
+  <string name="pref_account_settings">Birthday Adapter ezarpenak</string>
+  <!--Color Picker-->
+  <string name="dialog_color_picker">Kolore hautatzailea</string>
+  <string name="press_color_to_apply">Ezartzeko kolorea hautatu</string>
+</resources>
