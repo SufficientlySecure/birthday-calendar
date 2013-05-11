@@ -91,7 +91,7 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
             cursor.close();
         }
 
-        // get from preferences
+        // get current blacklist from preferences
         HashSet<String> blacklist = PreferencesHelper.getAccountsBlacklist(getContext());
 
         // Build List<AccountEntry> by getting AuthenticatorDescription for every Account

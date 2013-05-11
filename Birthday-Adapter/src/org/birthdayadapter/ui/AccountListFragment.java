@@ -20,6 +20,7 @@
 
 package org.birthdayadapter.ui;
 
+import java.util.HashSet;
 import java.util.List;
 
 import org.birthdayadapter.R;
@@ -28,6 +29,7 @@ import org.birthdayadapter.util.AccountListAdapter;
 import org.birthdayadapter.util.AccountListLoader;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
+import org.birthdayadapter.util.PreferencesHelper;
 
 import android.annotation.SuppressLint;
 import android.app.ListFragment;
@@ -40,7 +42,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ListView;
 
 @SuppressLint("NewApi")
@@ -62,7 +63,7 @@ public class AccountListFragment extends ListFragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        // Can't be used with a custom content view
+        // Can't be used with a custom content view:
         // setEmptyText("No accounts");
 
         // Create an empty adapter we will use to display the loaded data.
@@ -70,7 +71,7 @@ public class AccountListFragment extends ListFragment implements
         setListAdapter(mAdapter);
 
         // Start out with a progress indicator.
-        // Can't be used with a custom content view
+        // Can't be used with a custom content view:
         // setListShown(false);
 
         // Prepare the loader. Either re-connect with an existing one,
@@ -82,8 +83,15 @@ public class AccountListFragment extends ListFragment implements
 
             @Override
             public void onClick(View v) {
-                // TODO
-
+                HashSet<String> blacklist = new HashSet<String>();
+                for (AccountListEntry entry : mAdapter.getData()) {
+                    Log.d(Constants.TAG, "entry: " + entry.getLabel() + " " + entry.isSelected());
+                    if (!entry.isSelected()) {
+                        blacklist.add(entry.getName());
+                    }
+                }
+                
+                PreferencesHelper.setAccountsBlacklist(getActivity(), blacklist);
             }
         });
     }
@@ -91,21 +99,12 @@ public class AccountListFragment extends ListFragment implements
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        // Bug on Android >= 4.1, http://code.google.com/p/android/issues/detail?id=35885
-        // l.setItemChecked(position, l.isItemChecked(position));
 
-        CheckBox cBox = (CheckBox) v.findViewWithTag("checkbox_" + position);
-        Log.d(Constants.TAG, "Search cbox: " + "checkbox_" + position);
-
-        if (cBox != null) {
-            cBox.setChecked(!cBox.isChecked());
-
-            AccountListEntry entry = mAdapter.getItem(position);
-            entry.setSelected(!cBox.isChecked());
-        } else {
-            Log.e(Constants.TAG, "Checkbox could not be found!");
-        }
-        Log.e("LoaderCustom", "Item clicked: " + id);
+        // Update underlying data and notify adapter of change. The adapter will update the view
+        // automatically
+        AccountListEntry entry = mAdapter.getItem(position);
+        entry.setSelected(!entry.isSelected());
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -122,10 +121,10 @@ public class AccountListFragment extends ListFragment implements
 
         // The list should now be shown.
         if (isResumed()) {
-            // Can't be used with a custom content view
+            // Can't be used with a custom content view:
             // setListShown(true);
         } else {
-            // Can't be used with a custom content view
+            // Can't be used with a custom content view:
             // setListShownNoAnimation(true);
         }
     }

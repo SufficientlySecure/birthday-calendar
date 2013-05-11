@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -596,8 +597,13 @@ public class CalendarSyncAdapterService extends Service {
      * 
      * @return
      */
-    private static Cursor getContactsEvents(ContentResolver contentResolver) {
+    private static Cursor getContactsEvents(Context context, ContentResolver contentResolver) {
         Uri uri = ContactsContract.Data.CONTENT_URI;
+
+        // TODO: only those that are not blacklisted
+        // http://stackoverflow.com/questions/3100225/android-contact-query ?
+
+        HashSet<String> blacklist = PreferencesHelper.getAccountsBlacklist(context);
 
         String[] projection = new String[] { ContactsContract.Contacts.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Event.CONTACT_ID,
@@ -714,7 +720,7 @@ public class CalendarSyncAdapterService extends Service {
         ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
 
         // iterate through all Contact Events
-        Cursor cursor = getContactsEvents(contentResolver);
+        Cursor cursor = getContactsEvents(context, contentResolver);
 
         if (cursor == null) {
             Log.e(Constants.TAG, "Unable to get events from contacts! Cursor returns null!");

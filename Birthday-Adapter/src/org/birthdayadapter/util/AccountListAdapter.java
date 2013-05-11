@@ -38,6 +38,9 @@ import android.widget.TextView;
 public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
     private final LayoutInflater mInflater;
 
+    // hold a private reference to the underlying data List
+    private List<AccountListEntry> data;
+
     public AccountListAdapter(Context context) {
         super(context, -1);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -47,7 +50,12 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
         clear();
         if (data != null) {
             addAll(data);
+            this.data = data;
         }
+    }
+
+    public List<AccountListEntry> getData() {
+        return data;
     }
 
     /**
@@ -67,15 +75,8 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
         ((TextView) view.findViewById(R.id.account_list_text)).setText(entry.getLabel());
         ((TextView) view.findViewById(R.id.account_list_subtext)).setText(entry.getName());
         ((ImageView) view.findViewById(R.id.account_list_icon)).setImageDrawable(entry.getIcon());
-
         CheckBox cBox = (CheckBox) view.findViewById(R.id.account_list_cbox);
-
-        if (cBox != null) {
-            // bind position to tag of list item
-            cBox.setTag("checkbox_" + position);
-
-            cBox.setChecked(entry.isSelected());
-        }
+        cBox.setChecked(entry.isSelected());
 
         return view;
     }

@@ -21,7 +21,6 @@
 package org.birthdayadapter.util;
 
 import java.util.HashSet;
-import java.util.Set;
 
 import org.birthdayadapter.R;
 
