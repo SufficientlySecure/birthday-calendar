@@ -33,9 +33,12 @@ public class AccountListEntry {
     private String name;
     private String label;
     private Drawable icon;
+    private boolean selected;
 
-    public AccountListEntry(Context context, Account account, AuthenticatorDescription description) {
-        name = account.name;
+    public AccountListEntry(Context context, Account account, AuthenticatorDescription description,
+            boolean selected) {
+        this.name = account.name;
+        this.selected = selected;
         init(context, account, description);
     }
 
@@ -71,6 +74,14 @@ public class AccountListEntry {
 
     public Drawable getIcon() {
         return icon;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
     @Override

@@ -49,7 +49,7 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
     }
 
     /**
-     * Perform alphabetical comparison of application entry objects.
+     * Perform alphabetical comparison of account entry objects.
      */
     public static final Comparator<AccountListEntry> ALPHA_COMPARATOR = new Comparator<AccountListEntry>() {
         private final Collator sCollator = Collator.getInstance();
@@ -91,6 +91,9 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
             cursor.close();
         }
 
+        // get from preferences
+        HashSet<String> blacklist = PreferencesHelper.getAccountsBlacklist(getContext());
+
         // Build List<AccountEntry> by getting AuthenticatorDescription for every Account
         AccountManager manager = AccountManager.get(getContext());
         AuthenticatorDescription[] descriptions = manager.getAuthenticatorTypes();
@@ -99,7 +102,9 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
         for (Account account : activeContactAccounts) {
             for (AuthenticatorDescription description : descriptions) {
                 if (description.type.equals(account.type)) {
-                    entries.add(new AccountListEntry(getContext(), account, description));
+                    // add to entries, disable entry if in blacklist
+                    entries.add(new AccountListEntry(getContext(), account, description, !blacklist
+                            .contains(account.name)));
                 }
             }
         }

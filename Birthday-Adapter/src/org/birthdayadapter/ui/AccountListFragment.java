@@ -22,56 +22,38 @@ package org.birthdayadapter.ui;
 
 import java.util.List;
 
+import org.birthdayadapter.R;
 import org.birthdayadapter.util.AccountListEntry;
 import org.birthdayadapter.util.AccountListAdapter;
 import org.birthdayadapter.util.AccountListLoader;
+import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.Loader;
 import android.os.Bundle;
 
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ListView;
 
 @SuppressLint("NewApi")
 public class AccountListFragment extends ListFragment implements
         LoaderManager.LoaderCallbacks<List<AccountListEntry>> {
-//    private Activity mActivity;
-    // This is the Adapter being used to display the list's data.
+
     AccountListAdapter mAdapter;
 
-    // private long mCurrentRowId;
-
-    /**
-     * Handle Checkboxes clicks here, because to enable context menus on longClick we had to disable
-     * focusable and clickable on checkboxes in layout xml.
-     */
-    // @Override
-    // public void onListItemClick(ListView l, View v, int position, long id) {
-    // super.onListItemClick(l, v, position, id);
-    // mCurrentRowId = id;
-    //
-    // // Checkbox tags are defined by cursor position in HostsCursorAdapter, so we can get
-    // // checkboxes by position of cursor
-    // CheckBox cBox = (CheckBox) v.findViewWithTag("checkbox_" + position);
-    //
-    // if (cBox != null) {
-    // if (cBox.isChecked()) {
-    // cBox.setChecked(false);
-    // // change status based on row id from cursor
-    // // ProviderHelper.updateHostsSourceEnabled(mActivity, mCurrentRowId, false);
-    // } else {
-    // cBox.setChecked(true);
-    // // ProviderHelper.updateHostsSourceEnabled(mActivity, mCurrentRowId, true);
-    // }
-    // } else {
-    // Log.e(Constants.TAG, "Checkbox could not be found!");
-    // }
-    // }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.account_list_fragment, null);
+        return view;
+    }
 
     /**
      * Define Adapter and Loader on create of Activity
@@ -80,30 +62,50 @@ public class AccountListFragment extends ListFragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        // Give some text to display if there is no data. In a real
-        // application this would come from a resource.
-        setEmptyText("No applications");
-
-        // We have a menu item to show in action bar.
-        setHasOptionsMenu(true);
+        // Can't be used with a custom content view
+        // setEmptyText("No accounts");
 
         // Create an empty adapter we will use to display the loaded data.
         mAdapter = new AccountListAdapter(getActivity());
         setListAdapter(mAdapter);
 
         // Start out with a progress indicator.
-        setListShown(false);
+        // Can't be used with a custom content view
+        // setListShown(false);
 
         // Prepare the loader. Either re-connect with an existing one,
         // or start a new one.
         getLoaderManager().initLoader(0, null, this);
-    }
 
+        Button saveButton = (Button) getActivity().findViewById(R.id.account_list_save);
+        saveButton.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO
+
+            }
+        });
+    }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        // Insert desired behavior here.
-        Log.i("LoaderCustom", "Item clicked: " + id);
+        super.onListItemClick(l, v, position, id);
+        // Bug on Android >= 4.1, http://code.google.com/p/android/issues/detail?id=35885
+        // l.setItemChecked(position, l.isItemChecked(position));
+
+        CheckBox cBox = (CheckBox) v.findViewWithTag("checkbox_" + position);
+        Log.d(Constants.TAG, "Search cbox: " + "checkbox_" + position);
+
+        if (cBox != null) {
+            cBox.setChecked(!cBox.isChecked());
+
+            AccountListEntry entry = mAdapter.getItem(position);
+            entry.setSelected(!cBox.isChecked());
+        } else {
+            Log.e(Constants.TAG, "Checkbox could not be found!");
+        }
+        Log.e("LoaderCustom", "Item clicked: " + id);
     }
 
     @Override
@@ -120,9 +122,11 @@ public class AccountListFragment extends ListFragment implements
 
         // The list should now be shown.
         if (isResumed()) {
-            setListShown(true);
+            // Can't be used with a custom content view
+            // setListShown(true);
         } else {
-            setListShownNoAnimation(true);
+            // Can't be used with a custom content view
+            // setListShownNoAnimation(true);
         }
     }
 

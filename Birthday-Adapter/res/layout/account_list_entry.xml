@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal" >
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:orientation="horizontal"
+    android:paddingLeft="3dip"
+    android:paddingRight="?android:attr/scrollbarSize"
+    android:singleLine="true" >
 
     <CheckBox
-        android:id="@+id/account_list_checkbox"
+        android:id="@+id/account_list_cbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:clickable="false"
-        android:focusable="false" />
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
     <!-- focusable and clickable MUST be false to handle click and longClick in ListView Activity -->
 
     <ImageView
@@ -24,6 +28,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:orientation="vertical"
         android:paddingBottom="2dp"
         android:paddingTop="2dp" >
@@ -33,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@android:color/primary_text_dark"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/account_list_subtext"

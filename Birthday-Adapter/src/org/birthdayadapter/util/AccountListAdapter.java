@@ -30,6 +30,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -38,7 +39,7 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
     private final LayoutInflater mInflater;
 
     public AccountListAdapter(Context context) {
-        super(context, android.R.layout.simple_list_item_2);
+        super(context, -1);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -62,11 +63,21 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
             view = convertView;
         }
 
-        AccountListEntry item = getItem(position);
-        ((TextView) view.findViewById(R.id.account_list_text)).setText(item.getLabel());
-        ((TextView) view.findViewById(R.id.account_list_subtext)).setText(item.getName());
-        ((ImageView) view.findViewById(R.id.account_list_icon)).setImageDrawable(item.getIcon());
+        AccountListEntry entry = getItem(position);
+        ((TextView) view.findViewById(R.id.account_list_text)).setText(entry.getLabel());
+        ((TextView) view.findViewById(R.id.account_list_subtext)).setText(entry.getName());
+        ((ImageView) view.findViewById(R.id.account_list_icon)).setImageDrawable(entry.getIcon());
+
+        CheckBox cBox = (CheckBox) view.findViewById(R.id.account_list_cbox);
+
+        if (cBox != null) {
+            // bind position to tag of list item
+            cBox.setTag("checkbox_" + position);
+
+            cBox.setChecked(entry.isSelected());
+        }
 
         return view;
     }
+
 }

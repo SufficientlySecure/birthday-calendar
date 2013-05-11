@@ -22,7 +22,7 @@
     <!-- Tabs -->
     <string name="tab_main">Main</string>
     <string name="tab_preferences">Preferences</string>
-    <string name="tab_accounts">Accounts</string>
+    <string name="tab_accounts">Account Filter</string>
     <string name="tab_help">Help</string>
     <string name="tab_about">About</string>
 
@@ -84,5 +84,10 @@
     <!-- Color Picker -->
     <string name="dialog_color_picker">Color Picker</string>
     <string name="press_color_to_apply">Press on Color to apply</string>
+
+    <!-- Accounts -->
+    <string name="account_list_description">Only events from selected accounts will be displayed in your calendar.</string>
+    <string name="account_list_save">Save and apply filter</string>
+    <string name="account_list_empty">No accounts</string>
 
 </resources>
