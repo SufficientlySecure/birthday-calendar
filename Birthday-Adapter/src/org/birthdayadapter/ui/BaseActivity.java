@@ -49,8 +49,7 @@ public class BaseActivity extends FragmentActivity {
     public static final int BACKGROUND_STATUS_HANDLER_DISABLE = 0;
     public static final int BACKGROUND_STATUS_HANDLER_ENABLE = 1;
 
-    public BackgroundStatusHandler mBackgroundStatusHandler = new BackgroundStatusHandler(
-            this);
+    public BackgroundStatusHandler mBackgroundStatusHandler = new BackgroundStatusHandler(this);
 
     /**
      * Called when the activity is first created.
@@ -88,6 +87,9 @@ public class BaseActivity extends FragmentActivity {
 
             mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_preferences)),
                     PreferencesFragment.class, null);
+
+            mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_accounts)),
+                    AccountListFragment.class, null);
 
             mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_help)),
                     HelpFragment.class, null);

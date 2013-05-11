@@ -22,6 +22,7 @@
     <!-- Tabs -->
     <string name="tab_main">Main</string>
     <string name="tab_preferences">Preferences</string>
+    <string name="tab_accounts">Accounts</string>
     <string name="tab_help">Help</string>
     <string name="tab_about">About</string>
 

@@ -50,7 +50,7 @@ public class MySharedPreferenceChangeListener implements OnSharedPreferenceChang
         intent.putExtra(MainIntentService.EXTRA_MESSENGER, messenger);
 
         if (context.getString(R.string.pref_color_key).equals(key)) {
-            // sync reminders
+            // set new color
             intent.putExtra(MainIntentService.EXTRA_ACTION, MainIntentService.ACTION_CHANGE_COLOR);
         } else if (context.getString(R.string.pref_reminder_enable_key0).equals(key)
                 || context.getString(R.string.pref_reminder_enable_key1).equals(key)
