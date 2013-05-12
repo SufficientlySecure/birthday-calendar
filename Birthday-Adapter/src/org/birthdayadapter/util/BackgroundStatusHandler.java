@@ -48,15 +48,18 @@ public class BackgroundStatusHandler extends Handler {
         case BACKGROUND_STATUS_HANDLER_ENABLE:
             noOfRunningBackgroundThreads++;
 
-            activity.setProgressBarIndeterminateVisibility(Boolean.TRUE);
-
+            if (activity != null) {
+                activity.setProgressBarIndeterminateVisibility(Boolean.TRUE);
+            }
             break;
 
         case BACKGROUND_STATUS_HANDLER_DISABLE:
             noOfRunningBackgroundThreads--;
 
             if (noOfRunningBackgroundThreads <= 0) {
-                activity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
+                if (activity != null) {
+                    activity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
+                }
             }
 
             break;
