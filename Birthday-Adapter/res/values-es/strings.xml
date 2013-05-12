@@ -64,4 +64,5 @@
   <!--Color Picker-->
   <string name="dialog_color_picker">Selector de color</string>
   <string name="press_color_to_apply">Seleccione Color para aplicar</string>
+  <!--Accounts-->
 </resources>

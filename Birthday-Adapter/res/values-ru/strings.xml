@@ -40,4 +40,5 @@
   <!--Color Picker-->
   <string name="dialog_color_picker">Выбор цвета</string>
   <string name="press_color_to_apply">Чтобы применить, нажмите на цвет</string>
+  <!--Accounts-->
 </resources>

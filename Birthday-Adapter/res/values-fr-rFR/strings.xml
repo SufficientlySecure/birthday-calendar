@@ -19,6 +19,7 @@
   <!--Tabs-->
   <string name="tab_main">Principal</string>
   <string name="tab_preferences">Préférences</string>
+  <string name="tab_accounts">Filtre par compte</string>
   <string name="tab_help">Aide</string>
   <string name="tab_about">À propos</string>
   <!--Preferences-->
@@ -34,10 +35,49 @@
   <string name="pref_force_sync">Synchroniser maintenant !</string>
   <string name="pref_force_sync_summary">Il est généralement inutile de synchroniser manuellement, car Birthday Adapter synchronise automatiquement une fois par jour.</string>
   <string name="pref_reminders">Rappels</string>
+  <string name="pref_reminder_enable0">Activer le rappel 1</string>
+  <string name="pref_reminder_enable1">Activer le rappel 2</string>
+  <string name="pref_reminder_enable2">Activer le rappel 3</string>
+  <string name="pref_reminder_enable_summary">Activer ce rappel</string>
+  <string name="pref_reminder_time0">Rappel 1</string>
+  <string name="pref_reminder_time1">Rappel 2</string>
+  <string name="pref_reminder_time2">Rappel 3</string>
+  <string name="pref_reminder_time_summary">Choisir le moment où s\'affichera ce rappel</string>
+  <string-array name="pref_reminder_time_drop_down">
+    <item>le jour de l\'événement</item>
+    <item>1 jour avant</item>
+    <item>2 jours avant</item>
+    <item>3 jours avant</item>
+    <item>5 jours avant</item>
+    <item>7 jours avant</item>
+    <item>10 jours avant</item>
+    <item>14 jours avant</item>
+  </string-array>
+  <string name="pref_title">Labels personnalisés</string>
+  <string name="pref_title_enable">Activer les labels personnalisés</string>
+  <string name="pref_title_birthday_without_age">Anniversaire</string>
+  <string name="pref_title_birthday_with_age">Anniversaire avec l\'âge</string>
+  <string name="pref_title_anniversary_without_age">Fête</string>
+  <string name="pref_title_anniversary_with_age">Fête avec l\'âge</string>
+  <string name="pref_title_other_without_age">Autre événement</string>
+  <string name="pref_title_other_with_age">Autre événement avec âge</string>
+  <string name="pref_title_custom_without_age">Personnalisé</string>
+  <string name="pref_title_custom_with_age">Personnalisé avec âge</string>
+  <string name="pref_title_summary_without_age">Insérer %1$s pour afficher le nom du contact.</string>
+  <string name="pref_title_summary_with_age">Insérer %1$s pour afficher le nom du contact et %2$d pour son âge.</string>
+  <string name="pref_title_summary_custom_without_age">Insérer %1$s pour afficher le nom du contact et %2$s pour le label personnalisé de cet événement.</string>
+  <string name="pref_title_summary_custom_with_age">Insérer %1$s pour afficher le nom du contact, %2$s pour le label personnalisé de cet événement, et %3$d pour son âge.</string>
+  <string name="pref_advanced">Paramètres avancés</string>
+  <string name="pref_prefer_dd_slash_mm">Préférer le format JJ/MM/AAAA</string>
+  <string name="pref_prefer_dd_slash_mm_summary">Préférer JJ/MM/AAAA à MM/JJ/AAAA pour les formats de dates</string>
   <!--Adapter Screen-->
   <string name="pref_account_header">Paramètres</string>
   <string name="pref_account_settings">Configurer Birthday Adapter</string>
   <!--Color Picker-->
   <string name="dialog_color_picker">Choix de la couleur</string>
   <string name="press_color_to_apply">Choisissez la couleur à appliquer</string>
+  <!--Accounts-->
+  <string name="account_list_description">Seuls les événements du compte sélectionné seront affiché dans votre calendrier.</string>
+  <string name="account_list_save">Sauvegarder et appliquer le filtre</string>
+  <string name="account_list_empty">Aucun compte</string>
 </resources>

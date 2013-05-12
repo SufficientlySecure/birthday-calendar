@@ -26,4 +26,5 @@
   <!--Color Picker-->
   <string name="dialog_color_picker">Seletor de Cor</string>
   <string name="press_color_to_apply">Pressione na Cor para aplicar</string>
+  <!--Accounts-->
 </resources>

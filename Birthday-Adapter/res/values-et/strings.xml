@@ -51,4 +51,5 @@
   <!--Color Picker-->
   <string name="dialog_color_picker">Värvivalija</string>
   <string name="press_color_to_apply">Valimiseks vajuta värvil</string>
+  <!--Accounts-->
 </resources>

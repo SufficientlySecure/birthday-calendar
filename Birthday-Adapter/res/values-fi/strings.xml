@@ -59,4 +59,5 @@
   <!--Color Picker-->
   <string name="dialog_color_picker">Värin valinta</string>
   <string name="press_color_to_apply">Paina väriä valitaksesi</string>
+  <!--Accounts-->
 </resources>

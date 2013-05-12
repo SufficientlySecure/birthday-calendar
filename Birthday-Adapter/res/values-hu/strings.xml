@@ -26,4 +26,5 @@
   <!--Color Picker-->
   <string name="dialog_color_picker">Színválasztó</string>
   <string name="press_color_to_apply">Alkalmazáshoz érintse a színt</string>
+  <!--Accounts-->
 </resources>

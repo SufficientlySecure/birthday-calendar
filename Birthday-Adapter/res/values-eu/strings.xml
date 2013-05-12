@@ -65,4 +65,5 @@
   <!--Color Picker-->
   <string name="dialog_color_picker">Kolore hautatzailea</string>
   <string name="press_color_to_apply">Ezartzeko kolorea hautatu</string>
+  <!--Accounts-->
 </resources>

@@ -65,4 +65,5 @@
   <!--Color Picker-->
   <string name="dialog_color_picker">Färgväljare</string>
   <string name="press_color_to_apply">Klicka på en Färg för att godkänna</string>
+  <!--Accounts-->
 </resources>

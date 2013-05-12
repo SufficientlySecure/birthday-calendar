@@ -19,6 +19,7 @@
   <!--Tabs-->
   <string name="tab_main">Hauptmenu</string>
   <string name="tab_preferences">Einstellungen</string>
+  <string name="tab_accounts">Konten-Filter</string>
   <string name="tab_help">Hilfe</string>
   <string name="tab_about">Über</string>
   <!--Preferences-->
@@ -42,6 +43,16 @@
   <string name="pref_reminder_time1">Erinnerung 2</string>
   <string name="pref_reminder_time2">Erinnerung 3</string>
   <string name="pref_reminder_time_summary">Tag und Uhrzeit dieser Erinnerung einstellen</string>
+  <string-array name="pref_reminder_time_drop_down">
+    <item>Am Ereignistag</item>
+    <item>1 Tag vorher</item>
+    <item>2 Tage vorher</item>
+    <item>3 Tage vorher</item>
+    <item>5 Tage vorher</item>
+    <item>7 Tage vorher</item>
+    <item>10 Tage vorher</item>
+    <item>14 Tage vorher</item>
+  </string-array>
   <string name="pref_title">Benutzerdefinierte Bezeichnungen</string>
   <string name="pref_title_enable">Benutzerdefinierte Bezeichnungen aktivieren</string>
   <string name="pref_title_birthday_without_age">Geburtstag</string>
@@ -65,4 +76,8 @@
   <!--Color Picker-->
   <string name="dialog_color_picker">Farbauswahl</string>
   <string name="press_color_to_apply">Klicke auf die Farbe um zu bestätigen</string>
+  <!--Accounts-->
+  <string name="account_list_description">Nur Ereignisse von den ausgewählten Konten werden in deinem Kalendar angezeigt.</string>
+  <string name="account_list_save">Filter speichern und anwenden</string>
+  <string name="account_list_empty">Keine Konten vorhanden</string>
 </resources>
