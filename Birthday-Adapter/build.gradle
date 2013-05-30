@@ -1,0 +1,55 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.4.1'
+    }
+}
+apply plugin: 'android'
+
+dependencies {
+    compile fileTree(dir: 'libs', includes: ['*.jar'])
+}
+
+android {
+    compileSdkVersion 17
+    buildToolsVersion "17.0.0"
+
+    defaultConfig {
+        minSdkVersion 7
+        targetSdkVersion 17
+    }
+
+    /*
+     * To sign release build, create file gradle.properties in .gradle/ with this content:
+     *
+     * signingStoreLocation=/home/key.store
+     * signingStorePassword=xxx
+     * signingKeyAlias=alias
+     * signingKeyPassword=xxx
+     */
+    signingConfigs {
+        myConfig {
+            storeFile file(signingStoreLocation)
+            storePassword signingStorePassword
+            keyAlias signingKeyAlias
+            keyPassword signingKeyPassword
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.myConfig
+        }
+    }
+
+    productFlavors {
+        full {
+            buildConfig "public final static boolean FULL_VERSION = true;"
+        }
+        free {
+            buildConfig "public final static boolean FULL_VERSION = false;"
+        }
+    }
+}

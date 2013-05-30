@@ -6,12 +6,17 @@ Birthday Adapter provides birthdays, anniversaries, and other events from your c
 
 For more information visit http://code.google.com/p/birthday-adapter
 
-# Build using Ant
+# Build with Gradle
 
-1. Have Android SDK "tools" directory in your PATH (http://developer.android.com/sdk/index.html)
-2. Change to "Birthday-Adapter" directory with ``cd Birthday-Adapter``
-3. Execute ``android update project -p .``
-4. Execute ``ant debug``
+1. Have Android SDK "tools", "platform-tools", and "build-tools" directories in your PATH (http://developer.android.com/sdk/index.html)
+2. Export ANDROID_HOME pointing to your Android SDK
+3. Install gradle
+4. Execute ``gradle wrapper`` (http://www.gradle.org/docs/current/userguide/gradle_wrapper.html)
+5. Execute ``./gradlew assemble``
+
+## More build information
+
+Two productFlavors are build with gradle. A "full" version and a "free" version (without settings).
 
 # Contribute
 
