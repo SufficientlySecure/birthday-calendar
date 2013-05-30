@@ -81,7 +81,7 @@ public class AboutFragment extends Fragment {
 
     /**
      * Get the current package version.
-     * 
+     *
      * @return The current version.
      */
     private String getVersion() {
@@ -92,7 +92,7 @@ public class AboutFragment extends Fragment {
 
             result = String.format("%s (%s)", info.versionName, info.versionCode);
         } catch (NameNotFoundException e) {
-            Log.w(Constants.TAG, "Unable to get application version: " + e.getMessage());
+            Log.w(Constants.TAG, "Unable to get application version", e);
             result = "Unable to get application version.";
         }
 

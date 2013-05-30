@@ -36,12 +36,11 @@ public class MainIntentService extends IntentService {
 
     /* extras that can be given by intent */
     public static final String EXTRA_MESSENGER = "messenger";
-    public static final String EXTRA_ACTION = "action";
 
     /* possible EXTRA_ACTIONs */
-    public static final int ACTION_MANUAL_COMPLETE_SYNC = 0;
-    public static final int ACTION_CHANGE_COLOR = 1;
-    public static final int ACTION_CHANGE_REMINDER = 2;
+    public static final String ACTION_MANUAL_COMPLETE_SYNC = "MANUAL_SYNC";
+    public static final String ACTION_CHANGE_COLOR = "CHANGE_COLOR";
+    public static final String ACTION_CHANGE_REMINDER = "CHANGE_REMINDER";
 
     Messenger mMessenger;
 
@@ -62,8 +61,8 @@ public class MainIntentService extends IntentService {
             return;
         }
 
-        if (!(extras.containsKey(EXTRA_ACTION))) {
-            Log.e(Constants.TAG, "Extra bundle must contain an action!");
+        if (intent.getAction() == null) {
+            Log.e(Constants.TAG, "Intent must contain an action!");
             return;
         }
 
@@ -71,44 +70,30 @@ public class MainIntentService extends IntentService {
             mMessenger = (Messenger) extras.get(EXTRA_MESSENGER);
         }
 
-        int action = extras.getInt(EXTRA_ACTION);
+        String action = intent.getAction();
 
         setProgressCircleWithHandler(true);
 
-        // execute action from extra bundle
-        switch (action) {
-        case ACTION_CHANGE_COLOR:
-
+        // execute action
+        if (ACTION_CHANGE_COLOR.equals(action)) {
             // only if enabled
             if (new AccountHelper(this).isAccountActivated()) {
                 // update calendar color
                 CalendarSyncAdapterService.updateCalendarColor(this);
             }
-
-            break;
-
-        case ACTION_CHANGE_REMINDER:
-
+        } else if (ACTION_CHANGE_REMINDER.equals(action)) {
             // only if enabled
             if (new AccountHelper(this).isAccountActivated()) {
                 // Update all reminders to new minutes
                 CalendarSyncAdapterService.updateAllReminders(this);
             }
-
-            break;
-
-        case ACTION_MANUAL_COMPLETE_SYNC:
-
+        } else if (ACTION_MANUAL_COMPLETE_SYNC.equals(action)) {
             // Force synchronous sync
             CalendarSyncAdapterService.performSync(this);
-
-            break;
-
-        default:
-            break;
         }
 
         setProgressCircleWithHandler(false);
+
     }
 
     private void setProgressCircleWithHandler(boolean value) {

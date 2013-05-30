@@ -48,8 +48,7 @@ public class AccountHelper {
 
     /**
      * Add account for Birthday Adapter to Android system
-     * 
-     * @param context
+     *
      * @return
      */
     public Bundle addAccount() {
@@ -96,8 +95,7 @@ public class AccountHelper {
 
     /**
      * Remove account from Android system
-     * 
-     * @param context
+     *
      * @return
      */
     public boolean removeAccount() {
@@ -141,8 +139,7 @@ public class AccountHelper {
             Messenger messenger = new Messenger(mBackgroundStatusHandler);
             intent.putExtra(MainIntentService.EXTRA_MESSENGER, messenger);
         }
-        intent.putExtra(MainIntentService.EXTRA_ACTION,
-                MainIntentService.ACTION_MANUAL_COMPLETE_SYNC);
+        intent.setAction(MainIntentService.ACTION_MANUAL_COMPLETE_SYNC);
 
         // start service with intent
         mContext.startService(intent);
@@ -151,8 +148,7 @@ public class AccountHelper {
 
     /**
      * Checks whether the account is enabled or not
-     * 
-     * @param context
+     *
      * @return
      */
     public boolean isAccountActivated() {
