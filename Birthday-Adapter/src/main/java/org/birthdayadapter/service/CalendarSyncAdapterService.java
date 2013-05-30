@@ -270,86 +270,6 @@ public class CalendarSyncAdapterService extends Service {
     }
 
     /**
-     * Set all reminders in birthday calendar.
-     *
-     * @param context
-     */
-    public static void updateAllReminders(Context context) {
-        // before adding reminders, delete all existing ones
-        deleteAllReminders(context);
-
-        ContentResolver contentResolver = context.getContentResolver();
-
-        // get all reminder minutes from prefs
-        int[] minutes = PreferencesHelper.getAllReminderMinutes(context);
-
-        // get cursor for all events
-        String[] eventsProjection = new String[]{Events._ID};
-        String eventsWhere = Events.CALENDAR_ID + " = ?";
-        String[] eventsSelectionArgs = new String[]{String.valueOf(getCalendar(context))};
-        Cursor eventsCursor = contentResolver.query(getBirthdayAdapterUri(Events.CONTENT_URI),
-                eventsProjection, eventsWhere, eventsSelectionArgs, null);
-        int eventIdColumn = eventsCursor.getColumnIndex(Events._ID);
-
-        ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
-
-        Uri remindersUri = getBirthdayAdapterUri(Reminders.CONTENT_URI);
-
-        ContentProviderOperation.Builder builder = null;
-
-        // go through all events
-        try {
-            while (eventsCursor.moveToNext()) {
-                long eventId = eventsCursor.getLong(eventIdColumn);
-
-                Log.d(Constants.TAG, "Insert reminders for event id: " + eventId);
-
-                for (int i = 0; i < minutes.length; i++) {
-                    if (minutes[i] != Constants.DISABLED_REMINDER) {
-                        Log.d(Constants.TAG,
-                                "Create new reminder with uri " + remindersUri.toString());
-                        builder = ContentProviderOperation.newInsert(remindersUri);
-                        builder.withValue(Reminders.EVENT_ID, eventId);
-                        builder.withValue(Reminders.MINUTES, minutes[i]);
-
-                        // add operation to list, later executed
-                        operationList.add(builder.build());
-                    }
-                }
-
-                /*
-                 * intermediate commit - otherwise the binder transaction fails on large
-                 * operationList
-                 */
-                if (operationList.size() > 200) {
-                    try {
-                        Log.d(Constants.TAG, "Start applying the batch...");
-                        contentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
-                        Log.d(Constants.TAG, "Applying the batch was successful!");
-                        operationList.clear();
-                    } catch (Exception e) {
-                        Log.e(Constants.TAG, "Applying batch error!", e);
-                    }
-                }
-            }
-        } finally {
-            eventsCursor.close();
-        }
-
-        /* Create reminders */
-        if (operationList.size() > 0) {
-            try {
-                Log.d(Constants.TAG, "Start applying the batch...");
-                contentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
-                Log.d(Constants.TAG, "Applying the batch was successful!");
-            } catch (Exception e) {
-                Log.e(Constants.TAG, "Applying batch error!", e);
-            }
-        }
-
-    }
-
-    /**
      * Get a new ContentProviderOperation to insert a event
      *
      * @param context
@@ -687,16 +607,10 @@ public class CalendarSyncAdapterService extends Service {
             return;
         }
 
-        // Okay, now this works as follows:
+        // Sync flow:
         // 1. Clear events table for this account completely
         // 2. Get birthdays from contacts
-        // 3. Create events for each birthday
-
-        // Known limitations:
-        // - I am not doing any updating, just delete everything and then recreate everything
-        // - birthdays may be stored in other ways on some phones
-        // see
-        // http://stackoverflow.com/questions/8579883/get-birthday-for-each-contact-in-android-application
+        // 3. Create events and reminders for each birthday
 
         // empty table
         // with additional selection of calendar id, necessary on Android < 4 to remove events only

@@ -40,7 +40,6 @@ public class MainIntentService extends IntentService {
     /* possible EXTRA_ACTIONs */
     public static final String ACTION_MANUAL_COMPLETE_SYNC = "MANUAL_SYNC";
     public static final String ACTION_CHANGE_COLOR = "CHANGE_COLOR";
-    public static final String ACTION_CHANGE_REMINDER = "CHANGE_REMINDER";
 
     Messenger mMessenger;
 
@@ -80,12 +79,6 @@ public class MainIntentService extends IntentService {
             if (new AccountHelper(this).isAccountActivated()) {
                 // update calendar color
                 CalendarSyncAdapterService.updateCalendarColor(this);
-            }
-        } else if (ACTION_CHANGE_REMINDER.equals(action)) {
-            // only if enabled
-            if (new AccountHelper(this).isAccountActivated()) {
-                // Update all reminders to new minutes
-                CalendarSyncAdapterService.updateAllReminders(this);
             }
         } else if (ACTION_MANUAL_COMPLETE_SYNC.equals(action)) {
             // Force synchronous sync

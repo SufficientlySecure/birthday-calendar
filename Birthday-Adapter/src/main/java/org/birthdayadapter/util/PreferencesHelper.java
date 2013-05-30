@@ -75,7 +75,7 @@ public class PreferencesHelper {
 
     /**
      * Get all reminder minutes from preferences as int array
-     * 
+     *
      * @param context
      * @return
      */
@@ -109,52 +109,52 @@ public class PreferencesHelper {
                 context.getString(R.string.pref_title_enable_key), false);
 
         switch (eventType) {
-        case ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM:
-            if (!prefLabelsEnabled) {
-                return includeAge ? context.getString(R.string.event_title_custom_with_age)
-                        : context.getString(R.string.event_title_custom_without_age);
-            } else {
-                return includeAge ? prefs.getString(
-                        context.getString(R.string.pref_title_custom_with_age_key),
-                        context.getString(R.string.event_title_custom_with_age)) : prefs.getString(
-                        context.getString(R.string.pref_title_custom_without_age_key),
-                        context.getString(R.string.event_title_custom_without_age));
-            }
-        case ContactsContract.CommonDataKinds.Event.TYPE_ANNIVERSARY:
-            if (!prefLabelsEnabled) {
-                return includeAge ? context.getString(R.string.event_title_anniversary_with_age)
-                        : context.getString(R.string.event_title_anniversary_without_age);
-            } else {
-                return includeAge ? prefs.getString(
-                        context.getString(R.string.pref_title_anniversary_with_age_key),
-                        context.getString(R.string.event_title_anniversary_with_age)) : prefs
-                        .getString(
-                                context.getString(R.string.pref_title_anniversary_without_age_key),
-                                context.getString(R.string.event_title_anniversary_without_age));
-            }
-        case ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY:
-            if (!prefLabelsEnabled) {
-                return includeAge ? context.getString(R.string.event_title_birthday_with_age)
-                        : context.getString(R.string.event_title_birthday_without_age);
-            } else {
-                return includeAge ? prefs.getString(
-                        context.getString(R.string.pref_title_birthday_with_age_key),
-                        context.getString(R.string.event_title_birthday_with_age)) : prefs
-                        .getString(context.getString(R.string.pref_title_birthday_without_age_key),
-                                context.getString(R.string.event_title_birthday_without_age));
-            }
-        default:
-            // also ContactsContract.CommonDataKinds.Event.TYPE_OTHER
-            if (!prefLabelsEnabled) {
-                return includeAge ? context.getString(R.string.event_title_other_with_age)
-                        : context.getString(R.string.event_title_other_without_age);
-            } else {
-                return includeAge ? prefs.getString(
-                        context.getString(R.string.pref_title_other_with_age_key),
-                        context.getString(R.string.event_title_other_with_age)) : prefs.getString(
-                        context.getString(R.string.pref_title_other_without_age_key),
-                        context.getString(R.string.event_title_other_without_age));
-            }
+            case ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM:
+                if (!prefLabelsEnabled) {
+                    return includeAge ? context.getString(R.string.event_title_custom_with_age)
+                            : context.getString(R.string.event_title_custom_without_age);
+                } else {
+                    return includeAge ? prefs.getString(
+                            context.getString(R.string.pref_title_custom_with_age_key),
+                            context.getString(R.string.event_title_custom_with_age)) : prefs.getString(
+                            context.getString(R.string.pref_title_custom_without_age_key),
+                            context.getString(R.string.event_title_custom_without_age));
+                }
+            case ContactsContract.CommonDataKinds.Event.TYPE_ANNIVERSARY:
+                if (!prefLabelsEnabled) {
+                    return includeAge ? context.getString(R.string.event_title_anniversary_with_age)
+                            : context.getString(R.string.event_title_anniversary_without_age);
+                } else {
+                    return includeAge ? prefs.getString(
+                            context.getString(R.string.pref_title_anniversary_with_age_key),
+                            context.getString(R.string.event_title_anniversary_with_age)) : prefs
+                            .getString(
+                                    context.getString(R.string.pref_title_anniversary_without_age_key),
+                                    context.getString(R.string.event_title_anniversary_without_age));
+                }
+            case ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY:
+                if (!prefLabelsEnabled) {
+                    return includeAge ? context.getString(R.string.event_title_birthday_with_age)
+                            : context.getString(R.string.event_title_birthday_without_age);
+                } else {
+                    return includeAge ? prefs.getString(
+                            context.getString(R.string.pref_title_birthday_with_age_key),
+                            context.getString(R.string.event_title_birthday_with_age)) : prefs
+                            .getString(context.getString(R.string.pref_title_birthday_without_age_key),
+                                    context.getString(R.string.event_title_birthday_without_age));
+                }
+            default:
+                // also ContactsContract.CommonDataKinds.Event.TYPE_OTHER
+                if (!prefLabelsEnabled) {
+                    return includeAge ? context.getString(R.string.event_title_other_with_age)
+                            : context.getString(R.string.event_title_other_without_age);
+                } else {
+                    return includeAge ? prefs.getString(
+                            context.getString(R.string.pref_title_other_with_age_key),
+                            context.getString(R.string.event_title_other_with_age)) : prefs.getString(
+                            context.getString(R.string.pref_title_other_without_age_key),
+                            context.getString(R.string.event_title_other_without_age));
+                }
         }
     }
 
