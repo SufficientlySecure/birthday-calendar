@@ -1,159 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <CheckBoxPreference
-        android:key="@string/pref_enabled_key"
-        android:persistent="false"
-        android:summary="@string/pref_enable_summary"
-        android:title="@string/pref_enable" />
+            android:key="@string/pref_enabled_key"
+            android:persistent="false"
+            android:summary="@string/pref_enable_summary"
+            android:title="@string/pref_enable"/>
 
     <Preference
-        android:key="@string/pref_force_sync_key"
-        android:persistent="false"
-        android:summary="@string/pref_force_sync_summary"
-        android:title="@string/pref_force_sync" />
+            android:key="@string/pref_force_sync_key"
+            android:persistent="false"
+            android:summary="@string/pref_force_sync_summary"
+            android:title="@string/pref_force_sync"/>
 
-    <PreferenceCategory android:title="@string/pref_general" >
+    <PreferenceCategory android:title="@string/pref_general">
         <net.margaritov.preference.colorpicker.ColorPickerPreference
-            android:defaultValue="@color/pref_color_def"
-            android:key="@string/pref_color_key"
-            android:persistent="true"
-            android:summary="@string/pref_color_summary"
-            android:title="@string/pref_color" />
+                android:defaultValue="@color/pref_color_def"
+                android:key="@string/pref_color_key"
+                android:persistent="true"
+                android:summary="@string/pref_color_summary"
+                android:title="@string/pref_color"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_reminders" >
+    <PreferenceCategory android:title="@string/pref_reminders">
         <CheckBoxPreference
-            android:defaultValue="@string/pref_reminder_enable_def0"
-            android:key="@string/pref_reminder_enable_key0"
-            android:persistent="true"
-            android:summary="@string/pref_reminder_enable_summary"
-            android:title="@string/pref_reminder_enable0" />
+                android:defaultValue="@string/pref_reminder_enable_def0"
+                android:key="@string/pref_reminder_enable_key0"
+                android:persistent="true"
+                android:summary="@string/pref_reminder_enable_summary"
+                android:title="@string/pref_reminder_enable0"/>
 
         <org.birthdayadapter.ui.ReminderPreference
-            android:defaultValue="@integer/pref_reminder_time_def"
-            android:dependency="@string/pref_reminder_enable_key0"
-            android:key="@string/pref_reminder_time_key0"
-            android:persistent="true"
-            android:summary="@string/pref_reminder_time_summary"
-            android:title="@string/pref_reminder_time0" />
+                android:defaultValue="@integer/pref_reminder_time_def"
+                android:dependency="@string/pref_reminder_enable_key0"
+                android:key="@string/pref_reminder_time_key0"
+                android:persistent="true"
+                android:summary="@string/pref_reminder_time_summary"
+                android:title="@string/pref_reminder_time0"/>
 
         <CheckBoxPreference
-            android:defaultValue="@string/pref_reminder_enable_def1"
-            android:key="@string/pref_reminder_enable_key1"
-            android:persistent="true"
-            android:summary="@string/pref_reminder_enable_summary"
-            android:title="@string/pref_reminder_enable1" />
+                android:defaultValue="@string/pref_reminder_enable_def1"
+                android:key="@string/pref_reminder_enable_key1"
+                android:persistent="true"
+                android:summary="@string/pref_reminder_enable_summary"
+                android:title="@string/pref_reminder_enable1"/>
 
         <org.birthdayadapter.ui.ReminderPreference
-            android:defaultValue="@integer/pref_reminder_time_def"
-            android:dependency="@string/pref_reminder_enable_key1"
-            android:key="@string/pref_reminder_time_key1"
-            android:persistent="true"
-            android:summary="@string/pref_reminder_time_summary"
-            android:title="@string/pref_reminder_time1" />
+                android:defaultValue="@integer/pref_reminder_time_def"
+                android:dependency="@string/pref_reminder_enable_key1"
+                android:key="@string/pref_reminder_time_key1"
+                android:persistent="true"
+                android:summary="@string/pref_reminder_time_summary"
+                android:title="@string/pref_reminder_time1"/>
 
         <CheckBoxPreference
-            android:defaultValue="@string/pref_reminder_enable_def2"
-            android:key="@string/pref_reminder_enable_key2"
-            android:persistent="true"
-            android:summary="@string/pref_reminder_enable_summary"
-            android:title="@string/pref_reminder_enable2" />
+                android:defaultValue="@string/pref_reminder_enable_def2"
+                android:key="@string/pref_reminder_enable_key2"
+                android:persistent="true"
+                android:summary="@string/pref_reminder_enable_summary"
+                android:title="@string/pref_reminder_enable2"/>
 
         <org.birthdayadapter.ui.ReminderPreference
-            android:defaultValue="@integer/pref_reminder_time_def"
-            android:dependency="@string/pref_reminder_enable_key2"
-            android:key="@string/pref_reminder_time_key2"
-            android:persistent="true"
-            android:summary="@string/pref_reminder_time_summary"
-            android:title="@string/pref_reminder_time2" />
+                android:defaultValue="@integer/pref_reminder_time_def"
+                android:dependency="@string/pref_reminder_enable_key2"
+                android:key="@string/pref_reminder_time_key2"
+                android:persistent="true"
+                android:summary="@string/pref_reminder_time_summary"
+                android:title="@string/pref_reminder_time2"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_title" >
+    <PreferenceCategory android:title="@string/pref_title">
         <CheckBoxPreference
-            android:defaultValue="@string/pref_title_enable_def"
-            android:key="@string/pref_title_enable_key"
-            android:persistent="true"
-            android:summary=""
-            android:title="@string/pref_title_enable" />
+                android:defaultValue="@string/pref_title_enable_def"
+                android:key="@string/pref_title_enable_key"
+                android:persistent="true"
+                android:summary=""
+                android:title="@string/pref_title_enable"/>
 
         <EditTextPreference
-            android:defaultValue="@string/event_title_birthday_without_age"
-            android:dependency="@string/pref_title_enable_key"
-            android:dialogMessage="@string/pref_title_summary_without_age"
-            android:dialogTitle="@string/pref_title_birthday_without_age"
-            android:key="@string/pref_title_birthday_without_age_key"
-            android:persistent="true"
-            android:title="@string/pref_title_birthday_without_age" />
+                android:defaultValue="@string/event_title_birthday_without_age"
+                android:dependency="@string/pref_title_enable_key"
+                android:dialogMessage="@string/pref_title_summary_without_age"
+                android:dialogTitle="@string/pref_title_birthday_without_age"
+                android:key="@string/pref_title_birthday_without_age_key"
+                android:persistent="true"
+                android:title="@string/pref_title_birthday_without_age"/>
         <EditTextPreference
-            android:defaultValue="@string/event_title_birthday_with_age"
-            android:dependency="@string/pref_title_enable_key"
-            android:dialogMessage="@string/pref_title_summary_with_age"
-            android:dialogTitle="@string/pref_title_birthday_with_age"
-            android:key="@string/pref_title_birthday_with_age_key"
-            android:persistent="true"
-            android:title="@string/pref_title_birthday_with_age" />
+                android:defaultValue="@string/event_title_birthday_with_age"
+                android:dependency="@string/pref_title_enable_key"
+                android:dialogMessage="@string/pref_title_summary_with_age"
+                android:dialogTitle="@string/pref_title_birthday_with_age"
+                android:key="@string/pref_title_birthday_with_age_key"
+                android:persistent="true"
+                android:title="@string/pref_title_birthday_with_age"/>
         <EditTextPreference
-            android:defaultValue="@string/event_title_anniversary_without_age"
-            android:dependency="@string/pref_title_enable_key"
-            android:dialogMessage="@string/pref_title_summary_without_age"
-            android:dialogTitle="@string/pref_title_anniversary_without_age"
-            android:key="@string/pref_title_anniversary_without_age_key"
-            android:persistent="true"
-            android:title="@string/pref_title_anniversary_without_age" />
+                android:defaultValue="@string/event_title_anniversary_without_age"
+                android:dependency="@string/pref_title_enable_key"
+                android:dialogMessage="@string/pref_title_summary_without_age"
+                android:dialogTitle="@string/pref_title_anniversary_without_age"
+                android:key="@string/pref_title_anniversary_without_age_key"
+                android:persistent="true"
+                android:title="@string/pref_title_anniversary_without_age"/>
         <EditTextPreference
-            android:defaultValue="@string/event_title_anniversary_with_age"
-            android:dependency="@string/pref_title_enable_key"
-            android:dialogMessage="@string/pref_title_summary_with_age"
-            android:dialogTitle="@string/pref_title_anniversary_with_age"
-            android:key="@string/pref_title_anniversary_with_age_key"
-            android:persistent="true"
-            android:title="@string/pref_title_anniversary_with_age" />
+                android:defaultValue="@string/event_title_anniversary_with_age"
+                android:dependency="@string/pref_title_enable_key"
+                android:dialogMessage="@string/pref_title_summary_with_age"
+                android:dialogTitle="@string/pref_title_anniversary_with_age"
+                android:key="@string/pref_title_anniversary_with_age_key"
+                android:persistent="true"
+                android:title="@string/pref_title_anniversary_with_age"/>
         <EditTextPreference
-            android:defaultValue="@string/event_title_other_without_age"
-            android:dependency="@string/pref_title_enable_key"
-            android:dialogMessage="@string/pref_title_summary_without_age"
-            android:dialogTitle="@string/pref_title_other_without_age"
-            android:key="@string/pref_title_other_without_age_key"
-            android:persistent="true"
-            android:title="@string/pref_title_other_without_age" />
+                android:defaultValue="@string/event_title_other_without_age"
+                android:dependency="@string/pref_title_enable_key"
+                android:dialogMessage="@string/pref_title_summary_without_age"
+                android:dialogTitle="@string/pref_title_other_without_age"
+                android:key="@string/pref_title_other_without_age_key"
+                android:persistent="true"
+                android:title="@string/pref_title_other_without_age"/>
         <EditTextPreference
-            android:defaultValue="@string/event_title_other_with_age"
-            android:dependency="@string/pref_title_enable_key"
-            android:dialogMessage="@string/pref_title_summary_with_age"
-            android:dialogTitle="@string/pref_title_other_with_age"
-            android:key="@string/pref_title_other_with_age_key"
-            android:persistent="true"
-            android:title="@string/pref_title_other_with_age" />
+                android:defaultValue="@string/event_title_other_with_age"
+                android:dependency="@string/pref_title_enable_key"
+                android:dialogMessage="@string/pref_title_summary_with_age"
+                android:dialogTitle="@string/pref_title_other_with_age"
+                android:key="@string/pref_title_other_with_age_key"
+                android:persistent="true"
+                android:title="@string/pref_title_other_with_age"/>
         <EditTextPreference
-            android:defaultValue="@string/event_title_custom_without_age"
-            android:dependency="@string/pref_title_enable_key"
-            android:dialogMessage="@string/pref_title_summary_custom_without_age"
-            android:dialogTitle="@string/pref_title_custom_without_age"
-            android:key="@string/pref_title_custom_without_age_key"
-            android:persistent="true"
-            android:title="@string/pref_title_custom_without_age" />
+                android:defaultValue="@string/event_title_custom_without_age"
+                android:dependency="@string/pref_title_enable_key"
+                android:dialogMessage="@string/pref_title_summary_custom_without_age"
+                android:dialogTitle="@string/pref_title_custom_without_age"
+                android:key="@string/pref_title_custom_without_age_key"
+                android:persistent="true"
+                android:title="@string/pref_title_custom_without_age"/>
         <EditTextPreference
-            android:defaultValue="@string/event_title_custom_with_age"
-            android:dependency="@string/pref_title_enable_key"
-            android:dialogMessage="@string/pref_title_summary_custom_with_age"
-            android:dialogTitle="@string/pref_title_custom_with_age"
-            android:key="@string/pref_title_custom_with_age_key"
-            android:persistent="true"
-            android:title="@string/pref_title_custom_with_age" />
+                android:defaultValue="@string/event_title_custom_with_age"
+                android:dependency="@string/pref_title_enable_key"
+                android:dialogMessage="@string/pref_title_summary_custom_with_age"
+                android:dialogTitle="@string/pref_title_custom_with_age"
+                android:key="@string/pref_title_custom_with_age_key"
+                android:persistent="true"
+                android:title="@string/pref_title_custom_with_age"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_advanced" >
+    <PreferenceCategory android:title="@string/pref_advanced">
         <CheckBoxPreference
-            android:defaultValue="@string/pref_prefer_dd_slash_mm_def"
-            android:key="@string/pref_prefer_dd_slash_mm_key"
-            android:persistent="true"
-            android:summary="@string/pref_prefer_dd_slash_mm_summary"
-            android:title="@string/pref_prefer_dd_slash_mm" >
+                android:defaultValue="@string/pref_prefer_dd_slash_mm_def"
+                android:key="@string/pref_prefer_dd_slash_mm_key"
+                android:persistent="true"
+                android:summary="@string/pref_prefer_dd_slash_mm_summary"
+                android:title="@string/pref_prefer_dd_slash_mm">
         </CheckBoxPreference>
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_help" >
+    <PreferenceCategory android:title="@string/pref_help">
         <Preference
-            android:key="@string/pref_help_key"
-            android:persistent="false"
-            android:title="@string/pref_help" />
+                android:key="@string/pref_help_key"
+                android:persistent="false"
+                android:title="@string/pref_help"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

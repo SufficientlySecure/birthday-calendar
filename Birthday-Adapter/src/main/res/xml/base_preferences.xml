@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory>
     </PreferenceCategory>
 
     <Preference
-        android:persistent="false"
-        android:selectable="false"
-        android:summary="@string/pref_enable_summary"
-        android:title="@string/pref_description" />
+            android:persistent="false"
+            android:selectable="false"
+            android:summary="@string/pref_enable_summary"
+            android:title="@string/pref_description"/>
 
     <SwitchPreference
-        android:icon="@android:drawable/ic_menu_today"
-        android:key="@string/pref_enabled_key"
-        android:persistent="false"
-        android:title="@string/pref_enable_switch" />
+            android:icon="@android:drawable/ic_menu_today"
+            android:key="@string/pref_enabled_key"
+            android:persistent="false"
+            android:title="@string/pref_enable_switch"/>
 
     <Preference
-        android:key="@string/pref_force_sync_key"
-        android:persistent="false"
-        android:summary="@string/pref_force_sync_summary"
-        android:title="@string/pref_force_sync" />
+            android:key="@string/pref_force_sync_key"
+            android:persistent="false"
+            android:summary="@string/pref_force_sync_summary"
+            android:title="@string/pref_force_sync"/>
 
 </PreferenceScreen>

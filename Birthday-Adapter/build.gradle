@@ -50,7 +50,7 @@ android {
             buildConfig "public final static boolean FULL_VERSION = true;"
         }
         free {
-            packageName "org.birthdayadapter_free"
+            packageName "org.birthdayadapter.free"
             buildConfig "public final static boolean FULL_VERSION = false;"
         }
     }
