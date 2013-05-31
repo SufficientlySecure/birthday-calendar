@@ -48,10 +48,17 @@ android {
         full {
             packageName "org.birthdayadapter"
             buildConfig "public final static boolean FULL_VERSION = true;"
+            buildConfig "public final static boolean GOOGLE_PLAY_JB_BUG = false;"
+        }
+        full_google {
+            packageName "org.birthdayadapter"
+            buildConfig "public final static boolean FULL_VERSION = true;"
+            buildConfig "public final static boolean GOOGLE_PLAY_JB_BUG = true;"
         }
         free {
             packageName "org.birthdayadapter.free"
             buildConfig "public final static boolean FULL_VERSION = false;"
+            buildConfig "public final static boolean GOOGLE_PLAY_JB_BUG = false;"
         }
     }
 }
