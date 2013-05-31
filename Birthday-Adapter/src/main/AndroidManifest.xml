@@ -116,10 +116,11 @@
                     android:resource="@xml/sync_calendar"/>
         </service>
 
-        <provider
-                android:name="org.birthdayadapter.provider.BirthdayAdapterProvider"
-                android:authorities="org.birthdayadapter"
-                android:exported="false"/>
+        <!-- Provider defined in free, full, and full_google Manifests to prevent conflicts -->
+        <!--<provider-->
+        <!--android:name="org.birthdayadapter.provider.BirthdayAdapterProvider"-->
+        <!--android:authorities="org.birthdayadapter"-->
+        <!--android:exported="false"/>-->
     </application>
 
 </manifest>

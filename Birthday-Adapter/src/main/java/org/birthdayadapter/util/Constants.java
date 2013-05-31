@@ -25,6 +25,8 @@ import android.accounts.Account;
 public class Constants {
     public static final String TAG = "Birthday Adapter";
 
+    public static final String FULL_PACKAGE_NAME = "org.birthdayadapter";
+
     public static final String ACCOUNT_NAME = "Birthday Adapter";
     public static final String ACCOUNT_TYPE = "org.birthdayadapter.account";
     public static final String CONTENT_AUTHORITY = "com.android.calendar";

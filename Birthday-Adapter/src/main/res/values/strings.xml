@@ -99,4 +99,9 @@
     <string name="account_list_save">Save and apply filter</string>
     <string name="account_list_empty">No accounts</string>
 
+    <!--Free Version -->
+    <string name="pref_buy">Buy full version!</string>
+    <string name="pref_buy_full">Open Google Play to buy full version…</string>
+    <string name="pref_buy_full_summary">•Set your own reminders for events\n•Customize event titles</string>
+
 </resources>

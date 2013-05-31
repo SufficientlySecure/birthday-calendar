@@ -22,6 +22,7 @@ package org.birthdayadapter.provider;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
+import org.birthdayadapter.BuildConfig;
 
 public class BirthdayAdapterContract {
 
@@ -30,7 +31,15 @@ public class BirthdayAdapterContract {
         String ACCOUNT_TYPE = "account_type";
     }
 
-    public static final String CONTENT_AUTHORITY = "org.birthdayadapter";
+    public static final String CONTENT_AUTHORITY;
+
+    static {
+        if (BuildConfig.FULL_VERSION) {
+            CONTENT_AUTHORITY = "org.birthdayadapter";
+        } else {
+            CONTENT_AUTHORITY = "org.birthdayadapter.free";
+        }
+    }
 
     private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 

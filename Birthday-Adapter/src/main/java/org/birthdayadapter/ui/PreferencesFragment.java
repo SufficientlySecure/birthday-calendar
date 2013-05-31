@@ -20,9 +20,12 @@
 
 package org.birthdayadapter.ui;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.preference.Preference;
+import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.Constants;
-import org.birthdayadapter.util.MySharedPreferenceChangeListener;
 
 import android.annotation.TargetApi;
 import android.os.Build;
@@ -32,6 +35,7 @@ import android.preference.PreferenceFragment;
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class PreferencesFragment extends PreferenceFragment {
     BaseActivity mActivity;
+    private Preference mBuyFull;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,24 @@ public class PreferencesFragment extends PreferenceFragment {
         getPreferenceManager().setSharedPreferencesName(Constants.PREFS_NAME);
         // load preferences from xml
         addPreferencesFromResource(R.xml.pref_preferences);
+
+        if (!BuildConfig.FULL_VERSION) {
+            mBuyFull = (Preference) findPreference(getString(R.string.pref_buy_full_key));
+            mBuyFull.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW,
+                                Uri.parse("market://details?id=" + Constants.FULL_PACKAGE_NAME)));
+                    } catch (android.content.ActivityNotFoundException anfe) {
+                        startActivity(new Intent(Intent.ACTION_VIEW,
+                                Uri.parse("http://play.google.com/store/apps/details?id=" + Constants.FULL_PACKAGE_NAME)));
+                    }
+
+                    return false;
+                }
+            });
+        }
     }
 
     @Override

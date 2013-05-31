@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.4.1'
+        classpath 'com.android.tools.build:gradle:0.4.2'
     }
 }
 apply plugin: 'android'
@@ -47,18 +47,24 @@ android {
     productFlavors {
         full {
             packageName "org.birthdayadapter"
-            buildConfig "public final static boolean FULL_VERSION = true;"
-            buildConfig "public final static boolean GOOGLE_PLAY_JB_BUG = false;"
+            buildConfig """
+public final static boolean FULL_VERSION = true;
+public final static boolean GOOGLE_PLAY_JB_BUG = false;
+"""
         }
         full_google {
             packageName "org.birthdayadapter"
-            buildConfig "public final static boolean FULL_VERSION = true;"
-            buildConfig "public final static boolean GOOGLE_PLAY_JB_BUG = true;"
+            buildConfig """
+public final static boolean FULL_VERSION = true;
+public final static boolean GOOGLE_PLAY_JB_BUG = true;
+"""
         }
         free {
             packageName "org.birthdayadapter.free"
-            buildConfig "public final static boolean FULL_VERSION = false;"
-            buildConfig "public final static boolean GOOGLE_PLAY_JB_BUG = false;"
+            buildConfig """
+public final static boolean FULL_VERSION = false;
+public final static boolean GOOGLE_PLAY_JB_BUG = false;
+"""
         }
     }
 }

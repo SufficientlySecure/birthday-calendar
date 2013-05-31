@@ -30,25 +30,6 @@ import android.database.Cursor;
 
 public class ProviderHelper {
 
-//    public static void insertAccount(Context context, Account acc) {
-//        ContentValues values = new ContentValues();
-//        values.put(BirthdayAdapterContract.AccountBlacklist.ACCOUNT_NAME, acc.name);
-//        values.put(BirthdayAdapterContract.AccountBlacklist.ACCOUNT_TYPE, acc.type);
-//
-//        context.getContentResolver().insert(BirthdayAdapterContract.AccountBlacklist.CONTENT_URI, values);
-//    }
-//
-//    public static void deleteAccount(Context context, Account acc) {
-//        Cursor cursor = getAccountBlacklistCursor(context,
-//                BirthdayAdapterContract.AccountBlacklist.ACCOUNT_NAME + "= ? AND "
-//                        + BirthdayAdapterContract.AccountBlacklist.ACCOUNT_TYPE + "= ?",
-//                new String[]{acc.name, acc.type});
-//        long id = cursor.getLong(cursor.getColumnIndexOrThrow(BirthdayAdapterContract.AccountBlacklist._ID));
-//
-//        context.getContentResolver()
-//                .delete(BirthdayAdapterContract.AccountBlacklist.buildUri(Long.toString(id)), null, null);
-//    }
-
     public static void setAccountBlacklist(Context context, HashSet<Account> blacklist) {
         // clear table
         context.getContentResolver().delete(BirthdayAdapterContract.AccountBlacklist.CONTENT_URI, null, null);
@@ -101,6 +82,5 @@ public class ProviderHelper {
                 selectionArgs,
                 BirthdayAdapterContract.AccountBlacklist.DEFAULT_SORT);
     }
-
 
 }

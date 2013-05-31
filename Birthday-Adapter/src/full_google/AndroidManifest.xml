@@ -1,0 +1,12 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="org.birthdayadapter">
+
+    <application>
+
+        <provider
+                android:name="org.birthdayadapter.provider.BirthdayAdapterProvider"
+                android:authorities="org.birthdayadapter"
+                android:exported="false"/>
+    </application>
+
+</manifest>

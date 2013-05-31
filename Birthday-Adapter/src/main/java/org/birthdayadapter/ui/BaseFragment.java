@@ -20,6 +20,9 @@
 
 package org.birthdayadapter.ui;
 
+import android.content.Intent;
+import android.net.Uri;
+import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.AccountHelper;
 import org.birthdayadapter.util.Constants;
@@ -58,9 +61,6 @@ public class BaseFragment extends PreferenceFragment {
         // load preferences from xml
         addPreferencesFromResource(R.xml.base_preferences);
 
-        mEnabled = (SwitchPreference) findPreference(getString(R.string.pref_enabled_key));
-        mForceSync = (Preference) findPreference(getString(R.string.pref_force_sync_key));
-
         // if this is the first run, enable and sync birthday adapter!
         if (PreferencesHelper.getFirstRun(mActivity)) {
             PreferencesHelper.setFirstRun(mActivity, false);
@@ -68,6 +68,7 @@ public class BaseFragment extends PreferenceFragment {
             mAccountHelper.addAccountAndSync();
         }
 
+        mEnabled = (SwitchPreference) findPreference(getString(R.string.pref_enabled_key));
         mEnabled.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -86,6 +87,7 @@ public class BaseFragment extends PreferenceFragment {
             }
         });
 
+        mForceSync = (Preference) findPreference(getString(R.string.pref_force_sync_key));
         mForceSync.setOnPreferenceClickListener(new OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
