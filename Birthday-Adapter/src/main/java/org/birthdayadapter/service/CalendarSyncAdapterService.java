@@ -506,7 +506,7 @@ public class CalendarSyncAdapterService extends Service {
                  * 2a. Check if Account is allowed (not blacklisted)
                  */
                 if (!blacklist.contains(acc)) {
-                    Log.d(Constants.TAG, "Not in blacklist -> allowed!");
+//                    Log.d(Constants.TAG, "Not in blacklist -> allowed!");
 //                    if (BuildConfig.DEBUG)
 //                        DatabaseUtils.dumpCurrentRow(rawContacts);
 
