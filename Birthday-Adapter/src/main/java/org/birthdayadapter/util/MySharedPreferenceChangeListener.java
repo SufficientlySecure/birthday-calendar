@@ -42,6 +42,21 @@ public class MySharedPreferenceChangeListener implements OnSharedPreferenceChang
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (context.getString(R.string.pref_color_key).equals(key)) {
+            // set new color
+            startServiceAction(MainIntentService.ACTION_CHANGE_COLOR);
+        } else {
+            // resync all events
+            startServiceAction(MainIntentService.ACTION_MANUAL_COMPLETE_SYNC);
+        }
+    }
+
+    /**
+     * Start service with action, while executing, show progress
+     *
+     * @param action
+     */
+    public void startServiceAction(String action) {
         // Send all information needed to service to do in other thread
         Intent intent = new Intent(context, MainIntentService.class);
 
@@ -49,13 +64,7 @@ public class MySharedPreferenceChangeListener implements OnSharedPreferenceChang
         Messenger messenger = new Messenger(handler);
         intent.putExtra(MainIntentService.EXTRA_MESSENGER, messenger);
 
-        if (context.getString(R.string.pref_color_key).equals(key)) {
-            // set new color
-            intent.setAction(MainIntentService.ACTION_CHANGE_COLOR);
-        } else {
-            // resync all events
-            intent.setAction(MainIntentService.ACTION_MANUAL_COMPLETE_SYNC);
-        }
+        intent.setAction(action);
 
         // start service with intent
         context.startService(intent);

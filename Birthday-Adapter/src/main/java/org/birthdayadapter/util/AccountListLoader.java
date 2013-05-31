@@ -96,7 +96,7 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
             Log.d(Constants.TAG, "accountBlacklist acc type: " + account.type + ", name: " + account.name);
         }
 
-        // Build List<AccountEntry> by getting AuthenticatorDescription for every Account
+        // Build List<AccountListEntry> by getting AuthenticatorDescription for every Account
         AccountManager manager = AccountManager.get(getContext());
         AuthenticatorDescription[] descriptions = manager.getAuthenticatorTypes();
 

@@ -26,6 +26,7 @@ import java.util.List;
 import android.accounts.Account;
 import org.birthdayadapter.R;
 import org.birthdayadapter.provider.ProviderHelper;
+import org.birthdayadapter.service.MainIntentService;
 import org.birthdayadapter.util.AccountListEntry;
 import org.birthdayadapter.util.AccountListAdapter;
 import org.birthdayadapter.util.AccountListLoader;
@@ -50,6 +51,7 @@ public class AccountListFragment extends ListFragment implements
         LoaderManager.LoaderCallbacks<List<AccountListEntry>> {
 
     AccountListAdapter mAdapter;
+    BaseActivity mActivity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,6 +72,8 @@ public class AccountListFragment extends ListFragment implements
         // Create an empty adapter we will use to display the loaded data.
         mAdapter = new AccountListAdapter(getActivity());
         setListAdapter(mAdapter);
+
+        mActivity = (BaseActivity) getActivity();
 
         // Start out with a progress indicator.
         // Can't be used with a custom content view:
@@ -93,6 +97,9 @@ public class AccountListFragment extends ListFragment implements
                 }
 
                 ProviderHelper.setAccountBlacklist(getActivity(), blacklist);
+
+                // resync
+                mActivity.mySharedPreferenceChangeListener.startServiceAction(MainIntentService.ACTION_MANUAL_COMPLETE_SYNC);
             }
         });
     }

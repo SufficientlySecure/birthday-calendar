@@ -38,6 +38,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Window;
+import org.birthdayadapter.util.MySharedPreferenceChangeListener;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class BaseActivity extends FragmentActivity {
@@ -51,6 +52,8 @@ public class BaseActivity extends FragmentActivity {
 
     public BackgroundStatusHandler mBackgroundStatusHandler = new BackgroundStatusHandler(this);
 
+    public MySharedPreferenceChangeListener mySharedPreferenceChangeListener;
+
     /**
      * Called when the activity is first created.
      */
@@ -63,7 +66,7 @@ public class BaseActivity extends FragmentActivity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            // Load Activity for Android < 3
+            // Load Activity for Android < 4.0
             Intent oldActivity = new Intent(mActivity, BaseActivityV8.class);
             oldActivity.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(oldActivity);
@@ -99,6 +102,9 @@ public class BaseActivity extends FragmentActivity {
 
             // default is disabled:
             mActivity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
+
+            mySharedPreferenceChangeListener = new MySharedPreferenceChangeListener(mActivity,
+                    mBackgroundStatusHandler);
         }
     }
 

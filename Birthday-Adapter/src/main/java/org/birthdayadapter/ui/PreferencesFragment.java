@@ -32,16 +32,12 @@ import android.preference.PreferenceFragment;
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class PreferencesFragment extends PreferenceFragment {
     BaseActivity mActivity;
-    MySharedPreferenceChangeListener mySharedPreferenceChangeListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mActivity = (BaseActivity) getActivity();
-
-        mySharedPreferenceChangeListener = new MySharedPreferenceChangeListener(mActivity,
-                mActivity.mBackgroundStatusHandler);
 
         // save prefs here
         getPreferenceManager().setSharedPreferencesName(Constants.PREFS_NAME);
@@ -54,7 +50,7 @@ public class PreferencesFragment extends PreferenceFragment {
         super.onResume();
         // Set up a listener whenever a key changes
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(
-                mySharedPreferenceChangeListener);
+                mActivity.mySharedPreferenceChangeListener);
     }
 
     @Override
@@ -62,7 +58,7 @@ public class PreferencesFragment extends PreferenceFragment {
         super.onPause();
         // Unregister the listener whenever a key changes
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(
-                mySharedPreferenceChangeListener);
+                mActivity.mySharedPreferenceChangeListener);
     }
 
 }
