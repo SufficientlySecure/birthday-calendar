@@ -728,6 +728,7 @@ public class CalendarSyncAdapterService extends Service {
                     .getColumnIndex(ContactsContract.CommonDataKinds.Event.LOOKUP_KEY);
 
             int backRef = 0;
+            // for every event...
             while (cursor != null && cursor.moveToNext()) {
                 String eventDateString = cursor.getString(eventDateColumn);
                 String displayName = cursor.getString(displayNameColumn);
@@ -786,46 +787,44 @@ public class CalendarSyncAdapterService extends Service {
                         String title = generateTitle(context, eventType, cursor,
                                 eventCustomLabelColumn, includeAge, displayName, age);
 
-                        int noOfEventOperations = 0;
                         if (title != null) {
                             Log.d(Constants.TAG, "Title: " + title);
                             Log.d(Constants.TAG, "BackRef is " + backRef);
 
                             operationList.add(insertEvent(context, calendarId, eventDate,
                                     iteratedYear, title, eventLookupKey));
-                            noOfEventOperations = 1;
-                        } else {
-                            Log.d(Constants.TAG, "Title is null!");
-                        }
 
-                        /*
-                         * Gets ContentProviderOperation to insert new reminder to the
-                         * ContentProviderOperation with the given backRef. This is done using
-                         * "withValueBackReference"
-                         */
-                        int noOfReminderOperations = 0;
-                        for (int i = 0; i < 3; i++) {
-                            if (reminderMinutes[i] != Constants.DISABLED_REMINDER) {
-                                ContentProviderOperation.Builder builder = ContentProviderOperation
-                                        .newInsert(getBirthdayAdapterUri(Reminders.CONTENT_URI));
+                            /*
+                             * Gets ContentProviderOperation to insert new reminder to the
+                             * ContentProviderOperation with the given backRef. This is done using
+                             * "withValueBackReference"
+                             */
+                            int noOfReminderOperations = 0;
+                            for (int i = 0; i < 3; i++) {
+                                if (reminderMinutes[i] != Constants.DISABLED_REMINDER) {
+                                    ContentProviderOperation.Builder builder = ContentProviderOperation
+                                            .newInsert(getBirthdayAdapterUri(Reminders.CONTENT_URI));
 
-                                /*
-                                 * add reminder to last added event identified by backRef
-                                 * 
-                                 * see http://stackoverflow.com/questions/4655291/semantics-of-
-                                 * withvaluebackreference
-                                 */
-                                builder.withValueBackReference(Reminders.EVENT_ID, backRef);
-                                builder.withValue(Reminders.MINUTES, reminderMinutes[i]);
-                                builder.withValue(Reminders.METHOD, Reminders.METHOD_ALERT);
-                                operationList.add(builder.build());
+                                    /*
+                                     * add reminder to last added event identified by backRef
+                                     *
+                                     * see http://stackoverflow.com/questions/4655291/semantics-of-
+                                     * withvaluebackreference
+                                     */
+                                    builder.withValueBackReference(Reminders.EVENT_ID, backRef);
+                                    builder.withValue(Reminders.MINUTES, reminderMinutes[i]);
+                                    builder.withValue(Reminders.METHOD, Reminders.METHOD_ALERT);
+                                    operationList.add(builder.build());
 
-                                noOfReminderOperations += 1;
+                                    noOfReminderOperations += 1;
+                                }
                             }
-                        }
 
-                        // for the next...
-                        backRef += noOfEventOperations + noOfReminderOperations;
+                            // back references for the next reminders, 1 is for the event
+                            backRef += 1 + noOfReminderOperations;
+                        } else {
+                            Log.e(Constants.TAG, "Title is null -> Not inserting events and reminders!");
+                        }
 
                         /*
                          * intermediate commit - otherwise the binder transaction fails on large
