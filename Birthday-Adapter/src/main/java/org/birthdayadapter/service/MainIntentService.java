@@ -37,7 +37,7 @@ public class MainIntentService extends IntentService {
     /* extras that can be given by intent */
     public static final String EXTRA_MESSENGER = "messenger";
 
-    /* possible EXTRA_ACTIONs */
+    /* possible actions */
     public static final String ACTION_MANUAL_COMPLETE_SYNC = "MANUAL_SYNC";
     public static final String ACTION_CHANGE_COLOR = "CHANGE_COLOR";
 
@@ -86,7 +86,6 @@ public class MainIntentService extends IntentService {
         }
 
         setProgressCircleWithHandler(false);
-
     }
 
     private void setProgressCircleWithHandler(boolean value) {

@@ -72,8 +72,8 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
         try {
             cursor = getContext().getContentResolver().query(
                     ContactsContract.RawContacts.CONTENT_URI,
-                    new String[] { ContactsContract.RawContacts.ACCOUNT_NAME,
-                            ContactsContract.RawContacts.ACCOUNT_TYPE }, null, null, null);
+                    new String[]{ContactsContract.RawContacts.ACCOUNT_NAME,
+                            ContactsContract.RawContacts.ACCOUNT_TYPE}, null, null, null);
 
             if (cursor != null && cursor.getCount() > 0) {
                 while (cursor.moveToNext()) {

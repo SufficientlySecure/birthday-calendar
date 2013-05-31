@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
@@ -180,7 +181,7 @@ public class CalendarSyncAdapterService extends Service {
                 builder.withValue(Calendars.CALENDAR_DISPLAY_NAME,
                         context.getString(R.string.calendar_display_name));
                 builder.withValue(Calendars.CALENDAR_COLOR, PreferencesHelper.getColor(context));
-                if (Constants.DEBUG) {
+                if (BuildConfig.DEBUG) {
                     builder.withValue(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_EDITOR);
                 } else {
                     builder.withValue(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_READ);

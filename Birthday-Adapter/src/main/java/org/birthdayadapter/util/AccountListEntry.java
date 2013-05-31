@@ -36,7 +36,7 @@ public class AccountListEntry {
     private boolean selected;
 
     public AccountListEntry(Context context, Account account, AuthenticatorDescription description,
-            boolean selected) {
+                            boolean selected) {
         this.name = account.name;
         this.selected = selected;
         init(context, account, description);
@@ -44,7 +44,7 @@ public class AccountListEntry {
 
     /**
      * Load label and icon for this entry
-     * 
+     *
      * @param context
      * @param account
      * @param description

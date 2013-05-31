@@ -23,8 +23,6 @@ package org.birthdayadapter.util;
 import android.accounts.Account;
 
 public class Constants {
-    public static final boolean DEBUG = true;
-
     public static final String TAG = "Birthday Adapter";
 
     public static final String ACCOUNT_NAME = "Birthday Adapter";
@@ -35,7 +33,7 @@ public class Constants {
             ACCOUNT_TYPE);
 
     public static final String PREFS_NAME = "preferences";
-    
+
     public static final int DISABLED_REMINDER = -99999;
 
 }
