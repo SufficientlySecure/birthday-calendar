@@ -276,7 +276,7 @@ public class CalendarSyncAdapterService extends Service {
 
         // add button to open contact
         if (Build.VERSION.SDK_INT >= 16 && lookupKey != null) {
-            builder.withValue(Events.CUSTOM_APP_PACKAGE, "org.birthdayadapter");
+            builder.withValue(Events.CUSTOM_APP_PACKAGE, context.getPackageName());
             Uri contactLookupUri = Uri.withAppendedPath(
                     ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
             builder.withValue(Events.CUSTOM_APP_URI, contactLookupUri.toString());
