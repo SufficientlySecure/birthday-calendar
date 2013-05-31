@@ -29,15 +29,14 @@ import android.content.res.Resources.NotFoundException;
 import android.graphics.drawable.Drawable;
 
 public class AccountListEntry {
-
-    private String name;
     private String label;
     private Drawable icon;
     private boolean selected;
+    private Account account;
 
     public AccountListEntry(Context context, Account account, AuthenticatorDescription description,
                             boolean selected) {
-        this.name = account.name;
+        this.account = account;
         this.selected = selected;
         init(context, account, description);
     }
@@ -68,8 +67,8 @@ public class AccountListEntry {
         return label;
     }
 
-    public String getName() {
-        return name;
+    public Account getAccount() {
+        return account;
     }
 
     public Drawable getIcon() {
@@ -86,6 +85,6 @@ public class AccountListEntry {
 
     @Override
     public String toString() {
-        return name;
+        return "name: " + account.name + ", type: " + account.type;
     }
 }

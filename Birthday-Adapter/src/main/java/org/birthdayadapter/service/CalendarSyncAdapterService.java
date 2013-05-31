@@ -23,15 +23,12 @@ package org.birthdayadapter.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 
+import android.database.*;
 import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
+import org.birthdayadapter.provider.ProviderHelper;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
 import org.birthdayadapter.util.PreferencesHelper;
@@ -49,7 +46,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SyncResult;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -163,13 +159,13 @@ public class CalendarSyncAdapterService extends Service {
 
         // be sure to select the birthday calendar only (additionally to appendQueries in
         // getBirthdayAdapterUri for Android < 4)
-        Cursor c1 = contentResolver.query(calenderUri, new String[]{BaseColumns._ID},
+        Cursor cursor = contentResolver.query(calenderUri, new String[]{BaseColumns._ID},
                 Calendars.ACCOUNT_NAME + " = ? AND " + Calendars.ACCOUNT_TYPE + " = ?",
                 new String[]{Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE}, null);
 
         try {
-            if (c1.moveToNext()) {
-                return c1.getLong(0);
+            if (cursor != null && cursor.moveToNext()) {
+                return cursor.getLong(0);
             } else {
                 ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
 
@@ -199,7 +195,8 @@ public class CalendarSyncAdapterService extends Service {
                 return getCalendar(context);
             }
         } finally {
-            c1.close();
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
         }
     }
 
@@ -439,32 +436,183 @@ public class CalendarSyncAdapterService extends Service {
         }
     }
 
+
     /**
-     * Get Cursor of contacts with name, contact id, date of event, and type columns
+     * Get cursor over contact with events
      *
+     * @param context
+     * @param contentResolver
      * @return
      */
     private static Cursor getContactsEvents(Context context, ContentResolver contentResolver) {
+        // Account Filter is only available on Android >= 4.0
+        if (Build.VERSION.SDK_INT >= 14) {
+            return getContactsEventsWithAccountFilter(context, contentResolver);
+        } else {
+            return getContactsEventsWithoutAccountFilter(context, contentResolver);
+        }
+    }
+
+    /**
+     * Get Cursor of contacts with events, but only those from Accounts not in our blacklist!
+     * <p/>
+     * This is really complicated, because we can't query SQLite directly. We need to use the provided Content Provider
+     * and query several times for different tables.
+     *
+     * @param context
+     * @param contentResolver
+     * @return Cursor over all contacts with events, where accounts are not blacklisted
+     */
+    private static Cursor getContactsEventsWithAccountFilter(Context context, ContentResolver contentResolver) {
+        // 0. get blacklist of Account names from own provider
+        HashSet<Account> blacklist = ProviderHelper.getAccountBlacklist(context);
+
+        /*
+         * 1. Get all raw contacts with their corresponding Account name and type (only raw contacts get get Account
+         * affiliation
+         */
+        Uri rawContactsUri = ContactsContract.RawContacts.CONTENT_URI;
+        String[] rawContactsProjection = new String[]{
+                ContactsContract.RawContacts._ID,
+                ContactsContract.RawContacts.CONTACT_ID,
+                ContactsContract.RawContacts.DISPLAY_NAME_PRIMARY,
+                ContactsContract.RawContacts.ACCOUNT_NAME,
+                ContactsContract.RawContacts.ACCOUNT_TYPE,};
+        Cursor rawContacts = contentResolver.query(rawContactsUri, rawContactsProjection, null, null, null);
+
+        /*
+         * 2. Go over all raw contacts and check if the Account is allowed.
+         * If Account is allowed, get display name and lookup key and all events for this contact.
+         * Build a new MatrixCursor out of this data that can be used.
+         */
+        String[] columns = new String[]{
+                BaseColumns._ID,
+                ContactsContract.Data.DISPLAY_NAME,
+                ContactsContract.Data.LOOKUP_KEY,
+                ContactsContract.CommonDataKinds.Event.START_DATE,
+                ContactsContract.CommonDataKinds.Event.TYPE,
+                ContactsContract.CommonDataKinds.Event.LABEL
+        };
+        MatrixCursor mc = new MatrixCursor(columns);
+        int mcIndex = 0;
+        try {
+            while (rawContacts != null && rawContacts.moveToNext()) {
+                long rawId = rawContacts.getLong(rawContacts.getColumnIndex(ContactsContract.RawContacts._ID));
+                String accType = rawContacts.getString(rawContacts.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_TYPE));
+                String accName = rawContacts.getString(rawContacts.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_NAME));
+                Account acc = new Account(accName, accType);
+
+                /*
+                 * 2a. Check if Account is allowed (not blacklisted)
+                 */
+                if (!blacklist.contains(acc)) {
+                    Log.d(Constants.TAG, "Not in blacklist -> allowed!");
+//                    if (BuildConfig.DEBUG)
+//                        DatabaseUtils.dumpCurrentRow(rawContacts);
+
+                    String displayName = null;
+                    String lookupKey = null;
+                    String startDate = null;
+                    int type = ContactsContract.CommonDataKinds.Event.TYPE_OTHER;
+                    String label = null;
+
+                    /*
+                     * 2b. Get display name and lookup key from normal contact table
+                     */
+                    String[] displayProjection = new String[]{
+                            ContactsContract.Data.RAW_CONTACT_ID,
+                            ContactsContract.Data.DISPLAY_NAME,
+                            ContactsContract.Data.LOOKUP_KEY,
+                    };
+                    String displayWhere = ContactsContract.Data.RAW_CONTACT_ID + "= ?";
+                    String[] displaySelectionArgs = new String[]{
+                            String.valueOf(rawId)
+                    };
+                    Cursor displayCursor = contentResolver.query(ContactsContract.Data.CONTENT_URI, displayProjection,
+                            displayWhere, displaySelectionArgs, null);
+                    try {
+                        if (displayCursor != null && displayCursor.moveToFirst()) {
+                            displayName = displayCursor.getString(displayCursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
+                            lookupKey = displayCursor.getString(displayCursor.getColumnIndex(ContactsContract.Data.LOOKUP_KEY));
+                        }
+                    } finally {
+                        if (displayCursor != null && !displayCursor.isClosed())
+                            displayCursor.close();
+                    }
+
+                    /*
+                     * 2c. Get all events for this raw contact.
+                     * We don't get this information for the (merged) contact table, but from the raw contact.
+                     * If we would query this infos from the contact table we would also get events that should have been filtered!
+                     */
+                    Uri thisRawContactUri = ContentUris.withAppendedId(ContactsContract.RawContacts.CONTENT_URI, rawId);
+                    Uri entityUri = Uri.withAppendedPath(thisRawContactUri, ContactsContract.RawContacts.Entity.CONTENT_DIRECTORY);
+                    String[] eventsProjection = new String[]{
+                            ContactsContract.RawContacts._ID,
+                            ContactsContract.RawContacts.Entity.DATA_ID,
+                            ContactsContract.CommonDataKinds.Event.START_DATE,
+                            ContactsContract.CommonDataKinds.Event.TYPE,
+                            ContactsContract.CommonDataKinds.Event.LABEL
+                    };
+                    String eventsWhere = ContactsContract.RawContacts.Entity.MIMETYPE + "= ? AND "
+                            + ContactsContract.RawContacts.Entity.DATA_ID + " IS NOT NULL";
+                    String[] eventsSelectionArgs = new String[]{
+                            ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
+                    };
+                    Cursor eventsCursor = contentResolver.query(entityUri, eventsProjection, eventsWhere,
+                            eventsSelectionArgs, null);
+                    try {
+                        while (eventsCursor != null && eventsCursor.moveToNext()) {
+                            startDate = eventsCursor.getString(eventsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE));
+                            type = eventsCursor.getInt(eventsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE));
+                            label = eventsCursor.getString(eventsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL));
+
+                            /*
+                             * 2d. Add this information to our MatrixCursor
+                             */
+                            mc.newRow().add(mcIndex).add(displayName).add(lookupKey).add(startDate).add(type).add(label);
+                            mcIndex++;
+                        }
+                    } finally {
+                        if (eventsCursor != null && !eventsCursor.isClosed())
+                            eventsCursor.close();
+                    }
+                }
+            }
+        } finally {
+            if (rawContacts != null && !rawContacts.isClosed())
+                rawContacts.close();
+        }
+
+        if (BuildConfig.DEBUG)
+            DatabaseUtils.dumpCursor(mc);
+
+        return mc;
+    }
+
+    /**
+     * Get Cursor over contacts with events
+     *
+     * @param context
+     * @param contentResolver
+     * @return
+     */
+
+    private static Cursor getContactsEventsWithoutAccountFilter(Context context, ContentResolver contentResolver) {
         Uri uri = ContactsContract.Data.CONTENT_URI;
-
-        // TODO: only those that are not blacklisted
-        // http://stackoverflow.com/questions/3100225/android-contact-query ?
-
-        HashSet<String> blacklist = PreferencesHelper.getAccountsBlacklist(context);
-
-        String[] projection = new String[]{ContactsContract.Contacts.DISPLAY_NAME,
+        String[] projection = new String[]{ContactsContract.Contacts.Data._ID,
+                ContactsContract.Contacts.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Event.CONTACT_ID,
                 ContactsContract.CommonDataKinds.Event.LOOKUP_KEY,
                 ContactsContract.CommonDataKinds.Event.START_DATE,
                 ContactsContract.CommonDataKinds.Event.TYPE,
                 ContactsContract.CommonDataKinds.Event.LABEL};
-
         String where = ContactsContract.Data.MIMETYPE + "= ? AND "
                 + ContactsContract.CommonDataKinds.Event.TYPE + " IS NOT NULL";
         String[] selectionArgs = new String[]{ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE};
-        String sortOrder = null;
+        Cursor contactsCursor = contentResolver.query(uri, projection, where, selectionArgs, null);
 
-        return contentResolver.query(uri, projection, where, selectionArgs, sortOrder);
+        return contactsCursor;
     }
 
     /**
@@ -580,7 +728,7 @@ public class CalendarSyncAdapterService extends Service {
                     .getColumnIndex(ContactsContract.CommonDataKinds.Event.LOOKUP_KEY);
 
             int backRef = 0;
-            while (cursor.moveToNext()) {
+            while (cursor != null && cursor.moveToNext()) {
                 String eventDateString = cursor.getString(eventDateColumn);
                 String displayName = cursor.getString(displayNameColumn);
                 int eventType = cursor.getInt(eventTypeColumn);
@@ -699,7 +847,8 @@ public class CalendarSyncAdapterService extends Service {
                 }
             }
         } finally {
-            cursor.close();
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
         }
 
         /* Create events */

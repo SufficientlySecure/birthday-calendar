@@ -21,11 +21,7 @@
 package org.birthdayadapter.util;
 
 import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -35,6 +31,7 @@ import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
+import org.birthdayadapter.provider.ProviderHelper;
 
 /**
  * A custom Loader that loads all active accounts that provide contacts.
@@ -92,7 +89,12 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
         }
 
         // get current blacklist from preferences
-        HashSet<String> blacklist = PreferencesHelper.getAccountsBlacklist(getContext());
+        HashSet<Account> accountBlacklist = ProviderHelper.getAccountBlacklist(getContext());
+
+        Log.d(Constants.TAG, "accountBlacklist" + accountBlacklist);
+        for (Account account : accountBlacklist) {
+            Log.d(Constants.TAG, "accountBlacklist acc type: " + account.type + ", name: " + account.name);
+        }
 
         // Build List<AccountEntry> by getting AuthenticatorDescription for every Account
         AccountManager manager = AccountManager.get(getContext());
@@ -103,8 +105,8 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
             for (AuthenticatorDescription description : descriptions) {
                 if (description.type.equals(account.type)) {
                     // add to entries, disable entry if in blacklist
-                    entries.add(new AccountListEntry(getContext(), account, description, !blacklist
-                            .contains(account.name)));
+                    boolean enabled = !accountBlacklist.contains(account);
+                    entries.add(new AccountListEntry(getContext(), account, description, enabled));
                 }
             }
         }

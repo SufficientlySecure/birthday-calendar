@@ -54,25 +54,6 @@ public class PreferencesHelper {
         return result;
     }
 
-    @SuppressLint("NewApi")
-    public static HashSet<String> getAccountsBlacklist(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
-                Context.MODE_PRIVATE);
-        HashSet<String> result = (HashSet<String>) prefs.getStringSet(
-                context.getString(R.string.pref_accounts_blacklist_key), new HashSet<String>());
-
-        return result;
-    }
-
-    @SuppressLint("NewApi")
-    public static void setAccountsBlacklist(Context context, HashSet<String> value) {
-        SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
-                Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putStringSet(context.getString(R.string.pref_accounts_blacklist_key), value);
-        editor.commit();
-    }
-
     /**
      * Get all reminder minutes from preferences as int array
      *

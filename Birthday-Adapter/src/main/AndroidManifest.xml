@@ -115,6 +115,11 @@
                     android:name="android.content.SyncAdapter"
                     android:resource="@xml/sync_calendar"/>
         </service>
+
+        <provider
+                android:name="org.birthdayadapter.provider.BirthdayAdapterProvider"
+                android:authorities="org.birthdayadapter"
+                android:exported="false"/>
     </application>
 
 </manifest>

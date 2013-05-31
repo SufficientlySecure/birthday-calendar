@@ -23,13 +23,14 @@ package org.birthdayadapter.ui;
 import java.util.HashSet;
 import java.util.List;
 
+import android.accounts.Account;
 import org.birthdayadapter.R;
+import org.birthdayadapter.provider.ProviderHelper;
 import org.birthdayadapter.util.AccountListEntry;
 import org.birthdayadapter.util.AccountListAdapter;
 import org.birthdayadapter.util.AccountListLoader;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
-import org.birthdayadapter.util.PreferencesHelper;
 
 import android.annotation.SuppressLint;
 import android.app.ListFragment;
@@ -83,15 +84,15 @@ public class AccountListFragment extends ListFragment implements
 
             @Override
             public void onClick(View v) {
-                HashSet<String> blacklist = new HashSet<String>();
+                HashSet<Account> blacklist = new HashSet<Account>();
                 for (AccountListEntry entry : mAdapter.getData()) {
                     Log.d(Constants.TAG, "entry: " + entry.getLabel() + " " + entry.isSelected());
                     if (!entry.isSelected()) {
-                        blacklist.add(entry.getName());
+                        blacklist.add(entry.getAccount());
                     }
                 }
-                
-                PreferencesHelper.setAccountsBlacklist(getActivity(), blacklist);
+
+                ProviderHelper.setAccountBlacklist(getActivity(), blacklist);
             }
         });
     }

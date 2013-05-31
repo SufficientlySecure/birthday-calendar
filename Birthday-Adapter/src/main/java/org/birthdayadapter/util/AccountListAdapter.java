@@ -73,7 +73,7 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
 
         AccountListEntry entry = getItem(position);
         ((TextView) view.findViewById(R.id.account_list_text)).setText(entry.getLabel());
-        ((TextView) view.findViewById(R.id.account_list_subtext)).setText(entry.getName());
+        ((TextView) view.findViewById(R.id.account_list_subtext)).setText(entry.getAccount().name);
         ((ImageView) view.findViewById(R.id.account_list_icon)).setImageDrawable(entry.getIcon());
         CheckBox cBox = (CheckBox) view.findViewById(R.id.account_list_cbox);
         cBox.setChecked(entry.isSelected());
