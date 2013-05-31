@@ -11,6 +11,48 @@ All other apps only displays their own lists but have no real integration!
 • Total integration of birthdays, anniversaries, and other events as a calendar
 • Color picker for this birthday calendar
 • Default reminder can be set in-app
+• Filter contact events based on account
+
+<b>Problems</b>
+If you have problems with this app, please report them on the following website:
+http://code.google.com/p/birthday-adapter/issues
+Google Play offers no way to answer to comments on apps, so please report problems on the website. There I can solve your issues.
+
+<b>Translations</b>
+Help translating Birthday Adapter on https://www.transifex.net/projects/p/birthday-adapter
+
+<b>Source code and information</b>
+http://code.google.com/p/birthday-adapter
+
+<b>License</b>
+GPLv3
+
+<b>Keywords</b>
+birthday calendar, calendar integration, birthdays
+
+<b>Open source alternative to</b>
+EboBirthday, Birthdays, TKBirthdayReminder, Birthday Widget
+
+
+
+
+<b>Free Version</b>
+This is the free version of Birthday Adapter.
+
+<b>Description</b>
+Birthday Adapter provides birthdays, anniversaries, and other events from your contacts as a real calendar, which is displayed in your standard Android calendar application.
+To my knowledge, this is the first implementation that implements birthdays as a real calendar integrated in the Android calendar.
+All other apps only displays their own lists but have no real integration!
+
+<b>Known bugs</b>
+• Android 4.1 has a bug which causes Birthday Adapter to disable after reboots. Please install https://play.google.com/store/apps/details?id=org.birthdayadapter.jb.workaround as a workaround!
+• Reminder do not work correctly on Android 2.3
+
+<b>Features</b>
+• Total integration of birthdays, anniversaries, and other events as a calendar
+• Color picker for this birthday calendar
+• Default reminder can be set in-app (Only in full version!)
+• Filter contact events based on account
 
 <b>Problems</b>
 If you have problems with this app, please report them on the following website:

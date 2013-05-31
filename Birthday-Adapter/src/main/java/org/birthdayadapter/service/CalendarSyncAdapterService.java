@@ -823,7 +823,7 @@ public class CalendarSyncAdapterService extends Service {
                             // back references for the next reminders, 1 is for the event
                             backRef += 1 + noOfReminderOperations;
                         } else {
-                            Log.e(Constants.TAG, "Title is null -> Not inserting events and reminders!");
+                            Log.d(Constants.TAG, "Title is null -> Not inserting events and reminders!");
                         }
 
                         /*
