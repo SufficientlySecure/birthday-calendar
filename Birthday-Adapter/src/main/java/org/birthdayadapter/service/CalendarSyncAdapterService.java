@@ -591,13 +591,13 @@ public class CalendarSyncAdapterService extends Service {
     }
 
     /**
-     * Get Cursor over contacts with events
+     * Get Cursor over contacts with events without account filter.
+     * This method is used on Android < 4.
      *
      * @param context
      * @param contentResolver
      * @return
      */
-
     private static Cursor getContactsEventsWithoutAccountFilter(Context context, ContentResolver contentResolver) {
         Uri uri = ContactsContract.Data.CONTENT_URI;
         String[] projection = new String[]{ContactsContract.Contacts.Data._ID,

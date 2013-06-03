@@ -75,13 +75,12 @@ public class MainIntentService extends IntentService {
 
         // execute action
         if (ACTION_CHANGE_COLOR.equals(action)) {
-            // only if enabled
+            // update calendar color if enabled
             if (new AccountHelper(this).isAccountActivated()) {
-                // update calendar color
                 CalendarSyncAdapterService.updateCalendarColor(this);
             }
         } else if (ACTION_MANUAL_COMPLETE_SYNC.equals(action)) {
-            // Force synchronous sync
+            // perform blocking sync
             CalendarSyncAdapterService.performSync(this);
         }
 
