@@ -6,13 +6,13 @@ All other apps only displays their own lists but have no real integration!
 If you want to test this app, install the free version: https://play.google.com/store/apps/details?id=org.birthdayadapter.free
 
 <b>Known bugs</b>
-• Android 4.1 has a bug which causes Birthday Adapter to disable after reboots. Please install https://play.google.com/store/apps/details?id=org.birthdayadapter.jb.workaround as a workaround!
+• <b>Devices with Android 4.1 and all version of Samsung Galaxy S4</b> have a bug which causes Birthday Adapter to disable after reboots. Please install https://play.google.com/store/apps/details?id=org.birthdayadapter.jb.workaround additionally as a workaround!
 • Reminder do not work correctly on Android 2.3
 
 <b>Features</b>
-• Total integration of birthdays, anniversaries, and other events as a calendar
-• Color picker for this birthday calendar
-• Default reminder can be set in-app
+• Total integration of birthdays, anniversaries, and other events from Android's contacts as a calendar
+• Color picker for the birthday calendar
+• Event Reminders
 • Filter contact events based on account
 
 <b>Problems</b>
@@ -37,6 +37,8 @@ EboBirthday, Birthdays, TKBirthdayReminder, Birthday Widget
 
 
 
+
+
 <b>Free Version</b>
 This is the free version of Birthday Adapter.
 This version contains every feature of the full version, except reminders. It is also ad-free and needs no Internet access.
@@ -46,20 +48,21 @@ Birthday Adapter provides birthdays, anniversaries, and other events from your c
 To my knowledge, this is the first implementation that implements birthdays as a calendar displayed in Android's Calendar app.
 All other apps only displays their own lists but have no real integration!
 
+If you want to test this app, install the free version: https://play.google.com/store/apps/details?id=org.birthdayadapter.free
+
 <b>Known bugs</b>
-• Android 4.1 has a bug which causes Birthday Adapter to disable after reboots. Please install https://play.google.com/store/apps/details?id=org.birthdayadapter.jb.workaround as a workaround!
+• <b>Devices with Android 4.1 and all version of Samsung Galaxy S4</b> have a bug which causes Birthday Adapter to disable after reboots. Please install https://play.google.com/store/apps/details?id=org.birthdayadapter.jb.workaround additionally as a workaround!
 • Reminder do not work correctly on Android 2.3
 
 <b>Features</b>
-• Total integration of birthdays, anniversaries, and other events as a calendar
-• Color picker for this birthday calendar
-• Default reminder can be set in-app (Only in full version!)
+• Total integration of birthdays, anniversaries, and other events from Android's contacts as a calendar
+• Color picker for the birthday calendar
+• Event Reminders (Only in full version!)
 • Filter contact events based on account
 
 <b>Problems</b>
 If you have problems with this app, please report them on the following website:
 http://code.google.com/p/birthday-adapter/issues
-Google Play offers no way to answer to comments on apps, so please report problems on the website. There I can solve your issues.
 
 <b>Translations</b>
 Help translating Birthday Adapter on https://www.transifex.net/projects/p/birthday-adapter
