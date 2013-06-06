@@ -3,12 +3,13 @@ Birthday Adapter provides birthdays, anniversaries, and other events from your c
 To my knowledge, this is the first implementation that implements birthdays as a calendar displayed in Android's Calendar app.
 All other apps only displays their own lists but have no real integration!
 
-If you want to test this app, install the free version: https://play.google.com/store/apps/details?id=org.birthdayadapter.free
+If you want to test this app, install the free version:
+https://play.google.com/store/apps/details?id=org.birthdayadapter.free
 
 <b>Known bugs</b>
+• Reminder do not work correctly on Android 2.3
 • <b>Devices with Android 4.1 and all version of Samsung Galaxy S4</b> have a bug which causes Birthday Adapter to disable after reboots. Please install additionally:
 https://play.google.com/store/apps/details?id=org.birthdayadapter.jb.workaround
-• Reminder do not work correctly on Android 2.3
 
 <b>Features</b>
 • Total integration of birthdays, anniversaries, and other events from Android's contacts as a calendar
@@ -52,9 +53,9 @@ All other apps only displays their own lists but have no real integration!
 If you want to test this app, install the free version: https://play.google.com/store/apps/details?id=org.birthdayadapter.free
 
 <b>Known bugs</b>
+• Reminder do not work correctly on Android 2.3
 • <b>Devices with Android 4.1 and all version of Samsung Galaxy S4</b> have a bug which causes Birthday Adapter to disable after reboots. Please install additionally:
 https://play.google.com/store/apps/details?id=org.birthdayadapter.jb.workaround
-• Reminder do not work correctly on Android 2.3
 
 <b>Features</b>
 • Total integration of birthdays, anniversaries, and other events from Android's contacts as a calendar
