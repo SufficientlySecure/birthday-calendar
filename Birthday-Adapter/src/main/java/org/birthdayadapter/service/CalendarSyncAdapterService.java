@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import android.database.*;
+import android.text.TextUtils;
 import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
 import org.birthdayadapter.provider.ProviderHelper;
@@ -500,12 +501,23 @@ public class CalendarSyncAdapterService extends Service {
                 long rawId = rawContacts.getLong(rawContacts.getColumnIndex(ContactsContract.RawContacts._ID));
                 String accType = rawContacts.getString(rawContacts.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_TYPE));
                 String accName = rawContacts.getString(rawContacts.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_NAME));
-                Account acc = new Account(accName, accType);
 
                 /*
                  * 2a. Check if Account is allowed (not blacklisted)
                  */
-                if (!blacklist.contains(acc)) {
+                boolean addEvent = false;
+                if (TextUtils.isEmpty(accType) || TextUtils.isEmpty(accName)) {
+                    // Workaround: Simply add events without proper Account
+                    addEvent = true;
+                } else {
+                    Account acc = new Account(accName, accType);
+
+                    if (!blacklist.contains(acc)) {
+                        addEvent = true;
+                    }
+                }
+
+                if (addEvent) {
 //                    Log.d(Constants.TAG, "Not in blacklist -> allowed!");
 //                    if (BuildConfig.DEBUG)
 //                        DatabaseUtils.dumpCurrentRow(rawContacts);
