@@ -3,6 +3,10 @@
 
     <item name="pref_first_run_def" format="boolean" type="string">true</item>
 
+    <string name="pref_show_workaround_dialog_key" translatable="false">showWorkaroundDialog</string>
+
+    <item name="pref_show_workaround_dialog_def" format="boolean" type="string">true</item>
+
     <string name="pref_enabled_key" translatable="false">enabled</string>
     <string name="pref_help_key" translatable="false">help</string>
     <string name="pref_about_key" translatable="false">about</string>

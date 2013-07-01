@@ -22,6 +22,9 @@ package org.birthdayadapter.ui;
 
 import java.util.ArrayList;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.BackgroundStatusHandler;
 import org.birthdayadapter.util.FragmentStatePagerAdapterV14;
@@ -39,6 +42,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Window;
 import org.birthdayadapter.util.MySharedPreferenceChangeListener;
+import org.birthdayadapter.util.PreferencesHelper;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class BaseActivity extends FragmentActivity {
@@ -105,7 +109,30 @@ public class BaseActivity extends FragmentActivity {
 
             mySharedPreferenceChangeListener = new MySharedPreferenceChangeListener(mActivity,
                     mBackgroundStatusHandler);
+
+            /*
+             * Show workaround dialog for Android bug http://code.google.com/p/android/issues/detail?id=34880
+             * Bug exists on Android 4.1 (SDK 16) and on some phones like Galaxy S4
+             */
+            if (BuildConfig.GOOGLE_PLAY_VERSION && PreferencesHelper.getShowWorkaroundDialog(mActivity)
+                    && !isPackageInstalled("org.birthdayadapter.jb.workaround")) {
+                if ((Build.VERSION.SDK_INT == 16)
+                        || Build.DEVICE.toUpperCase().startsWith("GT-I9000") || Build.DEVICE.toUpperCase().startsWith("GT-I9500")) {
+                    InstallWorkaroundDialogFragment dialog = InstallWorkaroundDialogFragment.newInstance();
+                    dialog.show(getFragmentManager(), "workaroundDialog");
+                }
+            }
         }
+    }
+
+    public boolean isPackageInstalled(String targetPackage) {
+        PackageManager pm = getPackageManager();
+        try {
+            PackageInfo info = pm.getPackageInfo(targetPackage, PackageManager.GET_META_DATA);
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
+        return true;
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)

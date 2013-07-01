@@ -104,4 +104,11 @@
     <string name="pref_buy_full">Open Google Play to buy full version…</string>
     <string name="pref_buy_full_summary">• Set your own reminders for events\n• Customize event titles</string>
 
+    <!-- Install Workaround Dialog -->
+    <string name="workaround_dialog_title">Workaround needed for this Android Version!</string>
+    <string name="workaround_dialog_message">Due to a bug in Android, Birthday Adapter will be disabled after restarting this device.\n\nThis bug was introduced in Android 4.1.1 and seems to be fixed in Android 4.2. Unfortunately, some devices, e.g., Galaxy S4, still have this bug on Android 4.2. You can install a workaround from Google Play and find more information in the bug report: http://code.google.com/p/android/issues/detail?id=34880</string>
+    <string name="workaround_dialog_dont_show_again_button">Don\'t show again</string>
+    <string name="workaround_dialog_close_button">Close</string>
+    <string name="workaround_dialog_install_button">Install Workaround</string>
+
 </resources>
