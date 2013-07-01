@@ -1,3 +1,8 @@
+1.15
+* Show dialog if workaround is needed
+- Fix crash when contact has no corresponding sync account
+- Don't add duplicated events (Please submit bug reports if this still happens)
+
 1.14
 * Account Filter (Only on Android >= 4)
 
