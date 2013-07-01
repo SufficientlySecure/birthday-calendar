@@ -468,6 +468,9 @@ public class CalendarSyncAdapterService extends Service {
         // 0. get blacklist of Account names from own provider
         HashSet<Account> blacklist = ProviderHelper.getAccountBlacklist(context);
 
+        // HashSet of already added events using generated identifiers to check for duplicates before adding
+        HashSet<String> addedEventsIdentifiers = new HashSet<String>();
+
         /*
          * 1. Get all raw contacts with their corresponding Account name and type (only raw contacts get get Account
          * affiliation
@@ -518,14 +521,10 @@ public class CalendarSyncAdapterService extends Service {
                 }
 
                 if (addEvent) {
-//                    Log.d(Constants.TAG, "Not in blacklist -> allowed!");
-//                    if (BuildConfig.DEBUG)
-//                        DatabaseUtils.dumpCurrentRow(rawContacts);
-
                     String displayName = null;
                     String lookupKey = null;
                     String startDate = null;
-                    int type = ContactsContract.CommonDataKinds.Event.TYPE_OTHER;
+                    int type = ContactsContract.CommonDataKinds.Event.TYPE_OTHER; // default type
                     String label = null;
 
                     /*
@@ -580,10 +579,21 @@ public class CalendarSyncAdapterService extends Service {
                             label = eventsCursor.getString(eventsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL));
 
                             /*
-                             * 2d. Add this information to our MatrixCursor
+                             * 2d. Add this information to our MatrixCursor if not already added previously.
+                             *
+                             * If two SyncAdapter Accounts have the same contact with duplicated events, the event will already be in
+                             * the HashSet addedEventsIdentifiers.
                              */
-                            mc.newRow().add(mcIndex).add(displayName).add(lookupKey).add(startDate).add(type).add(label);
-                            mcIndex++;
+                            String eventIdentifier = lookupKey + startDate + type + label;
+                            if (addedEventsIdentifiers.contains(eventIdentifier)) {
+                                Log.d(Constants.TAG, "Event was NOT added, duplicate! Identifier: " + eventIdentifier);
+                            } else {
+                                Log.d(Constants.TAG, "Event was added! Identifier " + eventIdentifier);
+                                addedEventsIdentifiers.add(eventIdentifier);
+
+                                mc.newRow().add(mcIndex).add(displayName).add(lookupKey).add(startDate).add(type).add(label);
+                                mcIndex++;
+                            }
                         }
                     } finally {
                         if (eventsCursor != null && !eventsCursor.isClosed())
