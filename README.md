@@ -57,7 +57,7 @@ See http://www.androidpolice.com/2009/11/04/auto-formatting-android-xml-files-wi
 
 # Licenses
 Birthday Adapter is licensed under the GPLv3+.  
-The file COPYING includes the full license text.
+The file LICENSE includes the full license text.
 
 ## Details
 Birthday Adapter is free software: you can redistribute it and/or modify
