@@ -583,8 +583,10 @@ public class CalendarSyncAdapterService extends Service {
                              *
                              * If two SyncAdapter Accounts have the same contact with duplicated events, the event will already be in
                              * the HashSet addedEventsIdentifiers.
+                             *
+                             * eventIdentifier does not include startDate, because the String formats of startDate differ between accounts.
                              */
-                            String eventIdentifier = lookupKey + startDate + type + label;
+                            String eventIdentifier = lookupKey + type + label;
                             if (addedEventsIdentifiers.contains(eventIdentifier)) {
                                 Log.d(Constants.TAG, "Event was NOT added, duplicate! Identifier: " + eventIdentifier);
                             } else {
