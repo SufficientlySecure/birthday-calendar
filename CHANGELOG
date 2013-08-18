@@ -1,3 +1,6 @@
+1.16
+- New fixes to prevent duplicated events
+
 1.15
 * Show dialog if workaround is needed
 - Fix crash when contact has no corresponding sync account
