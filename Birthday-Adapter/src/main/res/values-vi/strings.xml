@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--AsyncTask progress dialogs-->
+  <string name="creating">Đang tạo gắn kết...</string>
+  <string name="removing">Đang loại bỏ gắn kết...</string>
+  <string name="synchronizing">Đang đồng bộ hóa...</string>
+  <!--Calendar-->
+  <string name="calendar_display_name">Sinh nhật</string>
+  <string name="event_title_birthday_with_age">%1$s: Sinh nhật (%2$d)</string>
+  <string name="event_title_birthday_without_age">%1$s: Sinh nhật</string>
+  <string name="event_title_anniversary_with_age">%1$s: Lễ kỷ niệm (%2$d)</string>
+  <string name="event_title_anniversary_without_age">%1$s: Lễ kỷ niệm</string>
+  <string name="event_title_other_with_age">%1$s: Sự kiện khác (%2$d)</string>
+  <string name="event_title_other_without_age">%1$s: Sự kiện khác</string>
+  <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
+  <string name="event_title_custom_without_age">%1$s: %2$s</string>
+  <!--About-->
+  <string name="about_version">Phiên bản:</string>
+  <!--Tabs-->
+  <string name="tab_main">Điều khiển chính</string>
+  <string name="tab_preferences">Tùy biến</string>
+  <string name="tab_accounts">Lọc tài khoản</string>
+  <string name="tab_help">Trợ giúp</string>
+  <string name="tab_about">Thông tin</string>
+  <!--Preferences-->
+  <string name="pref_general">Tổng quan</string>
+  <string name="pref_description">Mô tả</string>
+  <string name="pref_enable_switch">Lịch</string>
+  <string name="pref_enable">Bật Ngày sinh nhật</string>
+  <string name="pref_enable_summary">Hiển thị ngày sinh, lễ kỷ niệm và các sự kiện khác đối với liên lạc trong danh bạ dạng\nhiển thị giống phần lịch trong Lịch của Android.</string>
+  <string name="pref_color">Màu sắc</string>
+  <string name="pref_color_summary">Màu hiển thị thông báo sinh nhật</string>
+  <string name="pref_help">Trợ giúp</string>
+  <string name="pref_about">Dịch bởi Phan Anh</string>
+  <string name="pref_force_sync">Đồng bộ hóa ngay bây giờ!</string>
+  <string name="pref_force_sync_summary">Bình thường thì bạn không cần làm điều này, vì bộ phận gắn kết ngày sinh sẽ tự đồng bộ hóa\nmột lần mỗi ngày.</string>
+  <string name="pref_reminders">Nhắc nhở</string>
+  <string name="pref_reminder_enable0">Bật nhắc nhở 1</string>
+  <string name="pref_reminder_enable1">Bật nhắc nhở 2</string>
+  <string name="pref_reminder_enable2">Bật nhắc nhở 3</string>
+  <string name="pref_reminder_enable_summary">Bật nhắc nhở này</string>
+  <string name="pref_reminder_time0">Nhắc nhở 1</string>
+  <string name="pref_reminder_time1">Nhắc nhở 2</string>
+  <string name="pref_reminder_time2">Nhắc nhở 3</string>
+  <string name="pref_reminder_time_summary">Đăt thời gian cho nhắc nhở này</string>
+  <string-array name="pref_reminder_time_drop_down">
+    <item>Ngày của sự kiện</item>
+    <item>trước 1 ngày</item>
+    <item>trước 2 ngày</item>
+    <item>trước 3 ngày</item>
+    <item>trước 5 ngày</item>
+    <item>trước 7 ngày</item>
+    <item>trước 10 ngày</item>
+    <item>trước 14 ngày</item>
+  </string-array>
+  <string name="pref_title">Nhãn tùy chọn</string>
+  <string name="pref_title_enable">Bật nhãn tùy chọn</string>
+  <string name="pref_title_birthday_without_age">Sinh nhật</string>
+  <string name="pref_title_birthday_with_age">Sinh nhật kèm theo tuổi</string>
+  <string name="pref_title_anniversary_without_age">Lễ kỷ niệm</string>
+  <string name="pref_title_anniversary_with_age">Lễ kỷ niệm kèm theo tuổi</string>
+  <string name="pref_title_other_without_age">Sự kiện khác</string>
+  <string name="pref_title_other_with_age">Sự kiện khác kèm theo tuổi</string>
+  <string name="pref_title_custom_without_age">Tùy chọn</string>
+  <string name="pref_title_custom_with_age">Tùy chọn độ tuổi</string>
+  <string name="pref_title_summary_without_age">Chèn %1$s vào phần tên trong danh bạ.</string>
+  <string name="pref_title_summary_with_age">Chèn %1$s vào phần tên trong danh bạ và %2$d độ tuổi kèm theo.</string>
+  <string name="pref_title_summary_custom_without_age">Chèn %1$s trong phần tên danh bạ và %2$s cho phần\n        nhãn tùy chọn của sự kiện này.\n    </string>
+  <string name="pref_title_summary_custom_with_age">Chèn vào %1$s trong phần tên của danh bạ, %2$s cho phần nhãn tùy chọn\n        của sự kiện này, và %3$d cho phần tuổi.\n    </string>
+  <string name="pref_advanced">Thiết lập nâng cao</string>
+  <string name="pref_prefer_dd_slash_mm">Định dạng ưa thích dd/mm/yyyy</string>
+  <string name="pref_prefer_dd_slash_mm_summary">Định dạng ngày tháng ưa thích dd/mm/yyyy thành mm/dd/yyyy</string>
+  <!--Adapter Screen-->
+  <string name="pref_account_header">Thiết lập</string>
+  <string name="pref_account_settings">Chỉnh sửa phần gắn kết ngày sinh</string>
+  <!--Color Picker-->
+  <string name="dialog_color_picker">Chọn màu</string>
+  <string name="press_color_to_apply">Ấn vào Màu Sắc để áp dụng</string>
+  <!--Accounts-->
+  <string name="account_list_description">Chỉ hiện thị các sự kiện từ những tài khoản được chọn trong phần lịch của bạn.</string>
+  <string name="account_list_save">Lưu và áp dụng bộ lọc</string>
+  <string name="account_list_empty">Không có tài khoản nào</string>
+  <!--Free Version-->
+  <string name="pref_buy">Hãy mua phiên bản đầy đủ!</string>
+  <string name="pref_buy_full">Mở trang Google Play để mua phiên bản đầy đủ các tính năng...</string>
+  <string name="pref_buy_full_summary">• Đặt phần nhắc nhở của riêng bạn đối với các sự kiện\n• Tự chỉnh sửa tiêu đề các sự kiện</string>
+  <!--Install Workaround Dialog-->
+  <string name="workaround_dialog_title">Là một phiên bản cần thiết cho công việc của bất kỳ đối tượng nào!</string>
+  <string name="workaround_dialog_message">Vì đây là lỗi thuộc hệ thống Android, Birthday Adapter sẽ bị vô hiệu hóa sau khi khởi động lại thiết bị này.\n\nLỗi này đã từng xuất hiện trong Android 4.1.1 và đã được chỉnh lại trong Android 4.2. Nhưng rất tiếc là một vài thiết bị như Galaxy S4, thì lỗi này vẫn xuất hiện trên Android 4.2. Bạn có thể tìm hiểu thêm về vấn đề này tại: http://code.google.com/p/android/issues/detail?id=34880</string>
+  <string name="workaround_dialog_dont_show_again_button">Không hiển thị phần này lần nữa</string>
+  <string name="workaround_dialog_close_button">Đóng lại</string>
+  <string name="workaround_dialog_install_button">Cài đặt Workaround</string>
+</resources>

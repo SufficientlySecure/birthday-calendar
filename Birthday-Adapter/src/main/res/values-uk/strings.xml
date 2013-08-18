@@ -19,6 +19,7 @@
   <!--Tabs-->
   <string name="tab_main">Головне</string>
   <string name="tab_preferences">Параметри</string>
+  <string name="tab_accounts">Фільтр профілів</string>
   <string name="tab_help">Допомога</string>
   <string name="tab_about">Про програму</string>
   <!--Preferences-->
@@ -26,13 +27,13 @@
   <string name="pref_description">Опис</string>
   <string name="pref_enable_switch">Календар</string>
   <string name="pref_enable">Увімкнути календар з днями народження</string>
-  <string name="pref_enable_summary">Показує дні народження, ювілеї та інші події ваших контактів у календарі Андроїд.</string>
+  <string name="pref_enable_summary">Показує дні народження, ювілеї та інші події ваших контактів\n у календарі Андроїд.</string>
   <string name="pref_color">Колір</string>
   <string name="pref_color_summary">Колір календаря з днями народження</string>
   <string name="pref_help">Допомога</string>
   <string name="pref_about">Про програму</string>
   <string name="pref_force_sync">Синхронізувати зараз!</string>
-  <string name="pref_force_sync_summary">За звичай вам не потрібно робити це, бо Birthday Adapter синхронізується автоматично раз на день.</string>
+  <string name="pref_force_sync_summary">За звичай вам не потрібно робити це, бо Birthday Adapter синхронізується\n автоматично раз на день.</string>
   <string name="pref_reminders">Нагадування</string>
   <string name="pref_reminder_enable0">Увімкнути Нагадування 1</string>
   <string name="pref_reminder_enable1">Увімкнути Нагадування 2</string>
@@ -64,8 +65,8 @@
   <string name="pref_title_custom_with_age">Звичай з віком</string>
   <string name="pref_title_summary_without_age">Вставити %1$s для імені контакту.</string>
   <string name="pref_title_summary_with_age">Вставити %1$s для імені контакті та %2$d для віку.</string>
-  <string name="pref_title_summary_custom_without_age">Вставити %1$s для імені контакту та %2$s для власної мітки цієї події.</string>
-  <string name="pref_title_summary_custom_with_age">Вставити %1$s для імені контакту, %2$s для власної мітки цієї події і %3$d для віку.</string>
+  <string name="pref_title_summary_custom_without_age">Вставити %1$s для імені контакту та %2$s для власної \nмітки цієї події.</string>
+  <string name="pref_title_summary_custom_with_age">Вставити %1$s для імені контакту, %2$s для власної мітки\n цієї події і %3$d для віку.</string>
   <string name="pref_advanced">Додаткові параметри</string>
   <string name="pref_prefer_dd_slash_mm">Формат дати dd/MM/yyyy</string>
   <string name="pref_prefer_dd_slash_mm_summary">Віддає перевагу dd/MM/yyyy над MM/dd/yyyy при аналізі формату дати</string>
@@ -76,4 +77,17 @@
   <string name="dialog_color_picker">Вибір кольору</string>
   <string name="press_color_to_apply">Щоби застосувати, натисніть на колір</string>
   <!--Accounts-->
+  <string name="account_list_description">Лише події для вибраних профілів відображатимуться у вашому календарі.</string>
+  <string name="account_list_save">Зберегти і застосувати фільтр</string>
+  <string name="account_list_empty">Нема профілів</string>
+  <!--Free Version-->
+  <string name="pref_buy">Купіть повну версію!</string>
+  <string name="pref_buy_full">Відкрийте Google Play, щоб купити повну версію…</string>
+  <string name="pref_buy_full_summary">• Задавайте власні нагадування для подій\n• Налаштовуйте заголовки подій</string>
+  <!--Install Workaround Dialog-->
+  <string name="workaround_dialog_title">Необхідне тимчасове рішення для цієї версії Андроїда!</string>
+  <string name="workaround_dialog_message">Через помилку у Андроїді Birthday Adapter буде вимкнено після перезапуску цього пристрою.\n\nЦя помилка появилася у Андроїді 4.1.1 та здається виправлена у Андроїд 4.2. На жаль, деякі пристрої, зокрема, Galaxy S4, досі містять цю помилку на Андроїді 4.2. Ви можете встановити тимчасове рішення з Google Play та знайти більше інформації про це у звітах: http://code.google.com/p/android/issues/detail?id=34880</string>
+  <string name="workaround_dialog_dont_show_again_button">Не показувати знову</string>
+  <string name="workaround_dialog_close_button">Закрити</string>
+  <string name="workaround_dialog_install_button">Встановити тимчасове рішення</string>
 </resources>

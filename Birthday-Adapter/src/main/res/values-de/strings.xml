@@ -27,13 +27,13 @@
   <string name="pref_description">Beschreibung</string>
   <string name="pref_enable_switch">Kalender</string>
   <string name="pref_enable">Adapter aktivieren</string>
-  <string name="pref_enable_summary">Zeigt Ereignisse, die in den Kontakten hinterlegt wurden, als eigenen Kalender in Androids Kalender-Anwendung an.</string>
+  <string name="pref_enable_summary">Zeigt Geburtstage, Jahrestage und andere Ereignisse, die in den Kontakten hinterlegt sind, als eigenen Kalendar im Android-Kalendar an.</string>
   <string name="pref_color">Farbe</string>
   <string name="pref_color_summary">Farbe des Kalenders</string>
   <string name="pref_help">Hilfe</string>
   <string name="pref_about">Über</string>
   <string name="pref_force_sync">Jetzt synchronisieren!</string>
-  <string name="pref_force_sync_summary">Normalerweise ist das manuelle Synchronisieren nicht nötig, da der Geburtstagskalender einmal pro Tag automatisch synchronisiert wird.</string>
+  <string name="pref_force_sync_summary">Normalerweise ist das manuelle Synchronisieren nicht nötig, da der Geburtstagskalendar einmal pro Tag automatisch synchronisiert wird.</string>
   <string name="pref_reminders">Erinnerungen</string>
   <string name="pref_reminder_enable0">Erinnerung 1 aktivieren</string>
   <string name="pref_reminder_enable1">Erinnerung 2 aktivieren</string>
@@ -77,7 +77,17 @@
   <string name="dialog_color_picker">Farbauswahl</string>
   <string name="press_color_to_apply">Klicke auf die Farbe um zu bestätigen</string>
   <!--Accounts-->
-  <string name="account_list_description">Nur Ereignisse von den ausgewählten Konten werden in deinem Kalender angezeigt.</string>
+  <string name="account_list_description">Nur Ereignisse von den ausgewählten Konten werden in deinem Kalendar angezeigt.</string>
   <string name="account_list_save">Filter speichern und anwenden</string>
   <string name="account_list_empty">Keine Konten vorhanden</string>
+  <!--Free Version-->
+  <string name="pref_buy">Vollversion kaufen</string>
+  <string name="pref_buy_full">Google Play öffnen um Vollversion zu kaufen…</string>
+  <string name="pref_buy_full_summary">• Erinnerungsfunktion\n• Benutzerdefinierte Titel für Ereignisse</string>
+  <!--Install Workaround Dialog-->
+  <string name="workaround_dialog_title">Für diese Android-Version muss ein Workaround installiert werden!</string>
+  <string name="workaround_dialog_message">Aufgrund eines Fehlers in Android, wird Birthday Adapter nach einem Neustart des Geräts deaktiviert sein.\n\nDieser Fehler tritt ab Android 4.1.1 auf und wurde in Android 4.2 gefixt. Unglücklicherweise ist er dennoch auf einigen Geräten mit Android 4.2 vorhanden, z.B. auf dem Galaxy S4. Um das Problem zu umgehen kann ein Workaround von Google Play installiert werden. Weitere Informationen finden sich auf http://code.google.com/p/android/issues/detail?id=34880</string>
+  <string name="workaround_dialog_dont_show_again_button">Nicht wieder anzeigen</string>
+  <string name="workaround_dialog_close_button">Schließen</string>
+  <string name="workaround_dialog_install_button">Workaround installieren</string>
 </resources>

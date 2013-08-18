@@ -13,13 +13,11 @@
   <string name="pref_description">Descrição</string>
   <string name="pref_enable_switch">Calendário</string>
   <string name="pref_enable">Ativar Calendário de Aniversários</string>
-  <string name="pref_enable_summary">Exibir nascimentos, aniversários e outros eventos definidos nos contatos como um calendário em seu Calendário Android.</string>
   <string name="pref_color">Cor</string>
   <string name="pref_color_summary">Cor do calendário de aniversário</string>
   <string name="pref_help">Ajuda</string>
   <string name="pref_about">Sobre</string>
   <string name="pref_force_sync">Sincronizar agora!</string>
-  <string name="pref_force_sync_summary">Normalmente você não precisa fazer isso, porque o Birthday Adapter sincroniza automaticamente uma vez ao dia.</string>
   <!--Adapter Screen-->
   <string name="pref_account_header">Configurações</string>
   <string name="pref_account_settings">Configure o Birthday Adapter</string>
@@ -27,4 +25,6 @@
   <string name="dialog_color_picker">Seletor de Cor</string>
   <string name="press_color_to_apply">Pressione na Cor para aplicar</string>
   <!--Accounts-->
+  <!--Free Version-->
+  <!--Install Workaround Dialog-->
 </resources>

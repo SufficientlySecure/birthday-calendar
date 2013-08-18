@@ -19,6 +19,7 @@
   <!--Tabs-->
   <string name="tab_main">Huvudsaklig</string>
   <string name="tab_preferences">Preferens</string>
+  <string name="tab_accounts">Kontofilter</string>
   <string name="tab_help">Hjälp</string>
   <string name="tab_about">Om</string>
   <!--Preferences-->
@@ -42,6 +43,16 @@
   <string name="pref_reminder_time1">Påminnelse 2</string>
   <string name="pref_reminder_time2">Påminnelse 3</string>
   <string name="pref_reminder_time_summary">Ange tid för denna påminnelse</string>
+  <string-array name="pref_reminder_time_drop_down">
+    <item>Vid dagens händelse</item>
+    <item>1 dag innan</item>
+    <item>2 dagar innan</item>
+    <item>3 dagar innan</item>
+    <item>5 dagar innan</item>
+    <item>7 dagar innan</item>
+    <item>10 dagar innan</item>
+    <item>14 dagar innan</item>
+  </string-array>
   <string name="pref_title">Anpassade etiketter</string>
   <string name="pref_title_enable">Aktivera anpassade etiketter</string>
   <string name="pref_title_birthday_without_age">Födelsedag</string>
@@ -66,4 +77,12 @@
   <string name="dialog_color_picker">Färgväljare</string>
   <string name="press_color_to_apply">Klicka på en Färg för att godkänna</string>
   <!--Accounts-->
+  <string name="account_list_description">Endast händelser från valda konton kommer visas i din kalender.</string>
+  <string name="account_list_save">Spara och aktivera filter</string>
+  <string name="account_list_empty">Inga konton</string>
+  <!--Free Version-->
+  <string name="pref_buy">Köp fullversion!</string>
+  <string name="pref_buy_full">Öppna Google Play för att köpa fullversion...</string>
+  <string name="pref_buy_full_summary">• Ange dina egna påminnelser för händelser\n• Anpassa händelsetitlar</string>
+  <!--Install Workaround Dialog-->
 </resources>

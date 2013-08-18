@@ -80,4 +80,14 @@
   <string name="account_list_description">Seuls les événements du compte sélectionné seront affiché dans votre calendrier.</string>
   <string name="account_list_save">Sauvegarder et appliquer le filtre</string>
   <string name="account_list_empty">Aucun compte</string>
+  <!--Free Version-->
+  <string name="pref_buy">Achetez la version complète !</string>
+  <string name="pref_buy_full">Ouvrir Google Play pour acheter la version complète…</string>
+  <string name="pref_buy_full_summary">• Définissez vos propres rappels pour les évènements⏎\n• Personnalisez le titre des évènements</string>
+  <!--Install Workaround Dialog-->
+  <string name="workaround_dialog_title">Vous devez utiliser la solution de rechange pour cette version d’Android !</string>
+  <string name="workaround_dialog_message">En raison d’un bug sur Android, Birthday Adapter sera désactivé après le redémarrage de l’appareil.\n\nCe bug fut introduit sur Android 4.1.1 est semble réparé sur Android 4.2. Malheureusement, certains appareils, comme le Galaxy S4, ont toujours ce bug sur Android 4.2. Vous pouvez installer un solution de rechange sur Google Play. Plus d’informations sur le rapport de bug : http://code.google.com/p/android/issues/detail?id=34880</string>
+  <string name="workaround_dialog_dont_show_again_button">Ne plus afficher</string>
+  <string name="workaround_dialog_close_button">Fermer</string>
+  <string name="workaround_dialog_install_button">Installer la solution de rechange</string>
 </resources>

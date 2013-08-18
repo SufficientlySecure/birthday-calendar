@@ -26,13 +26,11 @@
   <string name="pref_description">Deskribapena</string>
   <string name="pref_enable_switch">Egutegia</string>
   <string name="pref_enable">Urtebetetze egutegia baimendu</string>
-  <string name="pref_enable_summary">Kontaktuetan egutegi bezala ezarririk dauden urtebetetze, urteurren eta beste gertaera batzuk Google Calendarren erakusten ditu.</string>
   <string name="pref_color">Kolorea</string>
   <string name="pref_color_summary">Urtebetetze egutegiaren kolorea</string>
   <string name="pref_help">Laguntza</string>
   <string name="pref_about">Honi buruz</string>
   <string name="pref_force_sync">Sinkronizatu orain!</string>
-  <string name="pref_force_sync_summary">Egunerokoan ez da beharrezkoa hau egitea, Birthday Adapter automatikoki sinkronizatzen bait da egunean behin.</string>
   <string name="pref_reminders">Jakinarazpenak</string>
   <string name="pref_reminder_enable0">1. jakinarazpena gaitu</string>
   <string name="pref_reminder_enable1">2. jakinarazpena gaitu</string>
@@ -54,8 +52,6 @@
   <string name="pref_title_custom_with_age">Hobespena  adinaren arabera</string>
   <string name="pref_title_summary_without_age"> %1$s gehitu kontaktuaren izenari</string>
   <string name="pref_title_summary_with_age"> %1$s gehitu kontaktuaren izenari eta %2$s adinari</string>
-  <string name="pref_title_summary_custom_without_age"> %1$s gehitu kontaktuaren izenari eta %2$s gertaera honetan hobetsitako etiketari</string>
-  <string name="pref_title_summary_custom_with_age">%1$s gehitu kontaktuaren izenari, %2$s gertaera honetan hobetsitako etiketari eta %3$s adinari</string>
   <string name="pref_advanced">Ezarpen aurreratuak</string>
   <string name="pref_prefer_dd_slash_mm">Ikuspegi gogokoena dd/MM/yyyy</string>
   <string name="pref_prefer_dd_slash_mm_summary">MM/dd/yyyy baino dd/MM/yyyy ikuspegia nahigo datak aztertzerakoan</string>
@@ -66,4 +62,6 @@
   <string name="dialog_color_picker">Kolore hautatzailea</string>
   <string name="press_color_to_apply">Ezartzeko kolorea hautatu</string>
   <!--Accounts-->
+  <!--Free Version-->
+  <!--Install Workaround Dialog-->
 </resources>

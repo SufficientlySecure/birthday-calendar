@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--AsyncTask progress dialogs-->
+  <string name="synchronizing">S\'està sincronitzant...</string>
+  <!--Calendar-->
+  <string name="calendar_display_name">Aniversaris</string>
+  <string name="event_title_birthday_with_age">%1$s: aniversari (%2$d)</string>
+  <string name="event_title_birthday_without_age">%1$s: aniversari</string>
+  <string name="event_title_other_with_age">%1$s: un altre esdeveniment (%2$d)</string>
+  <string name="event_title_other_without_age">%1$s: un altre esdeveniment</string>
+  <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
+  <string name="event_title_custom_without_age">%1$s: %2$s</string>
+  <!--About-->
+  <string name="about_version">Versió:</string>
+  <!--Tabs-->
+  <string name="tab_main">Principal</string>
+  <string name="tab_preferences">Preferències</string>
+  <string name="tab_help">Ajuda</string>
+  <string name="tab_about">Quant a</string>
+  <!--Preferences-->
+  <string name="pref_general">General</string>
+  <string name="pref_description">Descripció</string>
+  <string name="pref_enable_switch">Calendari</string>
+  <string name="pref_enable">Activa el calendari d\'aniversaris</string>
+  <string name="pref_color">Color</string>
+  <string name="pref_color_summary">Color del calendari d\'aniversaris</string>
+  <string name="pref_help">Ajuda</string>
+  <string name="pref_about">Quant a</string>
+  <string name="pref_force_sync">Sincronitza ara!</string>
+  <string name="pref_reminders">Recordatoris</string>
+  <string name="pref_reminder_enable0">Activa el recordatori 1</string>
+  <string name="pref_reminder_enable1">Activa el recordatori 2</string>
+  <string name="pref_reminder_enable2">Activa el recordatori 3</string>
+  <string name="pref_reminder_enable_summary">Activa aquest recordatori</string>
+  <string name="pref_reminder_time0">Recordatori 1</string>
+  <string name="pref_reminder_time1">Recordatori 2</string>
+  <string name="pref_reminder_time2">Recordatori 3</string>
+  <string name="pref_reminder_time_summary">Estableix l\'hora d\'aquest recordatori</string>
+  <string name="pref_title">Etiquetes personalitzades</string>
+  <string name="pref_title_enable">Activa les etiquetes personalitzades</string>
+  <string name="pref_title_birthday_without_age">Aniversari</string>
+  <string name="pref_title_birthday_with_age">Aniversari amb edat</string>
+  <string name="pref_advanced">Configuració avançada</string>
+  <string name="pref_prefer_dd_slash_mm">Prefereix el format dd/MM/aaaa</string>
+  <string name="pref_prefer_dd_slash_mm_summary">Prefereix dd/MM/aaaa a MM/dd/aaaa quan s\'analitzen les dates</string>
+  <!--Adapter Screen-->
+  <string name="pref_account_header">Configuració</string>
+  <string name="pref_account_settings">Configura Birthday Adapter</string>
+  <!--Color Picker-->
+  <string name="dialog_color_picker">Tria el color</string>
+  <string name="press_color_to_apply">Premeu sobre \'color\' per a aplicar</string>
+  <!--Accounts-->
+  <!--Free Version-->
+  <string name="pref_buy">Compreu la versió completa!</string>
+  <string name="pref_buy_full">Obri Google Play  per a comprar la versió completa...</string>
+  <!--Install Workaround Dialog-->
+  <string name="workaround_dialog_dont_show_again_button">Oculta d\'ara endavant</string>
+  <string name="workaround_dialog_close_button">Tanca</string>
+</resources>

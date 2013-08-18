@@ -26,13 +26,11 @@
   <string name="pref_description">Kuvaus</string>
   <string name="pref_enable_switch">Kalenteri</string>
   <string name="pref_enable">Aktivoi Birthday Calendar</string>
-  <string name="pref_enable_summary">Näyttää syntymäpäivät, vuosipäivät ja muut yhteystietoihin määritellyt tapahtumat Android-kalenterissa.</string>
   <string name="pref_color">Väri</string>
   <string name="pref_color_summary">Syntymäpäiväkalenterin väri</string>
   <string name="pref_help">Apua</string>
   <string name="pref_about">Tietoja</string>
   <string name="pref_force_sync">Synkronoi nyt!</string>
-  <string name="pref_force_sync_summary">Yleensä tätä ei tarvitse tehdä, koska Birthday Adapter synkronoi tiedot automaattisesti kerran päivässä.</string>
   <string name="pref_reminders">Muistutukset</string>
   <string name="pref_reminder_enable0">Aktivoi muistutus 1</string>
   <string name="pref_reminder_enable1">Aktivoi muistutus 2</string>
@@ -60,4 +58,6 @@
   <string name="dialog_color_picker">Värin valinta</string>
   <string name="press_color_to_apply">Paina väriä valitaksesi</string>
   <!--Accounts-->
+  <!--Free Version-->
+  <!--Install Workaround Dialog-->
 </resources>
