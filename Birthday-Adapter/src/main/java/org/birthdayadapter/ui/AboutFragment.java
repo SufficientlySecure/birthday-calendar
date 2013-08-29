@@ -25,10 +25,10 @@ import java.io.InputStream;
 
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.Constants;
+import org.birthdayadapter.util.JellyBeanSpanFixTextView;
 import org.birthdayadapter.util.Log;
 
 import net.nightwhistler.htmlspanner.HtmlSpanner;
-import net.nightwhistler.htmlspanner.JellyBeanSpanFixTextView;
 
 import android.annotation.TargetApi;
 import android.app.Fragment;

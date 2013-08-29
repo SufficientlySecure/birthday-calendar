@@ -2,7 +2,7 @@ apply plugin: 'android'
 
 dependencies {
     compile 'com.android.support:support-v4:18.0.+'
-    compile fileTree(dir: 'libs', includes: ['*.jar'])
+    compile project(':libraries:HtmlSpanner')
 }
 
 android {

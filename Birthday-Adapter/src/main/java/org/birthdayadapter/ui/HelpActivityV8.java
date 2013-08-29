@@ -24,10 +24,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import net.nightwhistler.htmlspanner.HtmlSpanner;
-import net.nightwhistler.htmlspanner.JellyBeanSpanFixTextView;
 
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.Constants;
+import org.birthdayadapter.util.JellyBeanSpanFixTextView;
 import org.birthdayadapter.util.Log;
 
 import android.content.pm.PackageInfo;
