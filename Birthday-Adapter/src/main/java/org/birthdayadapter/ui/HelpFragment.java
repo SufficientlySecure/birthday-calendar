@@ -20,21 +20,14 @@
 
 package org.birthdayadapter.ui;
 
-import java.io.IOException;
-import java.io.InputStream;
 
 import org.birthdayadapter.R;
-import org.birthdayadapter.util.Constants;
-import org.birthdayadapter.util.JellyBeanSpanFixTextView;
-import org.birthdayadapter.util.Log;
-
-import net.nightwhistler.htmlspanner.HtmlSpanner;
+import org.sufficientlysecure.htmltextview.HtmlTextView;
 
 import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,23 +39,10 @@ public class HelpFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.help_fragment, container, false);
 
-        // load html from html file from /res/raw
-        InputStream inputStreamText = this.getActivity().getResources().openRawResource(R.raw.help);
-
-        JellyBeanSpanFixTextView text = (JellyBeanSpanFixTextView) view
-                .findViewById(R.id.help_text);
+        HtmlTextView text = (HtmlTextView) view.findViewById(R.id.help_text);
 
         // load html into textview
-        HtmlSpanner htmlSpanner = new HtmlSpanner();
-        htmlSpanner.setStripExtraWhiteSpace(true);
-        try {
-            text.setText(htmlSpanner.fromHtml(inputStreamText));
-        } catch (IOException e) {
-            Log.e(Constants.TAG, "Error while reading raw resources as stream", e);
-        }
-
-        // make links work
-        text.setMovementMethod(LinkMovementMethod.getInstance());
+        text.setHtmlFromRawResource(getActivity(), R.raw.help);
 
         // no flickering when clicking textview for Android < 4
         text.setTextColor(getResources().getColor(android.R.color.secondary_text_dark_nodisable));

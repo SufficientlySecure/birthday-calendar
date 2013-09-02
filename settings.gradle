@@ -1,2 +1,2 @@
 include ':Birthday-Adapter'
-include ':libraries:HtmlSpanner'
+include ':libraries:HtmlTextView'

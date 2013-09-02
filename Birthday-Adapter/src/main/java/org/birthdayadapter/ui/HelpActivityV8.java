@@ -20,22 +20,16 @@
 
 package org.birthdayadapter.ui;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import net.nightwhistler.htmlspanner.HtmlSpanner;
-
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.Constants;
-import org.birthdayadapter.util.JellyBeanSpanFixTextView;
 import org.birthdayadapter.util.Log;
+import org.sufficientlysecure.htmltextview.HtmlTextView;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
 public class HelpActivityV8 extends FragmentActivity {
@@ -49,43 +43,19 @@ public class HelpActivityV8 extends FragmentActivity {
 
         setContentView(R.layout.help_activity_v8);
 
-        // load html from html file from /res/raw
-        InputStream inputStreamAbout = this.getResources().openRawResource(R.raw.about);
-        InputStream inputStreamHelp = this.getResources().openRawResource(R.raw.help);
-
         TextView versionText = (TextView) findViewById(R.id.help_about_version);
         versionText.setText(getString(R.string.about_version) + " " + getVersion());
 
-        JellyBeanSpanFixTextView aboutTextView = (JellyBeanSpanFixTextView) findViewById(R.id.help_about_text);
-        JellyBeanSpanFixTextView helpTextView = (JellyBeanSpanFixTextView) findViewById(R.id.help_help_text);
+        HtmlTextView aboutTextView = (HtmlTextView) findViewById(R.id.help_about_text);
+        HtmlTextView helpTextView = (HtmlTextView) findViewById(R.id.help_help_text);
 
-        // load html into textview
-        HtmlSpanner htmlSpanner = new HtmlSpanner();
-        htmlSpanner.setStripExtraWhiteSpace(true);
-        try {
-            aboutTextView.setText(htmlSpanner.fromHtml(inputStreamAbout));
-        } catch (IOException e) {
-            Log.e(Constants.TAG, "Error while reading raw resources as stream", e);
-        }
-
-        // make links work
-        aboutTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        // load html into textviews
+        aboutTextView.setHtmlFromRawResource(this, R.raw.about);
+        helpTextView.setHtmlFromRawResource(this, R.raw.help);
 
         // no flickering when clicking textview for Android < 4
         aboutTextView.setTextColor(getResources().getColor(
                 android.R.color.secondary_text_dark_nodisable));
-
-        // load html into textview
-        try {
-            helpTextView.setText(htmlSpanner.fromHtml(inputStreamHelp));
-        } catch (IOException e) {
-            Log.e(Constants.TAG, "Error while reading raw resources as stream", e);
-        }
-
-        // make links work
-        helpTextView.setMovementMethod(LinkMovementMethod.getInstance());
-
-        // no flickering when clicking textview for Android < 4
         helpTextView.setTextColor(getResources().getColor(
                 android.R.color.secondary_text_dark_nodisable));
     }

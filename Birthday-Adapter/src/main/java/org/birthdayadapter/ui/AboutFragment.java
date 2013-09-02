@@ -20,15 +20,10 @@
 
 package org.birthdayadapter.ui;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.Constants;
-import org.birthdayadapter.util.JellyBeanSpanFixTextView;
 import org.birthdayadapter.util.Log;
-
-import net.nightwhistler.htmlspanner.HtmlSpanner;
+import org.sufficientlysecure.htmltextview.HtmlTextView;
 
 import android.annotation.TargetApi;
 import android.app.Fragment;
@@ -37,7 +32,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,27 +44,13 @@ public class AboutFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.about_fragment, container, false);
 
-        // load html from html file from /res/raw
-        InputStream inputStreamText = this.getActivity().getResources()
-                .openRawResource(R.raw.about);
-
         TextView versionText = (TextView) view.findViewById(R.id.about_version);
         versionText.setText(getString(R.string.about_version) + " " + getVersion());
 
-        JellyBeanSpanFixTextView aboutTextView = (JellyBeanSpanFixTextView) view
-                .findViewById(R.id.about_text);
+        HtmlTextView aboutTextView = (HtmlTextView) view.findViewById(R.id.about_text);
 
         // load html into textview
-        HtmlSpanner htmlSpanner = new HtmlSpanner();
-        htmlSpanner.setStripExtraWhiteSpace(true);
-        try {
-            aboutTextView.setText(htmlSpanner.fromHtml(inputStreamText));
-        } catch (IOException e) {
-            Log.e(Constants.TAG, "Error while reading raw resources as stream", e);
-        }
-
-        // make links work
-        aboutTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        aboutTextView.setHtmlFromRawResource(getActivity(), R.raw.about);
 
         // no flickering when clicking textview for Android < 4
         aboutTextView.setTextColor(getResources().getColor(

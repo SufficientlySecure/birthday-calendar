@@ -51,7 +51,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <net.nightwhistler.htmlspanner.JellyBeanSpanFixTextView
+        <org.sufficientlysecure.htmltextview.HtmlTextView
                 android:id="@+id/help_about_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -64,7 +64,7 @@
                 android:text="@string/tab_help"
                 android:textAppearance="?android:attr/textAppearanceLarge"/>
 
-        <net.nightwhistler.htmlspanner.JellyBeanSpanFixTextView
+        <org.sufficientlysecure.htmltextview.HtmlTextView
                 android:id="@+id/help_help_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
