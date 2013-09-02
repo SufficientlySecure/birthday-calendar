@@ -22,10 +22,6 @@ Two productFlavors are build with gradle. A "full" version and a "free" version 
 
 Fork Birthday Adapter and do a Pull Request. I will merge your changes back into the main project.
 
-# Libraries
-
-All JAR-Libraries are provided in this repository under "libs".
-
 # Translations
 
 Translations are hosted on Transifex, which is configured by ".tx/config".
@@ -78,14 +74,12 @@ along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
   https://github.com/attenzione/android-ColorPickerPreference  
   Apache License v2
 
-* CalendarProvider from Original Android 4 Source  
+* Compatibility version of CalendarProvider  
+  https://github.com/dschuermann/android-calendar-compatibility  
   Apache License v2
 
-* HTMLCleander  
-  http://htmlcleaner.sourceforge.net/  
-  BSD License
-
-* HtmlSpanner  
+* HtmlTextView  
+  https://github.com/dschuermann/html-textview  
   Apache License v2
 
 ## Images

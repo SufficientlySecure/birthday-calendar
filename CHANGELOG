@@ -1,3 +1,6 @@
+1.17
+* Reduce apk size by switching from HtmlSpanner to HtmlTextView library
+
 1.16
 - New fixes to prevent duplicated events
 
