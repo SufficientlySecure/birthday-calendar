@@ -16,7 +16,10 @@ For more information visit http://sufficientlysecure.org/birthday-adapter
 
 ## More build information
 
-Two productFlavors are build with gradle. A "full" version and a "free" version (without settings).
+Different productFlavors are build with gradle:
+- ``full``
+- ``full_google`` with workarounds for Google Play
+- ``free`` without settings
 
 # Contribute
 
