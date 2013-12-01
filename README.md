@@ -10,9 +10,7 @@ For more information visit http://sufficientlysecure.org/birthday-adapter
 
 1. Have Android SDK "tools", "platform-tools", and "build-tools" directories in your PATH (http://developer.android.com/sdk/index.html)
 2. Export ANDROID_HOME pointing to your Android SDK
-3. Install gradle
-4. Execute ``gradle wrapper`` (http://www.gradle.org/docs/current/userguide/gradle_wrapper.html)
-5. Execute ``./gradlew build``
+3. Execute ``./gradlew build``
 
 ## More build information
 
