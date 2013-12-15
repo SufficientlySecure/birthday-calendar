@@ -1,17 +1,17 @@
 apply plugin: 'android'
 
 dependencies {
-    compile 'com.android.support:support-v4:18.0.+'
+    compile 'com.android.support:support-v4:19.0.+'
     compile project(':libraries:HtmlTextView')
 }
 
 android {
-    compileSdkVersion 17
-    buildToolsVersion "17.0.0"
+    compileSdkVersion 19
+    buildToolsVersion "19"
 
     defaultConfig {
         minSdkVersion 7
-        targetSdkVersion 17
+        targetSdkVersion 19
     }
 
     /*
