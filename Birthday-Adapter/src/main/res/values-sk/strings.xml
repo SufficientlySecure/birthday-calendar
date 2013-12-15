@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--AsyncTask progress dialogs-->
+  <string name="creating">Vytvoriť adaptér...</string>
+  <string name="removing">Odstrániť adaptér...</string>
+  <string name="synchronizing">Synchronizovať...</string>
+  <!--Calendar-->
+  <string name="calendar_display_name">Narodeniny</string>
+  <string name="event_title_birthday_with_age">%1$s: Narodeniny (%2$d)</string>
+  <string name="event_title_birthday_without_age">%1$s: Narodeniny</string>
+  <string name="event_title_anniversary_with_age">%1$s: Výročie (%2$d)</string>
+  <string name="event_title_anniversary_without_age">%1$s: Výročie</string>
+  <string name="event_title_other_with_age">%1$s: Iná udalosť (%2$d)</string>
+  <string name="event_title_other_without_age">%1$s: Iná udalosť</string>
+  <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
+  <string name="event_title_custom_without_age">%1$s: %2$s</string>
+  <!--About-->
+  <string name="about_version">Verzia:</string>
+  <!--Tabs-->
+  <string name="tab_main">Hlavné</string>
+  <string name="tab_preferences">Nastavenia</string>
+  <string name="tab_accounts">Filter účtu</string>
+  <string name="tab_help">Pomoc</string>
+  <string name="tab_about">O aplikácii</string>
+  <!--Preferences-->
+  <string name="pref_general">Obecné</string>
+  <string name="pref_description">Popis</string>
+  <string name="pref_enable_switch">Kalendár</string>
+  <string name="pref_enable">Zapnúť kalendár narodenín</string>
+  <string name="pref_enable_summary">Zobraziť narodeniny, výročia a iné udalosti definované v kontaktoch ako\nkalendár vo Vašom Android kalendári.</string>
+  <string name="pref_color">Farba</string>
+  <string name="pref_color_summary">Farba kalendára narodenín</string>
+  <string name="pref_help">Pomoc</string>
+  <string name="pref_about">O aplikácii</string>
+  <string name="pref_force_sync">Synchronizovať teraz!</string>
+  <string name="pref_force_sync_summary">Za normálnych okolností toto nie je potrebné, pretože Birthday Adapter \nsa synchronizuje automaticky raz denne.</string>
+  <string name="pref_reminders">Pripomienky</string>
+  <string name="pref_reminder_enable0">Zapnúť pripomienku 1</string>
+  <string name="pref_reminder_enable1">Zapnúť pripomienku 2</string>
+  <string name="pref_reminder_enable2">Zapnúť pripomienku 3</string>
+  <string name="pref_reminder_enable_summary">Zapnúť túto pripomienku</string>
+  <string name="pref_reminder_time0">Pripomienka 1</string>
+  <string name="pref_reminder_time1">Pripomienka 2</string>
+  <string name="pref_reminder_time2">Pripomienka 3</string>
+  <string name="pref_reminder_time_summary">Nastaviť čas tejto pripomienky</string>
+  <string-array name="pref_reminder_time_drop_down">
+    <item>V deň udalosti</item>
+    <item>1 deň pred</item>
+    <item>2 dni pred</item>
+    <item>3 dni pred</item>
+    <item>5 dní pred</item>
+    <item>7 dní pred</item>
+    <item>10 dní pred</item>
+    <item>14 dní pred</item>
+  </string-array>
+  <string name="pref_title">Vlastné popisky</string>
+  <string name="pref_title_enable">Zapnúť vlastné popisky</string>
+  <string name="pref_title_birthday_without_age">Narodeniny</string>
+  <string name="pref_title_birthday_with_age">Narodeniny s vekom</string>
+  <string name="pref_title_anniversary_without_age">Výročie</string>
+  <string name="pref_title_anniversary_with_age">Výročie s vekom</string>
+  <string name="pref_title_other_without_age">Iná udalosť</string>
+  <string name="pref_title_other_with_age">Iná udalosť s vekom</string>
+  <string name="pref_title_custom_without_age">Vlastné</string>
+  <string name="pref_title_custom_with_age">Vlastné s vekom</string>
+  <string name="pref_title_summary_without_age">Vložiť %1$s pre meno kontaktu.</string>
+  <string name="pref_title_summary_with_age">Vložiť %1$s pre meno kontaktu a %2$d pre vek.</string>
+  <string name="pref_title_summary_custom_without_age">Vložiť %1$s pre meno kontaktu a %2$s pre vlastný\npopisok tejto udalosti.</string>
+  <string name="pref_title_summary_custom_with_age">Vložiť %1$s pre meno kontaktu, %2$s pre vlastný popisok tejto udalosti\na %3$d pre vek.</string>
+  <string name="pref_advanced">Rozšírené nastavenia</string>
+  <string name="pref_prefer_dd_slash_mm">Navrhnúť dd/MM/rrrr formát</string>
+  <string name="pref_prefer_dd_slash_mm_summary">Navrhnúť dd/MM/rrrr na MM/dd/rrrr pri parsovaní formátov dátumu</string>
+  <!--Adapter Screen-->
+  <string name="pref_account_header">Nastavenia</string>
+  <string name="pref_account_settings">Konfigurovať Birthday Adapter</string>
+  <!--Color Picker-->
+  <string name="dialog_color_picker">Výber farby</string>
+  <string name="press_color_to_apply">Kliknúť na farbu pre použitie</string>
+  <!--Accounts-->
+  <string name="account_list_description">Iba udalosti z vybraných účtov budú zobrazené vo Vašom kalendári.</string>
+  <string name="account_list_save">Uložiť a použiť filter</string>
+  <string name="account_list_empty">Žiadne účty</string>
+  <!--Free Version-->
+  <string name="pref_buy">Kúpiť plnú verziu!</string>
+  <string name="pref_buy_full">Otvoriť Google Play pre zakúpenie plnej verzie...</string>
+  <string name="pref_buy_full_summary">• Nastaviť vlastné pripomienky pre udalosti\n• Upraviť názvy udalostí</string>
+  <!--Install Workaround Dialog-->
+  <string name="workaround_dialog_title">Je potrebný Workaround pre túto verziu androidu!</string>
+  <string name="workaround_dialog_message">Pre chybu v androide bude Birthday Adapter vypnutý po reštarte zariadenia.\n\nTáto chyba bola v Androide 4.1.1 a je odstranená v Androide 4.2. \nAvšak niektoré zariadenia ako Galaxy S4 stále majú chybu aj v Androide 4.2. Môžte nainštalovať Workaround z Google Play a zistiť viac informácií v zozname chýb: \nhttp://code.google.com/p/android/issues/detail?id=34880</string>
+  <string name="workaround_dialog_dont_show_again_button">Znovu nezobrazovať</string>
+  <string name="workaround_dialog_close_button">Zavrieť</string>
+  <string name="workaround_dialog_install_button">Inštalovať Workaround</string>
+</resources>
