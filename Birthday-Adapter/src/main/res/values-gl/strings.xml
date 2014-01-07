@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--AsyncTask progress dialogs-->
+  <string name="creating">Estase a crear o adaptador...</string>
+  <string name="removing">Estase a eliminar o adaptador...</string>
+  <string name="synchronizing">A sincronizar...</string>
+  <!--Calendar-->
+  <string name="event_title_other_with_age">%1$s: Outro evento (%2$d)</string>
+  <string name="event_title_other_without_age">%1$s: Outro evento</string>
+  <!--About-->
+  <string name="about_version">Versión:</string>
+  <!--Tabs-->
+  <string name="tab_main">Principal</string>
+  <string name="tab_preferences">Preferencias</string>
+  <string name="tab_accounts">Filtro de contas</string>
+  <string name="tab_help">Axuda</string>
+  <string name="tab_about">Acerca de</string>
+  <!--Preferences-->
+  <string name="pref_general">Xeral</string>
+  <string name="pref_description">Descrición</string>
+  <string name="pref_enable_switch">Calendario</string>
+  <string name="pref_color">Cor</string>
+  <string name="pref_color_summary">Cor do aniversario no calendario</string>
+  <string name="pref_help">Axuda</string>
+  <string name="pref_about">Acerca de</string>
+  <string name="pref_force_sync">Sincronizar agora!</string>
+  <string name="pref_reminders">Recordatorios</string>
+  <string name="pref_reminder_time0">Recordatorio 1</string>
+  <string name="pref_reminder_time1">Recordatorio 2</string>
+  <string name="pref_reminder_time2">Recordatorio 3</string>
+  <string name="pref_reminder_time_summary">Establecer a hora deste recordatorio</string>
+  <string name="pref_title">Etiquetas personalizadas:</string>
+  <string name="pref_title_other_without_age">Outro evento</string>
+  <string name="pref_title_custom_without_age">Personalizar</string>
+  <string name="pref_advanced">Configuración avanzada</string>
+  <!--Adapter Screen-->
+  <string name="pref_account_header">Axustes</string>
+  <!--Color Picker-->
+  <string name="dialog_color_picker">Escoller a cor</string>
+  <!--Accounts-->
+  <string name="account_list_save">Gardar e aplicar filtro</string>
+  <string name="account_list_empty">Non hai ningunha conta</string>
+  <!--Free Version-->
+  <string name="pref_buy">Mercar a versión completa!</string>
+  <string name="pref_buy_full">Abrir Google Play para mercar a versión completa...</string>
+  <!--Install Workaround Dialog-->
+  <string name="workaround_dialog_dont_show_again_button">Non volver preguntar máis</string>
+  <string name="workaround_dialog_close_button">Pechar</string>
+</resources>
