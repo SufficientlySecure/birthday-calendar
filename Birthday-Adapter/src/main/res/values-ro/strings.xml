@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--AsyncTask progress dialogs-->
+  <string name="creating">Cereare adaptor…</string>
+  <string name="removing">Elimare adaptor…</string>
+  <string name="synchronizing">Sincronizare...</string>
+  <!--Calendar-->
+  <string name="calendar_display_name">Zile de naştere</string>
+  <string name="event_title_birthday_with_age">%1$s: Zi de naştere (%2$d)</string>
+  <string name="event_title_birthday_without_age">%1$s: Ziua de naştere</string>
+  <string name="event_title_anniversary_with_age">%1$s: Aniversare (%2$d)</string>
+  <string name="event_title_anniversary_without_age">%1$s: Aniversare</string>
+  <string name="event_title_other_with_age">%1$s: Alt Eveniment (%2$d)</string>
+  <string name="event_title_other_without_age">%1$s: Alt Eveniment</string>
+  <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
+  <string name="event_title_custom_without_age">%1$s: %2$s</string>
+  <!--About-->
+  <string name="about_version">Versiune:</string>
+  <!--Tabs-->
+  <string name="tab_main">Principal</string>
+  <string name="tab_preferences">Preferinţe</string>
+  <string name="tab_accounts">Filtru Cont</string>
+  <string name="tab_help">Ajutor</string>
+  <string name="tab_about">Despre</string>
+  <!--Preferences-->
+  <string name="pref_general">General</string>
+  <string name="pref_description">Descriere</string>
+  <string name="pref_enable_switch">Calendar</string>
+  <string name="pref_enable">Activare Birthday Calendar</string>
+  <string name="pref_enable_summary">Afişează datele de naştere, aniversările şi alte evenimente definite în contacte, ca şi 
+calendar, în Caledarul tău Android.</string>
+  <string name="pref_color">Culoare</string>
+  <string name="pref_color_summary">Culoarea calendarului zilelor de naştere</string>
+  <string name="pref_help">Ajutor</string>
+  <string name="pref_about">Despre</string>
+  <string name="pref_force_sync">Sincronizează acum!</string>
+  <string name="pref_force_sync_summary">În mod normal, nu este necesar să faci acest lucru, deoarece Birthday Adapter se sincronizează
+automat, o dată pe zi.</string>
+  <string name="pref_reminders">Memento</string>
+  <string name="pref_reminder_enable0">Activare Memento 1</string>
+  <string name="pref_reminder_enable1">Activare Memento 2</string>
+  <string name="pref_reminder_enable2">Activare Memento 3</string>
+  <string name="pref_reminder_enable_summary">Activează acest Memento</string>
+  <string name="pref_reminder_time0">Memento 1</string>
+  <string name="pref_reminder_time1">Memento 2</string>
+  <string name="pref_reminder_time2">Memento 3</string>
+  <string name="pref_reminder_time_summary">Stabileşte ora acestui Memento</string>
+  <string-array name="pref_reminder_time_drop_down">
+    <item>În ziua evenimentului</item>
+    <item>cu 1 zi înainte</item>
+    <item>cu 2 zile înainte</item>
+    <item>cu 3 zile înainte</item>
+    <item>cu 5 zile înainte</item>
+    <item>cu 7 zile înainte</item>
+    <item>cu 10zile înainte</item>
+    <item>cu 14 zile înainte</item>
+  </string-array>
+  <string name="pref_title">Etichete Personalizate</string>
+  <string name="pref_title_enable">Activarea Etichetelor personalizate</string>
+  <string name="pref_title_birthday_without_age">Zi de naştere</string>
+  <string name="pref_title_birthday_with_age">Zi de naştere cu vârsta</string>
+  <string name="pref_title_anniversary_without_age">Aniversare</string>
+  <string name="pref_title_anniversary_with_age">Aniversare cu vârsta</string>
+  <string name="pref_title_other_without_age">Alt eveniment</string>
+  <string name="pref_title_other_with_age">Alt eveniment, cu vârsta</string>
+  <string name="pref_title_custom_without_age">Personalizat</string>
+  <string name="pref_title_custom_with_age">Personalizat, cu vârsta</string>
+  <string name="pref_title_summary_without_age">Introducere %1$s, pentru nume contact.</string>
+  <string name="pref_title_summary_with_age">Introducere %1$s, pentru nume contact, şi %2$d, pentru vârstă.  </string>
+  <string name="pref_title_summary_custom_without_age">Introducere %1$s, pentru nume contact, şi %2$s pentru
+eticheta personalizată a acestui eveniment.
+  </string>
+  <string name="pref_title_summary_custom_with_age">Introducere %1$s, pentru nume contact, %2$s pentru eticheta
+personalizată a acestui eveniment, şi %3$d pentru vârstă.</string>
+  <string name="pref_advanced">Configurări Avansate</string>
+  <string name="pref_prefer_dd_slash_mm">Prefer formatul dd/MM/yyyy</string>
+  <string name="pref_prefer_dd_slash_mm_summary">Prefer dd/MM/yyyy în MM/dd/yyyy la analizarea formatelor de dată</string>
+  <!--Adapter Screen-->
+  <string name="pref_account_header">Configurări</string>
+  <string name="pref_account_settings">Configurări Birthday Adapter</string>
+  <!--Color Picker-->
+  <string name="dialog_color_picker">Selector Culoare</string>
+  <string name="press_color_to_apply">Apasă pe Culoare pentru a aplica</string>
+  <!--Accounts-->
+  <string name="account_list_description">Numai evenimentele din conturile selectate, vor fi afişate în calendar.</string>
+  <string name="account_list_save">Salvează şi aplică filtrul</string>
+  <string name="account_list_empty">Nici-un cont</string>
+  <!--Free Version-->
+  <string name="pref_buy">Cumpără versiunea completă!</string>
+  <string name="pref_buy_full">Pentru a cumpăra versiunea completă, deschide Google Play...</string>
+  <!--Install Workaround Dialog-->
+  <string name="workaround_dialog_title">E necesară o Soluţie Alternativă pentru această versiune Android!</string>
+  <string name="workaround_dialog_dont_show_again_button">Nu se mai afişează</string>
+  <string name="workaround_dialog_close_button">Închide</string>
+  <string name="workaround_dialog_install_button">Instalare Soluţie alternativă</string>
+</resources>

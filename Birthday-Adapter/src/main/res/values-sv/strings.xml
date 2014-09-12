@@ -83,6 +83,5 @@
   <!--Free Version-->
   <string name="pref_buy">Köp fullversion!</string>
   <string name="pref_buy_full">Öppna Google Play för att köpa fullversion...</string>
-  <string name="pref_buy_full_summary">• Ange dina egna påminnelser för händelser\n• Anpassa händelsetitlar</string>
   <!--Install Workaround Dialog-->
 </resources>

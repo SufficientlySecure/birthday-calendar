@@ -27,7 +27,8 @@
   <string name="pref_description">Descrizione</string>
   <string name="pref_enable_switch">Calendario</string>
   <string name="pref_enable">Abilita calendario dei compleanni</string>
-  <string name="pref_enable_summary">Mostra compleanni, anniversari ed altri eventi definiti nei contatti come calendario nel tuo Calendario di Android.\n</string>
+  <string name="pref_enable_summary">Mostra compleanni, anniversari ed altri eventi definiti nei contatti come calendario nel tuo Calendario di Android.
+</string>
   <string name="pref_color">Colore</string>
   <string name="pref_color_summary">Colore calendario dei compleanni</string>
   <string name="pref_help">Aiuto</string>
@@ -83,9 +84,9 @@
   <!--Free Version-->
   <string name="pref_buy">Compra la versione completa!</string>
   <string name="pref_buy_full">Apri Google Play per comprare la versione completa...</string>
-  <string name="pref_buy_full_summary">• Imposta i tuoi promemoria per gli eventi\n• Personalizza i titoli degli eventi</string>
   <!--Install Workaround Dialog-->
-  <string name="workaround_dialog_message">A causa di un bug in Android, l\'adattatore dei calendari sarà essere disabilitato dopo il riavvio di questo dispositivo.\n\nQuesto bug è stato introdotto in Android 4.1.1 e sembra che sia stato risolto in Android 4.2. Sfortunatamente alcuni dispositivi, ad esempio Galaxy S4, mostrano ancora questo bug in Android 4.2. Puoi installare un workaround da Google Play e trovare altre informazioni in questa segnalazione di bug: http://code.google.com/p/android/issues/detail?id=34880</string>
+  <string name="workaround_dialog_title">Serve una soluzione per questa versione di Android!</string>
   <string name="workaround_dialog_dont_show_again_button">Non mostrare di nuovo</string>
   <string name="workaround_dialog_close_button">Chiudi</string>
+  <string name="workaround_dialog_install_button">Installa soluzione</string>
 </resources>

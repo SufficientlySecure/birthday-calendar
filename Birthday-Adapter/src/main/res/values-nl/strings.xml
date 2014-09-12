@@ -27,13 +27,16 @@
   <string name="pref_description">Beschrijving</string>
   <string name="pref_enable_switch">Agenda</string>
   <string name="pref_enable">Verjaardagsagenda inschakelen</string>
-  <string name="pref_enable_summary">Verjaardagen, jubilea en andere gebeurtenissen weergeven van contacten\nin een agenda in de app Agenda.</string>
+  <string name="pref_enable_summary">Verjaardagen, jubilea en andere gebeurtenissen weergeven van contacten
+in een agenda in de app Agenda.</string>
   <string name="pref_color">Kleur</string>
   <string name="pref_color_summary">Kleur verjaardagsagenda</string>
   <string name="pref_help">Help</string>
   <string name="pref_about">Over</string>
   <string name="pref_force_sync">Nu synchroniseren</string>
-  <string name="pref_force_sync_summary">Normaal is dit niet nodig, omdat Birthday Adapter automatisch\neenmaal per dag synchroniseert.\n    </string>
+  <string name="pref_force_sync_summary">Normaal is dit niet nodig, omdat Birthday Adapter automatisch
+eenmaal per dag synchroniseert.
+    </string>
   <string name="pref_reminders">Herinneringen</string>
   <string name="pref_reminder_enable0">Herinnering 1 inschakelen</string>
   <string name="pref_reminder_enable1">Herinnering 2 inschakelen</string>
@@ -65,8 +68,12 @@
   <string name="pref_title_custom_with_age">Aangepast met jaar</string>
   <string name="pref_title_summary_without_age">Voer %1$s in voor de contactnaam.</string>
   <string name="pref_title_summary_with_age">Voer %1$s in voor contactnaam en %2$d voor de leeftijd.</string>
-  <string name="pref_title_summary_custom_without_age">Voer %1$s in voor de contactnaam en %2$s voor de\naangepaste label.\n    </string>
-  <string name="pref_title_summary_custom_with_age">Voer %1$s in voor de contactnaam, %2$s voor de aangepaste\n        label en %3$d voor de leeftijd.\n    </string>
+  <string name="pref_title_summary_custom_without_age">Voer %1$s in voor de contactnaam en %2$s voor de
+aangepaste label.
+    </string>
+  <string name="pref_title_summary_custom_with_age">Voer %1$s in voor de contactnaam, %2$s voor de aangepaste
+        label en %3$d voor de leeftijd.
+    </string>
   <string name="pref_advanced">Geavanceerde instellingen</string>
   <string name="pref_prefer_dd_slash_mm">Voorkeur voor dd/MM/yyyy</string>
   <string name="pref_prefer_dd_slash_mm_summary">dd/MM/yyyy i.p.v. MM/dd/yyyy als datumnotatie</string>
@@ -77,16 +84,15 @@
   <string name="dialog_color_picker">Kleur kiezen</string>
   <string name="press_color_to_apply">Tik op een kleur om toe te passen</string>
   <!--Accounts-->
-  <string name="account_list_description">Alleen afspraken uit geselecteerde accounts worden weergegeven.\n    </string>
+  <string name="account_list_description">Alleen afspraken uit geselecteerde accounts worden weergegeven.
+    </string>
   <string name="account_list_save">Filter opslaan en toepassen</string>
   <string name="account_list_empty">Geen accounts</string>
   <!--Free Version-->
   <string name="pref_buy">Volledige versie kopen</string>
   <string name="pref_buy_full">Open de Play Store om de volledige versie te kopen...</string>
-  <string name="pref_buy_full_summary">• Eigen herinneringen instellen\n• Afspraaknamen wijzigen</string>
   <!--Install Workaround Dialog-->
   <string name="workaround_dialog_title">U moet een andere manier gebruiken voor deze Android-versie.</string>
-  <string name="workaround_dialog_message">Door een fout in Android wordt Birthday Adapter uitgestart na een herstart.\n\nDeze fout werd voor het eerst gevonden in Android 4.1.1 en lijkt opgelost te zijn in Android 4.2. Sommige apparaten, zoals de Samsung Galaxy S4, hebben deze fout echter nog steeds op Android 4.2. U kunt een andere manier installeren via de Play Store. Voor meer informatie: http://code.google.com/p/android/issues/detail?id=34880</string>
   <string name="workaround_dialog_dont_show_again_button">Niet opnieuw weergeven</string>
   <string name="workaround_dialog_close_button">Sluiten</string>
   <string name="workaround_dialog_install_button">Andere manier installeren</string>

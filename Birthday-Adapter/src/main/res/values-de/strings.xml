@@ -83,10 +83,8 @@
   <!--Free Version-->
   <string name="pref_buy">Vollversion kaufen</string>
   <string name="pref_buy_full">Google Play öffnen um Vollversion zu kaufen…</string>
-  <string name="pref_buy_full_summary">• Erinnerungsfunktion\n• Benutzerdefinierte Titel für Ereignisse</string>
   <!--Install Workaround Dialog-->
   <string name="workaround_dialog_title">Für diese Android-Version muss ein Workaround installiert werden!</string>
-  <string name="workaround_dialog_message">Aufgrund eines Fehlers in Android, wird Birthday Adapter nach einem Neustart des Geräts deaktiviert sein.\n\nDieser Fehler tritt ab Android 4.1.1 auf und wurde in Android 4.2 gefixt. Unglücklicherweise ist er dennoch auf einigen Geräten mit Android 4.2 vorhanden, z.B. auf dem Galaxy S4. Um das Problem zu umgehen kann ein Workaround von Google Play installiert werden. Weitere Informationen finden sich auf http://code.google.com/p/android/issues/detail?id=34880</string>
   <string name="workaround_dialog_dont_show_again_button">Nicht wieder anzeigen</string>
   <string name="workaround_dialog_close_button">Schließen</string>
   <string name="workaround_dialog_install_button">Workaround installieren</string>

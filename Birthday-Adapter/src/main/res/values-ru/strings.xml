@@ -44,7 +44,6 @@
   <string name="pref_reminder_time2">Напоминание 3</string>
   <string name="pref_reminder_time_summary">Задать время для этого напоминания</string>
   <string-array name="pref_reminder_time_drop_down">
-    <item>Отключить напоминания</item>
     <item>В день события</item>
     <item>За день</item>
     <item>За 2 дня</item>
@@ -84,10 +83,10 @@
   <!--Free Version-->
   <string name="pref_buy">Купить полную версию!</string>
   <string name="pref_buy_full">Открыть Google Play для покупки полной версии…</string>
-  <string name="pref_buy_full_summary">• Установить собственное напоминание для событий\n• Настройка заголовков событий</string>
+  <string name="pref_buy_full_summary">• Установить собственные напоминания для событий • Настройка заголовков событий</string>
   <!--Install Workaround Dialog-->
   <string name="workaround_dialog_title">Необходимо обходное решение для этой версии Android!</string>
-  <string name="workaround_dialog_message">Birthday Adapter будет отключен после перезапуска устройства из-за ошибки в Android.\n\nЭта ошибка появилась в Android 4.1.1 и, похоже, исправлена в Android 4.2. К сожалению некоторые устройства, например Galaxy S4, всё ещё содержат эту ошибку в Android 4.2. Вы можете установить обходное решение из Google Play и найти дополнительную информацию в отчёте об ошибке:\nhttp://code.google.com/p/android/issues/detail?id=34880</string>
+  <string name="workaround_dialog_message">Birthday Adapter будет отключен после перезапуска устройства из-за ошибки в Android.\n\nЭта ошибка появилась в Android 4.1.1 и, похоже, исправлена в Android 4.2. К сожалению некоторые устройства, например Galaxy S4, всё ещё содержат эту ошибку в Android 4.2. Вы можете установить обходное решение из Google Play и найти дополнительную информацию в отчёте об ошибке: http://code.google.com/p/android/issues/detail?id=34880</string>
   <string name="workaround_dialog_dont_show_again_button">Больше не показывать</string>
   <string name="workaround_dialog_close_button">Закрыть</string>
   <string name="workaround_dialog_install_button">Установить обходное решение</string>

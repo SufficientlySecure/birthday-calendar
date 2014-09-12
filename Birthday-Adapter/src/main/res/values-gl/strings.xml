@@ -5,8 +5,11 @@
   <string name="removing">Estase a eliminar o adaptador...</string>
   <string name="synchronizing">A sincronizar...</string>
   <!--Calendar-->
+  <string name="calendar_display_name">Aniversarios</string>
   <string name="event_title_other_with_age">%1$s: Outro evento (%2$d)</string>
   <string name="event_title_other_without_age">%1$s: Outro evento</string>
+  <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
+  <string name="event_title_custom_without_age">%1$s: %2$s</string>
   <!--About-->
   <string name="about_version">Versión:</string>
   <!--Tabs-->
@@ -24,6 +27,7 @@
   <string name="pref_help">Axuda</string>
   <string name="pref_about">Acerca de</string>
   <string name="pref_force_sync">Sincronizar agora!</string>
+  <string name="pref_force_sync_summary">Polo xeral, non vas necesitar facer isto porque Birthday Adapter sincronízase auotmaticamente todos os días.</string>
   <string name="pref_reminders">Recordatorios</string>
   <string name="pref_reminder_time0">Recordatorio 1</string>
   <string name="pref_reminder_time1">Recordatorio 2</string>

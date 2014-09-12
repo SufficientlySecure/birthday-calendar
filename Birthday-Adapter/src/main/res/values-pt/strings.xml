@@ -83,10 +83,8 @@
   <!--Free Version-->
   <string name="pref_buy">Comprar versão completa!</string>
   <string name="pref_buy_full">Abrir Google Play para comprar a versão completa...</string>
-  <string name="pref_buy_full_summary">Definir lembretes para eventos\nPersonalizar título dos eventos</string>
   <!--Install Workaround Dialog-->
   <string name="workaround_dialog_title">Requer uma solução alternativa para esta versão Android!</string>
-  <string name="workaround_dialog_message">Devido a um erro no sistema Android, o Birthday Adapter ficará desativado ao reiniciar o dispositivo.\n\nEste erro foi introduzido na versão 4.1.1 mas parece que já está resolvido na versão 4.2. Infelizmente, alguns dispositivos, por exemplo Galaxy S4 ainda têm este erro na versão 4.2. Pode instalar ua solução alternativa na Google Paly. Para saber mais informações sobre o erro, consulte http://code.google.com/p/android/issues/detail?id=34880</string>
   <string name="workaround_dialog_dont_show_again_button">Não mostrar novamente</string>
   <string name="workaround_dialog_close_button">Fechar</string>
   <string name="workaround_dialog_install_button">Instalar solução alternativa</string>
