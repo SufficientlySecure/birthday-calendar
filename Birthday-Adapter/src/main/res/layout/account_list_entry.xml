@@ -23,7 +23,7 @@
             android:layout_height="32dp"
             android:layout_gravity="center_vertical"
             android:paddingRight="2dp"
-            android:src="@drawable/icon"/>
+            android:src="@mipmap/ic_launcher"/>
 
     <LinearLayout
             android:layout_width="match_parent"
