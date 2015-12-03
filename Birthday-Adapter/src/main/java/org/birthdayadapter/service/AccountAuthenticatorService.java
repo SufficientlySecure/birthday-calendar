@@ -74,7 +74,7 @@ public class AccountAuthenticatorService extends Service {
          */
         @Override
         public Bundle addAccount(AccountAuthenticatorResponse response, String accountType,
-                String authTokenType, String[] requiredFeatures, Bundle options)
+                                 String authTokenType, String[] requiredFeatures, Bundle options)
                 throws NetworkErrorException {
             Bundle result = new Bundle();
             Intent i = new Intent(mContext, CreateAccountActivity.class);
@@ -92,7 +92,7 @@ public class AccountAuthenticatorService extends Service {
          */
         @Override
         public Bundle confirmCredentials(AccountAuthenticatorResponse response, Account account,
-                Bundle options) {
+                                         Bundle options) {
             Log.e(Constants.TAG, "confirmCredentials not implemented for Birthday Adapter!");
             return null;
         }
@@ -118,7 +118,7 @@ public class AccountAuthenticatorService extends Service {
          */
         @Override
         public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account,
-                String authTokenType, Bundle options) throws NetworkErrorException {
+                                   String authTokenType, Bundle options) throws NetworkErrorException {
             Log.e(Constants.TAG, "getAuthToken not implemented for Birthday Adapter!");
             return null;
         }
@@ -142,7 +142,7 @@ public class AccountAuthenticatorService extends Service {
          */
         @Override
         public Bundle hasFeatures(AccountAuthenticatorResponse response, Account account,
-                String[] features) throws NetworkErrorException {
+                                  String[] features) throws NetworkErrorException {
             Log.e(Constants.TAG, "hasFeatures: " + features);
             return null;
         }
@@ -156,7 +156,7 @@ public class AccountAuthenticatorService extends Service {
          */
         @Override
         public Bundle updateCredentials(AccountAuthenticatorResponse response, Account account,
-                String authTokenType, Bundle options) {
+                                        String authTokenType, Bundle options) {
             Log.e(Constants.TAG, "updateCredentials not implemented for Birthday Adapter!");
             return null;
         }

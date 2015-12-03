@@ -1,17 +1,25 @@
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 dependencies {
-    compile 'com.android.support:support-v4:19.0.+'
-    compile project(':libraries:HtmlTextView')
+    compile 'com.android.support:support-v4:22.1.0'
+    compile 'org.sufficientlysecure:html-textview:1.3'
 }
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "19"
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
 
     defaultConfig {
         minSdkVersion 7
-        targetSdkVersion 19
+        targetSdkVersion 22
+        versionCode 18
+        versionName "1.17"
+        applicationId "org.birthdayadapter"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 
     /*
@@ -27,7 +35,7 @@ android {
             project.hasProperty('signingKeyAlias') &&
             project.hasProperty('signingKeyPassword')) {
         println "Found sign properties in gradle.properties! Signing build…"
-        
+
         signingConfigs {
             release {
                 storeFile file(signingStoreLocation)
@@ -44,25 +52,19 @@ android {
 
     productFlavors {
         full {
-            packageName "org.birthdayadapter"
-            buildConfig """
-public final static boolean FULL_VERSION = true;
-public final static boolean GOOGLE_PLAY_VERSION = false;
-"""
+            applicationId = "org.birthdayadapter"
+            buildConfigField "boolean", "FULL_VERSION", "true"
+            buildConfigField "boolean", "GOOGLE_PLAY_VERSION", "false"
         }
         full_google {
-            packageName "org.birthdayadapter"
-            buildConfig """
-public final static boolean FULL_VERSION = true;
-public final static boolean GOOGLE_PLAY_VERSION = true;
-"""
+            applicationId = "org.birthdayadapter"
+            buildConfigField "boolean", "FULL_VERSION", "true"
+            buildConfigField "boolean", "GOOGLE_PLAY_VERSION", "true"
         }
         free {
-            packageName "org.birthdayadapter.free"
-            buildConfig """
-public final static boolean FULL_VERSION = false;
-public final static boolean GOOGLE_PLAY_VERSION = false;
-"""
+            applicationId = "org.birthdayadapter.free"
+            buildConfigField "boolean", "FULL_VERSION", "false"
+            buildConfigField "boolean", "GOOGLE_PLAY_VERSION", "true"
         }
     }
 }

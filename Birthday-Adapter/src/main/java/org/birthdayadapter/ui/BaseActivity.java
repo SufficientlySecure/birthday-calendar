@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+
 import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.BackgroundStatusHandler;
@@ -41,6 +42,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Window;
+
 import org.birthdayadapter.util.MySharedPreferenceChangeListener;
 import org.birthdayadapter.util.PreferencesHelper;
 

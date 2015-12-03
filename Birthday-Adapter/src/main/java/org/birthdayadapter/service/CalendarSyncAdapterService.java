@@ -27,6 +27,7 @@ import java.util.*;
 
 import android.database.*;
 import android.text.TextUtils;
+
 import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
 import org.birthdayadapter.provider.ProviderHelper;
@@ -661,28 +662,28 @@ public class CalendarSyncAdapterService extends Service {
 
                     if (eventCustomLabel != null) {
                         title = String.format(PreferencesHelper.getLabel(context,
-                                ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM, includeAge),
+                                        ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM, includeAge),
                                 displayName, eventCustomLabel, age);
                     } else {
                         title = String.format(PreferencesHelper.getLabel(context,
-                                ContactsContract.CommonDataKinds.Event.TYPE_OTHER, includeAge),
+                                        ContactsContract.CommonDataKinds.Event.TYPE_OTHER, includeAge),
                                 displayName, age);
                     }
                     break;
                 case ContactsContract.CommonDataKinds.Event.TYPE_ANNIVERSARY:
                     title = String.format(PreferencesHelper.getLabel(context,
-                            ContactsContract.CommonDataKinds.Event.TYPE_ANNIVERSARY, includeAge),
+                                    ContactsContract.CommonDataKinds.Event.TYPE_ANNIVERSARY, includeAge),
                             displayName, age);
                     break;
                 case ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY:
                     title = String.format(PreferencesHelper.getLabel(context,
-                            ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY, includeAge),
+                                    ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY, includeAge),
                             displayName, age);
                     break;
                 default:
                     // also ContactsContract.CommonDataKinds.Event.TYPE_OTHER
                     title = String.format(PreferencesHelper.getLabel(context,
-                            ContactsContract.CommonDataKinds.Event.TYPE_OTHER, includeAge),
+                                    ContactsContract.CommonDataKinds.Event.TYPE_OTHER, includeAge),
                             displayName, age);
                     break;
             }

@@ -31,6 +31,7 @@ import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
+
 import org.birthdayadapter.provider.ProviderHelper;
 
 /**

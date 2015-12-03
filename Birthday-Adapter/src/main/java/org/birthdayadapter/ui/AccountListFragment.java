@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import android.accounts.Account;
+
 import org.birthdayadapter.R;
 import org.birthdayadapter.provider.ProviderHelper;
 import org.birthdayadapter.service.MainIntentService;

@@ -34,6 +34,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
+
 import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;

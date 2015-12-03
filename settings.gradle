@@ -1,2 +1,1 @@
 include ':Birthday-Adapter'
-include ':libraries:HtmlTextView'

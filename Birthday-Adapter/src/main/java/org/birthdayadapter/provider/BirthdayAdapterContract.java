@@ -22,6 +22,7 @@ package org.birthdayadapter.provider;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
+
 import org.birthdayadapter.BuildConfig;
 
 public class BirthdayAdapterContract {

@@ -23,6 +23,7 @@ package org.birthdayadapter.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.preference.Preference;
+
 import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.Constants;

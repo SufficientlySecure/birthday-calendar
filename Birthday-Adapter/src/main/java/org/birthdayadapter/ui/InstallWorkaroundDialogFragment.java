@@ -34,6 +34,7 @@ import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.widget.TextView;
+
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.PreferencesHelper;
 

@@ -20,17 +20,17 @@
 
 package org.birthdayadapter.ui;
 
-import org.birthdayadapter.R;
-import org.birthdayadapter.util.Constants;
-import org.birthdayadapter.util.Log;
-import org.sufficientlysecure.htmltextview.HtmlTextView;
-
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.widget.TextView;
+
+import org.birthdayadapter.R;
+import org.birthdayadapter.util.Constants;
+import org.birthdayadapter.util.Log;
+import org.sufficientlysecure.htmltextview.HtmlTextView;
 
 public class HelpActivityV8 extends FragmentActivity {
 
@@ -50,8 +50,8 @@ public class HelpActivityV8 extends FragmentActivity {
         HtmlTextView helpTextView = (HtmlTextView) findViewById(R.id.help_help_text);
 
         // load html into textviews
-        aboutTextView.setHtmlFromRawResource(this, R.raw.about);
-        helpTextView.setHtmlFromRawResource(this, R.raw.help);
+        aboutTextView.setHtmlFromRawResource(this, R.raw.about, new HtmlTextView.LocalImageGetter());
+        helpTextView.setHtmlFromRawResource(this, R.raw.help, new HtmlTextView.LocalImageGetter());
 
         // no flickering when clicking textview for Android < 4
         aboutTextView.setTextColor(getResources().getColor(
