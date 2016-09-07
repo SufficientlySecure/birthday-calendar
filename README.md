@@ -1,5 +1,9 @@
 # Birthday Adapter
 
+[<img src="https://f-droid.org/badge/get-it-on.png"
+      alt="Get it on F-Droid"
+      height="80">](https://f-droid.org/app/org.birthdayadapter)
+
 Birthday Adapter is the first implementation to really display all contact birthdays automatically in your standard Android calendar without hassle.
 
 Birthday Adapter provides birthdays, anniversaries, and other events from your contacts as a real calendar, which is displayed in your standard Android calendar application. To my knowledge, this is the first implementation that implements birthdays as a real calendar integrated in the Android calendar. All other apps only displays their own lists but have no real integration! 
