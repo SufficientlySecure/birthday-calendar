@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2013 Dominik Schürmann <dominik@dominikschuermann.de>
+ * Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
  *
  * This file is part of Birthday Adapter.
  * 
