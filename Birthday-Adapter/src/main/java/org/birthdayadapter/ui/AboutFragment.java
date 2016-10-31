@@ -20,11 +20,6 @@
 
 package org.birthdayadapter.ui;
 
-import org.birthdayadapter.R;
-import org.birthdayadapter.util.Constants;
-import org.birthdayadapter.util.Log;
-import org.sufficientlysecure.htmltextview.HtmlTextView;
-
 import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.content.pm.PackageInfo;
@@ -36,6 +31,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import org.birthdayadapter.R;
+import org.birthdayadapter.util.Constants;
+import org.birthdayadapter.util.Log;
+import org.sufficientlysecure.htmltextview.HtmlTextView;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class AboutFragment extends Fragment {
@@ -50,7 +50,7 @@ public class AboutFragment extends Fragment {
         HtmlTextView aboutTextView = (HtmlTextView) view.findViewById(R.id.about_text);
 
         // load html into textview
-        aboutTextView.setHtmlFromRawResource(getActivity(), R.raw.about, new HtmlTextView.LocalImageGetter());
+        aboutTextView.setHtml(R.raw.about);
 
         // no flickering when clicking textview for Android < 4
         aboutTextView.setTextColor(getResources().getColor(

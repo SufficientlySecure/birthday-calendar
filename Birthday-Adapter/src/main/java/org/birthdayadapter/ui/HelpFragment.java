@@ -41,7 +41,7 @@ public class HelpFragment extends Fragment {
         HtmlTextView text = (HtmlTextView) view.findViewById(R.id.help_text);
 
         // load html into textview
-        text.setHtmlFromRawResource(getActivity(), R.raw.help, new HtmlTextView.LocalImageGetter());
+        text.setHtml(R.raw.help);
 
         // no flickering when clicking textview for Android < 4
         text.setTextColor(getResources().getColor(android.R.color.secondary_text_dark_nodisable));
