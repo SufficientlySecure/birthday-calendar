@@ -1,0 +1,14 @@
+<resources>
+
+    <string name="app_name">Birthday Adapter JB Workaround</string>
+    <string name="label">Birthday Adapter</string>
+    <string name="authenticator_activity">org.birthdayadapter.ui.CreateAccountActivity</string>
+    <string name="account_type">org.birthdayadapter.account</string>
+    <string name="package_name">org.birthdayadapter</string>
+    <string name="real_app_name">Birthday Adapter</string>
+
+    <!-- Adapter Screen -->
+    <string name="pref_account_header">Settings</string>
+    <string name="pref_account_settings">Configure Birthday Adapter</string>
+
+</resources>
