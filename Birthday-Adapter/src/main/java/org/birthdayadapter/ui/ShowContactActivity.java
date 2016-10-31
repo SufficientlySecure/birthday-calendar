@@ -55,10 +55,6 @@ public class ShowContactActivity extends Activity {
             Uri uri = Uri.parse(extras.getString(CalendarContract.EXTRA_CUSTOM_APP_URI));
             Log.d(Constants.TAG, "Uri: " + uri);
 
-            // Intent viewIntent = new Intent(Intent.ACTION_VIEW);
-            // viewIntent.setData(uri);
-            // startActivity(viewIntent);
-
             QuickContact.showQuickContact(this, getIntent().getSourceBounds(), uri,
                     QuickContact.MODE_LARGE, null);
 

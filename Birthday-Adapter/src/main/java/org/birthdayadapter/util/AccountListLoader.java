@@ -27,10 +27,10 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AuthenticatorDescription;
 import android.annotation.SuppressLint;
-import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
+import android.support.v4.content.AsyncTaskLoader;
 
 import org.birthdayadapter.provider.ProviderHelper;
 
@@ -40,7 +40,7 @@ import org.birthdayadapter.provider.ProviderHelper;
 @SuppressLint("NewApi")
 public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
 
-    List<AccountListEntry> mAccounts;
+    private List<AccountListEntry> mAccounts;
 
     public AccountListLoader(Context context) {
         super(context);
@@ -86,7 +86,9 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
         } catch (Exception e) {
             Log.e(Constants.TAG, "Error retrieving accounts!", e);
         } finally {
-            cursor.close();
+            if (cursor != null) {
+                cursor.close();
+            }
         }
 
         // get current blacklist from preferences
@@ -132,7 +134,6 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
                 onReleaseResources(accounts);
             }
         }
-        List<AccountListEntry> oldAccounts = accounts;
         mAccounts = accounts;
 
         if (isStarted()) {
@@ -144,8 +145,8 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
         // At this point we can release the resources associated with
         // 'oldAccounts' if needed; now that the new result is delivered we
         // know that it is no longer in use.
-        if (oldAccounts != null) {
-            onReleaseResources(oldAccounts);
+        if (accounts != null) {
+            onReleaseResources(accounts);
         }
     }
 

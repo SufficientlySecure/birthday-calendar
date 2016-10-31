@@ -43,7 +43,8 @@
         android:label="@string/app_name">
         <activity
             android:name="org.birthdayadapter.ui.BaseActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -55,12 +56,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="org.birthdayadapter.ui.BaseActivityV8"
-            android:label="@string/app_name" />
-        <activity
-            android:name="org.birthdayadapter.ui.HelpActivityV8"
-            android:label="@string/app_name" />
         <activity
             android:name="org.birthdayadapter.ui.CreateAccountActivity"
             android:label="@string/app_name"

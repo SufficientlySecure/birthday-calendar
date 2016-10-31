@@ -21,20 +21,6 @@
 
 package org.birthdayadapter.service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import android.database.*;
-import android.text.TextUtils;
-
-import org.birthdayadapter.BuildConfig;
-import org.birthdayadapter.R;
-import org.birthdayadapter.provider.ProviderHelper;
-import org.birthdayadapter.util.Constants;
-import org.birthdayadapter.util.Log;
-import org.birthdayadapter.util.PreferencesHelper;
-
 import android.accounts.Account;
 import android.accounts.OperationCanceledException;
 import android.annotation.SuppressLint;
@@ -48,6 +34,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SyncResult;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -59,12 +48,29 @@ import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
 import android.provider.ContactsContract;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 
+import org.birthdayadapter.BuildConfig;
+import org.birthdayadapter.R;
+import org.birthdayadapter.provider.ProviderHelper;
+import org.birthdayadapter.util.AccountHelper;
+import org.birthdayadapter.util.Constants;
+import org.birthdayadapter.util.Log;
+import org.birthdayadapter.util.PreferencesHelper;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.TimeZone;
+
 @SuppressLint("NewApi")
 public class CalendarSyncAdapterService extends Service {
-    private static SyncAdapterImpl sSyncAdapter = null;
 
     private static String CALENDAR_COLUMN_NAME = "birthday_adapter";
 
@@ -72,45 +78,41 @@ public class CalendarSyncAdapterService extends Service {
         super();
     }
 
-    private static class SyncAdapterImpl extends AbstractThreadedSyncAdapter {
-        private Context mContext;
+    private class CalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 
-        public SyncAdapterImpl(Context context) {
-            super(context, true);
-            mContext = context;
+        public CalendarSyncAdapter() {
+            super(CalendarSyncAdapterService.this, true);
         }
 
         @Override
         public void onPerformSync(Account account, Bundle extras, String authority,
                                   ContentProviderClient provider, SyncResult syncResult) {
             try {
-                CalendarSyncAdapterService.performSync(mContext, account, extras, authority,
+                CalendarSyncAdapterService.performSync(CalendarSyncAdapterService.this, account, extras, authority,
                         provider, syncResult);
             } catch (OperationCanceledException e) {
                 Log.e(Constants.TAG, "OperationCanceledException", e);
             }
         }
+
+        @Override
+        public void onSecurityException(Account account, Bundle extras, String authority, SyncResult syncResult) {
+            super.onSecurityException(account, extras, authority, syncResult);
+
+            // contact or calendar permission has been revoked -> simply remove account
+            AccountHelper accountHelper = new AccountHelper(CalendarSyncAdapterService.this, null);
+            accountHelper.removeAccount();
+        }
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        IBinder ret = null;
-        ret = getSyncAdapter().getSyncAdapterBinder();
-        return ret;
-    }
-
-    private SyncAdapterImpl getSyncAdapter() {
-        if (sSyncAdapter == null)
-            sSyncAdapter = new SyncAdapterImpl(this);
-        return sSyncAdapter;
+        return new CalendarSyncAdapter().getSyncAdapterBinder();
     }
 
     /**
      * Builds URI for Birthday Adapter based on account. Ensures that only the calendar of Birthday
      * Adapter is chosen.
-     *
-     * @param uri
-     * @return
      */
     public static Uri getBirthdayAdapterUri(Uri uri) {
         return uri.buildUpon().appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
@@ -120,8 +122,6 @@ public class CalendarSyncAdapterService extends Service {
 
     /**
      * Updates calendar color
-     *
-     * @param context
      */
     public static void updateCalendarColor(Context context) {
         int color = PreferencesHelper.getColor(context);
@@ -147,9 +147,6 @@ public class CalendarSyncAdapterService extends Service {
 
     /**
      * Gets calendar id, when no calendar is present, create one!
-     *
-     * @param context
-     * @return
      */
     private static long getCalendar(Context context) {
         Log.d(Constants.TAG, "getCalendar Method...");
@@ -204,13 +201,6 @@ public class CalendarSyncAdapterService extends Service {
 
     /**
      * Get a new ContentProviderOperation to insert a event
-     *
-     * @param context
-     * @param calendarId
-     * @param eventDate
-     * @param year       The event is inserted for this year
-     * @param title
-     * @return
      */
     private static ContentProviderOperation insertEvent(Context context, long calendarId,
                                                         Date eventDate, int year, String title, String lookupKey) {
@@ -324,8 +314,6 @@ public class CalendarSyncAdapterService extends Service {
      * <p/>
      * See also: http://dmfs.org/carddav/?date_format
      *
-     * @param context
-     * @param eventDateString
      * @return eventDate as Date object
      */
     private static Date parseEventDateString(Context context, String eventDateString) {
@@ -441,10 +429,6 @@ public class CalendarSyncAdapterService extends Service {
 
     /**
      * Get cursor over contact with events
-     *
-     * @param context
-     * @param contentResolver
-     * @return
      */
     private static Cursor getContactsEvents(Context context, ContentResolver contentResolver) {
         // Account Filter is only available on Android >= 4.0
@@ -461,8 +445,6 @@ public class CalendarSyncAdapterService extends Service {
      * This is really complicated, because we can't query SQLite directly. We need to use the provided Content Provider
      * and query several times for different tables.
      *
-     * @param context
-     * @param contentResolver
      * @return Cursor over all contacts with events, where accounts are not blacklisted
      */
     private static Cursor getContactsEventsWithAccountFilter(Context context, ContentResolver contentResolver) {
@@ -618,10 +600,6 @@ public class CalendarSyncAdapterService extends Service {
     /**
      * Get Cursor over contacts with events without account filter.
      * This method is used on Android < 4.
-     *
-     * @param context
-     * @param contentResolver
-     * @return
      */
     private static Cursor getContactsEventsWithoutAccountFilter(Context context, ContentResolver contentResolver) {
         Uri uri = ContactsContract.Data.CONTENT_URI;
@@ -635,22 +613,12 @@ public class CalendarSyncAdapterService extends Service {
         String where = ContactsContract.Data.MIMETYPE + "= ? AND "
                 + ContactsContract.CommonDataKinds.Event.TYPE + " IS NOT NULL";
         String[] selectionArgs = new String[]{ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE};
-        Cursor contactsCursor = contentResolver.query(uri, projection, where, selectionArgs, null);
 
-        return contactsCursor;
+        return contentResolver.query(uri, projection, where, selectionArgs, null);
     }
 
     /**
      * Generates title for events
-     *
-     * @param context
-     * @param eventType
-     * @param cursor
-     * @param eventCustomLabelColumn
-     * @param includeAge
-     * @param displayName
-     * @param age
-     * @return
      */
     private static String generateTitle(Context context, int eventType, Cursor cursor,
                                         int eventCustomLabelColumn, boolean includeAge, String displayName, int age) {
@@ -662,28 +630,28 @@ public class CalendarSyncAdapterService extends Service {
 
                     if (eventCustomLabel != null) {
                         title = String.format(PreferencesHelper.getLabel(context,
-                                        ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM, includeAge),
+                                ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM, includeAge),
                                 displayName, eventCustomLabel, age);
                     } else {
                         title = String.format(PreferencesHelper.getLabel(context,
-                                        ContactsContract.CommonDataKinds.Event.TYPE_OTHER, includeAge),
+                                ContactsContract.CommonDataKinds.Event.TYPE_OTHER, includeAge),
                                 displayName, age);
                     }
                     break;
                 case ContactsContract.CommonDataKinds.Event.TYPE_ANNIVERSARY:
                     title = String.format(PreferencesHelper.getLabel(context,
-                                    ContactsContract.CommonDataKinds.Event.TYPE_ANNIVERSARY, includeAge),
+                            ContactsContract.CommonDataKinds.Event.TYPE_ANNIVERSARY, includeAge),
                             displayName, age);
                     break;
                 case ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY:
                     title = String.format(PreferencesHelper.getLabel(context,
-                                    ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY, includeAge),
+                            ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY, includeAge),
                             displayName, age);
                     break;
                 default:
                     // also ContactsContract.CommonDataKinds.Event.TYPE_OTHER
                     title = String.format(PreferencesHelper.getLabel(context,
-                                    ContactsContract.CommonDataKinds.Event.TYPE_OTHER, includeAge),
+                            ContactsContract.CommonDataKinds.Event.TYPE_OTHER, includeAge),
                             displayName, age);
                     break;
             }
@@ -754,7 +722,7 @@ public class CalendarSyncAdapterService extends Service {
 
             int backRef = 0;
             // for every event...
-            while (cursor != null && cursor.moveToNext()) {
+            while (cursor.moveToNext()) {
                 String eventDateString = cursor.getString(eventDateColumn);
                 String displayName = cursor.getString(displayNameColumn);
                 int eventType = cursor.getInt(eventTypeColumn);
@@ -871,7 +839,7 @@ public class CalendarSyncAdapterService extends Service {
                 }
             }
         } finally {
-            if (cursor != null && !cursor.isClosed())
+            if (!cursor.isClosed())
                 cursor.close();
         }
 

@@ -34,8 +34,8 @@ import android.os.Handler;
 import android.os.Messenger;
 
 public class AccountHelper {
-    Context mContext;
-    Handler mBackgroundStatusHandler;
+    private Context mContext;
+    private Handler mBackgroundStatusHandler;
 
     public AccountHelper(Context context, Handler handler) {
         mContext = context;
@@ -48,8 +48,6 @@ public class AccountHelper {
 
     /**
      * Add account for Birthday Adapter to Android system
-     *
-     * @return
      */
     public Bundle addAccount() {
         Log.d(Constants.TAG, "Adding account...");
@@ -95,8 +93,6 @@ public class AccountHelper {
 
     /**
      * Remove account from Android system
-     *
-     * @return
      */
     public boolean removeAccount() {
         Log.d(Constants.TAG, "Removing account...");
@@ -143,13 +139,10 @@ public class AccountHelper {
 
         // start service with intent
         mContext.startService(intent);
-
     }
 
     /**
      * Checks whether the account is enabled or not
-     *
-     * @return
      */
     public boolean isAccountActivated() {
         AccountManager am = AccountManager.get(mContext);

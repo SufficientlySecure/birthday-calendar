@@ -43,10 +43,6 @@ public class AccountListEntry {
 
     /**
      * Load label and icon for this entry
-     *
-     * @param context
-     * @param account
-     * @param description
      */
     public void init(Context context, Account account, AuthenticatorDescription description) {
         PackageManager pm = context.getPackageManager();
@@ -54,9 +50,7 @@ public class AccountListEntry {
         try {
             label = pm.getResourcesForApplication(description.packageName).getString(
                     description.labelId);
-        } catch (NotFoundException e) {
-            Log.e(Constants.TAG, "Error retrieving label!", e);
-        } catch (NameNotFoundException e) {
+        } catch (NotFoundException | NameNotFoundException e) {
             Log.e(Constants.TAG, "Error retrieving label!", e);
         }
 

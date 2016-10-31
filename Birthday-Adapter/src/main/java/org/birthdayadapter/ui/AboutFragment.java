@@ -21,12 +21,12 @@
 package org.birthdayadapter.ui;
 
 import android.annotation.TargetApi;
-import android.app.Fragment;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,8 +53,7 @@ public class AboutFragment extends Fragment {
         aboutTextView.setHtml(R.raw.about);
 
         // no flickering when clicking textview for Android < 4
-        aboutTextView.setTextColor(getResources().getColor(
-                android.R.color.secondary_text_dark_nodisable));
+        aboutTextView.setTextColor(getResources().getColor(android.R.color.black));
 
         return view;
     }

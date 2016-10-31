@@ -20,41 +20,29 @@
 
 package org.birthdayadapter.ui;
 
-import java.util.ArrayList;
-
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Window;
 
 import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.BackgroundStatusHandler;
 import org.birthdayadapter.util.FragmentStatePagerAdapterV14;
-
-import android.annotation.TargetApi;
-import android.app.ActionBar;
-import android.app.ActionBar.Tab;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewPager;
-import android.view.Window;
-
 import org.birthdayadapter.util.MySharedPreferenceChangeListener;
 import org.birthdayadapter.util.PreferencesHelper;
 
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-public class BaseActivity extends FragmentActivity {
-    private FragmentActivity mActivity;
+import java.util.ArrayList;
 
-    private ViewPager mViewPager;
-    private TabsAdapter mTabsAdapter;
-
-    public static final int BACKGROUND_STATUS_HANDLER_DISABLE = 0;
-    public static final int BACKGROUND_STATUS_HANDLER_ENABLE = 1;
+public class BaseActivity extends AppCompatActivity {
 
     public BackgroundStatusHandler mBackgroundStatusHandler = new BackgroundStatusHandler(this);
 
@@ -67,62 +55,54 @@ public class BaseActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mActivity = this;
+        FragmentActivity mActivity = this;
 
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            // Load Activity for Android < 4.0
-            Intent oldActivity = new Intent(mActivity, BaseActivityV8.class);
-            oldActivity.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(oldActivity);
-            finish();
-        } else {
-            // Load new design with tabs
-            mViewPager = new ViewPager(this);
-            mViewPager.setId(R.id.pager);
+        // Load new design with tabs
+        ViewPager mViewPager = new ViewPager(this);
+        mViewPager.setId(R.id.pager);
 
-            setContentView(mViewPager);
+        setContentView(mViewPager);
 
-            ActionBar actionBar = getActionBar();
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(false);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(false);
 
-            mTabsAdapter = new TabsAdapter(this, mViewPager);
+        TabsAdapter mTabsAdapter = new TabsAdapter(this, mViewPager);
 
-            mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_main)),
-                    BaseFragment.class, null);
+        mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_main)),
+                BasePreferenceFragment.class, null);
 
-            mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_preferences)),
-                    PreferencesFragment.class, null);
+        mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_preferences)),
+                ExtendedPreferencesFragment.class, null);
 
-            mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_accounts)),
-                    AccountListFragment.class, null);
+        mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_accounts)),
+                AccountListFragment.class, null);
 
-            mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_help)),
-                    HelpFragment.class, null);
+        mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_help)),
+                HelpFragment.class, null);
 
-            mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_about)),
-                    AboutFragment.class, null);
+        mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_about)),
+                AboutFragment.class, null);
 
-            // default is disabled:
-            mActivity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
+        // default is disabled:
+        mActivity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
 
-            mySharedPreferenceChangeListener = new MySharedPreferenceChangeListener(mActivity,
-                    mBackgroundStatusHandler);
+        mySharedPreferenceChangeListener = new MySharedPreferenceChangeListener(mActivity,
+                mBackgroundStatusHandler);
 
             /*
              * Show workaround dialog for Android bug http://code.google.com/p/android/issues/detail?id=34880
              * Bug exists on Android 4.1 (SDK 16) and on some phones like Galaxy S4
              */
-            if (BuildConfig.GOOGLE_PLAY_VERSION && PreferencesHelper.getShowWorkaroundDialog(mActivity)
-                    && !isPackageInstalled("org.birthdayadapter.jb.workaround")) {
-                if ((Build.VERSION.SDK_INT == 16)
-                        || Build.DEVICE.toUpperCase().startsWith("GT-I9000") || Build.DEVICE.toUpperCase().startsWith("GT-I9500")) {
-                    InstallWorkaroundDialogFragment dialog = InstallWorkaroundDialogFragment.newInstance();
-                    dialog.show(getFragmentManager(), "workaroundDialog");
-                }
+        if (BuildConfig.GOOGLE_PLAY_VERSION && PreferencesHelper.getShowWorkaroundDialog(mActivity)
+                && !isPackageInstalled("org.birthdayadapter.jb.workaround")) {
+            if ((Build.VERSION.SDK_INT == 16)
+                    || Build.DEVICE.toUpperCase().startsWith("GT-I9000") || Build.DEVICE.toUpperCase().startsWith("GT-I9500")) {
+                InstallWorkaroundDialogFragment dialog = InstallWorkaroundDialogFragment.newInstance();
+                dialog.show(getSupportFragmentManager(), "workaroundDialog");
             }
         }
     }
@@ -137,7 +117,6 @@ public class BaseActivity extends FragmentActivity {
         return true;
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class TabsAdapter extends FragmentStatePagerAdapterV14 implements
             ActionBar.TabListener, ViewPager.OnPageChangeListener {
         private final Context mContext;
@@ -155,10 +134,10 @@ public class BaseActivity extends FragmentActivity {
             }
         }
 
-        public TabsAdapter(FragmentActivity activity, ViewPager pager) {
-            super(activity.getFragmentManager());
+        public TabsAdapter(AppCompatActivity activity, ViewPager pager) {
+            super(activity.getSupportFragmentManager());
             mContext = activity;
-            mActionBar = activity.getActionBar();
+            mActionBar = activity.getSupportActionBar();
             mViewPager = pager;
             mViewPager.setAdapter(this);
             mViewPager.setOnPageChangeListener(this);
@@ -194,7 +173,7 @@ public class BaseActivity extends FragmentActivity {
         public void onPageScrollStateChanged(int state) {
         }
 
-        public void onTabSelected(Tab tab, FragmentTransaction ft) {
+        public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
             Object tag = tab.getTag();
             for (int i = 0; i < mTabs.size(); i++) {
                 if (mTabs.get(i) == tag) {
@@ -203,10 +182,10 @@ public class BaseActivity extends FragmentActivity {
             }
         }
 
-        public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+        public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
         }
 
-        public void onTabReselected(Tab tab, FragmentTransaction ft) {
+        public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
         }
 
     }

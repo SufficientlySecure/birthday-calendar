@@ -22,7 +22,6 @@ package org.birthdayadapter.ui;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.preference.Preference;
 
 import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
@@ -31,12 +30,18 @@ import org.birthdayadapter.util.Constants;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-public class PreferencesFragment extends PreferenceFragment {
+public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     BaseActivity mActivity;
     private Preference mBuyFull;
+
+    @Override
+    public void onCreatePreferences(Bundle bundle, String s) {
+        addPreferencesFromResource(R.xml.pref_preferences);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,11 +51,9 @@ public class PreferencesFragment extends PreferenceFragment {
 
         // save prefs here
         getPreferenceManager().setSharedPreferencesName(Constants.PREFS_NAME);
-        // load preferences from xml
-        addPreferencesFromResource(R.xml.pref_preferences);
 
         if (!BuildConfig.FULL_VERSION) {
-            mBuyFull = (Preference) findPreference(getString(R.string.pref_buy_full_key));
+            mBuyFull = findPreference(getString(R.string.pref_buy_full_key));
             mBuyFull.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
