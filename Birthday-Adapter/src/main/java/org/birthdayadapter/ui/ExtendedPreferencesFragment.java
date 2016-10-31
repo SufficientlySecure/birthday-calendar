@@ -40,17 +40,11 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
-        addPreferencesFromResource(R.xml.pref_preferences);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        mActivity = (BaseActivity) getActivity();
-
         // save prefs here
         getPreferenceManager().setSharedPreferencesName(Constants.PREFS_NAME);
+        addPreferencesFromResource(R.xml.pref_preferences);
+
+        mActivity = (BaseActivity) getActivity();
 
         if (!BuildConfig.FULL_VERSION) {
             mBuyFull = findPreference(getString(R.string.pref_buy_full_key));

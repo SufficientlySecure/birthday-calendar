@@ -2,7 +2,6 @@
 <android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.v7.preference.PreferenceCategory />
     <android.support.v7.preference.PreferenceCategory android:title="@string/pref_general">
         <com.pavelsikun.vintagechroma.ChromaPreferenceCompat
             android:key="@string/pref_color_key"
@@ -20,7 +19,7 @@
             android:summary="@string/pref_reminder_enable_summary"
             android:title="@string/pref_reminder_enable0" />
 
-        <org.birthdayadapter.ui.ReminderPreference
+        <org.birthdayadapter.ui.ReminderPreferenceCompat
             android:defaultValue="@integer/pref_reminder_time_def"
             android:dependency="@string/pref_reminder_enable_key0"
             android:key="@string/pref_reminder_time_key0"
@@ -35,7 +34,7 @@
             android:summary="@string/pref_reminder_enable_summary"
             android:title="@string/pref_reminder_enable1" />
 
-        <org.birthdayadapter.ui.ReminderPreference
+        <org.birthdayadapter.ui.ReminderPreferenceCompat
             android:defaultValue="@integer/pref_reminder_time_def"
             android:dependency="@string/pref_reminder_enable_key1"
             android:key="@string/pref_reminder_time_key1"
@@ -50,7 +49,7 @@
             android:summary="@string/pref_reminder_enable_summary"
             android:title="@string/pref_reminder_enable2" />
 
-        <org.birthdayadapter.ui.ReminderPreference
+        <org.birthdayadapter.ui.ReminderPreferenceCompat
             android:defaultValue="@integer/pref_reminder_time_def"
             android:dependency="@string/pref_reminder_enable_key2"
             android:key="@string/pref_reminder_time_key2"

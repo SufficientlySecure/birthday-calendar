@@ -49,6 +49,8 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
+        // save prefs here
+        getPreferenceManager().setSharedPreferencesName(Constants.PREFS_NAME);
         addPreferencesFromResource(R.xml.base_preferences);
     }
 
@@ -56,14 +58,8 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Log.d(Constants.TAG, "onActivityCreated!");
-
         mActivity = (BaseActivity) getActivity();
-
         mAccountHelper = new AccountHelper(mActivity, mActivity.mBackgroundStatusHandler);
-
-        // save prefs here
-        getPreferenceManager().setSharedPreferencesName(Constants.PREFS_NAME);
 
         // if this is the first run, enable and sync birthday adapter!
         if (PreferencesHelper.getFirstRun(mActivity)) {

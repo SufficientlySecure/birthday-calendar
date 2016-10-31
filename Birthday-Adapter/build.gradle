@@ -1,19 +1,21 @@
 apply plugin: 'com.android.application'
 
 dependencies {
-    compile 'com.android.support:support-v4:24.0.0' // 25.0.0 does not support minSdkVersion 7!
-    compile 'com.android.support:preference-v7:24.0.0'
+    compile 'com.android.support:support-v4:25.0.0'
+//    compile 'com.android.support:preference-v7:25.0.0'
+//    compile 'com.android.support:preference-v14:25.0.0'
+    compile 'com.takisoft.fix:preference-v7:25.0.0.0'
     compile 'org.sufficientlysecure:html-textview:2.0'
     compile 'com.pavelsikun:vintage-chroma:1.5'
 }
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.0"
+    buildToolsVersion "25.0.0"
 
     defaultConfig {
         minSdkVersion 7
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 18
         versionName "1.17"
         applicationId "org.birthdayadapter"
