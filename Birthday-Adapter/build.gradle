@@ -16,8 +16,8 @@ android {
     defaultConfig {
         minSdkVersion 7
         targetSdkVersion 25
-        versionCode 18
-        versionName "1.17"
+        versionCode 19
+        versionName "2.0"
         applicationId "org.birthdayadapter"
     }
 
@@ -52,6 +52,13 @@ android {
         buildTypes.release.signingConfig = signingConfigs.release
     } else {
         buildTypes.release.signingConfig = null
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
     }
 
     productFlavors {
