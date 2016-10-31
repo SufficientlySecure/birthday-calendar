@@ -8,7 +8,7 @@ Birthday Adapter is the first implementation to really display all contact birth
 
 Birthday Adapter provides birthdays, anniversaries, and other events from your contacts as a real calendar, which is displayed in your standard Android calendar application. To my knowledge, this is the first implementation that implements birthdays as a real calendar integrated in the Android calendar. All other apps only displays their own lists but have no real integration! 
 
-For more information visit http://sufficientlysecure.org/birthday-adapter
+For more information visit https://www.sufficientlysecure.org/android/
 
 # Build with Gradle
 
