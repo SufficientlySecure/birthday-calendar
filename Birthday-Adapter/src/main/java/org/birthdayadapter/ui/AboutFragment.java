@@ -20,11 +20,9 @@
 
 package org.birthdayadapter.ui;
 
-import android.annotation.TargetApi;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -37,7 +35,6 @@ import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
 import org.sufficientlysecure.htmltextview.HtmlTextView;
 
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class AboutFragment extends Fragment {
 
     @Override

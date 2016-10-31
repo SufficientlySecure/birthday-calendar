@@ -22,18 +22,14 @@ package org.birthdayadapter.ui;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
 
 import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.Constants;
 
-import android.annotation.TargetApi;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceFragmentCompat;
-
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     BaseActivity mActivity;
     private Preference mBuyFull;

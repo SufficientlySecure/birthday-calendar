@@ -20,7 +20,6 @@
 
 package org.birthdayadapter.ui;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
@@ -38,13 +37,10 @@ import android.widget.TextView;
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.PreferencesHelper;
 
-@SuppressLint("NewApi")
 public class InstallWorkaroundDialogFragment extends DialogFragment {
 
     /**
      * Creates new instance of this dialog fragment
-     *
-     * @return
      */
     public static InstallWorkaroundDialogFragment newInstance() {
         InstallWorkaroundDialogFragment frag = new InstallWorkaroundDialogFragment();

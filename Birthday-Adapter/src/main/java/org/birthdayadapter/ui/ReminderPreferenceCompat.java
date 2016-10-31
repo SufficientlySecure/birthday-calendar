@@ -139,7 +139,7 @@ public class ReminderPreferenceCompat extends Preference {
         alert.create().show();
     }
 
-    protected void bind() {
+    private void bind() {
         // select day of reminder based on DAY_BASE_MINUTES
         int daySelection = 0;
         for (int i = 0; i < DAY_BASE_MINUTES.length; i++) {
@@ -158,8 +158,7 @@ public class ReminderPreferenceCompat extends Preference {
         picker.setCurrentMinute(minute);
     }
 
-    protected void save(boolean positiveResult) {
-
+    private void save(boolean positiveResult) {
         if (positiveResult) {
             int dayBase = DAY_BASE_MINUTES[spinner.getSelectedItemPosition()];
             int dayTime = picker.getCurrentMinute() + picker.getCurrentHour() * 60;

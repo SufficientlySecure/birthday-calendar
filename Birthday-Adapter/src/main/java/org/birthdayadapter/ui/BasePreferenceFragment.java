@@ -37,7 +37,6 @@ import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
 import org.birthdayadapter.util.PreferencesHelper;
 
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class BasePreferenceFragment extends PreferenceFragmentCompat {
     private BaseActivity mActivity;
     private AccountHelper mAccountHelper;

@@ -20,23 +20,8 @@
 
 package org.birthdayadapter.ui;
 
-import java.util.HashSet;
-import java.util.List;
-
 import android.accounts.Account;
-
-import org.birthdayadapter.R;
-import org.birthdayadapter.provider.ProviderHelper;
-import org.birthdayadapter.service.MainIntentService;
-import org.birthdayadapter.util.AccountListEntry;
-import org.birthdayadapter.util.AccountListAdapter;
-import org.birthdayadapter.util.AccountListLoader;
-import org.birthdayadapter.util.Constants;
-import org.birthdayadapter.util.Log;
-
-import android.annotation.SuppressLint;
 import android.os.Bundle;
-
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -47,7 +32,18 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 
-@SuppressLint("NewApi")
+import org.birthdayadapter.R;
+import org.birthdayadapter.provider.ProviderHelper;
+import org.birthdayadapter.service.MainIntentService;
+import org.birthdayadapter.util.AccountListAdapter;
+import org.birthdayadapter.util.AccountListEntry;
+import org.birthdayadapter.util.AccountListLoader;
+import org.birthdayadapter.util.Constants;
+import org.birthdayadapter.util.Log;
+
+import java.util.HashSet;
+import java.util.List;
+
 public class AccountListFragment extends ListFragment implements
         LoaderManager.LoaderCallbacks<List<AccountListEntry>> {
 
