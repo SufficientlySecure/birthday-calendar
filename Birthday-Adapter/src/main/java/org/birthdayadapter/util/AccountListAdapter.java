@@ -26,6 +26,7 @@ import org.birthdayadapter.R;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,6 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-@SuppressLint("NewApi")
 public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
     private final LayoutInflater mInflater;
 
@@ -49,7 +49,13 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
     public void setData(List<AccountListEntry> data) {
         clear();
         if (data != null) {
-            addAll(data);
+            if (Build.VERSION.SDK_INT >= 11) {
+                addAll(data);
+            } else {
+                for (AccountListEntry entry : data) {
+                    add(entry);
+                }
+            }
             this.data = data;
         }
     }

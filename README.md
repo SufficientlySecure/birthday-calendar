@@ -76,8 +76,8 @@ You should have received a copy of the GNU General Public License
 along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
 
 ## Libraries
-* ColorPickerPreference  
-  https://github.com/attenzione/android-ColorPickerPreference  
+* Android-Support-Preference-V7-Fix  
+  https://github.com/Gericop/Android-Support-Preference-V7-Fix  
   Apache License v2
 
 * Compatibility version of CalendarProvider  
@@ -87,6 +87,11 @@ along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
 * HtmlTextView  
   https://github.com/dschuermann/html-textview  
   Apache License v2
+
+* VintageChroma  
+  https://github.com/MrBIMC/VintageChroma  
+  Apache License v2
+
 
 ## Images
 
