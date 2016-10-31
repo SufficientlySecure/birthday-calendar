@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <!--AsyncTask progress dialogs-->
-  <string name="creating">Adapter aanmaken...</string>
-  <string name="removing">Adapter verwijderen...</string>
-  <string name="synchronizing">Synchroniseren...</string>
+  <string name="creating">Bezig met creëren van adapter...</string>
+  <string name="removing">Bezig met verwijderen van adapter...</string>
+  <string name="synchronizing">Bezig met synchroniseren...</string>
   <!--Calendar-->
   <string name="calendar_display_name">Verjaardagen</string>
   <string name="event_title_birthday_with_age">%1$s: verjaardag (%2$d)</string>
@@ -19,22 +19,22 @@
   <!--Tabs-->
   <string name="tab_main">Start</string>
   <string name="tab_preferences">Instellingen</string>
-  <string name="tab_accounts">Accountfilter</string>
-  <string name="tab_help">Help</string>
+  <string name="tab_accounts">Accountsfilter</string>
+  <string name="tab_help">Hulp</string>
   <string name="tab_about">Over</string>
   <!--Preferences-->
   <string name="pref_general">Algemeen</string>
   <string name="pref_description">Beschrijving</string>
-  <string name="pref_enable_switch">Agenda</string>
-  <string name="pref_enable">Verjaardagsagenda inschakelen</string>
-  <string name="pref_enable_summary">Verjaardagen, jubilea en andere gebeurtenissen weergeven van contacten
-in een agenda in de app Agenda.</string>
+  <string name="pref_enable_switch">Kalender</string>
+  <string name="pref_enable">Verjaardagskalender inschakelen</string>
+  <string name="pref_enable_summary">Weergeeft verjaardagen, jubilea en andere gebeurtenissen van contacten
+als een kalender in de Agenda-app.</string>
   <string name="pref_color">Kleur</string>
-  <string name="pref_color_summary">Kleur verjaardagsagenda</string>
-  <string name="pref_help">Help</string>
+  <string name="pref_color_summary">Kleur van verjaardagskalender</string>
+  <string name="pref_help">Hulp</string>
   <string name="pref_about">Over</string>
-  <string name="pref_force_sync">Nu synchroniseren</string>
-  <string name="pref_force_sync_summary">Normaal is dit niet nodig, omdat Birthday Adapter automatisch
+  <string name="pref_force_sync">Nu synchroniseren!</string>
+  <string name="pref_force_sync_summary">Normaal is dit niet nodig omdat Birthday Adapter automatisch
 eenmaal per dag synchroniseert.
     </string>
   <string name="pref_reminders">Herinneringen</string>
@@ -45,55 +45,57 @@ eenmaal per dag synchroniseert.
   <string name="pref_reminder_time0">Herinnering 1</string>
   <string name="pref_reminder_time1">Herinnering 2</string>
   <string name="pref_reminder_time2">Herinnering 3</string>
-  <string name="pref_reminder_time_summary">Tijd herinnering instellen</string>
+  <string name="pref_reminder_time_summary">Stel de tijd in van de herinnering</string>
   <string-array name="pref_reminder_time_drop_down">
-    <item>Op de dag zelf</item>
-    <item>1 dag eerder</item>
-    <item>2 dagen eerder</item>
-    <item>3 dagen eerder</item>
-    <item>5 dagen eerder</item>
-    <item>7 dagen eerder</item>
-    <item>10 dagen eerder</item>
-    <item>14 dagen eerder</item>
+    <item>Op de dag van de gebeurtenis</item>
+    <item>1 dag van tevoren</item>
+    <item>2 dagen van tevoren</item>
+    <item>3 dagen van tevoren</item>
+    <item>5 dagen van tevoren</item>
+    <item>7 dagen van tevoren</item>
+    <item>10 dagen van tevoren</item>
+    <item>14 dagen van tevoren</item>
   </string-array>
   <string name="pref_title">Aangepaste labels</string>
   <string name="pref_title_enable">Aangepaste labels inschakelen</string>
   <string name="pref_title_birthday_without_age">Verjaardag</string>
-  <string name="pref_title_birthday_with_age">Verjaardag met leeftijd</string>
+  <string name="pref_title_birthday_with_age">Verjaardag met leeftijdsvermelding</string>
   <string name="pref_title_anniversary_without_age">Jubileum</string>
-  <string name="pref_title_anniversary_with_age">Jubileum met jaar</string>
+  <string name="pref_title_anniversary_with_age">Jubileum met jaartalvermelding</string>
   <string name="pref_title_other_without_age">Andere gebeurtenis</string>
-  <string name="pref_title_other_with_age">Andere gebeurtenis met jaar</string>
+  <string name="pref_title_other_with_age">Andere gebeurtenis met jaartalvermelding</string>
   <string name="pref_title_custom_without_age">Aangepast</string>
-  <string name="pref_title_custom_with_age">Aangepast met jaar</string>
-  <string name="pref_title_summary_without_age">Voer %1$s in voor de contactnaam.</string>
-  <string name="pref_title_summary_with_age">Voer %1$s in voor contactnaam en %2$d voor de leeftijd.</string>
-  <string name="pref_title_summary_custom_without_age">Voer %1$s in voor de contactnaam en %2$s voor de
+  <string name="pref_title_custom_with_age">Aangepast met jaartalvermelding</string>
+  <string name="pref_title_summary_without_age">Vul %1$s in voor de naam van de contactpersoon.</string>
+  <string name="pref_title_summary_with_age">Vul %1$s in voor de naam van de contactpersoon en %2$d voor de leeftijd.</string>
+  <string name="pref_title_summary_custom_without_age">Vul %1$s in voor de naam van de contactpersoon en %2$s voor het
 aangepaste label.
     </string>
-  <string name="pref_title_summary_custom_with_age">Voer %1$s in voor de contactnaam, %2$s voor de aangepaste
+  <string name="pref_title_summary_custom_with_age">Vul %1$s in voor de naam van de contactpersoon, %2$s voor het aangepaste
         label en %3$d voor de leeftijd.
     </string>
   <string name="pref_advanced">Geavanceerde instellingen</string>
-  <string name="pref_prefer_dd_slash_mm">Voorkeur voor dd/MM/yyyy</string>
-  <string name="pref_prefer_dd_slash_mm_summary">dd/MM/yyyy i.p.v. MM/dd/yyyy als datumnotatie</string>
+  <string name="pref_prefer_dd_slash_mm">dd/MM/yyyy-opmaak de voorkeur geven</string>
+  <string name="pref_prefer_dd_slash_mm_summary">dd/MM/yyyy i.p.v. MM/dd/yyyy de voorkeur geven als datumopmaak</string>
   <!--Adapter Screen-->
   <string name="pref_account_header">Instellingen</string>
   <string name="pref_account_settings">Birthday Adapter instellen</string>
   <!--Color Picker-->
-  <string name="dialog_color_picker">Kleur kiezen</string>
-  <string name="press_color_to_apply">Tik op een kleur om toe te passen</string>
+  <string name="dialog_color_picker">Kleurkiezer</string>
+  <string name="press_color_to_apply">Druk op een kleur om deze toe te passen</string>
   <!--Accounts-->
-  <string name="account_list_description">Alleen afspraken uit geselecteerde accounts worden weergegeven.
+  <string name="account_list_description">Alleen gebeurtenissen uit geselecteerde accounts worden weergegeven in uw kalender.
     </string>
   <string name="account_list_save">Filter opslaan en toepassen</string>
   <string name="account_list_empty">Geen accounts</string>
   <!--Free Version-->
-  <string name="pref_buy">Volledige versie kopen</string>
-  <string name="pref_buy_full">Open de Play Store om de volledige versie te kopen...</string>
+  <string name="pref_buy">Koop de volledige versie!</string>
+  <string name="pref_buy_full">Open de Google Play Store om de volledige versie te kopen...</string>
+  <string name="pref_buy_full_summary">• Stel uw eigen herinneringen in voor gebeurtenissen\n• Pas de titels van gebeurtenissen aan</string>
   <!--Install Workaround Dialog-->
-  <string name="workaround_dialog_title">U moet een andere manier gebruiken voor deze Android-versie.</string>
-  <string name="workaround_dialog_dont_show_again_button">Niet opnieuw weergeven</string>
+  <string name="workaround_dialog_title">U moet een andere manier gebruiken voor deze Android-versie!</string>
+  <string name="workaround_dialog_message">Door een bug in Android zal Birthday Adapter uitgeschakeld worden na het herstarten van het apparaat.\n\nDeze bug is opgetreden in Android 4.1.1 en lijkt opgelost te zijn in Android 4.2. Helaas ervaren sommigen met 4.2 nog steeds deze bug, bijv. op de Galaxy S4. U kunt een andere manier gebruiken middels Google Play en meer informatie vinden in het bugrapport: http://code.google.com/p/android/issues/detail?id=34880</string>
+  <string name="workaround_dialog_dont_show_again_button">Niet meer weergeven</string>
   <string name="workaround_dialog_close_button">Sluiten</string>
   <string name="workaround_dialog_install_button">Andere manier installeren</string>
 </resources>

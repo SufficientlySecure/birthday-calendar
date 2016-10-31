@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <!--AsyncTask progress dialogs-->
-  <string name="creating">Creazione adattatore...</string>
+  <string name="creating">Rimozione adattatore...</string>
   <string name="removing">Rimozione adattatore...</string>
   <string name="synchronizing">Sincronizzazione...</string>
   <!--Calendar-->
@@ -84,8 +84,10 @@
   <!--Free Version-->
   <string name="pref_buy">Compra la versione completa!</string>
   <string name="pref_buy_full">Apri Google Play per comprare la versione completa...</string>
+  <string name="pref_buy_full_summary">• Imposta i tuoi promemoria per gli eventi\n• Personalizza i titoli degli eventi</string>
   <!--Install Workaround Dialog-->
   <string name="workaround_dialog_title">Serve una soluzione per questa versione di Android!</string>
+  <string name="workaround_dialog_message">A causa di un bug in Android, l\'adattatore dei compleanni sarà essere disabilitato dopo il riavvio di questo dispositivo\n\n. Questo bug è stato introdotto in Android 4.1.1 e sembra che sia stato risolto in Android 4.2. Sfortunatamente alcuni dispositivi, ad esempio Galaxy S4, mostrano ancora questo bug in Android 4.2. Puoi installare un workaround da Google Play e trovare altre informazioni in questa segnalazione di bug: http://code.google.com/p/android/issues/detail?id=34880</string>
   <string name="workaround_dialog_dont_show_again_button">Non mostrare di nuovo</string>
   <string name="workaround_dialog_close_button">Chiudi</string>
   <string name="workaround_dialog_install_button">Installa soluzione</string>

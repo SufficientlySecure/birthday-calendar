@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--AsyncTask progress dialogs-->
+  <string name="creating">Δημιουργία προσαρμογέα...</string>
+  <string name="removing">Αφαίρεση προσαρμογέα...</string>
+  <string name="synchronizing">Συγχρονισμός...</string>
+  <!--Calendar-->
+  <string name="calendar_display_name">Γενέθλια</string>
+  <string name="event_title_birthday_with_age">%1$s: Γενέθλια (%2$d)</string>
+  <string name="event_title_birthday_without_age">%1$s: Γενέθλια</string>
+  <string name="event_title_anniversary_with_age">%1$s: Επέτειος (%2$d)</string>
+  <string name="event_title_anniversary_without_age">%1$s: Επέτειος</string>
+  <string name="event_title_other_with_age">%1$s: Άλλη Εκδήλωση (%2$d)</string>
+  <string name="event_title_other_without_age">%1$s: Άλλη Εκδήλωση</string>
+  <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
+  <string name="event_title_custom_without_age">%1$s: %2$s</string>
+  <!--About-->
+  <string name="about_version">Έκδοση:</string>
+  <!--Tabs-->
+  <string name="tab_main">Κύρια</string>
+  <string name="tab_preferences">Προτιμήσεις</string>
+  <string name="tab_accounts">Φίλτρο λογαριασμού </string>
+  <string name="tab_help">Βοήθεια</string>
+  <string name="tab_about">Σχετικά με</string>
+  <!--Preferences-->
+  <string name="pref_general">Γενικά</string>
+  <string name="pref_description">Περιγραφή</string>
+  <string name="pref_enable_switch">Ημερολόγιο</string>
+  <string name="pref_enable">Ενεργοποίηση ημερολογίου γενεθλίων </string>
+  <string name="pref_enable_summary">Εμφανίζει γενέθλια, επετείους και άλλες εκδηλώσεις που ορίζονται στις επαφές ως ημερολόγιο στο Android ημερολόγιο σας.</string>
+  <string name="pref_color">Χρώμα</string>
+  <string name="pref_color_summary">Χρώμα ημερολόγιου γενεθλίων</string>
+  <string name="pref_help">Βοήθεια</string>
+  <string name="pref_about">Σχετικά με</string>
+  <string name="pref_force_sync">Συγχρονισμός τώρα!</string>
+  <string name="pref_force_sync_summary">Κανονικά δεν χρειάζεται να το κάνετε αυτό, επειδή ο Προσαρμογέας γενεθλίων συγχρονίζετε αυτόματα μία φορά την ημέρα.</string>
+  <string name="pref_reminders">Υπενθυμίσεις</string>
+  <string name="pref_reminder_enable0">Ενεργοποίηση υπενθύμισης 1</string>
+  <string name="pref_reminder_enable1">Ενεργοποίηση υπενθύμισης 2</string>
+  <string name="pref_reminder_enable2">Ενεργοποίηση υπενθύμισης 3</string>
+  <string name="pref_reminder_enable_summary">Ενεργοποιήση αυτής της υπενθύμισης</string>
+  <string name="pref_reminder_time0">Υπενθύμιση 1</string>
+  <string name="pref_reminder_time1">Υπενθύμιση 2</string>
+  <string name="pref_reminder_time2">Υπενθύμιση 3</string>
+  <string name="pref_reminder_time_summary">Ρύθμιση ώρας της υπενθύμισης</string>
+  <string name="pref_title">Προσαρμοσμένες ετικέτες</string>
+  <string name="pref_title_enable">Ενεργοποίηση προσαρμοσμένων ετικετών</string>
+  <string name="pref_title_birthday_without_age">Γενέθλια</string>
+  <string name="pref_title_birthday_with_age">Γενέθλια με ηλικία</string>
+  <string name="pref_title_anniversary_without_age">Επέτειος</string>
+  <string name="pref_title_anniversary_with_age">Επέτειος με ηλικία</string>
+  <string name="pref_title_other_without_age">Άλλη εκδήλωση</string>
+  <string name="pref_title_other_with_age">Άλλη εκδήλωση με ηλικία</string>
+  <string name="pref_title_custom_without_age">Προσαρμοσμένο</string>
+  <string name="pref_title_custom_with_age">Προσαρμοσμένο με ηλικία</string>
+  <string name="pref_title_summary_without_age">Εισαγωγή %1$s ονόματος της επαφής.</string>
+  <string name="pref_title_summary_with_age">Εισαγωγή %1$s για το όνομα της επαφής και %2$d για την ηλικία.</string>
+  <string name="pref_title_summary_custom_without_age">Εισαγωγή %1$s για το όνομα και την %2$s για την προσαρμοσμένη
+ετικέτα της εκδήλωσης αυτής.</string>
+  <string name="pref_title_summary_custom_with_age">Εισαγωγή %1$s για το όνομα της επαφής, %2$s για την προσαρμοσμένη ετικέτα του γεγονότος αυτου, και %3$d για την ηλικία.</string>
+  <string name="pref_advanced">Προηγμένες Ρυθμίσεις</string>
+  <string name="pref_prefer_dd_slash_mm">Προτιμήση dd/MM/yyyy τυπου</string>
+  <string name="pref_prefer_dd_slash_mm_summary">Προτιμήση  dd/MM/yyyy σε MM/dd/yyyy κατά την ανάλυση μορφών ημερομηνίας</string>
+  <!--Adapter Screen-->
+  <string name="pref_account_header">Ρυθμίσεις</string>
+  <string name="pref_account_settings">Διαμόρφωση του Birthday Adapter</string>
+  <!--Color Picker-->
+  <string name="dialog_color_picker">Επιλογέας χρωμάτων</string>
+  <string name="press_color_to_apply">Πατήστε στο χρώμα για την εφαρμογή</string>
+  <!--Accounts-->
+  <string name="account_list_description">Μόνο γεγονότα από επιλεγμένους λογαριασμούς θα εμφανίζονται στο ημερολόγιό σας</string>
+  <string name="account_list_save">Αποθήκευση και εφαρμογή φίλτρου</string>
+  <string name="account_list_empty">Δεν υπάρχουν λογαριασμοί</string>
+  <!--Free Version-->
+  <string name="pref_buy">Αγοράστε την πλήρη έκδοση!</string>
+  <string name="pref_buy_full">Ανοίξτε το Google Play για να αγοράσετε την πλήρη έκδοση...</string>
+  <string name="pref_buy_full_summary">• Ρυθμίστε τις δικες σας υπενθυμίσεις για εκδηλώσεις\n• Προσαρμογή τίτλων εκδήλωσης</string>
+  <!--Install Workaround Dialog-->
+  <string name="workaround_dialog_title">Εναλλακτικός τρόπος αντιμετώπισης απαιτείται για αυτήν την έκδοση του Android!</string>
+  <string name="workaround_dialog_message">Λόγω ενός σφάλματος στο Android, ο προσαρμογέας γενεθλίων θα απενεργοποιηθεί μετά την επανεκκίνηση της συσκευής αυτής. \ N \ nΤο παρόν σφάλμα εισήχθη στο Android 4.1.1 και φαίνεται να καθορίζεται στο Android 4.2. Δυστυχώς, κάποιες συσκευές, π.χ., το Galaxy S4, εξακολουθούν να έχουν αυτό το σφάλμα στο Android 4.2. Μπορείτε να εγκαταστήσετε έναν εναλλακτικό τρόπο αντιμετώπισης από το Google Play και να βρείτε περισσότερες πληροφορίες στην αναφορά σφάλματος: http://code.google.com/p/android/issues/detail?id=34880</string>
+  <string name="workaround_dialog_dont_show_again_button">Να μην ξανα εμφανιστεί το μήνυμα</string>
+  <string name="workaround_dialog_close_button">Κλείσιμο</string>
+  <string name="workaround_dialog_install_button">Εγκατάσταση Εναλλακτικόυ τρόπου αντιμετώπισης</string>
+</resources>

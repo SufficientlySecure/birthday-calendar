@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <!--AsyncTask progress dialogs-->
-  <string name="creating">Đang tạo gắn kết...</string>
-  <string name="removing">Đang loại bỏ gắn kết...</string>
-  <string name="synchronizing">Đang đồng bộ hóa...</string>
+  <string name="creating">Đang tạo trình gắn kết...</string>
+  <string name="removing">Đang xoá trình gắn kết...</string>
+  <string name="synchronizing">Đang đồng bộ...</string>
   <!--Calendar-->
   <string name="calendar_display_name">Sinh nhật</string>
   <string name="event_title_birthday_with_age">%1$s: Sinh nhật (%2$d)</string>
@@ -18,24 +18,25 @@
   <string name="about_version">Phiên bản:</string>
   <!--Tabs-->
   <string name="tab_main">Điều khiển chính</string>
-  <string name="tab_preferences">Tùy biến</string>
+  <string name="tab_preferences">Tuỳ chỉnh</string>
   <string name="tab_accounts">Lọc tài khoản</string>
   <string name="tab_help">Trợ giúp</string>
-  <string name="tab_about">Thông tin</string>
+  <string name="tab_about">Thông tin về</string>
   <!--Preferences-->
   <string name="pref_general">Tổng quan</string>
   <string name="pref_description">Mô tả</string>
   <string name="pref_enable_switch">Lịch</string>
-  <string name="pref_enable">Bật Ngày sinh nhật</string>
-  <string name="pref_enable_summary">Hiển thị ngày sinh, lễ kỷ niệm và các sự kiện khác đối với liên lạc trong danh bạ dạng
-hiển thị giống phần lịch trong Lịch của Android.</string>
+  <string name="pref_enable">Bật lịch sinh nhật</string>
+  <string name="pref_enable_summary">Hiển thị ngày sinh, lễ kỷ niệm và các sự kiện khác đã lưu trong danh bạ dưới dạng một
+bộ lịch trong Lịch của Android.</string>
   <string name="pref_color">Màu sắc</string>
-  <string name="pref_color_summary">Màu hiển thị thông báo sinh nhật</string>
+  <string name="pref_color_summary">Màu lịch sinh nhật</string>
   <string name="pref_help">Trợ giúp</string>
-  <string name="pref_about">Dịch bởi Phan Anh</string>
-  <string name="pref_force_sync">Đồng bộ hóa ngay bây giờ!</string>
-  <string name="pref_force_sync_summary">Bình thường thì bạn không cần làm điều này, vì bộ phận gắn kết ngày sinh sẽ tự đồng bộ hóa
-một lần mỗi ngày.</string>
+  <string name="pref_about">Thông tin về</string>
+  <string name="pref_force_sync">Đồng bộ ngay!</string>
+  <string name="pref_force_sync_summary">Thông thường thì bạn không cần làm điều này vì Birthday Adapter sẽ tự động đồng bộ
+mỗi ngày một lần.
+</string>
   <string name="pref_reminders">Nhắc nhở</string>
   <string name="pref_reminder_enable0">Bật nhắc nhở 1</string>
   <string name="pref_reminder_enable1">Bật nhắc nhở 2</string>
@@ -44,54 +45,57 @@ một lần mỗi ngày.</string>
   <string name="pref_reminder_time0">Nhắc nhở 1</string>
   <string name="pref_reminder_time1">Nhắc nhở 2</string>
   <string name="pref_reminder_time2">Nhắc nhở 3</string>
-  <string name="pref_reminder_time_summary">Đăt thời gian cho nhắc nhở này</string>
+  <string name="pref_reminder_time_summary">Đặt thời gian cho nhắc nhở này</string>
   <string-array name="pref_reminder_time_drop_down">
-    <item>Ngày của sự kiện</item>
-    <item>trước 1 ngày</item>
-    <item>trước 2 ngày</item>
-    <item>trước 3 ngày</item>
-    <item>trước 5 ngày</item>
-    <item>trước 7 ngày</item>
-    <item>trước 10 ngày</item>
-    <item>trước 14 ngày</item>
+    <item>Vào ngày xảy ra sự kiện</item>
+    <item>Trước 1 ngày</item>
+    <item>Trước 2 ngày</item>
+    <item>Trước 3 ngày</item>
+    <item>Trước 5 ngày</item>
+    <item>Trước 7 ngày</item>
+    <item>Trước 10 ngày</item>
+    <item>Trước 14 ngày</item>
   </string-array>
-  <string name="pref_title">Nhãn tùy chọn</string>
-  <string name="pref_title_enable">Bật nhãn tùy chọn</string>
+  <string name="pref_title">Nhãn tuỳ chọn</string>
+  <string name="pref_title_enable">Bật nhãn tuỳ chọn</string>
   <string name="pref_title_birthday_without_age">Sinh nhật</string>
   <string name="pref_title_birthday_with_age">Sinh nhật kèm theo tuổi</string>
   <string name="pref_title_anniversary_without_age">Lễ kỷ niệm</string>
   <string name="pref_title_anniversary_with_age">Lễ kỷ niệm kèm theo tuổi</string>
   <string name="pref_title_other_without_age">Sự kiện khác</string>
   <string name="pref_title_other_with_age">Sự kiện khác kèm theo tuổi</string>
-  <string name="pref_title_custom_without_age">Tùy chọn</string>
-  <string name="pref_title_custom_with_age">Tùy chọn độ tuổi</string>
-  <string name="pref_title_summary_without_age">Chèn %1$s vào phần tên trong danh bạ.</string>
-  <string name="pref_title_summary_with_age">Chèn %1$s vào phần tên trong danh bạ và %2$d độ tuổi kèm theo.</string>
-  <string name="pref_title_summary_custom_without_age">Chèn %1$s trong phần tên danh bạ và %2$s cho phần
-        nhãn tùy chọn của sự kiện này.
-    </string>
-  <string name="pref_title_summary_custom_with_age">Chèn vào %1$s trong phần tên của danh bạ, %2$s cho phần nhãn tùy chọn
-        của sự kiện này, và %3$d cho phần tuổi.
-    </string>
-  <string name="pref_advanced">Thiết lập nâng cao</string>
-  <string name="pref_prefer_dd_slash_mm">Định dạng ưa thích dd/mm/yyyy</string>
-  <string name="pref_prefer_dd_slash_mm_summary">Định dạng ngày tháng ưa thích dd/mm/yyyy thành mm/dd/yyyy</string>
+  <string name="pref_title_custom_without_age">Tuỳ chọn</string>
+  <string name="pref_title_custom_with_age">Tuỳ chọn kèm theo tuổi</string>
+  <string name="pref_title_summary_without_age">Chèn %1$s vào phần tên liên hệ.</string>
+  <string name="pref_title_summary_with_age">Chèn %1$s vào phần tên liên hệ và %2$d vào phần tuổi.</string>
+  <string name="pref_title_summary_custom_without_age">Chèn %1$s vào phần tên liên hệ và %2$s vào phần nhãn
+tuỳ chọn của sự kiện.
+</string>
+  <string name="pref_title_summary_custom_with_age">Chèn %1$s vào phần tên liên hệ, %2$s vào phần nhãn tuỳ chọn của
+sự kiện này, và %3$d cho phần tuổi.
+</string>
+  <string name="pref_advanced">Cài đặt nâng cao</string>
+  <string name="pref_prefer_dd_slash_mm">Định dạng ưa thích dd/MM/yyyy</string>
+  <string name="pref_prefer_dd_slash_mm_summary">Chọn dd/MM/yyyy thay vì MM/dd/yyyy khi phân tích định dạng ngày tháng</string>
   <!--Adapter Screen-->
-  <string name="pref_account_header">Thiết lập</string>
-  <string name="pref_account_settings">Chỉnh sửa phần gắn kết ngày sinh</string>
+  <string name="pref_account_header">Cài đặt</string>
+  <string name="pref_account_settings">Cấu hình Birthday Adapter</string>
   <!--Color Picker-->
-  <string name="dialog_color_picker">Chọn màu</string>
-  <string name="press_color_to_apply">Ấn vào Màu Sắc để áp dụng</string>
+  <string name="dialog_color_picker">Trình chọn màu</string>
+  <string name="press_color_to_apply">Nhấn vào Màu sắc để áp dụng</string>
   <!--Accounts-->
-  <string name="account_list_description">Chỉ hiện thị các sự kiện từ những tài khoản được chọn trong phần lịch của bạn.</string>
+  <string name="account_list_description">Chỉ những sự kiện từ các tài khoản đã chọn sẽ được hiển thị trên lịch.
+</string>
   <string name="account_list_save">Lưu và áp dụng bộ lọc</string>
   <string name="account_list_empty">Không có tài khoản nào</string>
   <!--Free Version-->
   <string name="pref_buy">Hãy mua phiên bản đầy đủ!</string>
-  <string name="pref_buy_full">Mở trang Google Play để mua phiên bản đầy đủ các tính năng...</string>
+  <string name="pref_buy_full">Mở Google Play để mua phiên bản đầy đủ...</string>
+  <string name="pref_buy_full_summary">• Đặt trình nhắc nhở sự kiện của riêng bạn\n• Tuỳ chỉnh tiêu đề sự kiện</string>
   <!--Install Workaround Dialog-->
-  <string name="workaround_dialog_title">Là một phiên bản cần thiết cho công việc của bất kỳ đối tượng nào!</string>
-  <string name="workaround_dialog_dont_show_again_button">Không hiển thị phần này lần nữa</string>
-  <string name="workaround_dialog_close_button">Đóng lại</string>
-  <string name="workaround_dialog_install_button">Cài đặt Workaround</string>
+  <string name="workaround_dialog_title">Cần bản sửa lỗi cho phiên bản Android này!</string>
+  <string name="workaround_dialog_message">Vì một lỗi trên Android, Birthday Adapter sẽ bị vô hiệu hoá sau khi khởi động lại thiết bị.\n\nLỗi này bắt đầu xuất hiện từ Android 4.1.1 và dường như đã được giải quyết từ Android 4.2. Đáng tiếc là một vài thiết bị như Galaxy S4 vẫn còn bị lỗi này trên Android 4.2. Bạn có thể cài đặt bản sửa lỗi từ Google Play và tìm thêm thông tin trong bản báo cáo lỗi: http://code.google.com/p/android/issues/detail?id=34880</string>
+  <string name="workaround_dialog_dont_show_again_button">Đừng hiển thị lại</string>
+  <string name="workaround_dialog_close_button">Đóng</string>
+  <string name="workaround_dialog_install_button">Cài đặt bản sửa lỗi</string>
 </resources>

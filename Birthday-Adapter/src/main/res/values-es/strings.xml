@@ -19,6 +19,7 @@
   <!--Tabs-->
   <string name="tab_main">Principal</string>
   <string name="tab_preferences">Preferencias</string>
+  <string name="tab_accounts">Filtrar cuenta</string>
   <string name="tab_help">Ayuda</string>
   <string name="tab_about">Sobre</string>
   <!--Preferences-->
@@ -26,11 +27,15 @@
   <string name="pref_description">Descripción</string>
   <string name="pref_enable_switch">Calendario</string>
   <string name="pref_enable">Activar calendario de cumpleaños</string>
+  <string name="pref_enable_summary">Mostrar cumpleaños, aniversarios y otros eventos definidos en los contactos como un
+ calendario, en su Calendario Android.</string>
   <string name="pref_color">Color</string>
   <string name="pref_color_summary">Color del calendario de cumpleaños</string>
   <string name="pref_help">Ayuda</string>
   <string name="pref_about">Sobre</string>
   <string name="pref_force_sync">Sincronice ahora!</string>
+  <string name="pref_force_sync_summary">Normalmente no es necesario, porque Birthday Adapter realiza la sincronización
+ automáticamente una vez al día.</string>
   <string name="pref_reminders">Recordatorio</string>
   <string name="pref_reminder_enable0">Activar recordatorio 1</string>
   <string name="pref_reminder_enable1">Activar recordatorio 2</string>
@@ -40,6 +45,16 @@
   <string name="pref_reminder_time1">Recordatorio 2</string>
   <string name="pref_reminder_time2">Recordatorio 3</string>
   <string name="pref_reminder_time_summary">Ajustar la hora de este recordatorio</string>
+  <string-array name="pref_reminder_time_drop_down">
+    <item>En el día del evento</item>
+    <item>1 día antes</item>
+    <item>2 días antes</item>
+    <item>3 días antes</item>
+    <item>5 días antes</item>
+    <item>7 días antes</item>
+    <item>10 días antes</item>
+    <item>14 días antes</item>
+  </string-array>
   <string name="pref_title">Etiqueta personalizada</string>
   <string name="pref_title_enable">Activar etiquetas personalizadas</string>
   <string name="pref_title_birthday_without_age">Cumpleaños</string>
@@ -52,15 +67,31 @@
   <string name="pref_title_custom_with_age">Personalizado con edad</string>
   <string name="pref_title_summary_without_age">Ingresar %1$s para el nombre del contacto.</string>
   <string name="pref_title_summary_with_age">Ingresar %1$s para el nombre del contacto y %2$d para la edad.</string>
+  <string name="pref_title_summary_custom_without_age">Introducir %1$s para el nombre del contacto y %2$s para personalizar
+ la etiqueta de este evento.</string>
+  <string name="pref_title_summary_custom_with_age">Introducir %1$s para el nombre del contacto y %2$s para personalizar
+ la etiqueta de este evento, y %3$d para la edad.</string>
   <string name="pref_advanced">Preferencias avanzadas.</string>
-  <string name="pref_prefer_dd_slash_mm">Preferir dd/MM/yyyy formato</string>
+  <string name="pref_prefer_dd_slash_mm">Preferir formato dd/MM/yyyy</string>
+  <string name="pref_prefer_dd_slash_mm_summary">Prefiero dd/mm/aaaa a MM/dd/aaaa al analizar los formatos de fecha</string>
   <!--Adapter Screen-->
   <string name="pref_account_header">Ajustes</string>
   <string name="pref_account_settings">Configurar Birthday Adapter</string>
   <!--Color Picker-->
   <string name="dialog_color_picker">Selector de color</string>
-  <string name="press_color_to_apply">Seleccione Color para aplicar</string>
+  <string name="press_color_to_apply">Seleccione color para aplicar</string>
   <!--Accounts-->
+  <string name="account_list_description">Mostrar solo los eventos de las cuentas seleccionadas en el calendario.</string>
+  <string name="account_list_save">Aplicar y guardar el filtro</string>
+  <string name="account_list_empty">No hay cuentas</string>
   <!--Free Version-->
+  <string name="pref_buy">¡Comprar la versión completa!</string>
+  <string name="pref_buy_full">Ir a Google Play para comprar la versión completa...</string>
+  <string name="pref_buy_full_summary">• Establecer sus propios recordatorios de eventos\n • Personalizar títulos de los eventos</string>
   <!--Install Workaround Dialog-->
+  <string name="workaround_dialog_title">¡Solución necesaria para esta versión de Android!</string>
+  <string name="workaround_dialog_message">Debido a un error en Android, Birthday Adapter se desactivará después de reiniciar el dispositivo.\n\nEste error se introdujo en Android 4.1.1 y parece que se ha arreglado en Android 4.2. Por desgracia, algunos dispositivos, por ejemplo, Galaxy S4, todavía tiene este error en Android 4.2. Puede instalar una solución desde Google Play y encontrar más información en el informe de error: http://code.google.com/p/android/issues/detail?id=34880</string>
+  <string name="workaround_dialog_dont_show_again_button">No mostrar de nuevo</string>
+  <string name="workaround_dialog_close_button">Cerrar</string>
+  <string name="workaround_dialog_install_button">Instalar solución</string>
 </resources>

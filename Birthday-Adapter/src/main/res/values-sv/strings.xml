@@ -84,4 +84,7 @@
   <string name="pref_buy">Köp fullversion!</string>
   <string name="pref_buy_full">Öppna Google Play för att köpa fullversion...</string>
   <!--Install Workaround Dialog-->
+  <string name="workaround_dialog_dont_show_again_button">Visa inte igen</string>
+  <string name="workaround_dialog_close_button">Stäng</string>
+  <string name="workaround_dialog_install_button">Installera lösning</string>
 </resources>
