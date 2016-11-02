@@ -1,2 +1,2 @@
-include ':Birthday-Adapter'
-include ':Birthday-Adapter-Workaround'
+include ':Birthday-Calendar'
+include ':Birthday-Calendar-Workaround'

@@ -5,7 +5,7 @@
         android:persistent="false"
         android:selectable="false"
         android:summary="@string/pref_enable_summary"
-        android:title="@string/pref_description" />
+        android:title="@string/pref_enable" />
 
     <android.support.v7.preference.SwitchPreferenceCompat
         android:icon="@mipmap/ic_launcher"
@@ -14,9 +14,27 @@
         android:title="@string/pref_enable_switch" />
 
     <android.support.v7.preference.Preference
-        android:key="@string/pref_force_sync_key"
         android:persistent="false"
-        android:summary="@string/pref_force_sync_summary"
-        android:title="@string/pref_force_sync" />
+        android:selectable="false"
+        android:summary="@string/pref_contacts_summary"
+        android:title="@string/pref_contacts" />
+
+    <android.support.v7.preference.Preference
+        android:icon="@mipmap/google_contacts"
+        android:key="@string/pref_contacts_key"
+        android:persistent="false"
+        android:title="@string/pref_contacts_open" />
+
+    <android.support.v7.preference.Preference
+        android:persistent="false"
+        android:selectable="false"
+        android:summary="@string/pref_calendar_summary"
+        android:title="@string/pref_calendar" />
+
+    <android.support.v7.preference.Preference
+        android:icon="@mipmap/google_calendar"
+        android:key="@string/pref_calendar_key"
+        android:persistent="false"
+        android:title="@string/pref_calendar_open" />
 
 </android.support.v7.preference.PreferenceScreen>

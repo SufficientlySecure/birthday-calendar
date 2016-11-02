@@ -1,5 +1,7 @@
 <resources>
 
+    <string name="app_name">Birthday Calendar</string>
+
     <!-- AsyncTask progress dialogs -->
     <string name="creating">Creating adapter…</string>
     <string name="removing">Removing adapter…</string>
@@ -28,12 +30,15 @@
 
     <!-- Preferences -->
     <string name="pref_general">General</string>
-    <string name="pref_description">Description</string>
-    <string name="pref_enable_switch">Calendar</string>
-    <string name="pref_enable">Enable Birthday Calendar</string>
-    <string name="pref_enable_summary">Shows birthdays, anniversaries, and other events defined in contacts as a
-        calendar in your Android Calendar.
-    </string>
+    <string name="pref_enable">1. Enable Birthday Calendar</string>
+    <string name="pref_enable_summary">"This creates calendar events from your contacts' birthdays."</string>
+    <string name="pref_enable_switch">"Birthday Calendar"</string>
+    <string name="pref_contacts">"2. Add birthdays to contacts"</string>
+    <string name="pref_contacts_summary">"Edit your friends' birthdays in your contacts app."</string>
+    <string name="pref_contacts_open">"Open contacts app"</string>
+    <string name="pref_calendar">"3. Birthdays inside calendar"</string>
+    <string name="pref_calendar_summary">"Birthdays are now shown as events in your calendar app."</string>
+    <string name="pref_calendar_open">"Open calendar app"</string>
     <string name="pref_color">Color</string>
     <string name="pref_color_summary">Color of birthday calendar</string>
     <string name="pref_help">Help</string>
@@ -81,9 +86,11 @@
     <string name="pref_title_summary_custom_with_age">Insert %1$s for the contact\'s name, %2$s for the custom label of
         this event, and %3$d for the age.
     </string>
-    <string name="pref_advanced">Advanced Settings</string>
+    <string name="pref_advanced_category">Advanced Settings</string>
     <string name="pref_prefer_dd_slash_mm">Prefer dd/MM/yyyy format</string>
     <string name="pref_prefer_dd_slash_mm_summary">Prefer dd/MM/yyyy to MM/dd/yyyy when parsing date formats</string>
+    <string name="pref_advanced">Advanced Settings</string>
+    <string name="pref_advanced_summary">Enable advanced settings</string>
 
     <!-- Adapter Screen -->
     <string name="pref_account_header">Settings</string>

@@ -8,6 +8,8 @@
     <item name="pref_show_workaround_dialog_def" format="boolean" type="string">true</item>
 
     <string name="pref_enabled_key" translatable="false">enabled</string>
+    <string name="pref_contacts_key" translatable="false">contacts</string>
+    <string name="pref_calendar_key" translatable="false">calendar</string>
     <string name="pref_help_key" translatable="false">help</string>
     <string name="pref_about_key" translatable="false">about</string>
     <string name="pref_color_key" translatable="false">color</string>
@@ -31,6 +33,10 @@
     <string name="pref_reminder_time_key2" translatable="false">reminderTime2</string>
 
     <item name="pref_reminder_time_def" format="string" type="integer">-540</item>
+
+    <string name="pref_advanced_key" translatable="false">advanced</string>
+
+    <item name="pref_advanced_def" format="boolean" type="string">false</item>
 
     <string name="pref_prefer_dd_slash_mm_key" translatable="false">preferddSlashMM</string>
 

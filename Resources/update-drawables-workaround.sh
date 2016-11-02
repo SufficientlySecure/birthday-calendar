@@ -1,6 +1,6 @@
 #!/bin/bash
 
-APP_DIR=../Birthday-Adapter-Workaround/src/main
+APP_DIR=../Birthday-Calendar-Workaround/src/main
 DRAWABLE_DIR=$APP_DIR/res/drawable
 MDPI_DIR=$APP_DIR/res/mipmap-mdpi
 HDPI_DIR=$APP_DIR/res/mipmap-hdpi

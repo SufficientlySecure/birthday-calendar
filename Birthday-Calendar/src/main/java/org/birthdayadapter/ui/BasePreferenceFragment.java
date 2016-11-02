@@ -21,10 +21,16 @@
 package org.birthdayadapter.ui;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.ContentUris;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.CalendarContract;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.Preference;
@@ -34,15 +40,15 @@ import android.support.v7.preference.SwitchPreferenceCompat;
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.AccountHelper;
 import org.birthdayadapter.util.Constants;
-import org.birthdayadapter.util.Log;
 import org.birthdayadapter.util.PreferencesHelper;
+
+import java.util.Calendar;
 
 public class BasePreferenceFragment extends PreferenceFragmentCompat {
     private BaseActivity mActivity;
     private AccountHelper mAccountHelper;
 
     private SwitchPreferenceCompat mEnabled;
-    private Preference mForceSync;
 
     public static final int MY_PERMISSIONS_REQUEST = 42;
 
@@ -76,31 +82,46 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
 
                     if (boolVal) {
                         addAccountAndSync();
-                        mForceSync.setEnabled(true);
                     } else {
                         mAccountHelper.removeAccount();
-                        mForceSync.setEnabled(false);
                     }
                 }
                 return true;
             }
         });
 
-        mForceSync = findPreference(getString(R.string.pref_force_sync_key));
-        mForceSync.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        Preference openContacts = findPreference(getString(R.string.pref_contacts_key));
+        openContacts.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                mAccountHelper.manualSync();
-
-                return false;
+                Intent intent = new Intent(Intent.ACTION_VIEW, ContactsContract.Contacts.CONTENT_URI);
+                startActivity(intent);
+                return true;
             }
         });
+
+        Preference openCalendar = findPreference(getString(R.string.pref_calendar_key));
+        openCalendar.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+
+            @SuppressLint("NewApi")
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
+                builder.appendPath("time");
+                ContentUris.appendId(builder, Calendar.getInstance().getTimeInMillis());
+                Intent intent = new Intent(Intent.ACTION_VIEW)
+                        .setData(builder.build());
+                startActivity(intent);
+                return true;
+            }
+        });
+
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
-        Log.d(Constants.TAG, "perm result");
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST: {
                 if (grantResults.length > 0) {
@@ -157,10 +178,8 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
         // If account is activated check the preference
         if (mAccountHelper.isAccountActivated()) {
             mEnabled.setChecked(true);
-            mForceSync.setEnabled(true);
         } else {
             mEnabled.setChecked(false);
-            mForceSync.setEnabled(false);
         }
     }
 

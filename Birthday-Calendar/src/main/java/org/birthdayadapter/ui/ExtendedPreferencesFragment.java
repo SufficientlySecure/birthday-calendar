@@ -28,11 +28,12 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 
 import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
+import org.birthdayadapter.util.AccountHelper;
 import org.birthdayadapter.util.Constants;
 
 public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     BaseActivity mActivity;
-    private Preference mBuyFull;
+    private AccountHelper mAccountHelper;
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
@@ -43,8 +44,8 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         mActivity = (BaseActivity) getActivity();
 
         if (!BuildConfig.FULL_VERSION) {
-            mBuyFull = findPreference(getString(R.string.pref_buy_full_key));
-            mBuyFull.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            Preference buyFull = findPreference(getString(R.string.pref_buy_full_key));
+            buyFull.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     try {
@@ -59,6 +60,18 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                 }
             });
         }
+
+        mAccountHelper = new AccountHelper(mActivity, mActivity.mBackgroundStatusHandler);
+
+        Preference forceSync = findPreference(getString(R.string.pref_force_sync_key));
+        forceSync.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                mAccountHelper.manualSync();
+
+                return false;
+            }
+        });
     }
 
     @Override
@@ -67,6 +80,13 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         // Set up a listener whenever a key changes
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(
                 mActivity.mySharedPreferenceChangeListener);
+
+        // If account is activated check the preference
+        if (mAccountHelper.isAccountActivated()) {
+//            mEnabled.setChecked(true);
+        } else {
+//            mEnabled.setChecked(false);
+        }
     }
 
     @Override
