@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2012-2013 Dominik Schürmann <dominik@dominikschuermann.de>
- * Copyright (C) 2010 Sam Steele
+ * Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
  *
  * This file is part of Birthday Adapter.
  * 
@@ -21,10 +20,6 @@
 
 package org.birthdayadapter.service;
 
-import org.birthdayadapter.ui.CreateAccountActivity;
-import org.birthdayadapter.util.Constants;
-import org.birthdayadapter.util.Log;
-
 import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorResponse;
@@ -36,31 +31,29 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
 
-public class AccountAuthenticatorService extends Service {
-    private static AccountAuthenticatorImpl sAccountAuthenticator = null;
+import org.birthdayadapter.ui.CreateAccountActivity;
 
-    public AccountAuthenticatorService() {
-        super();
+/**
+ * Based on https://developer.android.com/training/sync-adapters/creating-authenticator.html
+ */
+public class AccountAuthenticatorService extends Service {
+    private Authenticator mAuthenticator;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mAuthenticator = new Authenticator(this);
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        IBinder ret = null;
-        if (intent.getAction().equals(android.accounts.AccountManager.ACTION_AUTHENTICATOR_INTENT))
-            ret = getAuthenticator().getIBinder();
-        return ret;
+        return mAuthenticator.getIBinder();
     }
 
-    private AccountAuthenticatorImpl getAuthenticator() {
-        if (sAccountAuthenticator == null)
-            sAccountAuthenticator = new AccountAuthenticatorImpl(this);
-        return sAccountAuthenticator;
-    }
-
-    private static class AccountAuthenticatorImpl extends AbstractAccountAuthenticator {
+    private static class Authenticator extends AbstractAccountAuthenticator {
         private Context mContext;
 
-        public AccountAuthenticatorImpl(Context context) {
+        Authenticator(Context context) {
             super(context);
             mContext = context;
         }
@@ -93,8 +86,7 @@ public class AccountAuthenticatorService extends Service {
         @Override
         public Bundle confirmCredentials(AccountAuthenticatorResponse response, Account account,
                                          Bundle options) {
-            Log.e(Constants.TAG, "confirmCredentials not implemented for Birthday Adapter!");
-            return null;
+            throw new UnsupportedOperationException();
         }
 
         /*
@@ -105,8 +97,7 @@ public class AccountAuthenticatorService extends Service {
          */
         @Override
         public Bundle editProperties(AccountAuthenticatorResponse response, String accountType) {
-            Log.e(Constants.TAG, "editProperties not implemented for Birthday Adapter!");
-            return null;
+            throw new UnsupportedOperationException();
         }
 
         /*
@@ -119,8 +110,7 @@ public class AccountAuthenticatorService extends Service {
         @Override
         public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account,
                                    String authTokenType, Bundle options) throws NetworkErrorException {
-            Log.e(Constants.TAG, "getAuthToken not implemented for Birthday Adapter!");
-            return null;
+            throw new UnsupportedOperationException();
         }
 
         /*
@@ -130,8 +120,7 @@ public class AccountAuthenticatorService extends Service {
          */
         @Override
         public String getAuthTokenLabel(String authTokenType) {
-            Log.e(Constants.TAG, "getAuthTokenLabel not implemented for Birthday Adapter!");
-            return null;
+            throw new UnsupportedOperationException();
         }
 
         /*
@@ -143,8 +132,7 @@ public class AccountAuthenticatorService extends Service {
         @Override
         public Bundle hasFeatures(AccountAuthenticatorResponse response, Account account,
                                   String[] features) throws NetworkErrorException {
-            Log.e(Constants.TAG, "hasFeatures: " + features);
-            return null;
+            throw new UnsupportedOperationException();
         }
 
         /*
@@ -157,8 +145,7 @@ public class AccountAuthenticatorService extends Service {
         @Override
         public Bundle updateCredentials(AccountAuthenticatorResponse response, Account account,
                                         String authTokenType, Bundle options) {
-            Log.e(Constants.TAG, "updateCredentials not implemented for Birthday Adapter!");
-            return null;
+            throw new UnsupportedOperationException();
         }
     }
 }
