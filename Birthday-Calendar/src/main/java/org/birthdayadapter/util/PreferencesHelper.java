@@ -20,14 +20,11 @@
 
 package org.birthdayadapter.util;
 
-import java.util.HashSet;
-
-import org.birthdayadapter.R;
-
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.ContactsContract;
+
+import org.birthdayadapter.R;
 
 public class PreferencesHelper {
     public static boolean getFirstRun(Context context) {
@@ -63,17 +60,13 @@ public class PreferencesHelper {
     public static int getColor(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
                 Context.MODE_PRIVATE);
-        int result = prefs.getInt(context.getString(R.string.pref_color_key), context
-                .getResources().getInteger(R.color.pref_color_def));
 
-        return result;
+        return prefs.getInt(context.getString(R.string.pref_color_key), context
+                .getResources().getColor(R.color.pref_color_def));
     }
 
     /**
      * Get all reminder minutes from preferences as int array
-     *
-     * @param context
-     * @return
      */
     public static int[] getAllReminderMinutes(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
@@ -88,7 +81,7 @@ public class PreferencesHelper {
             if (enabled) {
                 String key = context.getString(R.string.pref_reminder_time_key) + i;
                 minutes[i] = prefs.getInt(key,
-                        Integer.parseInt(context.getString(R.integer.pref_reminder_time_def)));
+                        context.getResources().getInteger(R.integer.pref_reminder_time_def));
             } else {
                 minutes[i] = Constants.DISABLED_REMINDER;
             }

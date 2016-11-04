@@ -20,13 +20,9 @@
 
 package org.birthdayadapter.util;
 
-import java.util.List;
-
-import org.birthdayadapter.R;
-
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +30,10 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.birthdayadapter.R;
+
+import java.util.List;
 
 public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
     private final LayoutInflater mInflater;
@@ -67,8 +67,9 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
     /**
      * Populate new items in the list.
      */
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View view;
 
         if (convertView == null) {

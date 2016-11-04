@@ -30,14 +30,14 @@ public class BackgroundStatusHandler extends Handler {
     public static final int BACKGROUND_STATUS_HANDLER_DISABLE = 0;
     public static final int BACKGROUND_STATUS_HANDLER_ENABLE = 1;
 
-    WeakReference<Activity> mActivity;
+    private WeakReference<Activity> mActivity;
 
     public BackgroundStatusHandler(Activity activity) {
-        mActivity = new WeakReference<Activity>(activity);
+        mActivity = new WeakReference<>(activity);
         noOfRunningBackgroundThreads = 0;
     }
 
-    int noOfRunningBackgroundThreads;
+    private int noOfRunningBackgroundThreads;
 
     @Override
     public void handleMessage(Message msg) {

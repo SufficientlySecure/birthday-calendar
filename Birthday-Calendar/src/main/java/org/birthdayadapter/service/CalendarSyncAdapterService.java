@@ -80,7 +80,7 @@ public class CalendarSyncAdapterService extends Service {
 
     private class CalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 
-        public CalendarSyncAdapter() {
+        CalendarSyncAdapter() {
             super(CalendarSyncAdapterService.this, true);
         }
 
@@ -166,7 +166,7 @@ public class CalendarSyncAdapterService extends Service {
             if (cursor != null && cursor.moveToNext()) {
                 return cursor.getLong(0);
             } else {
-                ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
+                ArrayList<ContentProviderOperation> operationList = new ArrayList<>();
 
                 ContentProviderOperation.Builder builder = ContentProviderOperation
                         .newInsert(calenderUri);
@@ -239,7 +239,7 @@ public class CalendarSyncAdapterService extends Service {
         builder.withValue(Events.CALENDAR_ID, calendarId);
         builder.withValue(Events.DTSTART, dtstart);
         builder.withValue(Events.DTEND, dtend);
-        builder.withValue(Events.EVENT_TIMEZONE, Time.TIMEZONE_UTC);
+        builder.withValue(Events.EVENT_TIMEZONE, "UTC"); // ALL_DAY events must be UTC
         // builder.withValue(Events.EVENT_TIMEZONE, Time.getCurrentTimezone());
 
         builder.withValue(Events.ALL_DAY, 1);
@@ -277,7 +277,6 @@ public class CalendarSyncAdapterService extends Service {
     /**
      * Try to parse input with SimpleDateFormat
      *
-     * @param input
      * @param format      SimpleDateFormat
      * @param setYear1700 When true the age will be not displayed in brackets
      * @return Date object if successful, otherwise null
@@ -318,40 +317,24 @@ public class CalendarSyncAdapterService extends Service {
      */
     private static Date parseEventDateString(Context context, String eventDateString) {
         if (eventDateString != null) {
-            Date eventDate = null;
+            Date eventDate;
 
-            /*
-             * yyyy-MM-dd
-             * 
-             * Note: Most used format!
-             */
+            // yyyy-MM-dd, Most used format!
             eventDate = parseStringWithSimpleDateFormat(eventDateString, "yyyy-MM-dd", false);
 
-            /*
-             * --MM-dd
-             * 
-             * Note: Most used format without year!
-             */
+            // --MM-dd, Most used format without year!
             if (eventDate == null) {
                 eventDate = parseStringWithSimpleDateFormat(eventDateString, "--MM-dd", true);
             }
 
-            /*
-             * yyyyMMdd
-             * 
-             * Note: HTC Desire
-             */
+            // yyyyMMdd, HTC Desire
             if (eventDate == null) {
                 if (eventDateString.length() == 8) {
                     eventDate = parseStringWithSimpleDateFormat(eventDateString, "yyyyMMdd", false);
                 }
             }
 
-            /*
-             * Unix timestamp
-             * 
-             * Note: Some Motorola devices
-             */
+            // Unix timestamp, Some Motorola devices
             if (eventDate == null) {
                 Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
                         + " as a unix timestamp!");
@@ -362,12 +345,12 @@ public class CalendarSyncAdapterService extends Service {
                 }
             }
 
-            /* dd.MM.yyyy */
+            // dd.MM.yyyy
             if (eventDate == null) {
                 eventDate = parseStringWithSimpleDateFormat(eventDateString, "dd.MM.yyyy", false);
             }
 
-            /* yyyy.MM.dd */
+            // yyyy.MM.dd
             if (eventDate == null) {
                 eventDate = parseStringWithSimpleDateFormat(eventDateString, "yyyy.MM.dd", false);
             }
@@ -376,32 +359,24 @@ public class CalendarSyncAdapterService extends Service {
              * Prefer dd/MM/yyyy over MM/dd/yyyy ?
              */
             if (PreferencesHelper.getPreferddSlashMM(context)) {
-                /* dd/MM/yyyy */
+                // dd/MM/yyyy
                 if (eventDate == null) {
                     eventDate = parseStringWithSimpleDateFormat(eventDateString, "dd/MM/yyyy",
                             false);
                 }
 
-                /* dd/MM */
+                // dd/MM
                 if (eventDate == null) {
                     eventDate = parseStringWithSimpleDateFormat(eventDateString, "dd/MM", true);
                 }
             } else {
-                /*
-                 * MM/dd/yyyy
-                 * 
-                 * Note: Used by Facebook
-                 */
+                // MM/dd/yyyy, Used by Facebook
                 if (eventDate == null) {
                     eventDate = parseStringWithSimpleDateFormat(eventDateString, "MM/dd/yyyy",
                             false);
                 }
 
-                /*
-                 * MM/dd
-                 * 
-                 * Note: Used by Facebook
-                 */
+                //MM/dd, Used by Facebook
                 if (eventDate == null) {
                     eventDate = parseStringWithSimpleDateFormat(eventDateString, "MM/dd", true);
                 }
@@ -452,7 +427,7 @@ public class CalendarSyncAdapterService extends Service {
         HashSet<Account> blacklist = ProviderHelper.getAccountBlacklist(context);
 
         // HashSet of already added events using generated identifiers to check for duplicates before adding
-        HashSet<String> addedEventsIdentifiers = new HashSet<String>();
+        HashSet<String> addedEventsIdentifiers = new HashSet<>();
 
         /*
          * 1. Get all raw contacts with their corresponding Account name and type (only raw contacts get get Account
@@ -506,9 +481,9 @@ public class CalendarSyncAdapterService extends Service {
                 if (addEvent) {
                     String displayName = null;
                     String lookupKey = null;
-                    String startDate = null;
-                    int type = ContactsContract.CommonDataKinds.Event.TYPE_OTHER; // default type
-                    String label = null;
+                    String startDate;
+                    int type;
+                    String label;
 
                     /*
                      * 2b. Get display name and lookup key from normal contact table
@@ -660,6 +635,85 @@ public class CalendarSyncAdapterService extends Service {
         return title;
     }
 
+    private static void cleanTables(ContentResolver contentResolver, long calendarId) {
+
+        // empty table
+        // with additional selection of calendar id, necessary on Android < 4 to remove events only
+        // from birthday calendar
+        int delEventsRows = contentResolver.delete(getBirthdayAdapterUri(Events.CONTENT_URI),
+                Events.CALENDAR_ID + " = ?", new String[]{String.valueOf(calendarId)});
+        Log.i(Constants.TAG, "Events of birthday calendar is now empty, deleted " + delEventsRows
+                + " rows!");
+        Log.i(Constants.TAG, "Reminders of birthday calendar is now empty!");
+    }
+
+
+    /**
+     * Delete all reminders of birthday adapter by going through all events and delete corresponding
+     * reminders. This is needed as ContentResolver can not join directly.
+     * <p>
+     * TODO: not used currently
+     */
+    private static void deleteAllReminders(Context context) {
+        Log.d(Constants.TAG, "Going through all events and deleting all reminders...");
+
+        ContentResolver contentResolver = context.getContentResolver();
+
+        // get cursor for all events
+        Cursor eventsCursor = contentResolver.query(getBirthdayAdapterUri(Events.CONTENT_URI),
+                new String[]{Events._ID}, Events.CALENDAR_ID + "= ?",
+                new String[]{String.valueOf(getCalendar(context))}, null);
+        int eventIdColumn = eventsCursor.getColumnIndex(Events._ID);
+
+        ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
+
+        Uri remindersUri = getBirthdayAdapterUri(Reminders.CONTENT_URI);
+
+        ContentProviderOperation.Builder builder = null;
+
+        // go through all events
+        try {
+            while (eventsCursor.moveToNext()) {
+                long eventId = eventsCursor.getLong(eventIdColumn);
+
+                Log.d(Constants.TAG, "Delete reminders for event id: " + eventId);
+
+                // get all reminders for this specific event
+                Cursor remindersCursor = contentResolver.query(remindersUri, new String[]{
+                                Reminders._ID, Reminders.MINUTES}, Reminders.EVENT_ID + "= ?",
+                        new String[]{String.valueOf(eventId)}, null);
+                int remindersIdColumn = remindersCursor.getColumnIndex(Reminders._ID);
+
+                /* Delete reminders for this event */
+                try {
+                    while (remindersCursor.moveToNext()) {
+                        long currentReminderId = remindersCursor.getLong(remindersIdColumn);
+                        Uri currentReminderUri = ContentUris.withAppendedId(remindersUri,
+                                currentReminderId);
+
+                        builder = ContentProviderOperation.newDelete(currentReminderUri);
+
+                        // add operation to list, later executed
+                        if (builder != null) {
+                            operationList.add(builder.build());
+                        }
+                    }
+                } finally {
+                    remindersCursor.close();
+                }
+            }
+        } finally {
+            eventsCursor.close();
+        }
+
+        try {
+            contentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
+        } catch (Exception e) {
+            Log.e(Constants.TAG, "Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     private static void performSync(Context context, Account account, Bundle extras,
                                     String authority, ContentProviderClient provider, SyncResult syncResult)
             throws OperationCanceledException {
@@ -684,22 +738,14 @@ public class CalendarSyncAdapterService extends Service {
 
         // Sync flow:
         // 1. Clear events table for this account completely
+        cleanTables(contentResolver, calendarId);
         // 2. Get birthdays from contacts
         // 3. Create events and reminders for each birthday
-
-        // empty table
-        // with additional selection of calendar id, necessary on Android < 4 to remove events only
-        // from birthday calendar
-        int delEventsRows = contentResolver.delete(getBirthdayAdapterUri(Events.CONTENT_URI),
-                Events.CALENDAR_ID + " = ?", new String[]{String.valueOf(calendarId)});
-        Log.i(Constants.TAG, "Events of birthday calendar is now empty, deleted " + delEventsRows
-                + " rows!");
-        Log.i(Constants.TAG, "Reminders of birthday calendar is now empty!");
 
         int[] reminderMinutes = PreferencesHelper.getAllReminderMinutes(context);
 
         // collection of birthdays that will later be added to the calendar
-        ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
+        ArrayList<ContentProviderOperation> operationList = new ArrayList<>();
 
         // iterate through all Contact Events
         Cursor cursor = getContactsEvents(context, contentResolver);

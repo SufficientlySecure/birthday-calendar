@@ -22,6 +22,7 @@ package org.birthdayadapter.util;
 
 import org.birthdayadapter.service.MainIntentService;
 
+import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerFuture;
@@ -29,9 +30,11 @@ import android.app.AlarmManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Messenger;
+import android.support.v4.app.ActivityCompat;
 
 public class AccountHelper {
     private Context mContext;
@@ -147,6 +150,10 @@ public class AccountHelper {
     public boolean isAccountActivated() {
         AccountManager am = AccountManager.get(mContext);
 
+        if (ActivityCompat.checkSelfPermission(mContext,
+                Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
         Account[] availableAccounts = am.getAccountsByType(Constants.ACCOUNT_TYPE);
         for (Account currentAccount : availableAccounts) {
             if (currentAccount.name.equals(Constants.ACCOUNT_NAME)) {

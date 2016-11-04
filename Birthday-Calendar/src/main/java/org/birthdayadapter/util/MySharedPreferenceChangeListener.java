@@ -31,8 +31,8 @@ import android.os.Handler;
 import android.os.Messenger;
 
 public class MySharedPreferenceChangeListener implements OnSharedPreferenceChangeListener {
-    Context context;
-    Handler handler;
+    private Context context;
+    private Handler handler;
 
     public MySharedPreferenceChangeListener(Context context, Handler handler) {
         super();
@@ -53,8 +53,6 @@ public class MySharedPreferenceChangeListener implements OnSharedPreferenceChang
 
     /**
      * Start service with action, while executing, show progress
-     *
-     * @param action
      */
     public void startServiceAction(String action) {
         // Send all information needed to service to do in other thread

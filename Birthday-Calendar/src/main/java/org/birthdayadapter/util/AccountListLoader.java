@@ -20,13 +20,9 @@
 
 package org.birthdayadapter.util;
 
-import java.text.Collator;
-import java.util.*;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AuthenticatorDescription;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
@@ -34,10 +30,16 @@ import android.support.v4.content.AsyncTaskLoader;
 
 import org.birthdayadapter.provider.ProviderHelper;
 
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+
 /**
  * A custom Loader that loads all active accounts that provide contacts.
  */
-@SuppressLint("NewApi")
 public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
 
     private List<AccountListEntry> mAccounts;
@@ -65,7 +67,7 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
     @Override
     public List<AccountListEntry> loadInBackground() {
         // Retrieve all accounts that are actively used for contacts
-        HashSet<Account> activeContactAccounts = new HashSet<Account>();
+        HashSet<Account> activeContactAccounts = new HashSet<>();
         Cursor cursor = null;
         try {
             cursor = getContext().getContentResolver().query(
@@ -103,7 +105,7 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
         AccountManager manager = AccountManager.get(getContext());
         AuthenticatorDescription[] descriptions = manager.getAuthenticatorTypes();
 
-        ArrayList<AccountListEntry> entries = new ArrayList<AccountListEntry>();
+        ArrayList<AccountListEntry> entries = new ArrayList<>();
         for (Account account : activeContactAccounts) {
             for (AuthenticatorDescription description : descriptions) {
                 if (description.type.equals(account.type)) {
