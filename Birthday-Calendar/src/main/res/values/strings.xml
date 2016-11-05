@@ -2,11 +2,6 @@
 
     <string name="app_name">Birthday Calendar</string>
 
-    <!-- AsyncTask progress dialogs -->
-    <string name="creating">Creating adapter…</string>
-    <string name="removing">Removing adapter…</string>
-    <string name="synchronizing">Synchronizing…</string>
-
     <!-- Calendar -->
     <string name="calendar_display_name">Birthdays</string>
     <string name="event_title_birthday_with_age">%1$s: Birthday (%2$d)</string>
@@ -40,12 +35,11 @@
     <string name="pref_calendar_summary">"Birthdays are now shown as events in your calendar app."</string>
     <string name="pref_calendar_open">"Open calendar app"</string>
     <string name="pref_color">Color</string>
-    <string name="pref_color_summary">Color of birthday calendar</string>
     <string name="pref_help">Help</string>
     <string name="pref_about">About</string>
     <string name="pref_force_sync">Synchronize now!</string>
-    <string name="pref_force_sync_summary">Normally you don\'t need to do this, because Birthday Adapter synchronizes
-        automatically once a day.
+    <string name="pref_force_sync_summary">"Usually you don't need to do this, because Birthday Adapter synchronizes
+        automatically once a day."
     </string>
     <string name="pref_reminders">Reminders</string>
     <string name="pref_reminder_enable0">Enable Reminder 1</string>
@@ -96,14 +90,9 @@
     <string name="pref_account_header">Settings</string>
     <string name="pref_account_settings">Configure Birthday Adapter</string>
 
-    <!-- Color Picker -->
-    <string name="dialog_color_picker">Color Picker</string>
-    <string name="press_color_to_apply">Press on Color to apply</string>
-
     <!-- Accounts -->
     <string name="account_list_description">Only birthdays from selected accounts will be displayed in your calendar.
     </string>
-    <string name="account_list_save">Save and apply filter</string>
     <string name="account_list_empty">No accounts</string>
 
     <!--Free Version -->

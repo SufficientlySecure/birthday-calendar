@@ -26,6 +26,11 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 
+    lintOptions {
+        // not everything is translated by Transifex contributors
+        disable 'MissingTranslation', 'ExtraTranslation'
+    }
+
     /*
      * To sign release build, create file gradle.properties in ~/.gradle/ with this content:
      *
