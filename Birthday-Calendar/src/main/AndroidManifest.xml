@@ -49,33 +49,31 @@
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- required to start it from Account settings -->
             <intent-filter>
                 <action android:name="org.birthdayadapter.settings.MAIN" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <!-- launchMode and taskAffinity required to not launch
+        AddAccountActivity on the existing task of Birthday Calendar -->
         <activity
-            android:name="org.birthdayadapter.ui.CreateAccountActivity"
+            android:name="org.birthdayadapter.ui.AddAccountActivity"
+            android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Transparent">
-            <!-- NOTE: intent-filter somehow required to get it started from Android Accounts -->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-            </intent-filter>
-        </activity>
+            android:launchMode="singleTask"
+            android:taskAffinity="org.birthdayadapter.addaccount"
+            android:theme="@style/Theme.Transparent" />
         <activity
             android:name="org.birthdayadapter.ui.ShowContactActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.Transparent">
+            <!-- special Intent to be called from calendar app's event -->
             <intent-filter>
                 <action android:name="android.provider.calendar.action.HANDLE_CUSTOM_EVENT" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="vnd.android.cursor.item/event" />
             </intent-filter>
         </activity>

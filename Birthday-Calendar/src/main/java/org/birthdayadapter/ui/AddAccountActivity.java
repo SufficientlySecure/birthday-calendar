@@ -26,7 +26,7 @@ import android.os.Bundle;
 
 import org.birthdayadapter.util.AccountHelper;
 
-public class CreateAccountActivity extends AccountAuthenticatorActivity {
+public class AddAccountActivity extends AccountAuthenticatorActivity {
 
     /**
      * Called when the activity is first created.

@@ -57,12 +57,11 @@ public class ShowContactActivity extends Activity {
 
             QuickContact.showQuickContact(this, getIntent().getSourceBounds(), uri,
                     QuickContact.MODE_LARGE, null);
-
-            finish();
         } else {
             Log.e(Constants.TAG, "getIntent().getData() is null!");
-            finish();
         }
+
+        finish();
     }
 
 }

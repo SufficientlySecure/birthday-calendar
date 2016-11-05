@@ -31,7 +31,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
 
-import org.birthdayadapter.ui.CreateAccountActivity;
+import org.birthdayadapter.ui.AddAccountActivity;
 
 /**
  * Based on https://developer.android.com/training/sync-adapters/creating-authenticator.html
@@ -58,19 +58,12 @@ public class AccountAuthenticatorService extends Service {
             mContext = context;
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see android.accounts.AbstractAccountAuthenticator#addAccount(android.
-         * accounts.AccountAuthenticatorResponse, java.lang.String, java.lang.String,
-         * java.lang.String[], android.os.Bundle)
-         */
         @Override
         public Bundle addAccount(AccountAuthenticatorResponse response, String accountType,
                                  String authTokenType, String[] requiredFeatures, Bundle options)
                 throws NetworkErrorException {
 
-            Intent intent = new Intent(mContext, CreateAccountActivity.class);
+            Intent intent = new Intent(mContext, AddAccountActivity.class);
             intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
 
             Bundle result = new Bundle();
@@ -78,72 +71,34 @@ public class AccountAuthenticatorService extends Service {
             return result;
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see android.accounts.AbstractAccountAuthenticator#confirmCredentials(
-         * android.accounts.AccountAuthenticatorResponse, android.accounts.Account,
-         * android.os.Bundle)
-         */
         @Override
         public Bundle confirmCredentials(AccountAuthenticatorResponse response, Account account,
                                          Bundle options) {
             throw new UnsupportedOperationException();
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see android.accounts.AbstractAccountAuthenticator#editProperties(android
-         * .accounts.AccountAuthenticatorResponse, java.lang.String)
-         */
         @Override
         public Bundle editProperties(AccountAuthenticatorResponse response, String accountType) {
             throw new UnsupportedOperationException();
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see android.accounts.AbstractAccountAuthenticator#getAuthToken(android
-         * .accounts.AccountAuthenticatorResponse, android.accounts.Account, java.lang.String,
-         * android.os.Bundle)
-         */
         @Override
         public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account,
                                    String authTokenType, Bundle options) throws NetworkErrorException {
             throw new UnsupportedOperationException();
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see android.accounts.AbstractAccountAuthenticator#getAuthTokenLabel(java .lang.String)
-         */
         @Override
         public String getAuthTokenLabel(String authTokenType) {
             throw new UnsupportedOperationException();
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see android.accounts.AbstractAccountAuthenticator#hasFeatures(android
-         * .accounts.AccountAuthenticatorResponse, android.accounts.Account, java.lang.String[])
-         */
         @Override
         public Bundle hasFeatures(AccountAuthenticatorResponse response, Account account,
                                   String[] features) throws NetworkErrorException {
             throw new UnsupportedOperationException();
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see android.accounts.AbstractAccountAuthenticator#updateCredentials(android
-         * .accounts.AccountAuthenticatorResponse, android.accounts.Account, java.lang.String,
-         * android.os.Bundle)
-         */
         @Override
         public Bundle updateCredentials(AccountAuthenticatorResponse response, Account account,
                                         String authTokenType, Bundle options) {
