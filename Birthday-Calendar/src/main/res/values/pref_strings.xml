@@ -32,7 +32,7 @@
     <string name="pref_reminder_time_key1" translatable="false">reminderTime1</string>
     <string name="pref_reminder_time_key2" translatable="false">reminderTime2</string>
 
-    <item name="pref_reminder_time_def" format="string" type="integer">-540</item>
+    <integer name="pref_reminder_time_def">-540</integer>
 
     <string name="pref_advanced_key" translatable="false">advanced</string>
 

@@ -52,7 +52,7 @@ public class AccountHelper {
     /**
      * Add account for Birthday Adapter to Android system
      */
-    public Bundle addAccount() {
+    public Bundle addAccountAndSync() {
         Log.d(Constants.TAG, "Adding account...");
 
         // enable automatic sync once per day
@@ -69,28 +69,13 @@ public class AccountHelper {
             Bundle result = new Bundle();
             result.putString(AccountManager.KEY_ACCOUNT_NAME, Constants.ACCOUNT.name);
             result.putString(AccountManager.KEY_ACCOUNT_TYPE, Constants.ACCOUNT.type);
+
+            // Force a sync! Even when background sync is disabled, this will force one sync!
+            manualSync();
+
             return result;
         } else {
             return null;
-        }
-    }
-
-    /**
-     * Adds account and forces manual sync afterwards if adding was successful
-     */
-    public void addAccountAndSync() {
-        Bundle result = addAccount();
-
-        if (result != null) {
-            if (result.containsKey(AccountManager.KEY_ACCOUNT_NAME)) {
-                // Force a sync! Even when background sync is disabled, this will force one sync!
-                manualSync();
-            } else {
-                Log.e(Constants.TAG,
-                        "Account was not added! result did not contain KEY_ACCOUNT_NAME!");
-            }
-        } else {
-            Log.e(Constants.TAG, "Account was not added! result was null!");
         }
     }
 

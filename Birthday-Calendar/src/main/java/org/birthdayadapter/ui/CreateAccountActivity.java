@@ -21,13 +21,10 @@
 
 package org.birthdayadapter.ui;
 
-import org.birthdayadapter.util.AccountHelper;
-import org.birthdayadapter.util.Constants;
-import org.birthdayadapter.util.Log;
-
 import android.accounts.AccountAuthenticatorActivity;
-import android.accounts.AccountManager;
 import android.os.Bundle;
+
+import org.birthdayadapter.util.AccountHelper;
 
 public class CreateAccountActivity extends AccountAuthenticatorActivity {
 
@@ -39,20 +36,9 @@ public class CreateAccountActivity extends AccountAuthenticatorActivity {
         super.onCreate(savedInstanceState);
 
         AccountHelper accHelper = new AccountHelper(this);
-        Bundle result = accHelper.addAccount();
-
+        Bundle result = accHelper.addAccountAndSync();
         if (result != null) {
-            if (result.containsKey(AccountManager.KEY_ACCOUNT_NAME)) {
-                // Force a sync! Even when background sync is disabled, this will force one sync!
-                accHelper.manualSync();
-
-                setAccountAuthenticatorResult(result);
-            } else {
-                Log.e(Constants.TAG,
-                        "Account was not added! result did not contain KEY_ACCOUNT_NAME!");
-            }
-        } else {
-            Log.e(Constants.TAG, "Account was not added! result was null!");
+            setAccountAuthenticatorResult(result);
         }
 
         finish();
