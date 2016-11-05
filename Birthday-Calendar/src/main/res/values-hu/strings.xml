@@ -1,9 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <!--AsyncTask progress dialogs-->
-  <string name="creating">Illesztő létrehozása...</string>
-  <string name="removing">Illesztő eltávolítása...</string>
-  <string name="synchronizing">Szinkronizálás...</string>
   <!--Calendar-->
   <string name="calendar_display_name">Születésnapok</string>
   <string name="event_title_birthday_with_age">%1$s: Születésnap (%2$d)</string>
@@ -24,20 +20,10 @@
   <string name="tab_about">Névjegy</string>
   <!--Preferences-->
   <string name="pref_general">Általános</string>
-  <string name="pref_description">Leírás</string>
-  <string name="pref_enable_switch">Naptár</string>
-  <string name="pref_enable">Birthday Calendar engedélyezése</string>
-  <string name="pref_enable_summary">A névjegyekben meghatározott születésnapok, évfordulók és egyéb események mutatása mint egy
-        naptár az Android Naptárjában.
-    </string>
   <string name="pref_color">Szín</string>
-  <string name="pref_color_summary">Születésnapi naptár színe</string>
   <string name="pref_help">Súgó</string>
   <string name="pref_about">Rólunk</string>
   <string name="pref_force_sync">Szinkronizáljon most!</string>
-  <string name="pref_force_sync_summary">Normális esetben nem kell ezt csinálnia, mert a Birthday Adapter szinkronizál
-        naponta egyszer automatikusan.
-    </string>
   <string name="pref_reminders">Emlékeztetők</string>
   <string name="pref_reminder_enable0">Emlékeztető 1 engedélyezése</string>
   <string name="pref_reminder_enable1">Emlékeztető 2 engedélyezése</string>
@@ -75,19 +61,13 @@
   <string name="pref_title_summary_custom_with_age">%1$s beszúrása a névjegy nevéhez, %2$s ez az esemény
         egyéni címkéjéhez és %3$d a korhoz.
     </string>
-  <string name="pref_advanced">Haladó Beállítások</string>
   <string name="pref_prefer_dd_slash_mm">nn/HH/ÉÉÉÉ formátum előnyben részesítése</string>
   <string name="pref_prefer_dd_slash_mm_summary">nn/HH/éééé előnyben részesítése HH/nn/éééé-hez képest a dátumformátum elemzésekor</string>
+  <string name="pref_advanced">Haladó Beállítások</string>
   <!--Adapter Screen-->
   <string name="pref_account_header">Beállítások</string>
   <string name="pref_account_settings">Birthday Adapter konfigurálása</string>
-  <!--Color Picker-->
-  <string name="dialog_color_picker">Színválasztó</string>
-  <string name="press_color_to_apply">Szín megérintése az alkalmazáshoz</string>
   <!--Accounts-->
-  <string name="account_list_description">Csak a kiválasztott fiókokban lévő események lesznek megjelenítve a naptáradban.
-    </string>
-  <string name="account_list_save">Szűrő mentése és alkalmazása</string>
   <string name="account_list_empty">Nincs fiók</string>
   <!--Free Version-->
   <string name="pref_buy">Teljes verzió megvásárlása!</string>

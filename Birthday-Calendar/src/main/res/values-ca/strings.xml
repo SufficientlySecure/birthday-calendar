@@ -1,9 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <!--AsyncTask progress dialogs-->
-  <string name="creating">S\'està creant l\'adaptador...</string>
-  <string name="removing">S\'està suprimint l\'adaptador...</string>
-  <string name="synchronizing">S\'està sincronitzant...</string>
   <!--Calendar-->
   <string name="calendar_display_name">Natalicis</string>
   <string name="event_title_birthday_with_age">%1$s: natalici (%2$d)</string>
@@ -24,18 +20,10 @@
   <string name="tab_about">Quant a</string>
   <!--Preferences-->
   <string name="pref_general">General</string>
-  <string name="pref_description">Descripció</string>
-  <string name="pref_enable_switch">Calendari</string>
-  <string name="pref_enable">Activa el calendari d\'aniversaris</string>
-  <string name="pref_enable_summary">Mostra natalicis, altres aniversaris i altres esdeveniments definits als contactes com a
-calendari en el vostre Android Calendar.</string>
   <string name="pref_color">Color</string>
-  <string name="pref_color_summary">Color del calendari de natalicis</string>
   <string name="pref_help">Ajuda</string>
   <string name="pref_about">Quant a</string>
   <string name="pref_force_sync">Sincronitza ara!</string>
-  <string name="pref_force_sync_summary">Normalment això no cal, perquè Birthday Adapter sincronitza ⏎
-automàticament una vegada al dia. ⏎</string>
   <string name="pref_reminders">Recordatoris</string>
   <string name="pref_reminder_enable0">Activa el recordatori 1</string>
   <string name="pref_reminder_enable1">Activa el recordatori 2</string>
@@ -66,23 +54,18 @@ automàticament una vegada al dia. ⏎</string>
   <string name="pref_title_custom_without_age">Personalitzat</string>
   <string name="pref_title_custom_with_age">Personalitzat amb indicació del temps</string>
   <string name="pref_title_summary_without_age">Inseriu %1$s per al nom del contacte.</string>
-  <string name="pref_title_summary_with_age">Inseriu %1$s per al nom del contacte i %2$s per a l\'edat.</string>
+  <string name="pref_title_summary_with_age">Inseriu %1$s per al nom del contacte i %2$d per a l\'edat.</string>
   <string name="pref_title_summary_custom_without_age">Inseriu %1$s per al nom del contacte i %2$s per a l\'etiqueta ⏎
 personalitzada d\'aquest esdeveniment. ⏎</string>
   <string name="pref_title_summary_custom_with_age">Inseriu %1$s per al nom del contacte, %2$s per a l\'etiqueta personalitzada ⏎
 de l\'esdeveniment i %3$d per a l\'edat. ⏎</string>
-  <string name="pref_advanced">Configuració avançada</string>
   <string name="pref_prefer_dd_slash_mm">Prefereix el format dd/MM/aaaa</string>
   <string name="pref_prefer_dd_slash_mm_summary">Prefereix dd/MM/aaaa a MM/dd/aaaa quan s\'analitzen les dates</string>
+  <string name="pref_advanced">Configuració avançada</string>
   <!--Adapter Screen-->
   <string name="pref_account_header">Configuració</string>
   <string name="pref_account_settings">Configura Birthday Adapter</string>
-  <!--Color Picker-->
-  <string name="dialog_color_picker">Tria el color</string>
-  <string name="press_color_to_apply">Premeu sobre \'color\' per a aplicar</string>
   <!--Accounts-->
-  <string name="account_list_description">Només es mostraran al vostre calendari els esdeveniments dels comptes seleccionats. ⏎</string>
-  <string name="account_list_save">Desa i aplica el filtre</string>
   <string name="account_list_empty">No hi ha cap compte</string>
   <!--Free Version-->
   <string name="pref_buy">Compreu la versió completa!</string>

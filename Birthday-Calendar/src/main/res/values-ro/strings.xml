@@ -1,9 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <!--AsyncTask progress dialogs-->
-  <string name="creating">Cereare adaptor…</string>
-  <string name="removing">Elimare adaptor…</string>
-  <string name="synchronizing">Sincronizare...</string>
   <!--Calendar-->
   <string name="calendar_display_name">Zile de naştere</string>
   <string name="event_title_birthday_with_age">%1$s: Zi de naştere (%2$d)</string>
@@ -24,18 +20,10 @@
   <string name="tab_about">Despre</string>
   <!--Preferences-->
   <string name="pref_general">General</string>
-  <string name="pref_description">Descriere</string>
-  <string name="pref_enable_switch">Calendar</string>
-  <string name="pref_enable">Activare Birthday Calendar</string>
-  <string name="pref_enable_summary">Afişează datele de naştere, aniversările şi alte evenimente definite în contacte, ca şi 
-calendar, în Caledarul tău Android.</string>
   <string name="pref_color">Culoare</string>
-  <string name="pref_color_summary">Culoarea calendarului zilelor de naştere</string>
   <string name="pref_help">Ajutor</string>
   <string name="pref_about">Despre</string>
   <string name="pref_force_sync">Sincronizează acum!</string>
-  <string name="pref_force_sync_summary">În mod normal, nu este necesar să faci acest lucru, deoarece Birthday Adapter se sincronizează
-automat, o dată pe zi.</string>
   <string name="pref_reminders">Memento</string>
   <string name="pref_reminder_enable0">Activare Memento 1</string>
   <string name="pref_reminder_enable1">Activare Memento 2</string>
@@ -72,18 +60,13 @@ eticheta personalizată a acestui eveniment.
   </string>
   <string name="pref_title_summary_custom_with_age">Introducere %1$s, pentru nume contact, %2$s pentru eticheta
 personalizată a acestui eveniment, şi %3$d pentru vârstă.</string>
-  <string name="pref_advanced">Configurări Avansate</string>
   <string name="pref_prefer_dd_slash_mm">Prefer formatul dd/MM/yyyy</string>
   <string name="pref_prefer_dd_slash_mm_summary">Prefer dd/MM/yyyy în MM/dd/yyyy la analizarea formatelor de dată</string>
+  <string name="pref_advanced">Configurări Avansate</string>
   <!--Adapter Screen-->
   <string name="pref_account_header">Configurări</string>
   <string name="pref_account_settings">Configurări Birthday Adapter</string>
-  <!--Color Picker-->
-  <string name="dialog_color_picker">Selector Culoare</string>
-  <string name="press_color_to_apply">Apasă pe Culoare pentru a aplica</string>
   <!--Accounts-->
-  <string name="account_list_description">Numai evenimentele din conturile selectate, vor fi afişate în calendar.</string>
-  <string name="account_list_save">Salvează şi aplică filtrul</string>
   <string name="account_list_empty">Nici-un cont</string>
   <!--Free Version-->
   <string name="pref_buy">Cumpără versiunea completă!</string>

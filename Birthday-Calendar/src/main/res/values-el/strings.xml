@@ -1,9 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <!--AsyncTask progress dialogs-->
-  <string name="creating">Δημιουργία προσαρμογέα...</string>
-  <string name="removing">Αφαίρεση προσαρμογέα...</string>
-  <string name="synchronizing">Συγχρονισμός...</string>
   <!--Calendar-->
   <string name="calendar_display_name">Γενέθλια</string>
   <string name="event_title_birthday_with_age">%1$s: Γενέθλια (%2$d)</string>
@@ -24,16 +20,10 @@
   <string name="tab_about">Σχετικά με</string>
   <!--Preferences-->
   <string name="pref_general">Γενικά</string>
-  <string name="pref_description">Περιγραφή</string>
-  <string name="pref_enable_switch">Ημερολόγιο</string>
-  <string name="pref_enable">Ενεργοποίηση ημερολογίου γενεθλίων </string>
-  <string name="pref_enable_summary">Εμφανίζει γενέθλια, επετείους και άλλες εκδηλώσεις που ορίζονται στις επαφές ως ημερολόγιο στο Android ημερολόγιο σας.</string>
   <string name="pref_color">Χρώμα</string>
-  <string name="pref_color_summary">Χρώμα ημερολόγιου γενεθλίων</string>
   <string name="pref_help">Βοήθεια</string>
   <string name="pref_about">Σχετικά με</string>
   <string name="pref_force_sync">Συγχρονισμός τώρα!</string>
-  <string name="pref_force_sync_summary">Κανονικά δεν χρειάζεται να το κάνετε αυτό, επειδή ο Προσαρμογέας γενεθλίων συγχρονίζετε αυτόματα μία φορά την ημέρα.</string>
   <string name="pref_reminders">Υπενθυμίσεις</string>
   <string name="pref_reminder_enable0">Ενεργοποίηση υπενθύμισης 1</string>
   <string name="pref_reminder_enable1">Ενεργοποίηση υπενθύμισης 2</string>
@@ -58,18 +48,13 @@
   <string name="pref_title_summary_custom_without_age">Εισαγωγή %1$s για το όνομα και την %2$s για την προσαρμοσμένη
 ετικέτα της εκδήλωσης αυτής.</string>
   <string name="pref_title_summary_custom_with_age">Εισαγωγή %1$s για το όνομα της επαφής, %2$s για την προσαρμοσμένη ετικέτα του γεγονότος αυτου, και %3$d για την ηλικία.</string>
-  <string name="pref_advanced">Προηγμένες Ρυθμίσεις</string>
   <string name="pref_prefer_dd_slash_mm">Προτιμήση dd/MM/yyyy τυπου</string>
   <string name="pref_prefer_dd_slash_mm_summary">Προτιμήση  dd/MM/yyyy σε MM/dd/yyyy κατά την ανάλυση μορφών ημερομηνίας</string>
+  <string name="pref_advanced">Προηγμένες Ρυθμίσεις</string>
   <!--Adapter Screen-->
   <string name="pref_account_header">Ρυθμίσεις</string>
   <string name="pref_account_settings">Διαμόρφωση του Birthday Adapter</string>
-  <!--Color Picker-->
-  <string name="dialog_color_picker">Επιλογέας χρωμάτων</string>
-  <string name="press_color_to_apply">Πατήστε στο χρώμα για την εφαρμογή</string>
   <!--Accounts-->
-  <string name="account_list_description">Μόνο γεγονότα από επιλεγμένους λογαριασμούς θα εμφανίζονται στο ημερολόγιό σας</string>
-  <string name="account_list_save">Αποθήκευση και εφαρμογή φίλτρου</string>
   <string name="account_list_empty">Δεν υπάρχουν λογαριασμοί</string>
   <!--Free Version-->
   <string name="pref_buy">Αγοράστε την πλήρη έκδοση!</string>

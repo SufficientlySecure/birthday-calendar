@@ -1,9 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <!--AsyncTask progress dialogs-->
-  <string name="creating">Criando adaptador...</string>
-  <string name="removing">Removendo adaptador...</string>
-  <string name="synchronizing">Sincronização...</string>
   <!--Calendar-->
   <string name="calendar_display_name">Datas de nascimento</string>
   <string name="event_title_birthday_with_age">%1$s: Data de nascimento (%2$d)</string>
@@ -24,16 +20,10 @@
   <string name="tab_about">Sobre</string>
   <!--Preferences-->
   <string name="pref_general">Geral</string>
-  <string name="pref_description">Descrição</string>
-  <string name="pref_enable_switch">Calendário</string>
-  <string name="pref_enable">Ativar calendário</string>
-  <string name="pref_enable_summary">Mostra datas de nascimento, aniversários e outros eventos definidos nos seus contactos e mostra-os no calendário Android.</string>
   <string name="pref_color">Cor</string>
-  <string name="pref_color_summary">Cor do calendário</string>
   <string name="pref_help">Ajuda</string>
   <string name="pref_about">Sobre</string>
   <string name="pref_force_sync">Sincronizar agora!</string>
-  <string name="pref_force_sync_summary">Esta operação não deve ser necessária, pois o Birthday Adapter deve efetuar a sincronização diariamente.</string>
   <string name="pref_reminders">Lembretes</string>
   <string name="pref_reminder_enable0">Ativar lembrete 1</string>
   <string name="pref_reminder_enable1">Ativar lembrete 2</string>
@@ -67,18 +57,13 @@
   <string name="pref_title_summary_with_age">Inserir %1$s para o nome do contacto e %2$d para a idade.</string>
   <string name="pref_title_summary_custom_without_age">Inserir %1$s para o nome do contacto e %2$s para a etiqueta personalizada deste evento.</string>
   <string name="pref_title_summary_custom_with_age">Inserir %1$s para o nome do contacto e %2$s para a etiqueta personalizada e %3$d para a idade.</string>
-  <string name="pref_advanced">Definições avançadas</string>
   <string name="pref_prefer_dd_slash_mm">Utilizar dd/MM/aaaa</string>
   <string name="pref_prefer_dd_slash_mm_summary">Utilizar dd/MM/aaaa em vez de MM/dd/aaaa para datas</string>
+  <string name="pref_advanced">Definições avançadas</string>
   <!--Adapter Screen-->
   <string name="pref_account_header">Definições</string>
   <string name="pref_account_settings">Configurar aplicação</string>
-  <!--Color Picker-->
-  <string name="dialog_color_picker">Seletor de cor</string>
-  <string name="press_color_to_apply">Prima na cor para aplicar</string>
   <!--Accounts-->
-  <string name="account_list_description">Apenas os eventos das contas selecionadas serão exibidos no seu calendário.</string>
-  <string name="account_list_save">Gravar e aplicar filtro</string>
   <string name="account_list_empty">Sem contas</string>
   <!--Free Version-->
   <string name="pref_buy">Comprar versão completa!</string>

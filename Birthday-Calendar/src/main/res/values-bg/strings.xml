@@ -1,9 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <!--AsyncTask progress dialogs-->
-  <string name="creating">Създава адаптер ...</string>
-  <string name="removing">Премахва адаптер ...</string>
-  <string name="synchronizing">Синхронизиране ...</string>
   <!--Calendar-->
   <string name="calendar_display_name">Рождени дни</string>
   <string name="event_title_birthday_with_age">%1$s: Рождени дни (%2$d)</string>
@@ -24,18 +20,10 @@
   <string name="tab_about">Относно</string>
   <!--Preferences-->
   <string name="pref_general">Главни</string>
-  <string name="pref_description">Описание</string>
-  <string name="pref_enable_switch">Календар</string>
-  <string name="pref_enable">Включва календар рожден ден</string>
-  <string name="pref_enable_summary">Показва рождени дни, годишнини и други отбелязани в контактите
-на вашия Android календар.</string>
   <string name="pref_color">Цвят</string>
-  <string name="pref_color_summary">Цвят на календара рожден ден</string>
   <string name="pref_help">Помощ</string>
   <string name="pref_about">Относно</string>
   <string name="pref_force_sync">Синхронизирай сега!</string>
-  <string name="pref_force_sync_summary">Обикновено няма нужда от това, защото Адаптер Рождени дни
-се синхронизира всеки ден.</string>
   <string name="pref_reminders">Напомняния</string>
   <string name="pref_reminder_enable0">Включва Напомняне 1</string>
   <string name="pref_reminder_enable1">Включва Напомняне 2</string>
@@ -73,19 +61,13 @@
   <string name="pref_title_summary_custom_with_age">Вмъква %1$s за името на контакта, %2$s за собствен етикет на
 това събитие и %3$d за години.
     </string>
-  <string name="pref_advanced">Подробни настройки</string>
   <string name="pref_prefer_dd_slash_mm">Предпочитан формат dd/MM/yyyy</string>
   <string name="pref_prefer_dd_slash_mm_summary">Предпочитан формат dd/MM/yyyy към MM/dd/yyyy при форматиране на дата</string>
+  <string name="pref_advanced">Подробни настройки</string>
   <!--Adapter Screen-->
   <string name="pref_account_header">Настройки</string>
   <string name="pref_account_settings">Конфигуриране на Адаптер Рожден ден</string>
-  <!--Color Picker-->
-  <string name="dialog_color_picker">Цветова палитра</string>
-  <string name="press_color_to_apply">Натисни на Цвят за прилагане</string>
   <!--Accounts-->
-  <string name="account_list_description">Само събития от избрания профил ще се показват във вашия календар .
-    </string>
-  <string name="account_list_save">Запис и прилагане на филър</string>
   <string name="account_list_empty">Няма профили</string>
   <!--Free Version-->
   <string name="pref_buy">Купи пълната версия!</string>

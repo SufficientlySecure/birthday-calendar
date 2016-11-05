@@ -1,9 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <!--AsyncTask progress dialogs-->
-  <string name="creating">正在创建同步器…</string>
-  <string name="removing">正在移除同步器…</string>
-  <string name="synchronizing">正在同步…</string>
   <!--Calendar-->
   <string name="calendar_display_name">生日</string>
   <string name="event_title_birthday_with_age">%1$s的生日 (%2$d)</string>
@@ -24,16 +20,10 @@
   <string name="tab_about">关于</string>
   <!--Preferences-->
   <string name="pref_general">常规</string>
-  <string name="pref_description">介绍</string>
-  <string name="pref_enable_switch">日历</string>
-  <string name="pref_enable">启用生日日历</string>
-  <string name="pref_enable_summary">将通讯录中联系人的生日、纪念日等事件整合成一个日历，在系统日历中显示。</string>
   <string name="pref_color">日历颜色</string>
-  <string name="pref_color_summary">日历标签的颜色</string>
   <string name="pref_help">帮助</string>
   <string name="pref_about">关于</string>
   <string name="pref_force_sync">立即同步</string>
-  <string name="pref_force_sync_summary">正常情况下，Birthday Adapter 会每天自动同步一次日历，不需要手动同步。</string>
   <string name="pref_reminders">提醒</string>
   <string name="pref_reminder_enable0">启用提醒 1</string>
   <string name="pref_reminder_enable1">启用提醒 2</string>
@@ -67,18 +57,13 @@
   <string name="pref_title_summary_with_age">输入 %1$s 替代联系人姓名，%2$d 替代年数。</string>
   <string name="pref_title_summary_custom_without_age">输入 %1$s 替代联系人姓名，%2$s 替代自定义事件的名称。</string>
   <string name="pref_title_summary_custom_with_age">输入 %1$s 替代联系人姓名，%2$s 替代自定义事件的名称，%3$d 替代年数。</string>
-  <string name="pref_advanced">高级</string>
   <string name="pref_prefer_dd_slash_mm">优先使用 dd/MM/yyyy 格式</string>
   <string name="pref_prefer_dd_slash_mm_summary">解析日期时优先使用 dd/MM/yyyy 格式（默认为 MM/dd/yyyy）</string>
+  <string name="pref_advanced">高级</string>
   <!--Adapter Screen-->
   <string name="pref_account_header">设置</string>
   <string name="pref_account_settings">配置 Birthday Adapter</string>
-  <!--Color Picker-->
-  <string name="dialog_color_picker">选择颜色</string>
-  <string name="press_color_to_apply">点按需要的颜色以确认</string>
   <!--Accounts-->
-  <string name="account_list_description">只有选中账户中的事件会显示在日历中。</string>
-  <string name="account_list_save">保存</string>
   <string name="account_list_empty">没有账户</string>
   <!--Free Version-->
   <string name="pref_buy">购买完整版！</string>

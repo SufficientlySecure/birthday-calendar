@@ -1,9 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <!--AsyncTask progress dialogs-->
-  <string name="creating">Vytvoriť adaptér...</string>
-  <string name="removing">Odstrániť adaptér...</string>
-  <string name="synchronizing">Synchronizovať...</string>
   <!--Calendar-->
   <string name="calendar_display_name">Narodeniny</string>
   <string name="event_title_birthday_with_age">%1$s: Narodeniny (%2$d)</string>
@@ -24,18 +20,10 @@
   <string name="tab_about">O aplikácii</string>
   <!--Preferences-->
   <string name="pref_general">Obecné</string>
-  <string name="pref_description">Popis</string>
-  <string name="pref_enable_switch">Kalendár</string>
-  <string name="pref_enable">Zapnúť kalendár narodenín</string>
-  <string name="pref_enable_summary">Zobraziť narodeniny, výročia a iné udalosti definované v kontaktoch ako
-kalendár vo Vašom Android kalendári.</string>
   <string name="pref_color">Farba</string>
-  <string name="pref_color_summary">Farba kalendára narodenín</string>
   <string name="pref_help">Pomoc</string>
   <string name="pref_about">O aplikácii</string>
   <string name="pref_force_sync">Synchronizovať teraz!</string>
-  <string name="pref_force_sync_summary">Za normálnych okolností toto nie je potrebné, pretože Birthday Adapter 
-sa synchronizuje automaticky raz denne.</string>
   <string name="pref_reminders">Pripomienky</string>
   <string name="pref_reminder_enable0">Zapnúť pripomienku 1</string>
   <string name="pref_reminder_enable1">Zapnúť pripomienku 2</string>
@@ -71,18 +59,13 @@ sa synchronizuje automaticky raz denne.</string>
 popisok tejto udalosti.</string>
   <string name="pref_title_summary_custom_with_age">Vložiť %1$s pre meno kontaktu, %2$s pre vlastný popisok tejto udalosti
 a %3$d pre vek.</string>
-  <string name="pref_advanced">Rozšírené nastavenia</string>
   <string name="pref_prefer_dd_slash_mm">Navrhnúť dd/MM/rrrr formát</string>
   <string name="pref_prefer_dd_slash_mm_summary">Navrhnúť dd/MM/rrrr na MM/dd/rrrr pri parsovaní formátov dátumu</string>
+  <string name="pref_advanced">Rozšírené nastavenia</string>
   <!--Adapter Screen-->
   <string name="pref_account_header">Nastavenia</string>
   <string name="pref_account_settings">Konfigurovať Birthday Adapter</string>
-  <!--Color Picker-->
-  <string name="dialog_color_picker">Výber farby</string>
-  <string name="press_color_to_apply">Kliknúť na farbu pre použitie</string>
   <!--Accounts-->
-  <string name="account_list_description">Iba udalosti z vybraných účtov budú zobrazené vo Vašom kalendári.</string>
-  <string name="account_list_save">Uložiť a použiť filter</string>
   <string name="account_list_empty">Žiadne účty</string>
   <!--Free Version-->
   <string name="pref_buy">Kúpiť plnú verziu!</string>

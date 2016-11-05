@@ -1,9 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <!--AsyncTask progress dialogs-->
-  <string name="creating">Création de l\'adaptateur...</string>
-  <string name="removing">Suppression de l\'adapteur...</string>
-  <string name="synchronizing">Synchronisation...</string>
   <!--Calendar-->
   <string name="calendar_display_name">Anniversaires</string>
   <string name="event_title_birthday_with_age">%1$s : anniversaire (%2$d)</string>
@@ -24,16 +20,10 @@
   <string name="tab_about">À propos de</string>
   <!--Preferences-->
   <string name="pref_general">Général</string>
-  <string name="pref_description">Description</string>
-  <string name="pref_enable_switch">Calendrier</string>
-  <string name="pref_enable">Activer le calendrier des anniversaires</string>
-  <string name="pref_enable_summary">Affiche les anniversaires, fêtes et autres évènements définis dans vos contacts comme  calendrier dans votre calendrier Android.</string>
   <string name="pref_color">Couleur</string>
-  <string name="pref_color_summary">Couleur du calendrier des anniversaires</string>
   <string name="pref_help">Aide</string>
   <string name="pref_about">À propos de</string>
   <string name="pref_force_sync">Synchroniser maintenant !</string>
-  <string name="pref_force_sync_summary">Vous n\'avez normalement pas à le faire car l\'adaptateur d\'anniversaires se synchronise automatiquement une fois par jour.</string>
   <string name="pref_reminders">Rappels</string>
   <string name="pref_reminder_enable0">Activer le rappel 1</string>
   <string name="pref_reminder_enable1">Activer le rappel 2</string>
@@ -67,18 +57,13 @@
   <string name="pref_title_summary_with_age">Insérer %1$s pour le nom du contact et %2$d pour son âge.</string>
   <string name="pref_title_summary_custom_without_age">Insérer %1$s pour le nom du contact et %2$s pour l\'étiquette personnalisée de cet évènement.</string>
   <string name="pref_title_summary_custom_with_age">Insérer %1$s pour le nom du contact, %2$s pour l\'étiquette personnalisée de cet évènement, et %3$d pour son âge.</string>
-  <string name="pref_advanced">Paramètres avancés</string>
   <string name="pref_prefer_dd_slash_mm">Préférer le format JJ/MM/aaaa</string>
   <string name="pref_prefer_dd_slash_mm_summary">Préférer JJ/MM/aaaa à MM/JJ/aaaaa pour les formats de dates</string>
+  <string name="pref_advanced">Paramètres avancés</string>
   <!--Adapter Screen-->
   <string name="pref_account_header">Paramètres</string>
   <string name="pref_account_settings">Configurer l\'Adaptateur d\'anniversaires</string>
-  <!--Color Picker-->
-  <string name="dialog_color_picker">Choix de la couleur</string>
-  <string name="press_color_to_apply">Toucher la couleur à appliquer</string>
   <!--Accounts-->
-  <string name="account_list_description">Seuls les évènements des comptes choisis seront affichés dans votre calendrier.</string>
-  <string name="account_list_save">Sauvegarder et appliquer le filtre</string>
   <string name="account_list_empty">Aucun compte</string>
   <!--Free Version-->
   <string name="pref_buy">Acheter la version complète !</string>

@@ -1,9 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <!--AsyncTask progress dialogs-->
-  <string name="creating">Adapter wird erstellt...</string>
-  <string name="removing">Adapter wird entfernt...</string>
-  <string name="synchronizing">Ereignisse werden synchronisiert...</string>
   <!--Calendar-->
   <string name="calendar_display_name">Geburtstage</string>
   <string name="event_title_birthday_with_age">%1$s: Geburtstag (%2$d)</string>
@@ -24,16 +20,10 @@
   <string name="tab_about">Über</string>
   <!--Preferences-->
   <string name="pref_general">Allgemein</string>
-  <string name="pref_description">Beschreibung</string>
-  <string name="pref_enable_switch">Kalender</string>
-  <string name="pref_enable">Adapter aktivieren</string>
-  <string name="pref_enable_summary">Zeigt Geburtstage, Jahrestage und andere Ereignisse, die in den Kontakten hinterlegt sind, als eigenen Kalender im Android-Kalender an.</string>
   <string name="pref_color">Farbe</string>
-  <string name="pref_color_summary">Farbe des Kalenders</string>
   <string name="pref_help">Hilfe</string>
   <string name="pref_about">Über</string>
   <string name="pref_force_sync">Jetzt synchronisieren!</string>
-  <string name="pref_force_sync_summary">Normalerweise ist das manuelle Synchronisieren nicht nötig, da der Birthday Adapter einmal pro Tag automatisch synchronisiert wird.</string>
   <string name="pref_reminders">Erinnerungen</string>
   <string name="pref_reminder_enable0">Erinnerung 1 aktivieren</string>
   <string name="pref_reminder_enable1">Erinnerung 2 aktivieren</string>
@@ -67,18 +57,13 @@
   <string name="pref_title_summary_with_age">Benutze %1$s um den Kontaktnamen und %2$d um das Alter einzufügen.</string>
   <string name="pref_title_summary_custom_without_age">Benutze %1$s um den Kontaktnamen und %2$s um den benutzerdefinierten Titel einzufügen.</string>
   <string name="pref_title_summary_custom_with_age">Benutze %1$s um den Kontaktnamen, %2$s um den benutzerdefinierten Titel und %3$d um das Alter einzufügen.</string>
-  <string name="pref_advanced">Erweiterte Einstellungen</string>
   <string name="pref_prefer_dd_slash_mm">dd/MM/yyyy Format bevorzugen</string>
   <string name="pref_prefer_dd_slash_mm_summary">Bevorzuge dd/MM/yyyy gegenüber MM/dd/yyyy beim Parsen von Datumsformaten</string>
+  <string name="pref_advanced">Erweiterte Einstellungen</string>
   <!--Adapter Screen-->
   <string name="pref_account_header">Einstellungen</string>
   <string name="pref_account_settings">Birthday Adapter konfigurieren</string>
-  <!--Color Picker-->
-  <string name="dialog_color_picker">Farbauswahl</string>
-  <string name="press_color_to_apply">Klicke auf die Farbe um zu bestätigen</string>
   <!--Accounts-->
-  <string name="account_list_description">Nur Ereignisse von den ausgewählten Konten werden in deinem Kalender angezeigt.</string>
-  <string name="account_list_save">Filter speichern und anwenden</string>
   <string name="account_list_empty">Keine Konten vorhanden</string>
   <!--Free Version-->
   <string name="pref_buy">Vollversion kaufen</string>

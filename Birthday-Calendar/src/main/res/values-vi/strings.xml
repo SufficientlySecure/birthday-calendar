@@ -1,9 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <!--AsyncTask progress dialogs-->
-  <string name="creating">Đang tạo trình gắn kết...</string>
-  <string name="removing">Đang xoá trình gắn kết...</string>
-  <string name="synchronizing">Đang đồng bộ...</string>
   <!--Calendar-->
   <string name="calendar_display_name">Sinh nhật</string>
   <string name="event_title_birthday_with_age">%1$s: Sinh nhật (%2$d)</string>
@@ -24,19 +20,10 @@
   <string name="tab_about">Thông tin về</string>
   <!--Preferences-->
   <string name="pref_general">Tổng quan</string>
-  <string name="pref_description">Mô tả</string>
-  <string name="pref_enable_switch">Lịch</string>
-  <string name="pref_enable">Bật lịch sinh nhật</string>
-  <string name="pref_enable_summary">Hiển thị ngày sinh, lễ kỷ niệm và các sự kiện khác đã lưu trong danh bạ dưới dạng một
-bộ lịch trong Lịch của Android.</string>
   <string name="pref_color">Màu sắc</string>
-  <string name="pref_color_summary">Màu lịch sinh nhật</string>
   <string name="pref_help">Trợ giúp</string>
   <string name="pref_about">Thông tin về</string>
   <string name="pref_force_sync">Đồng bộ ngay!</string>
-  <string name="pref_force_sync_summary">Thông thường thì bạn không cần làm điều này vì Birthday Adapter sẽ tự động đồng bộ
-mỗi ngày một lần.
-</string>
   <string name="pref_reminders">Nhắc nhở</string>
   <string name="pref_reminder_enable0">Bật nhắc nhở 1</string>
   <string name="pref_reminder_enable1">Bật nhắc nhở 2</string>
@@ -74,19 +61,13 @@ tuỳ chọn của sự kiện.
   <string name="pref_title_summary_custom_with_age">Chèn %1$s vào phần tên liên hệ, %2$s vào phần nhãn tuỳ chọn của
 sự kiện này, và %3$d cho phần tuổi.
 </string>
-  <string name="pref_advanced">Cài đặt nâng cao</string>
   <string name="pref_prefer_dd_slash_mm">Định dạng ưa thích dd/MM/yyyy</string>
   <string name="pref_prefer_dd_slash_mm_summary">Chọn dd/MM/yyyy thay vì MM/dd/yyyy khi phân tích định dạng ngày tháng</string>
+  <string name="pref_advanced">Cài đặt nâng cao</string>
   <!--Adapter Screen-->
   <string name="pref_account_header">Cài đặt</string>
   <string name="pref_account_settings">Cấu hình Birthday Adapter</string>
-  <!--Color Picker-->
-  <string name="dialog_color_picker">Trình chọn màu</string>
-  <string name="press_color_to_apply">Nhấn vào Màu sắc để áp dụng</string>
   <!--Accounts-->
-  <string name="account_list_description">Chỉ những sự kiện từ các tài khoản đã chọn sẽ được hiển thị trên lịch.
-</string>
-  <string name="account_list_save">Lưu và áp dụng bộ lọc</string>
   <string name="account_list_empty">Không có tài khoản nào</string>
   <!--Free Version-->
   <string name="pref_buy">Hãy mua phiên bản đầy đủ!</string>

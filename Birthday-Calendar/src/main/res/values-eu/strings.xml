@@ -1,9 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <!--AsyncTask progress dialogs-->
-  <string name="creating">Egokitzailea sortzen...</string>
-  <string name="removing">Egokitzailea kentzen...</string>
-  <string name="synchronizing">Aldibertzen...</string>
   <!--Calendar-->
   <string name="calendar_display_name">Urtebetetzea</string>
   <string name="event_title_birthday_with_age">%1$s: Urtebetetzea (%2$d)</string>
@@ -24,21 +20,10 @@
   <string name="tab_about">Honi buruz</string>
   <!--Preferences-->
   <string name="pref_general">Orokorra</string>
-  <string name="pref_description">Azalpena</string>
-  <string name="pref_enable_switch">Egutegia</string>
-  <string name="pref_enable">Gaitu Urtebetetze Egutegia</string>
-  <string name="pref_enable_summary">Urtebetetzeak, urteurrenak, eta harremanetan zehaztutako beste gertaerak
-egutegi bat bezala erakusten ditu zure Android Egutegian.
-    </string>
   <string name="pref_color">Margoa</string>
-  <string name="pref_color_summary">Urtebetetze egutegiaren margoa</string>
   <string name="pref_help">Laguntza</string>
   <string name="pref_about">Honi buruz</string>
   <string name="pref_force_sync">Aldiberetu orain!</string>
-  <string name="pref_force_sync_summary">Arrunt ez duzu hau egin beharrik, zeren Urtebetetze Egokitzaileak berezgaitasunez
-aldiberetzen du egunean behin.
-
-    </string>
   <string name="pref_reminders">Gogoratzaileak</string>
   <string name="pref_reminder_enable0">Gaitu 1 Gogoratzailea</string>
   <string name="pref_reminder_enable1">Gaitu 2 Gogoratzailea</string>
@@ -75,18 +60,13 @@ aldiberetzen du egunean behin.
     </string>
   <string name="pref_title_summary_custom_with_age">Txertatu %1$s harremanaren izenerako, %2$s gertaera honen
         norbere etiketarako eta %3$d adinerako.</string>
-  <string name="pref_advanced">Ezarpen Aurreratuak</string>
   <string name="pref_prefer_dd_slash_mm">Hobetsi dd/MM/yyyy heuskarria</string>
   <string name="pref_prefer_dd_slash_mm_summary">Hobetsi MM/dd/yyyy -&gt; dd/MM/yyyy gain egun heuskarriak aztertzerakoan</string>
+  <string name="pref_advanced">Ezarpen Aurreratuak</string>
   <!--Adapter Screen-->
   <string name="pref_account_header">Ezarpenak</string>
   <string name="pref_account_settings">Itxuratu Birthday Egokitzailea</string>
-  <!--Color Picker-->
-  <string name="dialog_color_picker">Margo Hautatzailea</string>
-  <string name="press_color_to_apply">Sakatu Margo bat ezartzeko</string>
   <!--Accounts-->
-  <string name="account_list_description">Hautaturiko kontuetako gertaerak bakarrik erakutsiko dira zure egutegian.</string>
-  <string name="account_list_save">Gorde eta ezarri iragazkia</string>
   <string name="account_list_empty">Ez dago konturik</string>
   <!--Free Version-->
   <string name="pref_buy">Erosi bertsio osoa!</string>

@@ -1,9 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <!--AsyncTask progress dialogs-->
-  <string name="creating">アダプターを作成中…</string>
-  <string name="removing">アダプターを削除中…</string>
-  <string name="synchronizing">同期中…</string>
   <!--Calendar-->
   <string name="calendar_display_name">誕生日</string>
   <string name="event_title_birthday_with_age">%1$s: 誕生日 (%2$d)</string>
@@ -24,18 +20,10 @@
   <string name="tab_about">アプリについて</string>
   <!--Preferences-->
   <string name="pref_general">全般</string>
-  <string name="pref_description">説明</string>
-  <string name="pref_enable_switch">カレンダー</string>
-  <string name="pref_enable">誕生日カレンダーを有効にする</string>
-  <string name="pref_enable_summary">Android カレンダーに、カレンダーとして連絡先に定義された
-誕生日、記念日、その他のイベントを表示する</string>
   <string name="pref_color">色</string>
-  <string name="pref_color_summary">誕生日カレンダーの色</string>
   <string name="pref_help">ヘルプ</string>
   <string name="pref_about">アプリについて</string>
   <string name="pref_force_sync">今すぐ同期!</string>
-  <string name="pref_force_sync_summary">誕生日アダプターは1日に1回自動的に同期を行うため、
-通常この操作は必要ありません。</string>
   <string name="pref_reminders">リマインダー</string>
   <string name="pref_reminder_enable0">リマインダー 1 を有効にする</string>
   <string name="pref_reminder_enable1">リマインダー 2 を有効にする</string>
@@ -70,18 +58,13 @@
   <string name="pref_title_summary_custom_without_age">%1$s に連絡先の名前を、%2$s にこのイベントのカスタムラベルを挿入する。</string>
   <string name="pref_title_summary_custom_with_age">%1$s に連絡先の名前を、%2$s このイベントのカスタムラベルを、
 %3$d に年齢を挿入する。</string>
-  <string name="pref_advanced">追加の設定</string>
   <string name="pref_prefer_dd_slash_mm">dd/MM/yyyy 形式を用いる</string>
   <string name="pref_prefer_dd_slash_mm_summary">日付形式の解析時に dd/MM/yyyy から MM/dd/yyyy を用いる</string>
+  <string name="pref_advanced">追加の設定</string>
   <!--Adapter Screen-->
   <string name="pref_account_header">設定</string>
   <string name="pref_account_settings">誕生日アダプターを構成</string>
-  <!--Color Picker-->
-  <string name="dialog_color_picker">色選択</string>
-  <string name="press_color_to_apply">適用する色を選択してください</string>
   <!--Accounts-->
-  <string name="account_list_description">選択したアカウントのイベントのみ、カレンダーに表示されます。</string>
-  <string name="account_list_save">保存およびフィルターを適用</string>
   <string name="account_list_empty">アカウントがありません</string>
   <!--Free Version-->
   <string name="pref_buy">完全バージョンを購入!</string>
