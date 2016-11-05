@@ -80,10 +80,6 @@ along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
   https://github.com/Gericop/Android-Support-Preference-V7-Fix  
   Apache License v2
 
-* Compatibility version of CalendarProvider  
-  https://github.com/dschuermann/android-calendar-compatibility  
-  Apache License v2
-
 * HtmlTextView  
   https://github.com/dschuermann/html-textview  
   Apache License v2
