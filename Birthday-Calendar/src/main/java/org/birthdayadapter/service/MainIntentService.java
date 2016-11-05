@@ -32,6 +32,9 @@ import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
 import org.birthdayadapter.util.BackgroundStatusHandler;
 
+/**
+ * An IntentServices queues incoming Intents and works them one by one.
+ */
 public class MainIntentService extends IntentService {
 
     /* extras that can be given by intent */

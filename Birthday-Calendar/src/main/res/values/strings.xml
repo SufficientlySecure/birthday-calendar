@@ -101,7 +101,7 @@
     <string name="press_color_to_apply">Press on Color to apply</string>
 
     <!-- Accounts -->
-    <string name="account_list_description">Only events from selected accounts will be displayed in your calendar.
+    <string name="account_list_description">Only birthdays from selected accounts will be displayed in your calendar.
     </string>
     <string name="account_list_save">Save and apply filter</string>
     <string name="account_list_empty">No accounts</string>

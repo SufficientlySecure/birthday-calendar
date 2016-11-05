@@ -26,10 +26,4 @@
         android:text="@string/account_list_empty"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <Button
-        android:id="@+id/account_list_save"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/account_list_save" />
-
 </LinearLayout>

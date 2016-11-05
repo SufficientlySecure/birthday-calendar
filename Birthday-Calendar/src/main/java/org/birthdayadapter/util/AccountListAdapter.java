@@ -20,6 +20,7 @@
 
 package org.birthdayadapter.util;
 
+import android.accounts.Account;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -33,6 +34,7 @@ import android.widget.TextView;
 
 import org.birthdayadapter.R;
 
+import java.util.HashSet;
 import java.util.List;
 
 public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
@@ -62,6 +64,21 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
 
     public List<AccountListEntry> getData() {
         return data;
+    }
+
+    public HashSet<Account> getAccountBlacklist() {
+        if (getData() == null) {
+            return null;
+        }
+
+        HashSet<Account> blacklist = new HashSet<>();
+        for (AccountListEntry entry : getData()) {
+            Log.d(Constants.TAG, "entry: " + entry.getLabel() + " " + entry.isSelected());
+            if (!entry.isSelected()) {
+                blacklist.add(entry.getAccount());
+            }
+        }
+        return blacklist;
     }
 
     /**

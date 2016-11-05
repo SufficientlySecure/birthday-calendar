@@ -21,15 +21,14 @@
 package org.birthdayadapter.ui;
 
 import android.accounts.Account;
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
 
 import org.birthdayadapter.R;
@@ -38,8 +37,6 @@ import org.birthdayadapter.service.MainIntentService;
 import org.birthdayadapter.util.AccountListAdapter;
 import org.birthdayadapter.util.AccountListEntry;
 import org.birthdayadapter.util.AccountListLoader;
-import org.birthdayadapter.util.Constants;
-import org.birthdayadapter.util.Log;
 
 import java.util.HashSet;
 import java.util.List;
@@ -49,6 +46,14 @@ public class AccountListFragment extends ListFragment implements
 
     AccountListAdapter mAdapter;
     BaseActivity mActivity;
+
+    DataSetObserver dos = new DataSetObserver() {
+        @Override
+        public void onChanged() {
+            super.onChanged();
+            applyBlacklist();
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,6 +74,8 @@ public class AccountListFragment extends ListFragment implements
         mAdapter = new AccountListAdapter(getActivity());
         setListAdapter(mAdapter);
 
+        mAdapter.registerDataSetObserver(dos);
+
         mActivity = (BaseActivity) getActivity();
 
         // Start out with a progress indicator.
@@ -78,26 +85,16 @@ public class AccountListFragment extends ListFragment implements
         // Prepare the loader. Either re-connect with an existing one,
         // or start a new one.
         getLoaderManager().initLoader(0, null, this);
+    }
 
-        Button saveButton = (Button) getActivity().findViewById(R.id.account_list_save);
-        saveButton.setOnClickListener(new OnClickListener() {
+    private void applyBlacklist() {
+        HashSet<Account> blacklist = mAdapter.getAccountBlacklist();
 
-            @Override
-            public void onClick(View v) {
-                HashSet<Account> blacklist = new HashSet<>();
-                for (AccountListEntry entry : mAdapter.getData()) {
-                    Log.d(Constants.TAG, "entry: " + entry.getLabel() + " " + entry.isSelected());
-                    if (!entry.isSelected()) {
-                        blacklist.add(entry.getAccount());
-                    }
-                }
-
-                ProviderHelper.setAccountBlacklist(getActivity(), blacklist);
-
-                // resync
-                mActivity.mySharedPreferenceChangeListener.startServiceAction(MainIntentService.ACTION_MANUAL_COMPLETE_SYNC);
-            }
-        });
+        if (blacklist != null) {
+            ProviderHelper.setAccountBlacklist(getActivity(), blacklist);
+            mActivity.mySharedPreferenceChangeListener.startServiceAction(
+                    MainIntentService.ACTION_MANUAL_COMPLETE_SYNC);
+        }
     }
 
     @Override
