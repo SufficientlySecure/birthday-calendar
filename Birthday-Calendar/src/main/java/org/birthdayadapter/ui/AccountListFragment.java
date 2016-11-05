@@ -57,7 +57,7 @@ public class AccountListFragment extends ListFragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.account_list_fragment, null);
+        return inflater.inflate(R.layout.account_list_fragment, container, false);
     }
 
     /**

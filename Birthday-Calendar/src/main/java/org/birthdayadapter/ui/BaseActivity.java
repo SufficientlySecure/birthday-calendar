@@ -41,6 +41,7 @@ import org.birthdayadapter.util.PreferencesHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class BaseActivity extends AppCompatActivity implements BackgroundStatusHandler.StatusChangeListener {
 
@@ -76,7 +77,8 @@ public class BaseActivity extends AppCompatActivity implements BackgroundStatusH
         if (BuildConfig.GOOGLE_PLAY_VERSION && PreferencesHelper.getShowWorkaroundDialog(this)
                 && !isPackageInstalled("org.birthdayadapter.jb.workaround")) {
             if ((Build.VERSION.SDK_INT == 16)
-                    || Build.DEVICE.toUpperCase().startsWith("GT-I9000") || Build.DEVICE.toUpperCase().startsWith("GT-I9500")) {
+                    || Build.DEVICE.toUpperCase(Locale.US).startsWith("GT-I9000")
+                    || Build.DEVICE.toUpperCase(Locale.US).startsWith("GT-I9500")) {
                 InstallWorkaroundDialogFragment dialog = InstallWorkaroundDialogFragment.newInstance();
                 dialog.show(getSupportFragmentManager(), "workaroundDialog");
             }

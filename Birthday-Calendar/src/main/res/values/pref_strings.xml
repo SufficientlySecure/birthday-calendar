@@ -10,8 +10,6 @@
     <string name="pref_enabled_key" translatable="false">enabled</string>
     <string name="pref_contacts_key" translatable="false">contacts</string>
     <string name="pref_calendar_key" translatable="false">calendar</string>
-    <string name="pref_help_key" translatable="false">help</string>
-    <string name="pref_about_key" translatable="false">about</string>
     <string name="pref_color_key" translatable="false">color</string>
 
     <!-- The first two hex numbers are for opacity and must be FF -->

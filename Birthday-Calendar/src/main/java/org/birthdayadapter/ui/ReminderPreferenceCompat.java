@@ -20,6 +20,7 @@
 
 package org.birthdayadapter.ui;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -104,6 +105,7 @@ public class ReminderPreferenceCompat extends Preference {
         AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
+        @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.pref_reminder, null);
         alert.setView(view);
 

@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
+    android:maxLines="1"
     android:orientation="horizontal"
     android:paddingLeft="3dip"
-    android:paddingRight="?android:attr/scrollbarSize"
-    android:singleLine="true">
+    android:paddingRight="?android:attr/scrollbarSize">
 
     <CheckBox
         android:id="@+id/account_list_cbox"
@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
-            android:singleLine="true" />
+            android:maxLines="1" />
     </LinearLayout>
 
 </LinearLayout>
