@@ -39,7 +39,7 @@ public class PreferencesHelper {
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(context.getString(R.string.pref_first_run_key), value);
-        editor.commit();
+        editor.apply();
     }
 
     public static boolean getShowWorkaroundDialog(Context context) {
@@ -54,7 +54,7 @@ public class PreferencesHelper {
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(context.getString(R.string.pref_show_workaround_dialog_key), value);
-        editor.commit();
+        editor.apply();
     }
 
     public static int getColor(Context context) {

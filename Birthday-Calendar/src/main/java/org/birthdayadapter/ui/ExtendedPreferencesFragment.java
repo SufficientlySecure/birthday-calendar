@@ -51,9 +51,10 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                     try {
                         startActivity(new Intent(Intent.ACTION_VIEW,
                                 Uri.parse("market://details?id=" + Constants.FULL_PACKAGE_NAME)));
-                    } catch (android.content.ActivityNotFoundException anfe) {
+                    } catch (android.content.ActivityNotFoundException e) {
                         startActivity(new Intent(Intent.ACTION_VIEW,
-                                Uri.parse("http://play.google.com/store/apps/details?id=" + Constants.FULL_PACKAGE_NAME)));
+                                Uri.parse("http://play.google.com/store/apps/details?id="
+                                        + Constants.FULL_PACKAGE_NAME)));
                     }
 
                     return false;
@@ -80,13 +81,6 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         // Set up a listener whenever a key changes
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(
                 mActivity.mySharedPreferenceChangeListener);
-
-        // If account is activated check the preference
-        if (mAccountHelper.isAccountActivated()) {
-//            mEnabled.setChecked(true);
-        } else {
-//            mEnabled.setChecked(false);
-        }
     }
 
     @Override

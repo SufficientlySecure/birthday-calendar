@@ -401,19 +401,6 @@ public class CalendarSyncAdapterService extends Service {
         }
     }
 
-
-    /**
-     * Get cursor over contact with events
-     */
-    private static Cursor getContactsEvents(Context context, ContentResolver contentResolver) {
-        // Account Filter is only available on Android >= 4.0
-        if (Build.VERSION.SDK_INT >= 14) {
-            return getContactsEventsWithAccountFilter(context, contentResolver);
-        } else {
-            return getContactsEventsWithoutAccountFilter(context, contentResolver);
-        }
-    }
-
     /**
      * Get Cursor of contacts with events, but only those from Accounts not in our blacklist!
      * <p/>
@@ -422,7 +409,7 @@ public class CalendarSyncAdapterService extends Service {
      *
      * @return Cursor over all contacts with events, where accounts are not blacklisted
      */
-    private static Cursor getContactsEventsWithAccountFilter(Context context, ContentResolver contentResolver) {
+    private static Cursor getContactsEvents(Context context, ContentResolver contentResolver) {
         // 0. get blacklist of Account names from own provider
         HashSet<Account> blacklist = ProviderHelper.getAccountBlacklist(context);
 
@@ -570,26 +557,6 @@ public class CalendarSyncAdapterService extends Service {
             DatabaseUtils.dumpCursor(mc);
 
         return mc;
-    }
-
-    /**
-     * Get Cursor over contacts with events without account filter.
-     * This method is used on Android < 4.
-     */
-    private static Cursor getContactsEventsWithoutAccountFilter(Context context, ContentResolver contentResolver) {
-        Uri uri = ContactsContract.Data.CONTENT_URI;
-        String[] projection = new String[]{ContactsContract.Contacts.Data._ID,
-                ContactsContract.Contacts.DISPLAY_NAME,
-                ContactsContract.CommonDataKinds.Event.CONTACT_ID,
-                ContactsContract.CommonDataKinds.Event.LOOKUP_KEY,
-                ContactsContract.CommonDataKinds.Event.START_DATE,
-                ContactsContract.CommonDataKinds.Event.TYPE,
-                ContactsContract.CommonDataKinds.Event.LABEL};
-        String where = ContactsContract.Data.MIMETYPE + "= ? AND "
-                + ContactsContract.CommonDataKinds.Event.TYPE + " IS NOT NULL";
-        String[] selectionArgs = new String[]{ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE};
-
-        return contentResolver.query(uri, projection, where, selectionArgs, null);
     }
 
     /**

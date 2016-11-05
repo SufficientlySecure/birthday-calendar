@@ -28,6 +28,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -43,8 +44,7 @@ public class InstallWorkaroundDialogFragment extends DialogFragment {
      * Creates new instance of this dialog fragment
      */
     public static InstallWorkaroundDialogFragment newInstance() {
-        InstallWorkaroundDialogFragment frag = new InstallWorkaroundDialogFragment();
-        return frag;
+        return new InstallWorkaroundDialogFragment();
     }
 
     @Override
@@ -61,6 +61,7 @@ public class InstallWorkaroundDialogFragment extends DialogFragment {
     /**
      * Creates dialog
      */
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Linkify the message

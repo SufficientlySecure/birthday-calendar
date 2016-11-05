@@ -52,8 +52,7 @@ public class AccountListFragment extends ListFragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.account_list_fragment, null);
-        return view;
+        return inflater.inflate(R.layout.account_list_fragment, null);
     }
 
     /**
@@ -85,7 +84,7 @@ public class AccountListFragment extends ListFragment implements
 
             @Override
             public void onClick(View v) {
-                HashSet<Account> blacklist = new HashSet<Account>();
+                HashSet<Account> blacklist = new HashSet<>();
                 for (AccountListEntry entry : mAdapter.getData()) {
                     Log.d(Constants.TAG, "entry: " + entry.getLabel() + " " + entry.isSelected());
                     if (!entry.isSelected()) {
