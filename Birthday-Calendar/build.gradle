@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 
 dependencies {
-    compile 'com.android.support:support-v4:25.0.0'
     compile 'com.android.support:appcompat-v7:25.0.0'
     compile 'com.android.support:design:25.0.0'
 //    compile 'com.android.support:preference-v7:25.0.0'
@@ -20,7 +19,6 @@ android {
         targetSdkVersion 25
         versionCode 19
         versionName "2.0"
-        applicationId "org.birthdayadapter"
     }
 
     compileOptions {
@@ -54,13 +52,6 @@ android {
         buildTypes.release.signingConfig = signingConfigs.release
     } else {
         buildTypes.release.signingConfig = null
-    }
-
-    lintOptions {
-        checkReleaseBuilds false
-        // Or, if you prefer, you can continue to check for errors in release builds,
-        // but continue the build even when errors are found:
-        abortOnError false
     }
 
     productFlavors {
