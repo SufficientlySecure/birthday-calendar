@@ -26,11 +26,11 @@ import android.os.Bundle;
 
 import org.birthdayadapter.util.AccountHelper;
 
+/**
+ * This activity is transparent, i.e., it has no layout
+ */
 public class AddAccountActivity extends AccountAuthenticatorActivity {
 
-    /**
-     * Called when the activity is first created.
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
