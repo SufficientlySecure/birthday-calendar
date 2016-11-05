@@ -20,84 +20,60 @@
 
 package org.birthdayadapter.ui;
 
-import android.content.Context;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Window;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.BackgroundStatusHandler;
-import org.birthdayadapter.util.FragmentStatePagerAdapterV14;
 import org.birthdayadapter.util.MySharedPreferenceChangeListener;
 import org.birthdayadapter.util.PreferencesHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity implements BackgroundStatusHandler.StatusChangeListener {
 
     public BackgroundStatusHandler mBackgroundStatusHandler = new BackgroundStatusHandler(this);
 
     public MySharedPreferenceChangeListener mySharedPreferenceChangeListener;
 
-    /**
-     * Called when the activity is first created.
-     */
+    private ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FragmentActivity mActivity = this;
+        setContentView(R.layout.base_activity);
 
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        progressBar = (ProgressBar) findViewById(R.id.progress_spinner);
 
-        // Load new design with tabs
-        ViewPager mViewPager = new ViewPager(this);
-        mViewPager.setId(R.id.pager);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
 
-        setContentView(mViewPager);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(false);
-
-        TabsAdapter mTabsAdapter = new TabsAdapter(this, mViewPager);
-
-        mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_main)),
-                BasePreferenceFragment.class, null);
-
-        mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_preferences)),
-                ExtendedPreferencesFragment.class, null);
-
-        mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_accounts)),
-                AccountListFragment.class, null);
-
-        mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_help)),
-                HelpFragment.class, null);
-
-        mTabsAdapter.addTab(actionBar.newTab().setText(getString(R.string.tab_about)),
-                AboutFragment.class, null);
-
-        // default is disabled:
-        mActivity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
-
-        mySharedPreferenceChangeListener = new MySharedPreferenceChangeListener(mActivity,
+        mySharedPreferenceChangeListener = new MySharedPreferenceChangeListener(this,
                 mBackgroundStatusHandler);
 
-            /*
-             * Show workaround dialog for Android bug http://code.google.com/p/android/issues/detail?id=34880
-             * Bug exists on Android 4.1 (SDK 16) and on some phones like Galaxy S4
-             */
-        if (BuildConfig.GOOGLE_PLAY_VERSION && PreferencesHelper.getShowWorkaroundDialog(mActivity)
+        /*
+         * Show workaround dialog for Android bug http://code.google.com/p/android/issues/detail?id=34880
+         * Bug exists on Android 4.1 (SDK 16) and on some phones like Galaxy S4
+         */
+        if (BuildConfig.GOOGLE_PLAY_VERSION && PreferencesHelper.getShowWorkaroundDialog(this)
                 && !isPackageInstalled("org.birthdayadapter.jb.workaround")) {
             if ((Build.VERSION.SDK_INT == 16)
                     || Build.DEVICE.toUpperCase().startsWith("GT-I9000") || Build.DEVICE.toUpperCase().startsWith("GT-I9500")) {
@@ -107,87 +83,62 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    public boolean isPackageInstalled(String targetPackage) {
-        PackageManager pm = getPackageManager();
-        try {
-            PackageInfo info = pm.getPackageInfo(targetPackage, PackageManager.GET_META_DATA);
-        } catch (PackageManager.NameNotFoundException e) {
-            return false;
-        }
-        return true;
+    public void setIndeterminateProgress(boolean visible) {
+        progressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
-    public static class TabsAdapter extends FragmentStatePagerAdapterV14 implements
-            ActionBar.TabListener, ViewPager.OnPageChangeListener {
-        private final Context mContext;
-        private final ActionBar mActionBar;
-        private final ViewPager mViewPager;
-        private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new BasePreferenceFragment(), getString(R.string.tab_main));
+        adapter.addFragment(new ExtendedPreferencesFragment(), getString(R.string.tab_preferences));
+        adapter.addFragment(new AccountListFragment(), getString(R.string.tab_accounts));
+        adapter.addFragment(new HelpFragment(), getString(R.string.tab_help));
+        adapter.addFragment(new AboutFragment(), getString(R.string.tab_about));
+        viewPager.setAdapter(adapter);
+    }
 
-        static final class TabInfo {
-            private final Class<?> clss;
-            private final Bundle args;
+    @Override
+    public void onStatusChange(boolean progress) {
+        setIndeterminateProgress(progress);
+    }
 
-            TabInfo(Class<?> _class, Bundle _args) {
-                clss = _class;
-                args = _args;
-            }
-        }
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
 
-        public TabsAdapter(AppCompatActivity activity, ViewPager pager) {
-            super(activity.getSupportFragmentManager());
-            mContext = activity;
-            mActionBar = activity.getSupportActionBar();
-            mViewPager = pager;
-            mViewPager.setAdapter(this);
-            mViewPager.setOnPageChangeListener(this);
-        }
-
-        public void addTab(ActionBar.Tab tab, Class<?> clss, Bundle args) {
-            TabInfo info = new TabInfo(clss, args);
-            tab.setTag(info);
-            tab.setTabListener(this);
-            mTabs.add(info);
-            mActionBar.addTab(tab);
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public int getCount() {
-            return mTabs.size();
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
         }
 
         @Override
         public Fragment getItem(int position) {
-            TabInfo info = mTabs.get(position);
-            return Fragment.instantiate(mContext, info.clss.getName(), info.args);
+            return mFragmentList.get(position);
         }
 
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
         }
 
-        public void onPageSelected(int position) {
-            mActionBar.setSelectedNavigationItem(position);
+        public void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
         }
 
-        public void onPageScrollStateChanged(int state) {
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
         }
+    }
 
-        public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-            Object tag = tab.getTag();
-            for (int i = 0; i < mTabs.size(); i++) {
-                if (mTabs.get(i) == tag) {
-                    mViewPager.setCurrentItem(i);
-                }
-            }
+    public boolean isPackageInstalled(String targetPackage) {
+        PackageManager pm = getPackageManager();
+        try {
+            pm.getPackageInfo(targetPackage, PackageManager.GET_META_DATA);
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
         }
-
-        public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-        }
-
-        public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-        }
-
+        return true;
     }
 
 }

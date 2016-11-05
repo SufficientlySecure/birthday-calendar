@@ -2,6 +2,8 @@ apply plugin: 'com.android.application'
 
 dependencies {
     compile 'com.android.support:support-v4:25.0.0'
+    compile 'com.android.support:appcompat-v7:25.0.0'
+    compile 'com.android.support:design:25.0.0'
 //    compile 'com.android.support:preference-v7:25.0.0'
 //    compile 'com.android.support:preference-v14:25.0.0'
     compile 'com.takisoft.fix:preference-v7:25.0.0.0'

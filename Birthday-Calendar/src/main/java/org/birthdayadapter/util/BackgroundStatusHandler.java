@@ -22,18 +22,22 @@ package org.birthdayadapter.util;
 
 import java.lang.ref.WeakReference;
 
-import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
 
 public class BackgroundStatusHandler extends Handler {
+
+    public interface StatusChangeListener {
+        public void onStatusChange(boolean progress);
+    }
+
     public static final int BACKGROUND_STATUS_HANDLER_DISABLE = 0;
     public static final int BACKGROUND_STATUS_HANDLER_ENABLE = 1;
 
-    private WeakReference<Activity> mActivity;
+    private WeakReference<StatusChangeListener> mListener;
 
-    public BackgroundStatusHandler(Activity activity) {
-        mActivity = new WeakReference<>(activity);
+    public BackgroundStatusHandler(StatusChangeListener activity) {
+        mListener = new WeakReference<>(activity);
         noOfRunningBackgroundThreads = 0;
     }
 
@@ -41,15 +45,15 @@ public class BackgroundStatusHandler extends Handler {
 
     @Override
     public void handleMessage(Message msg) {
-        Activity activity = mActivity.get();
+        StatusChangeListener listener = mListener.get();
         final int what = msg.what;
 
         switch (what) {
             case BACKGROUND_STATUS_HANDLER_ENABLE:
                 noOfRunningBackgroundThreads++;
 
-                if (activity != null) {
-                    activity.setProgressBarIndeterminateVisibility(Boolean.TRUE);
+                if (listener != null) {
+                    listener.onStatusChange(true);
                 }
                 break;
 
@@ -57,8 +61,8 @@ public class BackgroundStatusHandler extends Handler {
                 noOfRunningBackgroundThreads--;
 
                 if (noOfRunningBackgroundThreads <= 0) {
-                    if (activity != null) {
-                        activity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
+                    if (listener != null) {
+                        listener.onStatusChange(false);
                     }
                 }
 
