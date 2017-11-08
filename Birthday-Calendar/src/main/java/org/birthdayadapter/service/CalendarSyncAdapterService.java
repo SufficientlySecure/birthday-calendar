@@ -298,6 +298,7 @@ public class CalendarSyncAdapterService extends Service {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(parsedDate);
                 cal.set(Calendar.YEAR, 1700);
+                parsedDate = cal.getTime();
             }
 
             return parsedDate;
