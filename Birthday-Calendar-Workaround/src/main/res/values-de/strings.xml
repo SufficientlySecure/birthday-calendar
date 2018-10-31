@@ -1,0 +1,10 @@
+<resources>
+
+    <string name="label">Birthday Adapter</string>
+    <string name="account_type">org.birthdayadapter.account</string>
+
+    <!-- Adapter Screen -->
+    <string name="pref_account_header">Einstellungen</string>
+    <string name="pref_account_settings">Birthday Adapter konfigurieren</string>
+
+</resources>
