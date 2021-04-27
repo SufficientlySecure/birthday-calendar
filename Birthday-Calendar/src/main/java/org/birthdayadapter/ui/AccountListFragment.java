@@ -84,7 +84,7 @@ public class AccountListFragment extends ListFragment implements
 
         // Prepare the loader. Either re-connect with an existing one,
         // or start a new one.
-        getLoaderManager().initLoader(0, null, this);
+        LoaderManager.getInstance(this).initLoader(0, null, this);
     }
 
     private void applyBlacklist() {

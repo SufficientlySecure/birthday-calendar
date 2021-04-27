@@ -51,13 +51,7 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
     public void setData(List<AccountListEntry> data) {
         clear();
         if (data != null) {
-            if (Build.VERSION.SDK_INT >= 11) {
-                addAll(data);
-            } else {
-                for (AccountListEntry entry : data) {
-                    add(entry);
-                }
-            }
+            addAll(data);
             this.data = data;
         }
     }

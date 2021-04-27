@@ -63,6 +63,7 @@ import org.birthdayadapter.util.PreferencesHelper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -259,12 +260,10 @@ public class CalendarSyncAdapterService extends Service {
          * Note: HTC calendar (4.0.3 Android + HTC Sense 4.0) will show a conflict with other events
          * if availability is not set to free!
          */
-        if (Build.VERSION.SDK_INT >= 14) {
-            builder.withValue(Events.AVAILABILITY, Events.AVAILABILITY_FREE);
-        }
+        builder.withValue(Events.AVAILABILITY, Events.AVAILABILITY_FREE);
 
         // add button to open contact
-        if (Build.VERSION.SDK_INT >= 16 && lookupKey != null) {
+        if (lookupKey != null) {
             builder.withValue(Events.CUSTOM_APP_PACKAGE, context.getPackageName());
             Uri contactLookupUri = Uri.withAppendedPath(
                     ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
@@ -565,6 +564,7 @@ public class CalendarSyncAdapterService extends Service {
      */
     private static String generateTitle(Context context, int eventType, Cursor cursor,
                                         int eventCustomLabelColumn, boolean includeAge, String displayName, int age) {
+        displayName = addJubileeIcon(displayName, age);
         String title = null;
         if (displayName != null) {
             switch (eventType) {
@@ -601,6 +601,18 @@ public class CalendarSyncAdapterService extends Service {
         }
 
         return title;
+    }
+
+    /**
+     * Adds an icon if jubelee age
+     */
+    private static String addJubileeIcon(String displayName, int age) {
+        String jubilees = " 18, 20, 30, 40, 50, 60, 70, 75, 80, 90, 100, ";
+        boolean is_jubilee = jubilees.contains(" " + String.valueOf(age) + ",");
+        if (is_jubilee) {
+            displayName = "\uD83C\uDF89 " + displayName;
+        }
+        return displayName;
     }
 
     private static void cleanTables(ContentResolver contentResolver, long calendarId) {

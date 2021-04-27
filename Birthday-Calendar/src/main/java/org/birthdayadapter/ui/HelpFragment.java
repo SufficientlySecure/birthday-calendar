@@ -21,6 +21,8 @@
 package org.birthdayadapter.ui;
 
 import android.os.Bundle;
+
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,8 +43,8 @@ public class HelpFragment extends Fragment {
         text.setHtml(R.raw.help);
 
         // no flickering when clicking textview for Android < 4
-        text.setTextColor(getResources().getColor(android.R.color.black));
-
+        //text.setTextColor(getResources().getColor(android.R.color.black));
+        text.setTextColor(getResources().getColor(android.R.color.black, null));
         return view;
     }
 }

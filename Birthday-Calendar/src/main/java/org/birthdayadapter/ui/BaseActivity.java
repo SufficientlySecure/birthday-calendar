@@ -69,20 +69,6 @@ public class BaseActivity extends AppCompatActivity implements BackgroundStatusH
 
         mySharedPreferenceChangeListener = new MySharedPreferenceChangeListener(this,
                 mBackgroundStatusHandler);
-
-        /*
-         * Show workaround dialog for Android bug http://code.google.com/p/android/issues/detail?id=34880
-         * Bug exists on Android 4.1 (SDK 16) and on some phones like Galaxy S4
-         */
-        if (BuildConfig.GOOGLE_PLAY_VERSION && PreferencesHelper.getShowWorkaroundDialog(this)
-                && !isPackageInstalled("org.birthdayadapter.jb.workaround")) {
-            if ((Build.VERSION.SDK_INT == 16)
-                    || Build.DEVICE.toUpperCase(Locale.US).startsWith("GT-I9000")
-                    || Build.DEVICE.toUpperCase(Locale.US).startsWith("GT-I9500")) {
-                InstallWorkaroundDialogFragment dialog = InstallWorkaroundDialogFragment.newInstance();
-                dialog.show(getSupportFragmentManager(), "workaroundDialog");
-            }
-        }
     }
 
     public void setIndeterminateProgress(boolean visible) {

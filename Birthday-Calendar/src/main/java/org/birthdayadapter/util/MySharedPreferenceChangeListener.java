@@ -31,8 +31,8 @@ import android.os.Handler;
 import android.os.Messenger;
 
 public class MySharedPreferenceChangeListener implements OnSharedPreferenceChangeListener {
-    private Context context;
-    private Handler handler;
+    private final Context context;
+    private final Handler handler;
 
     public MySharedPreferenceChangeListener(Context context, Handler handler) {
         super();

@@ -62,7 +62,7 @@ public class PreferencesHelper {
                 Context.MODE_PRIVATE);
 
         return prefs.getInt(context.getString(R.string.pref_color_key), context
-                .getResources().getColor(R.color.pref_color_def));
+                .getResources().getColor(R.color.pref_color_def, null));
     }
 
     /**
