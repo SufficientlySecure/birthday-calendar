@@ -26,7 +26,7 @@ import android.accounts.AuthenticatorDescription;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
-import android.support.v4.content.AsyncTaskLoader;
+import androidx.loader.content.AsyncTaskLoader;
 
 import org.birthdayadapter.provider.ProviderHelper;
 
