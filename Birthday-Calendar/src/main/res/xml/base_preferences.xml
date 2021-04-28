@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.preference.Preference
+    <androidx.preference.Preference
         android:persistent="false"
         android:selectable="false"
         android:summary="@string/pref_enable_summary"
         android:title="@string/pref_enable" />
 
-    <android.support.v7.preference.SwitchPreferenceCompat
+    <androidx.preference.SwitchPreferenceCompat
         android:icon="@mipmap/ic_launcher"
         android:key="@string/pref_enabled_key"
         android:persistent="false"
         android:title="@string/pref_enable_switch" />
 
-    <android.support.v7.preference.Preference
+    <androidx.preference.Preference
         android:persistent="false"
         android:selectable="false"
         android:summary="@string/pref_contacts_summary"
         android:title="@string/pref_contacts" />
 
-    <android.support.v7.preference.Preference
+    <androidx.preference.Preference
         android:icon="@mipmap/google_contacts"
         android:key="@string/pref_contacts_key"
         android:persistent="false"
         android:title="@string/pref_contacts_open" />
 
-    <android.support.v7.preference.Preference
+    <androidx.preference.Preference
         android:persistent="false"
         android:selectable="false"
         android:summary="@string/pref_calendar_summary"
         android:title="@string/pref_calendar" />
 
-    <android.support.v7.preference.Preference
+    <androidx.preference.Preference
         android:icon="@mipmap/google_calendar"
         android:key="@string/pref_calendar_key"
         android:persistent="false"
         android:title="@string/pref_calendar_open" />
 
-</android.support.v7.preference.PreferenceScreen>
+</androidx.preference.PreferenceScreen>

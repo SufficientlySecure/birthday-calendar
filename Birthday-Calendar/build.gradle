@@ -1,24 +1,24 @@
 apply plugin: 'com.android.application'
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:25.0.0'
-    compile 'com.android.support:design:25.0.0'
-//    compile 'com.android.support:preference-v7:25.0.0'
-//    compile 'com.android.support:preference-v14:25.0.0'
-    compile 'com.takisoft.fix:preference-v7:25.0.0.0'
-    compile 'org.sufficientlysecure:html-textview:2.0'
-    compile 'com.pavelsikun:vintage-chroma:1.5'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+//    implementation 'com.android.support:preference-v7:25.0.0'
+//    implementation 'com.android.support:preference-v14:25.0.0'
+    implementation 'com.takisoft.fix:preference-v7:25.0.0.0'
+    implementation 'org.sufficientlysecure:html-textview:2.0'
+    implementation 'com.pavelsikun:vintage-chroma:1.5'
 }
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    compileSdkVersion 30
+    buildToolsVersion "29.0.2"
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 30
         versionCode 19
-        versionName "2.0"
+        versionName "2.0.2"
     }
 
     compileOptions {
@@ -59,18 +59,22 @@ android {
         buildTypes.release.signingConfig = null
     }
 
+    flavorDimensions "version"
     productFlavors {
         full {
+            dimension "version"
             applicationId = "org.birthdayadapter"
             buildConfigField "boolean", "FULL_VERSION", "true"
             buildConfigField "boolean", "GOOGLE_PLAY_VERSION", "false"
         }
         full_google {
+            dimension "version"
             applicationId = "org.birthdayadapter"
             buildConfigField "boolean", "FULL_VERSION", "true"
             buildConfigField "boolean", "GOOGLE_PLAY_VERSION", "true"
         }
         free {
+            dimension "version"
             applicationId = "org.birthdayadapter.free"
             buildConfigField "boolean", "FULL_VERSION", "false"
             buildConfigField "boolean", "GOOGLE_PLAY_VERSION", "true"
