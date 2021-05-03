@@ -63,6 +63,7 @@ import org.birthdayadapter.util.PreferencesHelper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -565,6 +566,7 @@ public class CalendarSyncAdapterService extends Service {
      */
     private static String generateTitle(Context context, int eventType, Cursor cursor,
                                         int eventCustomLabelColumn, boolean includeAge, String displayName, int age) {
+        displayName = addJubileeIcon(displayName, age);
         String title = null;
         if (displayName != null) {
             switch (eventType) {
@@ -601,6 +603,19 @@ public class CalendarSyncAdapterService extends Service {
         }
 
         return title;
+    }
+
+    /**
+     * Adds an icon if jubelee age
+     */
+    private static String addJubileeIcon(String displayName, int age) {
+
+        int jubilees[] = {18,20,30,40,50,60,75,80,90,100};
+        boolean is_jubilee = Arrays.asList(jubilees).contains(age);
+        if (is_jubilee) {
+            displayName = "🍾 " + displayName;
+        }
+        return displayName;
     }
 
     private static void cleanTables(ContentResolver contentResolver, long calendarId) {
