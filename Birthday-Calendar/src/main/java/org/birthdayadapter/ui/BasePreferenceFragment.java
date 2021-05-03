@@ -155,17 +155,25 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
         // check Android 6 permission
         int contactsPerm = ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.READ_CONTACTS);
+        int contactsPerm2 = ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.WRITE_CONTACTS);
         int calendarPerm = ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.READ_CALENDAR);
+        int calendarPerm2 = ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.WRITE_CALENDAR);
 
         if (contactsPerm == PackageManager.PERMISSION_GRANTED
-                && calendarPerm == PackageManager.PERMISSION_GRANTED) {
+                && contactsPerm2 == PackageManager.PERMISSION_GRANTED
+                && calendarPerm == PackageManager.PERMISSION_GRANTED
+                && calendarPerm2 == PackageManager.PERMISSION_GRANTED) {
             return true;
         } else {
             requestPermissions(
                     new String[]{
                             Manifest.permission.READ_CONTACTS,
-                            Manifest.permission.READ_CALENDAR},
+                            Manifest.permission.WRITE_CONTACTS,
+                            Manifest.permission.READ_CALENDAR,
+                            Manifest.permission.WRITE_CALENDAR},
                     MY_PERMISSIONS_REQUEST);
             return false;
         }
