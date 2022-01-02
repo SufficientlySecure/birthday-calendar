@@ -45,7 +45,6 @@ import org.birthdayadapter.util.PreferencesHelper;
 import java.util.Calendar;
 
 public class BasePreferenceFragment extends PreferenceFragmentCompat {
-    private BaseActivity mActivity;
     private AccountHelper mAccountHelper;
 
     private SwitchPreferenceCompat mEnabled;
@@ -63,7 +62,7 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mActivity = (BaseActivity) getActivity();
+        BaseActivity mActivity = (BaseActivity) getActivity();
         mAccountHelper = new AccountHelper(mActivity, mActivity.mBackgroundStatusHandler);
 
         // if this is the first run, enable and sync birthday adapter!
@@ -120,22 +119,20 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST: {
-                if (grantResults.length > 0) {
-                    for (int res : grantResults) {
-                        if (res != PackageManager.PERMISSION_GRANTED) {
-                            mEnabled.setChecked(false);
-                            return;
-                        }
+        if (requestCode == MY_PERMISSIONS_REQUEST) {
+            if (grantResults.length > 0) {
+                for (int res : grantResults) {
+                    if (res != PackageManager.PERMISSION_GRANTED) {
+                        mEnabled.setChecked(false);
+                        return;
                     }
-
-                    // permission was granted
-                    mAccountHelper.addAccountAndSync();
-                    mEnabled.setChecked(true);
                 }
+
+                // permission was granted
+                mAccountHelper.addAccountAndSync();
+                mEnabled.setChecked(true);
             }
         }
     }
@@ -148,32 +145,30 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
 
     @TargetApi(Build.VERSION_CODES.M)
     private boolean hasPermissions() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-
         // check Android 6 permission
         int contactsPerm = ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.READ_CONTACTS);
-        int contactsPerm2 = ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.WRITE_CONTACTS);
         int calendarPerm = ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.READ_CALENDAR);
-        int calendarPerm2 = ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.WRITE_CALENDAR);
+        int accountPerm = ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.GET_ACCOUNTS);
 
         if (contactsPerm == PackageManager.PERMISSION_GRANTED
-                && contactsPerm2 == PackageManager.PERMISSION_GRANTED
                 && calendarPerm == PackageManager.PERMISSION_GRANTED
-                && calendarPerm2 == PackageManager.PERMISSION_GRANTED) {
+                && accountPerm == PackageManager.PERMISSION_GRANTED) {
             return true;
         } else {
             requestPermissions(
                     new String[]{
+                            Manifest.permission.GET_ACCOUNTS,
+                            Manifest.permission_group.CALENDAR,
+                            Manifest.permission_group.CONTACTS,
+                            Manifest.permission.READ_SYNC_SETTINGS,
+                            Manifest.permission.WRITE_SYNC_SETTINGS,
                             Manifest.permission.READ_CONTACTS,
                             Manifest.permission.WRITE_CONTACTS,
-                            Manifest.permission.READ_CALENDAR,
-                            Manifest.permission.WRITE_CALENDAR},
+                            Manifest.permission.WRITE_CALENDAR,
+                            Manifest.permission.READ_CALENDAR},
                     MY_PERMISSIONS_REQUEST);
             return false;
         }
@@ -184,11 +179,7 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
         super.onResume();
 
         // If account is activated check the preference
-        if (mAccountHelper.isAccountActivated()) {
-            mEnabled.setChecked(true);
-        } else {
-            mEnabled.setChecked(false);
-        }
+        mEnabled.setChecked(mAccountHelper.isAccountActivated());
     }
 
 }

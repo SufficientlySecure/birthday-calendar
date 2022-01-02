@@ -260,12 +260,10 @@ public class CalendarSyncAdapterService extends Service {
          * Note: HTC calendar (4.0.3 Android + HTC Sense 4.0) will show a conflict with other events
          * if availability is not set to free!
          */
-        if (Build.VERSION.SDK_INT >= 14) {
-            builder.withValue(Events.AVAILABILITY, Events.AVAILABILITY_FREE);
-        }
+        builder.withValue(Events.AVAILABILITY, Events.AVAILABILITY_FREE);
 
         // add button to open contact
-        if (Build.VERSION.SDK_INT >= 16 && lookupKey != null) {
+        if (lookupKey != null) {
             builder.withValue(Events.CUSTOM_APP_PACKAGE, context.getPackageName());
             Uri contactLookupUri = Uri.withAppendedPath(
                     ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
@@ -609,11 +607,10 @@ public class CalendarSyncAdapterService extends Service {
      * Adds an icon if jubelee age
      */
     private static String addJubileeIcon(String displayName, int age) {
-
-        int jubilees[] = {18,20,30,40,50,60,75,80,90,100};
-        boolean is_jubilee = Arrays.asList(jubilees).contains(age);
+        String jubilees = " 18, 20, 30, 40, 50, 60, 70, 75, 80, 90, 100, ";
+        boolean is_jubilee = jubilees.contains(" " + String.valueOf(age) + ",");
         if (is_jubilee) {
-            displayName = "🍾 " + displayName;
+            displayName = "\uD83C\uDF89 " + displayName;
         }
         return displayName;
     }
