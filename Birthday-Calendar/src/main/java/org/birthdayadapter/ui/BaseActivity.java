@@ -2,7 +2,7 @@
  * Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
  *
  * This file is part of Birthday Adapter.
- * 
+ *
  * Birthday Adapter is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -25,13 +25,14 @@ import android.os.Build;
 import android.os.Bundle;
 import com.google.android.material.tabs.TabLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.ProgressBar;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
@@ -61,11 +62,13 @@ public class BaseActivity extends AppCompatActivity implements BackgroundStatusH
         setSupportActionBar(toolbar);
         progressBar = (ProgressBar) findViewById(R.id.progress_spinner);
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        ViewPager2 viewPager = (ViewPager2) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
+        new TabLayoutMediator(tabLayout, viewPager,
+                (tab, position) -> tab.setText(((ViewPagerAdapter)viewPager.getAdapter()).getPageTitle(position))
+        ).attach();
 
         mySharedPreferenceChangeListener = new MySharedPreferenceChangeListener(this,
                 mBackgroundStatusHandler);
@@ -75,8 +78,8 @@ public class BaseActivity extends AppCompatActivity implements BackgroundStatusH
         progressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
-    private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+    private void setupViewPager(ViewPager2 viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(this);
         adapter.addFragment(new BasePreferenceFragment(), getString(R.string.tab_main));
         adapter.addFragment(new ExtendedPreferencesFragment(), getString(R.string.tab_preferences));
         adapter.addFragment(new AccountListFragment(), getString(R.string.tab_accounts));
@@ -90,21 +93,21 @@ public class BaseActivity extends AppCompatActivity implements BackgroundStatusH
         setIndeterminateProgress(progress);
     }
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
+    class ViewPagerAdapter extends FragmentStateAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
-        public ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
+        public ViewPagerAdapter(FragmentActivity fa) {
+            super(fa);
         }
 
         @Override
-        public Fragment getItem(int position) {
+        public Fragment createFragment(int position) {
             return mFragmentList.get(position);
         }
 
         @Override
-        public int getCount() {
+        public int getItemCount() {
             return mFragmentList.size();
         }
 
@@ -113,7 +116,6 @@ public class BaseActivity extends AppCompatActivity implements BackgroundStatusH
             mFragmentTitleList.add(title);
         }
 
-        @Override
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }

@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <androidx.preference.PreferenceCategory android:title="@string/pref_general">
-        <com.pavelsikun.vintagechroma.ChromaPreferenceCompat
+        <androidx.preference.Preference
             android:key="@string/pref_color_key"
             android:persistent="true"
-            android:title="@string/pref_color"
-            app:chromaColorMode="HSV"
-            app:chromaIndicatorMode="HEX"
-            app:chromaInitialColor="@color/pref_color_def" />
+            android:title="@string/pref_color" />
     </androidx.preference.PreferenceCategory>
     <androidx.preference.PreferenceCategory android:title="@string/pref_reminders">
         <androidx.preference.CheckBoxPreference

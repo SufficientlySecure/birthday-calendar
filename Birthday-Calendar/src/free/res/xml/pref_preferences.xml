@@ -3,13 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.preference.PreferenceCategory android:title="@string/pref_general">
-        <com.pavelsikun.vintagechroma.ChromaPreferenceCompat
+        <androidx.preference.Preference
             android:key="@string/pref_color_key"
             android:persistent="true"
             android:title="@string/pref_color"
-            app:chromaColorMode="HSV"
-            app:chromaIndicatorMode="HEX"
-            app:chromaInitialColor="@color/pref_color_def" />
+            />
     </androidx.preference.PreferenceCategory>
     <androidx.preference.PreferenceCategory android:title="@string/pref_buy">
         <androidx.preference.Preference
@@ -24,7 +22,7 @@
             android:key="@string/pref_advanced_key"
             android:persistent="true"
             android:summary="@string/pref_advanced_summary"
-            android:title="@string/pref_advanced" />
+            android:title="@string.pref_advanced" />
         <androidx.preference.CheckBoxPreference
             android:defaultValue="@string/pref_prefer_dd_slash_mm_def"
             android:dependency="@string/pref_advanced_key"

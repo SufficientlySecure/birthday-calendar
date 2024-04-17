@@ -54,51 +54,45 @@ public class ReminderPreferenceCompat extends Preference {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public ReminderPreferenceCompat(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        init();
     }
 
     public ReminderPreferenceCompat(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init();
     }
 
     public ReminderPreferenceCompat(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init();
     }
 
     public ReminderPreferenceCompat(Context context) {
         super(context);
+        init();
     }
 
-    @Override
-    protected void onClick() {
-        super.onClick();
-        click();
+    private void init() {
+        setOnPreferenceClickListener(new OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                click();
+                return true;
+            }
+        });
     }
 
     @Override
     protected Object onGetDefaultValue(TypedArray a, int index) {
-        return (a.getString(index));
+        // The default value is an integer resource, so we should read it as an integer.
+        return a.getInteger(index, 0);
     }
 
     @Override
-    protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
-        // convert default to Integer
-        Integer defaultInt = null;
-        if (defaultValue == null) {
-            defaultInt = 0;
-        } else if (defaultValue instanceof Number) {
-            defaultInt = (Integer) defaultValue;
-        } else {
-            defaultInt = Integer.valueOf(defaultValue.toString());
-        }
-
-        Integer time = null;
-        if (restoreValue) {
-            time = getPersistedInt(defaultInt);
-        } else {
-            time = defaultInt;
-        }
-
-        lastMinutes = time;
+    protected void onSetInitialValue(Object defaultValue) {
+        // The 'defaultValue' is the value from the XML, which onGetDefaultValue now returns as an Integer.
+        // We retrieve the persisted value, falling back to this default if no value has been persisted yet.
+        lastMinutes = getPersistedInt(defaultValue != null ? (Integer) defaultValue : 0);
     }
 
     private void click() {
@@ -156,14 +150,29 @@ public class ReminderPreferenceCompat extends Preference {
         // select day minutes for this specific day
         int hour = dayMinutes / 60;
         int minute = dayMinutes % 60;
-        picker.setCurrentHour(hour);
-        picker.setCurrentMinute(minute);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            picker.setHour(hour);
+            picker.setMinute(minute);
+        } else {
+            picker.setCurrentHour(hour);
+            picker.setCurrentMinute(minute);
+        }
     }
 
     private void save(boolean positiveResult) {
         if (positiveResult) {
+            int hour;
+            int minute;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                hour = picker.getHour();
+                minute = picker.getMinute();
+            } else {
+                hour = picker.getCurrentHour();
+                minute = picker.getCurrentMinute();
+            }
+
             int dayBase = DAY_BASE_MINUTES[spinner.getSelectedItemPosition()];
-            int dayTime = picker.getCurrentMinute() + picker.getCurrentHour() * 60;
+            int dayTime = minute + hour * 60;
 
             lastMinutes = dayBase + ONE_DAY_MINUTES - dayTime;
 

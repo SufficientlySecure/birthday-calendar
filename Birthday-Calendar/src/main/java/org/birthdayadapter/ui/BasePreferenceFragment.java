@@ -2,7 +2,7 @@
  * Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
  *
  * This file is part of Birthday Adapter.
- * 
+ *
  * Birthday Adapter is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -31,7 +31,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.ContactsContract;
+import android.view.View;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -53,69 +56,73 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
-        // save prefs here
         getPreferenceManager().setSharedPreferencesName(Constants.PREFS_NAME);
         addPreferencesFromResource(R.xml.base_preferences);
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
+        // All setup logic that requires a context/activity must go here, AFTER the view is created.
         BaseActivity mActivity = (BaseActivity) getActivity();
+        if (mActivity == null) {
+            // This should not happen, but as a safeguard.
+            return;
+        }
+
         mAccountHelper = new AccountHelper(mActivity, mActivity.mBackgroundStatusHandler);
 
         // if this is the first run, enable and sync birthday adapter!
         if (PreferencesHelper.getFirstRun(mActivity)) {
             PreferencesHelper.setFirstRun(mActivity, false);
-
             addAccountAndSync();
         }
 
-        mEnabled = (SwitchPreferenceCompat) findPreference(getString(R.string.pref_enabled_key));
-        mEnabled.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (newValue instanceof Boolean) {
-                    Boolean boolVal = (Boolean) newValue;
-
-                    if (boolVal) {
-                        addAccountAndSync();
-                    } else {
-                        mAccountHelper.removeAccount();
+        mEnabled = findPreference(getString(R.string.pref_enabled_key));
+        if (mEnabled != null) {
+            mEnabled.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    if (newValue instanceof Boolean) {
+                        if ((Boolean) newValue) {
+                            addAccountAndSync();
+                        } else {
+                            mAccountHelper.removeAccount();
+                        }
                     }
+                    return true;
                 }
-                return true;
-            }
-        });
+            });
+        }
 
         Preference openContacts = findPreference(getString(R.string.pref_contacts_key));
-        openContacts.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, ContactsContract.Contacts.CONTENT_URI);
-                startActivity(intent);
-                return true;
-            }
-        });
+        if (openContacts != null) {
+            openContacts.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, ContactsContract.Contacts.CONTENT_URI);
+                    startActivity(intent);
+                    return true;
+                }
+            });
+        }
 
         Preference openCalendar = findPreference(getString(R.string.pref_calendar_key));
-        openCalendar.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-
-            @SuppressLint("NewApi")
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
-                builder.appendPath("time");
-                ContentUris.appendId(builder, Calendar.getInstance().getTimeInMillis());
-                Intent intent = new Intent(Intent.ACTION_VIEW)
-                        .setData(builder.build());
-                startActivity(intent);
-                return true;
-            }
-        });
-
+        if (openCalendar != null) {
+            openCalendar.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @SuppressLint("NewApi")
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
+                    builder.appendPath("time");
+                    ContentUris.appendId(builder, Calendar.getInstance().getTimeInMillis());
+                    Intent intent = new Intent(Intent.ACTION_VIEW).setData(builder.build());
+                    startActivity(intent);
+                    return true;
+                }
+            });
+        }
     }
 
     @Override
@@ -125,14 +132,18 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
             if (grantResults.length > 0) {
                 for (int res : grantResults) {
                     if (res != PackageManager.PERMISSION_GRANTED) {
-                        mEnabled.setChecked(false);
+                        if (mEnabled != null) {
+                            mEnabled.setChecked(false);
+                        }
                         return;
                     }
                 }
 
                 // permission was granted
                 mAccountHelper.addAccountAndSync();
-                mEnabled.setChecked(true);
+                if (mEnabled != null) {
+                    mEnabled.setChecked(true);
+                }
             }
         }
     }
@@ -145,30 +156,21 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
 
     @TargetApi(Build.VERSION_CODES.M)
     private boolean hasPermissions() {
-        // check Android 6 permission
-        int contactsPerm = ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.READ_CONTACTS);
-        int calendarPerm = ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.READ_CALENDAR);
-        int accountPerm = ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.GET_ACCOUNTS);
+        if (getActivity() == null) return false;
 
-        if (contactsPerm == PackageManager.PERMISSION_GRANTED
-                && calendarPerm == PackageManager.PERMISSION_GRANTED
-                && accountPerm == PackageManager.PERMISSION_GRANTED) {
+        int contactsPerm = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS);
+        int calendarPerm = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CALENDAR);
+
+        if (contactsPerm == PackageManager.PERMISSION_GRANTED && calendarPerm == PackageManager.PERMISSION_GRANTED) {
             return true;
         } else {
             requestPermissions(
                     new String[]{
                             Manifest.permission.GET_ACCOUNTS,
-                            Manifest.permission_group.CALENDAR,
-                            Manifest.permission_group.CONTACTS,
-                            Manifest.permission.READ_SYNC_SETTINGS,
-                            Manifest.permission.WRITE_SYNC_SETTINGS,
                             Manifest.permission.READ_CONTACTS,
                             Manifest.permission.WRITE_CONTACTS,
-                            Manifest.permission.WRITE_CALENDAR,
-                            Manifest.permission.READ_CALENDAR},
+                            Manifest.permission.READ_CALENDAR,
+                            Manifest.permission.WRITE_CALENDAR},
                     MY_PERMISSIONS_REQUEST);
             return false;
         }
@@ -177,9 +179,8 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
     @Override
     public void onResume() {
         super.onResume();
-
-        // If account is activated check the preference
-        mEnabled.setChecked(mAccountHelper.isAccountActivated());
+        if (mAccountHelper != null && mEnabled != null) {
+            mEnabled.setChecked(mAccountHelper.isAccountActivated());
+        }
     }
-
 }

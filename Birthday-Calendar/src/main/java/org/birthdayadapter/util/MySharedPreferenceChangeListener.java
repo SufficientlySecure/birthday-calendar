@@ -20,17 +20,16 @@
 
 package org.birthdayadapter.util;
 
-import org.birthdayadapter.R;
-import org.birthdayadapter.service.MainIntentService;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Handler;
 import android.os.Messenger;
 
-public class MySharedPreferenceChangeListener implements OnSharedPreferenceChangeListener {
+import org.birthdayadapter.R;
+import org.birthdayadapter.service.MainIntentService;
+
+public class MySharedPreferenceChangeListener implements SharedPreferences.OnSharedPreferenceChangeListener {
     private final Context context;
     private final Handler handler;
 
@@ -42,11 +41,18 @@ public class MySharedPreferenceChangeListener implements OnSharedPreferenceChang
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (context.getString(R.string.pref_color_key).equals(key)) {
+        if (key == null || context == null) {
+            return; // Safeguard against unexpected nulls
+        }
+
+        // Get the preference keys from resources
+        String colorKey = context.getString(R.string.pref_color_key);
+
+        if (key.equals(colorKey)) {
             // set new color
             startServiceAction(MainIntentService.ACTION_CHANGE_COLOR);
         } else {
-            // resync all events
+            // For any other preference change, resync all events
             startServiceAction(MainIntentService.ACTION_MANUAL_COMPLETE_SYNC);
         }
     }
@@ -55,12 +61,16 @@ public class MySharedPreferenceChangeListener implements OnSharedPreferenceChang
      * Start service with action, while executing, show progress
      */
     public void startServiceAction(String action) {
+        if (context == null) return;
+
         // Send all information needed to service to do in other thread
         Intent intent = new Intent(context, MainIntentService.class);
 
         // Create a new Messenger for the communication back
-        Messenger messenger = new Messenger(handler);
-        intent.putExtra(MainIntentService.EXTRA_MESSENGER, messenger);
+        if (handler != null) {
+            Messenger messenger = new Messenger(handler);
+            intent.putExtra(MainIntentService.EXTRA_MESSENGER, messenger);
+        }
 
         intent.setAction(action);
 

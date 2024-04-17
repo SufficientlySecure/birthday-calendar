@@ -8,7 +8,6 @@
         android:title="@string/pref_enable" />
 
     <androidx.preference.SwitchPreferenceCompat
-        android:icon="@mipmap/ic_launcher"
         android:key="@string/pref_enabled_key"
         android:persistent="false"
         android:title="@string/pref_enable_switch" />
