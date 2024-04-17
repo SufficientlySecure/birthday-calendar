@@ -41,16 +41,16 @@ public class AboutFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.about_fragment, container, false);
 
-        TextView versionText = (TextView) view.findViewById(R.id.about_version);
+        TextView versionText = view.findViewById(R.id.about_version);
         versionText.setText(getString(R.string.about_version) + " " + getVersion());
 
-        HtmlTextView aboutTextView = (HtmlTextView) view.findViewById(R.id.about_text);
+        // HtmlTextView aboutTextView = (HtmlTextView) view.findViewById(R.id.about_text);
 
         // load html into textview
-        aboutTextView.setHtml(R.raw.about);
+        // aboutTextView.setHtml(R.raw.about);
 
         // no flickering when clicking textview for Android < 4
-        aboutTextView.setTextColor(getResources().getColor(android.R.color.black));
+        // aboutTextView.setTextColor(getResources().getColor(android.R.color.black));
 
         return view;
     }
@@ -66,7 +66,7 @@ public class AboutFragment extends Fragment {
             PackageManager manager = getActivity().getPackageManager();
             PackageInfo info = manager.getPackageInfo(getActivity().getPackageName(), 0);
 
-            result = String.format("%s (%s)", info.versionName, info.versionCode);
+            result = String.format("%s (%s)", info.versionName, info.getLongVersionCode());
         } catch (NameNotFoundException e) {
             Log.w(Constants.TAG, "Unable to get application version", e);
             result = "Unable to get application version.";

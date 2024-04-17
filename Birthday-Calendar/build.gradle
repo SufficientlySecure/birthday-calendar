@@ -1,35 +1,31 @@
 apply plugin: 'com.android.application'
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.3.0'
-//    implementation 'com.android.support:preference-v7:25.0.0'
-//    implementation 'com.android.support:preference-v14:25.0.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:preference-v7:28.0.0'
+    implementation 'com.android.support:preference-v14:28.0.0'
     implementation 'com.takisoft.fix:preference-v7:25.0.0.0'
     implementation 'org.sufficientlysecure:html-textview:2.0'
     implementation 'com.pavelsikun:vintage-chroma:1.5'
 }
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "29.0.2"
+    compileSdk 34
 
     defaultConfig {
-        minSdkVersion 25
-        targetSdkVersion 30
+        minSdkVersion 28
+        targetSdkVersion 34
         versionCode 19
         versionName "2.0.2"
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    lintOptions {
-        // not everything is translated by Transifex contributors
-        disable 'MissingTranslation', 'ExtraTranslation'
-    }
 
     /*
      * To sign release build, create file gradle.properties in ~/.gradle/ with this content:
@@ -59,25 +55,32 @@ android {
         buildTypes.release.signingConfig = null
     }
 
-    flavorDimensions "version"
+    flavorDimensions += "version"
     productFlavors {
-        full {
+        create("full") {
             dimension "version"
             applicationId = "org.birthdayadapter"
             buildConfigField "boolean", "FULL_VERSION", "true"
             buildConfigField "boolean", "GOOGLE_PLAY_VERSION", "false"
         }
-        full_google {
+        create("full_google") {
             dimension "version"
             applicationId = "org.birthdayadapter"
             buildConfigField "boolean", "FULL_VERSION", "true"
             buildConfigField "boolean", "GOOGLE_PLAY_VERSION", "true"
         }
-        free {
+        create("free") {
             dimension "version"
             applicationId = "org.birthdayadapter.free"
             buildConfigField "boolean", "FULL_VERSION", "false"
             buildConfigField "boolean", "GOOGLE_PLAY_VERSION", "true"
         }
+    }
+    namespace 'org.birthdayadapter'
+    lint {
+        disable 'MissingTranslation', 'ExtraTranslation'
+    }
+    buildFeatures {
+        buildConfig true
     }
 }
