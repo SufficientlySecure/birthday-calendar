@@ -22,17 +22,21 @@ package org.birthdayadapter.ui;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
+
+import java.io.InputStream;
 
 public class AboutFragment extends Fragment {
 
@@ -43,13 +47,19 @@ public class AboutFragment extends Fragment {
         TextView versionText = view.findViewById(R.id.about_version);
         versionText.setText(getString(R.string.about_version) + " " + getVersion());
 
-        // HtmlTextView aboutTextView = (HtmlTextView) view.findViewById(R.id.about_text);
-
-        // load html into textview
-        // aboutTextView.setHtml(R.raw.about);
-
-        // no flickering when clicking textview for Android < 4
-        // aboutTextView.setTextColor(getResources().getColor(android.R.color.black));
+        TextView aboutTextView = view.findViewById(R.id.about_text);
+        
+        // Load HTML from raw resource
+        try {
+            InputStream in = getResources().openRawResource(R.raw.about);
+            byte[] buffer = new byte[in.available()];
+            in.read(buffer);
+            in.close();
+            aboutTextView.setText(Html.fromHtml(new String(buffer), Html.FROM_HTML_MODE_LEGACY));
+            aboutTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        } catch (Exception e) {
+            Log.e(Constants.TAG, "Error loading about.html", e);
+        }
 
         return view;
     }
@@ -65,8 +75,8 @@ public class AboutFragment extends Fragment {
             PackageManager manager = getActivity().getPackageManager();
             PackageInfo info = manager.getPackageInfo(getActivity().getPackageName(), 0);
 
-            result = String.format("%s (%s)", info.versionName, info.getLongVersionCode());
-        } catch (NameNotFoundException e) {
+            result = String.format("%s (%s)", info.versionName, info.versionCode);
+        } catch (PackageManager.NameNotFoundException e) {
             Log.w(Constants.TAG, "Unable to get application version", e);
             result = "Unable to get application version.";
         }
