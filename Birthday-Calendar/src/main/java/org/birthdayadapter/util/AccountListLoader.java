@@ -26,6 +26,7 @@ import android.accounts.AuthenticatorDescription;
 import android.content.Context;
 import androidx.loader.content.AsyncTaskLoader;
 
+import org.birthdayadapter.R;
 import org.birthdayadapter.provider.ProviderHelper;
 
 import java.text.Collator;
@@ -66,8 +67,14 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
         ArrayList<AccountListEntry> entries = new ArrayList<>();
 
         HashSet<Account> accountBlacklist = ProviderHelper.getAccountBlacklist(getContext());
+        String selfAccountType = getContext().getString(R.string.account_type);
 
         for (Account account : accounts) {
+            // Don't show the app's own account in the filter list
+            if (account.type.equals(selfAccountType)) {
+                continue;
+            }
+
             for (AuthenticatorDescription description : descriptions) {
                 if (description.type.equals(account.type)) {
                     boolean enabled = !accountBlacklist.contains(account);
