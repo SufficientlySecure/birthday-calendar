@@ -22,6 +22,9 @@ package org.birthdayadapter.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -47,6 +50,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
 
     BaseActivity mActivity;
     private AccountHelper mAccountHelper;
+    private Preference colorPref;
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
@@ -99,8 +103,9 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
             });
         }
 
-        Preference colorPref = findPreference(getString(R.string.pref_color_key));
+        colorPref = findPreference(getString(R.string.pref_color_key));
         if (colorPref != null) {
+            updateColorPreferenceIcon();
             colorPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
@@ -120,6 +125,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                                 SharedPreferences.Editor editor = getPreferenceManager().getSharedPreferences().edit();
                                 editor.putInt(getString(R.string.pref_color_key), color);
                                 editor.apply();
+                                updateColorPreferenceIcon();
                                 return Unit.INSTANCE;
                             }
                     );
@@ -132,6 +138,21 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                 }
             });
         }
+    }
+
+    private void updateColorPreferenceIcon() {
+        if (colorPref != null) {
+            int color = PreferencesHelper.getColor(mActivity);
+            colorPref.setIcon(createColorDrawable(color));
+        }
+    }
+
+    private Drawable createColorDrawable(int color) {
+        ShapeDrawable coloredCircle = new ShapeDrawable(new OvalShape());
+        coloredCircle.getPaint().setColor(color);
+        coloredCircle.setIntrinsicWidth(72);
+        coloredCircle.setIntrinsicHeight(72);
+        return coloredCircle;
     }
 
     @Override
