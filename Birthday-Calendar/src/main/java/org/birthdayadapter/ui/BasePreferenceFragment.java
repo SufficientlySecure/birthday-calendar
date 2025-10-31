@@ -45,6 +45,8 @@ import org.birthdayadapter.util.AccountHelper;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.PreferencesHelper;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Calendar;
 
 public class BasePreferenceFragment extends PreferenceFragmentCompat {
@@ -64,20 +66,12 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // All setup logic that requires a context/activity must go here, AFTER the view is created.
         BaseActivity mActivity = (BaseActivity) getActivity();
         if (mActivity == null) {
-            // This should not happen, but as a safeguard.
             return;
         }
 
         mAccountHelper = new AccountHelper(mActivity, mActivity.mBackgroundStatusHandler);
-
-        // if this is the first run, enable and sync birthday adapter!
-        if (PreferencesHelper.getFirstRun(mActivity)) {
-            PreferencesHelper.setFirstRun(mActivity, false);
-            addAccountAndSync();
-        }
 
         mEnabled = findPreference(getString(R.string.pref_enabled_key));
         if (mEnabled != null) {
@@ -86,6 +80,7 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     if (newValue instanceof Boolean) {
                         if ((Boolean) newValue) {
+                            // This will trigger the permission check if needed
                             addAccountAndSync();
                         } else {
                             mAccountHelper.removeAccount();
@@ -94,6 +89,16 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
                     return true;
                 }
             });
+        }
+
+        // On first run, set the switch to true and trigger the sync/permission flow
+        if (PreferencesHelper.getFirstRun(mActivity)) {
+            PreferencesHelper.setFirstRun(mActivity, false);
+            // We directly call addAccountAndSync which contains the permission check.
+            // We also manually set the switch to checked state.
+            if (mEnabled != null) {
+                mEnabled.setChecked(true);
+            }
         }
 
         Preference openContacts = findPreference(getString(R.string.pref_contacts_key));
@@ -129,20 +134,25 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if (requestCode == MY_PERMISSIONS_REQUEST) {
+            boolean allGranted = true;
             if (grantResults.length > 0) {
                 for (int res : grantResults) {
                     if (res != PackageManager.PERMISSION_GRANTED) {
-                        if (mEnabled != null) {
-                            mEnabled.setChecked(false);
-                        }
-                        return;
+                        allGranted = false;
+                        break;
                     }
                 }
+            } else {
+                allGranted = false;
+            }
 
-                // permission was granted
+            if (allGranted) {
+                // permission was granted, now we can really add the account
                 mAccountHelper.addAccountAndSync();
+            } else {
+                // permission denied, disable the feature
                 if (mEnabled != null) {
-                    mEnabled.setChecked(true);
+                    mEnabled.setChecked(false);
                 }
             }
         }
@@ -158,21 +168,26 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
     private boolean hasPermissions() {
         if (getActivity() == null) return false;
 
-        int contactsPerm = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS);
-        int calendarPerm = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CALENDAR);
+        List<String> permissionsToRequest = new ArrayList<>();
+        String[] requiredPermissions = new String[]{
+                Manifest.permission.GET_ACCOUNTS,
+                Manifest.permission.READ_CONTACTS,
+                Manifest.permission.WRITE_CONTACTS,
+                Manifest.permission.READ_CALENDAR,
+                Manifest.permission.WRITE_CALENDAR
+        };
 
-        if (contactsPerm == PackageManager.PERMISSION_GRANTED && calendarPerm == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        } else {
-            requestPermissions(
-                    new String[]{
-                            Manifest.permission.GET_ACCOUNTS,
-                            Manifest.permission.READ_CONTACTS,
-                            Manifest.permission.WRITE_CONTACTS,
-                            Manifest.permission.READ_CALENDAR,
-                            Manifest.permission.WRITE_CALENDAR},
-                    MY_PERMISSIONS_REQUEST);
+        for (String permission : requiredPermissions) {
+            if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(permission);
+            }
+        }
+
+        if (!permissionsToRequest.isEmpty()) {
+            requestPermissions(permissionsToRequest.toArray(new String[0]), MY_PERMISSIONS_REQUEST);
             return false;
+        } else {
+            return true;
         }
     }
 

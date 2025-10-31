@@ -21,6 +21,7 @@
 
 package org.birthdayadapter.service;
 
+import android.Manifest;
 import android.accounts.Account;
 import android.accounts.OperationCanceledException;
 import android.annotation.SuppressLint;
@@ -34,6 +35,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SyncResult;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.MatrixCursor;
@@ -51,6 +53,8 @@ import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.text.format.Time;
+
+import androidx.core.content.ContextCompat;
 
 import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
@@ -125,6 +129,11 @@ public class CalendarSyncAdapterService extends Service {
      * Updates calendar color
      */
     public static void updateCalendarColor(Context context) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            Log.e(Constants.TAG, "Missing WRITE_CALENDAR permission to update color!");
+            return;
+        }
+
         int color = PreferencesHelper.getColor(context);
         ContentResolver contentResolver = context.getContentResolver();
 
@@ -151,6 +160,12 @@ public class CalendarSyncAdapterService extends Service {
      */
     private static long getCalendar(Context context) {
         Log.d(Constants.TAG, "getCalendar Method...");
+
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            Log.e(Constants.TAG, "Missing calendar permissions to get or create calendar!");
+            return -1;
+        }
 
         ContentResolver contentResolver = context.getContentResolver();
 
@@ -217,52 +232,24 @@ public class CalendarSyncAdapterService extends Service {
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
 
-        /*
-         * Allday events have to be set in UTC!
-         * 
-         * Without UTC it results in: CalendarProvider2 W insertInTransaction: allDay is true but
-         * sec, min, hour were not 0.
-         * http://stackoverflow.com/questions/3440172/getting-exception-when
-         * -inserting-events-in-android-calendar
-         */
         cal.setTimeZone(TimeZone.getTimeZone("UTC"));
-        // cal.setTimeZone(TimeZone.getTimeZone(Time.getCurrentTimezone()));
 
-        /*
-         * Define over entire day.
-         * 
-         * Note: ALL_DAY is enough on original Android calendar, but some calendar apps (Business
-         * Calendar) do not display the event if time between dtstart and dtend is 0
-         */
         long dtstart = cal.getTimeInMillis();
         long dtend = dtstart + DateUtils.DAY_IN_MILLIS;
 
         builder.withValue(Events.CALENDAR_ID, calendarId);
         builder.withValue(Events.DTSTART, dtstart);
         builder.withValue(Events.DTEND, dtend);
-        builder.withValue(Events.EVENT_TIMEZONE, "UTC"); // ALL_DAY events must be UTC
-        // builder.withValue(Events.EVENT_TIMEZONE, Time.getCurrentTimezone());
+        builder.withValue(Events.EVENT_TIMEZONE, "UTC");
 
         builder.withValue(Events.ALL_DAY, 1);
         builder.withValue(Events.TITLE, title);
         builder.withValue(Events.STATUS, Events.STATUS_CONFIRMED);
 
-        /*
-         * Enable reminders for this event
-         * 
-         * Note: Needs to be explicitly set on Android < 4 to enable reminders
-         */
         builder.withValue(Events.HAS_ALARM, 1);
 
-        /*
-         * Set availability to free.
-         * 
-         * Note: HTC calendar (4.0.3 Android + HTC Sense 4.0) will show a conflict with other events
-         * if availability is not set to free!
-         */
         builder.withValue(Events.AVAILABILITY, Events.AVAILABILITY_FREE);
 
-        // add button to open contact
         if (lookupKey != null) {
             builder.withValue(Events.CUSTOM_APP_PACKAGE, context.getPackageName());
             Uri contactLookupUri = Uri.withAppendedPath(
@@ -275,24 +262,14 @@ public class CalendarSyncAdapterService extends Service {
 
     /**
      * Try to parse input with SimpleDateFormat
-     *
-     * @param format      SimpleDateFormat
-     * @param setYear1700 When true the age will be not displayed in brackets
-     * @return Date object if successful, otherwise null
      */
     private static Date parseStringWithSimpleDateFormat(String input, String format,
                                                         boolean setYear1700) {
-        Log.d(Constants.TAG, "Trying to parse Event Date String " + input + " with " + format);
         SimpleDateFormat dateFormat = new SimpleDateFormat(format, Locale.US);
         dateFormat.setTimeZone(TimeZone.getDefault());
         try {
             Date parsedDate = dateFormat.parse(input);
 
-            /*
-             * Because no year is defined in address book, set year to 1700
-             * 
-             * When year < 1800, the age will be not displayed in brackets
-             */
             if (setYear1700) {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(parsedDate);
@@ -307,119 +284,41 @@ public class CalendarSyncAdapterService extends Service {
         }
     }
 
-    /**
-     * The date format in the contact events is not standardized! This method will try to parse it
-     * trying different date formats.
-     * <p/>
-     * See also: http://dmfs.org/carddav/?date_format
-     *
-     * @return eventDate as Date object
-     */
     private static Date parseEventDateString(Context context, String eventDateString) {
-        if (eventDateString != null) {
-            Date eventDate;
+        if (eventDateString == null) return null;
 
-            // yyyy-MM-dd, Most used format!
-            eventDate = parseStringWithSimpleDateFormat(eventDateString, "yyyy-MM-dd", false);
-
-            // --MM-dd, Most used format without year!
-            if (eventDate == null) {
-                eventDate = parseStringWithSimpleDateFormat(eventDateString, "--MM-dd", true);
-            }
-
-            // yyyyMMdd, HTC Desire
-            if (eventDate == null) {
-                if (eventDateString.length() == 8) {
-                    eventDate = parseStringWithSimpleDateFormat(eventDateString, "yyyyMMdd", false);
-                }
-            }
-
-            // Unix timestamp, Some Motorola devices
-            if (eventDate == null) {
-                Log.d(Constants.TAG, "Trying to parse Event Date String " + eventDateString
-                        + " as a unix timestamp!");
-                try {
-                    eventDate = new Date(Long.parseLong(eventDateString));
-                } catch (NumberFormatException e) {
-                    Log.d(Constants.TAG, "Parsing failed!");
-                }
-            }
-
-            // dd.MM.yyyy
-            if (eventDate == null) {
-                eventDate = parseStringWithSimpleDateFormat(eventDateString, "dd.MM.yyyy", false);
-            }
-
-            // yyyy.MM.dd
-            if (eventDate == null) {
-                eventDate = parseStringWithSimpleDateFormat(eventDateString, "yyyy.MM.dd", false);
-            }
-
-            /**
-             * Prefer dd/MM/yyyy over MM/dd/yyyy ?
-             */
-            if (PreferencesHelper.getPreferddSlashMM(context)) {
-                // dd/MM/yyyy
-                if (eventDate == null) {
-                    eventDate = parseStringWithSimpleDateFormat(eventDateString, "dd/MM/yyyy",
-                            false);
-                }
-
-                // dd/MM
-                if (eventDate == null) {
-                    eventDate = parseStringWithSimpleDateFormat(eventDateString, "dd/MM", true);
-                }
-            } else {
-                // MM/dd/yyyy, Used by Facebook
-                if (eventDate == null) {
-                    eventDate = parseStringWithSimpleDateFormat(eventDateString, "MM/dd/yyyy",
-                            false);
-                }
-
-                //MM/dd, Used by Facebook
-                if (eventDate == null) {
-                    eventDate = parseStringWithSimpleDateFormat(eventDateString, "MM/dd", true);
-                }
-            }
-
-            /* Return */
-            if (eventDate != null) {
-                Log.d(Constants.TAG, "Event Date String " + eventDateString + " was parsed as "
-                        + eventDate.toString());
-
-                return eventDate;
-            } else {
-                Log.e(Constants.TAG, "Event Date String " + eventDateString
-                        + " could NOT be parsed! returning null!");
-
-                return null;
-            }
+        String[] formatsToTry;
+        if (PreferencesHelper.getPreferddSlashMM(context)) {
+            formatsToTry = new String[]{"yyyy-MM-dd", "--MM-dd", "yyyyMMdd", "dd.MM.yyyy", "yyyy.MM.dd", "dd/MM/yyyy", "dd/MM"};
         } else {
-            Log.d(Constants.TAG, "Event Date String is null!");
+            formatsToTry = new String[]{"yyyy-MM-dd", "--MM-dd", "yyyyMMdd", "MM/dd/yyyy", "MM/dd"};
+        }
 
+        for (String format : formatsToTry) {
+            boolean setYear1700 = format.equals("--MM-dd") || format.equals("dd/MM") || format.equals("MM/dd");
+            Date parsedDate = parseStringWithSimpleDateFormat(eventDateString, format, setYear1700);
+            if (parsedDate != null) {
+                return parsedDate;
+            }
+        }
+        
+        try {
+            return new Date(Long.parseLong(eventDateString));
+        } catch (NumberFormatException e) {
+            Log.e(Constants.TAG, "Could not parse date string: " + eventDateString);
             return null;
         }
     }
 
-    /**
-     * Get Cursor of contacts with events, but only those from Accounts not in our blacklist!
-     * <p/>
-     * This is really complicated, because we can't query SQLite directly. We need to use the provided Content Provider
-     * and query several times for different tables.
-     *
-     * @return Cursor over all contacts with events, where accounts are not blacklisted
-     */
     private static Cursor getContactsEvents(Context context, ContentResolver contentResolver) {
-        // 0. get blacklist of Account names from own provider
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            Log.e(Constants.TAG, "Missing READ_CONTACTS permission!");
+            return null;
+        }
+        
         HashSet<Account> blacklist = ProviderHelper.getAccountBlacklist(context);
-
-        // HashSet of already added events using generated identifiers to check for duplicates before adding
         HashSet<String> addedEventsIdentifiers = new HashSet<>();
 
-        /*
-         * 1. Get all raw contacts with their corresponding Account name and type (only raw contacts get get Account
-         * affiliation
-         */
         Uri rawContactsUri = ContactsContract.RawContacts.CONTENT_URI;
         String[] rawContactsProjection = new String[]{
                 ContactsContract.RawContacts._ID,
@@ -429,11 +328,6 @@ public class CalendarSyncAdapterService extends Service {
                 ContactsContract.RawContacts.ACCOUNT_TYPE,};
         Cursor rawContacts = contentResolver.query(rawContactsUri, rawContactsProjection, null, null, null);
 
-        /*
-         * 2. Go over all raw contacts and check if the Account is allowed.
-         * If Account is allowed, get display name and lookup key and all events for this contact.
-         * Build a new MatrixCursor out of this data that can be used.
-         */
         String[] columns = new String[]{
                 BaseColumns._ID,
                 ContactsContract.Data.DISPLAY_NAME,
@@ -444,22 +338,19 @@ public class CalendarSyncAdapterService extends Service {
         };
         MatrixCursor mc = new MatrixCursor(columns);
         int mcIndex = 0;
+        if (rawContacts == null) return mc;
+
         try {
-            while (rawContacts != null && rawContacts.moveToNext()) {
+            while (rawContacts.moveToNext()) {
                 long rawId = rawContacts.getLong(rawContacts.getColumnIndex(ContactsContract.RawContacts._ID));
                 String accType = rawContacts.getString(rawContacts.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_TYPE));
                 String accName = rawContacts.getString(rawContacts.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_NAME));
 
-                /*
-                 * 2a. Check if Account is allowed (not blacklisted)
-                 */
                 boolean addEvent = false;
                 if (TextUtils.isEmpty(accType) || TextUtils.isEmpty(accName)) {
-                    // Workaround: Simply add events without proper Account
                     addEvent = true;
                 } else {
                     Account acc = new Account(accName, accType);
-
                     if (!blacklist.contains(acc)) {
                         addEvent = true;
                     }
@@ -472,9 +363,6 @@ public class CalendarSyncAdapterService extends Service {
                     int type;
                     String label;
 
-                    /*
-                     * 2b. Get display name and lookup key from normal contact table
-                     */
                     String[] displayProjection = new String[]{
                             ContactsContract.Data.RAW_CONTACT_ID,
                             ContactsContract.Data.DISPLAY_NAME,
@@ -486,21 +374,17 @@ public class CalendarSyncAdapterService extends Service {
                     };
                     Cursor displayCursor = contentResolver.query(ContactsContract.Data.CONTENT_URI, displayProjection,
                             displayWhere, displaySelectionArgs, null);
+                    if(displayCursor == null) continue;
                     try {
-                        if (displayCursor != null && displayCursor.moveToFirst()) {
+                        if (displayCursor.moveToFirst()) {
                             displayName = displayCursor.getString(displayCursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
                             lookupKey = displayCursor.getString(displayCursor.getColumnIndex(ContactsContract.Data.LOOKUP_KEY));
                         }
                     } finally {
-                        if (displayCursor != null && !displayCursor.isClosed())
+                        if (displayCursor != null)
                             displayCursor.close();
                     }
 
-                    /*
-                     * 2c. Get all events for this raw contact.
-                     * We don't get this information for the (merged) contact table, but from the raw contact.
-                     * If we would query this infos from the contact table we would also get events that should have been filtered!
-                     */
                     Uri thisRawContactUri = ContentUris.withAppendedId(ContactsContract.RawContacts.CONTENT_URI, rawId);
                     Uri entityUri = Uri.withAppendedPath(thisRawContactUri, ContactsContract.RawContacts.Entity.CONTENT_DIRECTORY);
                     String[] eventsProjection = new String[]{
@@ -517,20 +401,13 @@ public class CalendarSyncAdapterService extends Service {
                     };
                     Cursor eventsCursor = contentResolver.query(entityUri, eventsProjection, eventsWhere,
                             eventsSelectionArgs, null);
+                     if(eventsCursor == null) continue;
                     try {
-                        while (eventsCursor != null && eventsCursor.moveToNext()) {
+                        while (eventsCursor.moveToNext()) {
                             startDate = eventsCursor.getString(eventsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE));
                             type = eventsCursor.getInt(eventsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE));
                             label = eventsCursor.getString(eventsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL));
 
-                            /*
-                             * 2d. Add this information to our MatrixCursor if not already added previously.
-                             *
-                             * If two SyncAdapter Accounts have the same contact with duplicated events, the event will already be in
-                             * the HashSet addedEventsIdentifiers.
-                             *
-                             * eventIdentifier does not include startDate, because the String formats of startDate differ between accounts.
-                             */
                             String eventIdentifier = lookupKey + type + label;
                             if (addedEventsIdentifiers.contains(eventIdentifier)) {
                                 Log.d(Constants.TAG, "Event was NOT added, duplicate! Identifier: " + eventIdentifier);
@@ -543,25 +420,19 @@ public class CalendarSyncAdapterService extends Service {
                             }
                         }
                     } finally {
-                        if (eventsCursor != null && !eventsCursor.isClosed())
+                        if (eventsCursor != null)
                             eventsCursor.close();
                     }
                 }
             }
         } finally {
-            if (rawContacts != null && !rawContacts.isClosed())
+            if (rawContacts != null)
                 rawContacts.close();
         }
-
-        if (BuildConfig.DEBUG)
-            DatabaseUtils.dumpCursor(mc);
 
         return mc;
     }
 
-    /**
-     * Generates title for events
-     */
     private static String generateTitle(Context context, int eventType, Cursor cursor,
                                         int eventCustomLabelColumn, boolean includeAge, String displayName, int age) {
         displayName = addJubileeIcon(displayName, age);
@@ -603,9 +474,6 @@ public class CalendarSyncAdapterService extends Service {
         return title;
     }
 
-    /**
-     * Adds an icon if jubelee age
-     */
     private static String addJubileeIcon(String displayName, int age) {
         String jubilees = " 18, 20, 30, 40, 50, 60, 70, 75, 80, 90, 100, ";
         boolean is_jubilee = jubilees.contains(" " + String.valueOf(age) + ",");
@@ -703,6 +571,13 @@ public class CalendarSyncAdapterService extends Service {
     public static void performSync(Context context) {
         Log.d(Constants.TAG, "Starting sync...");
 
+        // Check for calendar permissions before proceeding
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            Log.e(Constants.TAG, "Sync failed: Missing calendar permissions.");
+            return;
+        }
+
         ContentResolver contentResolver = context.getContentResolver();
 
         if (contentResolver == null) {
@@ -712,26 +587,20 @@ public class CalendarSyncAdapterService extends Service {
 
         long calendarId = getCalendar(context);
         if (calendarId == -1) {
-            Log.e("CalendarSyncAdapter", "Unable to create calendar");
+            Log.e("CalendarSyncAdapter", "Unable to create or find calendar");
             return;
         }
 
-        // Sync flow:
-        // 1. Clear events table for this account completely
         cleanTables(contentResolver, calendarId);
-        // 2. Get birthdays from contacts
-        // 3. Create events and reminders for each birthday
-
+        
         int[] reminderMinutes = PreferencesHelper.getAllReminderMinutes(context);
 
-        // collection of birthdays that will later be added to the calendar
         ArrayList<ContentProviderOperation> operationList = new ArrayList<>();
 
-        // iterate through all Contact Events
         Cursor cursor = getContactsEvents(context, contentResolver);
 
         if (cursor == null) {
-            Log.e(Constants.TAG, "Unable to get events from contacts! Cursor returns null!");
+            Log.e(Constants.TAG, "Unable to get events from contacts! Cursor is null!");
             return;
         }
 
@@ -747,7 +616,7 @@ public class CalendarSyncAdapterService extends Service {
                     .getColumnIndex(ContactsContract.CommonDataKinds.Event.LOOKUP_KEY);
 
             int backRef = 0;
-            // for every event...
+
             while (cursor.moveToNext()) {
                 String eventDateString = cursor.getString(eventDateColumn);
                 String displayName = cursor.getString(displayNameColumn);
@@ -756,80 +625,36 @@ public class CalendarSyncAdapterService extends Service {
 
                 Date eventDate = parseEventDateString(context, eventDateString);
 
-                // only proceed when parsing didn't fail
                 if (eventDate != null) {
 
-                    // get year from event
                     Calendar eventCal = Calendar.getInstance();
                     eventCal.setTime(eventDate);
                     int eventYear = eventCal.get(Calendar.YEAR);
-                    Log.d(Constants.TAG, "Event Year: " + eventYear);
 
-                    /*
-                     * If year < 1800 don't show brackets with age behind name.
-                     * 
-                     * When no year is defined parseEventDateString() sets it to 1700
-                     * 
-                     * Also iCloud for example sets year to 1604 if no year is defined in their user
-                     * interface
-                     */
-                    boolean hasYear = false;
-                    if (eventYear >= 1800) {
-                        hasYear = true;
-                    }
+                    boolean hasYear = eventYear >= 1800;
 
-                    // get current year
-                    Calendar currCal = Calendar.getInstance();
-                    int currYear = currCal.get(Calendar.YEAR);
+                    int currYear = Calendar.getInstance().get(Calendar.YEAR);
 
-                    /*
-                     * Insert events for the past 3 years and the next 5 years.
-                     * 
-                     * Events are not inserted as recurring events to have different titles with
-                     * birthday age in it.
-                     */
                     int startYear = currYear - 3;
                     int endYear = currYear + 5;
 
                     for (int iteratedYear = startYear; iteratedYear <= endYear; iteratedYear++) {
-                        Log.d(Constants.TAG, "iteratedYear: " + iteratedYear);
-
-                        // calculate age
                         int age = iteratedYear - eventYear;
-
-                        // if birthday has year and age of this event >= 0, display age in title
-                        boolean includeAge = false;
-                        if (hasYear && age >= 0) {
-                            includeAge = true;
-                        }
+                        boolean includeAge = hasYear && age >= 0;
 
                         String title = generateTitle(context, eventType, cursor,
                                 eventCustomLabelColumn, includeAge, displayName, age);
 
                         if (title != null) {
-                            Log.d(Constants.TAG, "Title: " + title);
-                            Log.d(Constants.TAG, "BackRef is " + backRef);
-
                             operationList.add(insertEvent(context, calendarId, eventDate,
                                     iteratedYear, title, eventLookupKey));
 
-                            /*
-                             * Gets ContentProviderOperation to insert new reminder to the
-                             * ContentProviderOperation with the given backRef. This is done using
-                             * "withValueBackReference"
-                             */
                             int noOfReminderOperations = 0;
                             for (int i = 0; i < 3; i++) {
                                 if (reminderMinutes[i] != Constants.DISABLED_REMINDER) {
                                     ContentProviderOperation.Builder builder = ContentProviderOperation
                                             .newInsert(getBirthdayAdapterUri(Reminders.CONTENT_URI));
 
-                                    /*
-                                     * add reminder to last added event identified by backRef
-                                     *
-                                     * see http://stackoverflow.com/questions/4655291/semantics-of-
-                                     * withvaluebackreference
-                                     */
                                     builder.withValueBackReference(Reminders.EVENT_ID, backRef);
                                     builder.withValue(Reminders.MINUTES, reminderMinutes[i]);
                                     builder.withValue(Reminders.METHOD, Reminders.METHOD_ALERT);
@@ -839,22 +664,15 @@ public class CalendarSyncAdapterService extends Service {
                                 }
                             }
 
-                            // back references for the next reminders, 1 is for the event
                             backRef += 1 + noOfReminderOperations;
                         } else {
                             Log.d(Constants.TAG, "Title is null -> Not inserting events and reminders!");
                         }
 
-                        /*
-                         * intermediate commit - otherwise the binder transaction fails on large
-                         * operationList
-                         */
                         if (operationList.size() > 200) {
                             try {
-                                Log.d(Constants.TAG, "Start applying the batch...");
                                 contentResolver.applyBatch(CalendarContract.AUTHORITY,
                                         operationList);
-                                Log.d(Constants.TAG, "Applying the batch was successful!");
                                 backRef = 0;
                                 operationList.clear();
                             } catch (Exception e) {
@@ -869,12 +687,9 @@ public class CalendarSyncAdapterService extends Service {
                 cursor.close();
         }
 
-        /* Create events */
         if (operationList.size() > 0) {
             try {
-                Log.d(Constants.TAG, "Start applying the batch...");
                 contentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
-                Log.d(Constants.TAG, "Applying the batch was successful!");
             } catch (Exception e) {
                 Log.e(Constants.TAG, "Applying batch error!", e);
             }

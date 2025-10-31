@@ -20,17 +20,21 @@
 
 package org.birthdayadapter.ui;
 
+import android.Manifest;
 import android.accounts.Account;
-import android.database.DataSetObserver;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
@@ -38,6 +42,7 @@ import androidx.loader.content.Loader;
 import org.birthdayadapter.R;
 import org.birthdayadapter.provider.ProviderHelper;
 import org.birthdayadapter.service.MainIntentService;
+import org.birthdayadapter.util.AccountHelper;
 import org.birthdayadapter.util.AccountListAdapter;
 import org.birthdayadapter.util.AccountListEntry;
 import org.birthdayadapter.util.AccountListLoader;
@@ -48,23 +53,19 @@ import java.util.List;
 public class AccountListFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<List<AccountListEntry>> {
 
+    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
+
     AccountListAdapter mAdapter;
     BaseActivity mActivity;
     ListView mListView;
-
-    DataSetObserver dos = new DataSetObserver() {
-        @Override
-        public void onChanged() {
-            super.onChanged();
-            applyBlacklist();
-        }
-    };
+    TextView mEmptyView;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.account_list_fragment, container, false);
         mListView = view.findViewById(R.id.account_list);
+        mEmptyView = view.findViewById(android.R.id.empty);
         return view;
     }
 
@@ -76,29 +77,67 @@ public class AccountListFragment extends Fragment implements
 
         mAdapter = new AccountListAdapter(mActivity);
         mListView.setAdapter(mAdapter);
+        mListView.setEmptyView(mEmptyView); // Link the empty view to the list
+
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Update underlying data and notify adapter of change. The adapter will update the view
-                // automatically
                 AccountListEntry entry = mAdapter.getItem(position);
-                entry.setSelected(!entry.isSelected());
-                mAdapter.notifyDataSetChanged();
+                if (entry != null) {
+                    entry.setSelected(!entry.isSelected());
+                    mAdapter.notifyDataSetChanged();
+                }
             }
         });
+    }
 
-        mAdapter.registerDataSetObserver(dos);
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Check for permissions and load accounts if granted
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+            LoaderManager.getInstance(this).restartLoader(0, null, this);
+        } else {
+            // Request permission if not granted
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
+        }
+    }
 
-        LoaderManager.getInstance(this).initLoader(0, null, this);
+    @Override
+    public void onPause() {
+        super.onPause();
+        // Save the blacklist when the user leaves the screen
+        applyBlacklist();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission was granted, now we can load the accounts
+                LoaderManager.getInstance(this).restartLoader(0, null, this);
+            } else {
+                // Permission denied, show a message to the user
+                Toast.makeText(getContext(), "Permission to read contacts denied. Accounts cannot be loaded.", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void applyBlacklist() {
+        if (mAdapter == null || mActivity == null || mActivity.mySharedPreferenceChangeListener == null) {
+            return;
+        }
+
         HashSet<Account> blacklist = mAdapter.getAccountBlacklist();
 
         if (blacklist != null) {
             ProviderHelper.setAccountBlacklist(getActivity(), blacklist);
-            mActivity.mySharedPreferenceChangeListener.startServiceAction(
-                    MainIntentService.ACTION_MANUAL_COMPLETE_SYNC);
+
+            AccountHelper accountHelper = new AccountHelper(mActivity, null);
+            if (accountHelper.isAccountActivated()) {
+                mActivity.mySharedPreferenceChangeListener.startServiceAction(
+                        MainIntentService.ACTION_MANUAL_COMPLETE_SYNC);
+            }
         }
     }
 
@@ -111,6 +150,13 @@ public class AccountListFragment extends Fragment implements
     @Override
     public void onLoadFinished(@NonNull Loader<List<AccountListEntry>> loader, List<AccountListEntry> data) {
         mAdapter.setData(data);
+        if (data == null || data.isEmpty()) {
+            mListView.setVisibility(View.GONE);
+            mEmptyView.setVisibility(View.VISIBLE);
+        } else {
+            mListView.setVisibility(View.VISIBLE);
+            mEmptyView.setVisibility(View.GONE);
+        }
     }
 
     @Override

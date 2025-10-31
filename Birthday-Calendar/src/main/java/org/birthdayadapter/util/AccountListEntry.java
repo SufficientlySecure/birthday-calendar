@@ -2,7 +2,7 @@
  * Copyright (C) 2012-2013 Dominik Schürmann <dominik@dominikschuermann.de>
  *
  * This file is part of Birthday Adapter.
- * 
+ *
  * Birthday Adapter is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -54,7 +54,12 @@ public class AccountListEntry {
             Log.e(Constants.TAG, "Error retrieving label!", e);
         }
 
-        icon = pm.getDrawable(description.packageName, description.iconId, null);
+        try {
+            icon = pm.getDrawable(description.packageName, description.iconId, null);
+        } catch (Exception e) {
+            Log.e(Constants.TAG, "Error retrieving icon!", e);
+            icon = null;
+        }
     }
 
     public String getLabel() {
