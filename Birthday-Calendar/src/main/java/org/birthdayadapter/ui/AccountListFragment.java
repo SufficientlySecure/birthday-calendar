@@ -59,6 +59,7 @@ public class AccountListFragment extends Fragment implements
     BaseActivity mActivity;
     ListView mListView;
     TextView mEmptyView;
+    private HashSet<Account> initialBlacklist;
 
     @Nullable
     @Override
@@ -74,6 +75,7 @@ public class AccountListFragment extends Fragment implements
         super.onViewCreated(view, savedInstanceState);
 
         mActivity = (BaseActivity) getActivity();
+        if (mActivity == null) return;
 
         mAdapter = new AccountListAdapter(mActivity);
         mListView.setAdapter(mAdapter);
@@ -106,8 +108,8 @@ public class AccountListFragment extends Fragment implements
     @Override
     public void onPause() {
         super.onPause();
-        // Save the blacklist when the user leaves the screen
-        applyBlacklist();
+        // Save the blacklist when the user leaves the screen, but only if it has changed
+        applyBlacklistIfNeeded();
     }
 
     @Override
@@ -123,15 +125,16 @@ public class AccountListFragment extends Fragment implements
         }
     }
 
-    private void applyBlacklist() {
+    private void applyBlacklistIfNeeded() {
         if (mAdapter == null || mActivity == null || mActivity.mySharedPreferenceChangeListener == null) {
             return;
         }
 
-        HashSet<Account> blacklist = mAdapter.getAccountBlacklist();
+        HashSet<Account> newBlacklist = mAdapter.getAccountBlacklist();
 
-        if (blacklist != null) {
-            ProviderHelper.setAccountBlacklist(getActivity(), blacklist);
+        // Only save and sync if the blacklist has actually changed
+        if (newBlacklist != null && !newBlacklist.equals(initialBlacklist)) {
+            ProviderHelper.setAccountBlacklist(getActivity(), newBlacklist);
 
             AccountHelper accountHelper = new AccountHelper(mActivity, null);
             if (accountHelper.isAccountActivated()) {
@@ -150,6 +153,11 @@ public class AccountListFragment extends Fragment implements
     @Override
     public void onLoadFinished(@NonNull Loader<List<AccountListEntry>> loader, List<AccountListEntry> data) {
         mAdapter.setData(data);
+        // Store the initial state of the blacklist after data is loaded
+        if (mAdapter != null) {
+            initialBlacklist = mAdapter.getAccountBlacklist();
+        }
+        
         if (data == null || data.isEmpty()) {
             mListView.setVisibility(View.GONE);
             mEmptyView.setVisibility(View.VISIBLE);
