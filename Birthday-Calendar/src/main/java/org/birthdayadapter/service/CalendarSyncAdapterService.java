@@ -52,7 +52,6 @@ import android.provider.CalendarContract.Reminders;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.text.format.Time;
 
 import androidx.core.content.ContextCompat;
 
@@ -67,7 +66,6 @@ import org.birthdayadapter.util.PreferencesHelper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -279,13 +277,14 @@ public class CalendarSyncAdapterService extends Service {
 
             return parsedDate;
         } catch (ParseException e) {
-            Log.d(Constants.TAG, "Parsing failed!");
             return null;
         }
     }
 
-    private static Date parseEventDateString(Context context, String eventDateString) {
-        if (eventDateString == null) return null;
+    private static Date parseEventDateString(Context context, String eventDateString, String displayName) {
+        if (TextUtils.isEmpty(eventDateString)) {
+            return null;
+        }
 
         String[] formatsToTry;
         if (PreferencesHelper.getPreferddSlashMM(context)) {
@@ -301,11 +300,12 @@ public class CalendarSyncAdapterService extends Service {
                 return parsedDate;
             }
         }
-        
+
+        // If all other formats fail, try to parse as a raw timestamp
         try {
             return new Date(Long.parseLong(eventDateString));
         } catch (NumberFormatException e) {
-            Log.e(Constants.TAG, "Could not parse date string: " + eventDateString);
+            Log.e(Constants.TAG, "Could not parse date string: '" + eventDateString + "' for contact: '" + displayName + "'");
             return null;
         }
     }
@@ -315,7 +315,7 @@ public class CalendarSyncAdapterService extends Service {
             Log.e(Constants.TAG, "Missing READ_CONTACTS permission!");
             return null;
         }
-        
+
         HashSet<Account> blacklist = ProviderHelper.getAccountBlacklist(context);
         HashSet<String> addedEventsIdentifiers = new HashSet<>();
 
@@ -409,12 +409,8 @@ public class CalendarSyncAdapterService extends Service {
                             label = eventsCursor.getString(eventsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL));
 
                             String eventIdentifier = lookupKey + type + label;
-                            if (addedEventsIdentifiers.contains(eventIdentifier)) {
-                                Log.d(Constants.TAG, "Event was NOT added, duplicate! Identifier: " + eventIdentifier);
-                            } else {
-                                Log.d(Constants.TAG, "Event was added! Identifier " + eventIdentifier);
+                            if (!addedEventsIdentifiers.contains(eventIdentifier)) {
                                 addedEventsIdentifiers.add(eventIdentifier);
-
                                 mc.newRow().add(mcIndex).add(displayName).add(lookupKey).add(startDate).add(type).add(label);
                                 mcIndex++;
                             }
@@ -623,7 +619,7 @@ public class CalendarSyncAdapterService extends Service {
                 int eventType = cursor.getInt(eventTypeColumn);
                 String eventLookupKey = cursor.getString(eventLookupKeyColumn);
 
-                Date eventDate = parseEventDateString(context, eventDateString);
+                Date eventDate = parseEventDateString(context, eventDateString, displayName);
 
                 if (eventDate != null) {
 
@@ -646,6 +642,7 @@ public class CalendarSyncAdapterService extends Service {
                                 eventCustomLabelColumn, includeAge, displayName, age);
 
                         if (title != null) {
+                            Log.d(Constants.TAG, "Adding event: " + title);
                             operationList.add(insertEvent(context, calendarId, eventDate,
                                     iteratedYear, title, eventLookupKey));
 
