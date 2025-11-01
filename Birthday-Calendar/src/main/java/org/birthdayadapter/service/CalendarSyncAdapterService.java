@@ -635,6 +635,10 @@ public class CalendarSyncAdapterService extends Service {
                     int endYear = currYear + 5;
 
                     for (int iteratedYear = startYear; iteratedYear <= endYear; iteratedYear++) {
+                        if (hasYear && iteratedYear < eventYear) {
+                            continue; // Don't create events for years before the birth year
+                        }
+
                         int age = iteratedYear - eventYear;
                         boolean includeAge = hasYear && age >= 0;
 
