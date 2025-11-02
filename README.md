@@ -10,25 +10,25 @@ Birthday Calendar provides birthdays, anniversaries, and other events from your 
 
 For more information visit https://www.sufficientlysecure.org/android/
 
-# Build with Gradle
+## Build with Gradle
 
 1. Have Android SDK "tools", "platform-tools", and "build-tools" directories in your PATH (http://developer.android.com/sdk/index.html)
 2. Open the Android SDK Manager (shell command: ``android``). Expand the Extras directory and install "Android Support Repository"
 3. Export ANDROID_HOME pointing to your Android SDK
 4. Execute ``./gradlew build``
 
-## More build information
+### More build information
 
 Different productFlavors are build with gradle:
 - ``full``
 - ``full_google`` with workarounds for Google Play
 - ``free`` without settings
 
-# Contribute
+## Contribute
 
 Fork Birthday Calendar and do a Pull Request. I will merge your changes back into the main project.
 
-# Translations
+## Translations
 
 Translations are hosted on Transifex, which is configured by ".tx/config".
 
@@ -39,9 +39,9 @@ Translations are hosted on Transifex, which is configured by ".tx/config".
 
 see http://help.transifex.net/features/client/index.html#user-client
 
-# Coding Style
+## Coding Style
 
-## Code
+### Code
 * Indentation: 4 spaces, no tabs
 * Maximum line width for code and comments: 100
 * Opening braces don't go on their own line
@@ -50,18 +50,18 @@ see http://help.transifex.net/features/client/index.html#user-client
 
 See http://source.android.com/source/code-style.html
 
-## XML
+### XML
 * XML Maximum line width 999
 * XML: Split multiple attributes each on a new line (Eclipse: Properties -> XML -> XML Files -> Editor)
 * XML: Indent using spaces with Indention size 4 (Eclipse: Properties -> XML -> XML Files -> Editor)
 
 See http://www.androidpolice.com/2009/11/04/auto-formatting-android-xml-files-with-eclipse/
 
-# Licenses
-Birthday Calendar is licensed under the GPLv3+.  
+## Licenses
+Birthday Calendar is licensed under the GPLv3+.
 The file LICENSE includes the full license text.
 
-## Details
+### Details
 Birthday Calendar is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -75,23 +75,18 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Birthday Calendar.  If not, see <http://www.gnu.org/licenses/>.
 
-## Libraries
-* Android-Support-Preference-V7-Fix  
-  https://github.com/Gericop/Android-Support-Preference-V7-Fix  
-  Apache License v2
+### Libraries
+* AndroidX Libraries
+  https://developer.android.com/jetpack/androidx
+  Apache License 2.0
 
-* HtmlTextView  
-  https://github.com/dschuermann/html-textview  
-  Apache License v2
+* Material Dialogs
+  https://github.com/afollestad/material-dialogs
+  Apache License 2.0
 
-* VintageChroma  
-  https://github.com/MrBIMC/VintageChroma  
-  Apache License v2
+### Images
 
-
-## Images
-
-* icon.svg  
-  Based on Tango Icon Library and Tango Pidgin Icon Theme  
-  http://tango.freedesktop.org/  
+* icon.svg
+  Based on Tango Icon Library and Tango Pidgin Icon Theme
+  http://tango.freedesktop.org/
   Public Domain (Tango Icon Library) and GPL (Tango Pidgin Icon Theme)
