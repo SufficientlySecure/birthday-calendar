@@ -20,13 +20,13 @@
 
 package org.birthdayadapter.util;
 
+import org.birthdayadapter.R;
 import org.birthdayadapter.service.MainIntentService;
 
 import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerFuture;
-import android.app.AlarmManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -35,6 +35,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Messenger;
 import androidx.core.app.ActivityCompat;
+
+import java.util.concurrent.TimeUnit;
 
 public class AccountHelper {
     private Context mContext;
@@ -55,26 +57,27 @@ public class AccountHelper {
     public Bundle addAccountAndSync() {
         Log.d(Constants.TAG, "Adding account...");
 
-        // enable automatic sync once per day
-        ContentResolver.setSyncAutomatically(Constants.ACCOUNT, Constants.CONTENT_AUTHORITY, true);
-        ContentResolver.setIsSyncable(Constants.ACCOUNT, Constants.ACCOUNT_TYPE, 1);
-
-        // add periodic sync interval once per day
-        long freq = AlarmManager.INTERVAL_DAY;
-        ContentResolver.addPeriodicSync(Constants.ACCOUNT, Constants.ACCOUNT_TYPE, new Bundle(),
-                freq);
-
         AccountManager am = AccountManager.get(mContext);
-        if (am.addAccountExplicitly(Constants.ACCOUNT, null, null)) {
+        final Account account = new Account(Constants.ACCOUNT_NAME, mContext.getString(R.string.account_type));
+
+        if (am.addAccountExplicitly(account, null, null)) {
+            // Set the sync adapter to be syncable
+            ContentResolver.setIsSyncable(account, Constants.CONTENT_AUTHORITY, 1);
+            // Enable automatic sync
+            ContentResolver.setSyncAutomatically(account, Constants.CONTENT_AUTHORITY, true);
+            // Add a periodic sync every 24 hours
+            ContentResolver.addPeriodicSync(account, Constants.CONTENT_AUTHORITY, Bundle.EMPTY, TimeUnit.HOURS.toSeconds(24));
+
             Bundle result = new Bundle();
-            result.putString(AccountManager.KEY_ACCOUNT_NAME, Constants.ACCOUNT.name);
-            result.putString(AccountManager.KEY_ACCOUNT_TYPE, Constants.ACCOUNT.type);
+            result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
+            result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
 
             // Force a sync! Even when background sync is disabled, this will force one sync!
             manualSync();
 
             return result;
         } else {
+            Log.e(Constants.TAG, "Failed to add account explicitly.");
             return null;
         }
     }
@@ -86,9 +89,10 @@ public class AccountHelper {
         Log.d(Constants.TAG, "Removing account...");
 
         AccountManager am = AccountManager.get(mContext);
+        final Account account = new Account(Constants.ACCOUNT_NAME, mContext.getString(R.string.account_type));
 
         // remove account
-        AccountManagerFuture<Boolean> future = am.removeAccount(Constants.ACCOUNT, null, null);
+        AccountManagerFuture<Boolean> future = am.removeAccount(account, null, null);
         if (future.isDone()) {
             try {
                 future.getResult();
@@ -112,7 +116,8 @@ public class AccountHelper {
         // Disabled: Force resync in Android OS
         // Bundle extras = new Bundle();
         // extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-        // ContentResolver.requestSync(Constants.ACCOUNT, Constants.CONTENT_AUTHORITY, extras);
+        // final Account account = new Account(Constants.ACCOUNT_NAME, mContext.getString(R.string.account_type));
+        // ContentResolver.requestSync(account, Constants.CONTENT_AUTHORITY, extras);
 
         // Enabled: Force resync in own thread:
         // Send all information needed to service to do in other thread
@@ -139,7 +144,7 @@ public class AccountHelper {
                 Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
             return false;
         }
-        Account[] availableAccounts = am.getAccountsByType(Constants.ACCOUNT_TYPE);
+        Account[] availableAccounts = am.getAccountsByType(mContext.getString(R.string.account_type));
         for (Account currentAccount : availableAccounts) {
             if (currentAccount.name.equals(Constants.ACCOUNT_NAME)) {
                 return true;

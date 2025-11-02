@@ -1,4 +1,5 @@
 <sync-adapter xmlns:android="http://schemas.android.com/apk/res/android"
-    android:accountType="org.birthdayadapter.auth"
+    android:accountType="@string/account_type"
     android:contentAuthority="com.android.calendar"
-    android:supportsUploading="false" />
+    android:supportsUploading="false"
+    android:userVisible="true" />
