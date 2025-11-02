@@ -28,8 +28,6 @@
     <string name="pref_reminder_time_key1" translatable="false">reminderTime1</string>
     <string name="pref_reminder_time_key2" translatable="false">reminderTime2</string>
 
-    <integer name="pref_reminder_time_def">-540</integer>
-
     <string name="pref_advanced_key" translatable="false">advanced</string>
 
     <item name="pref_advanced_def" format="boolean" type="string">false</item>
@@ -51,6 +49,5 @@
     <string name="pref_title_custom_without_age_key">custom</string>
     <string name="pref_title_custom_with_age_key">customAge</string>
     <string name="pref_buy_full_key" translatable="false">buyFull</string>
-
 
 </resources>
