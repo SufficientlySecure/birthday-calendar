@@ -429,6 +429,30 @@ public class CalendarSyncAdapterService extends Service {
         return mc;
     }
 
+    private static boolean eventExists(ContentResolver resolver, String title, Date eventDate) {
+        if (eventDate == null) return false;
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(eventDate);
+        String dayOfYear = String.valueOf(cal.get(Calendar.DAY_OF_YEAR));
+
+        Uri uri = Events.CONTENT_URI;
+        String[] projection = {Events._ID};
+        String selection = Events.TITLE + " = ? AND strftime('%j', " + Events.DTSTART + " / 1000, 'unixepoch') = ?";
+        String[] selectionArgs = {title, dayOfYear};
+
+        Cursor cursor = resolver.query(uri, projection, selection, selectionArgs, null);
+
+        if (cursor != null) {
+            try {
+                return cursor.getCount() > 0;
+            } finally {
+                cursor.close();
+            }
+        }
+        return false;
+    }
+
     private static String generateTitle(Context context, int eventType, Cursor cursor,
                                         int eventCustomLabelColumn, boolean includeAge, String displayName, int age) {
         displayName = addJubileeIcon(displayName, age);
@@ -622,62 +646,62 @@ public class CalendarSyncAdapterService extends Service {
                 Date eventDate = parseEventDateString(context, eventDateString, displayName);
 
                 if (eventDate != null) {
+                    String baseTitle = generateTitle(context, eventType, cursor, eventCustomLabelColumn, false, displayName, 0);
 
-                    Calendar eventCal = Calendar.getInstance();
-                    eventCal.setTime(eventDate);
-                    int eventYear = eventCal.get(Calendar.YEAR);
+                    if (baseTitle != null && !eventExists(contentResolver, baseTitle, eventDate)) {
+                        Calendar eventCal = Calendar.getInstance();
+                        eventCal.setTime(eventDate);
+                        int eventYear = eventCal.get(Calendar.YEAR);
 
-                    boolean hasYear = eventYear >= 1800;
+                        boolean hasYear = eventYear >= 1800;
+                        int currYear = Calendar.getInstance().get(Calendar.YEAR);
 
-                    int currYear = Calendar.getInstance().get(Calendar.YEAR);
+                        int startYear = currYear - 3;
+                        int endYear = currYear + 5;
 
-                    int startYear = currYear - 3;
-                    int endYear = currYear + 5;
-
-                    for (int iteratedYear = startYear; iteratedYear <= endYear; iteratedYear++) {
-                        if (hasYear && iteratedYear < eventYear) {
-                            continue; // Don't create events for years before the birth year
-                        }
-
-                        int age = iteratedYear - eventYear;
-                        boolean includeAge = hasYear && age >= 0;
-
-                        String title = generateTitle(context, eventType, cursor,
-                                eventCustomLabelColumn, includeAge, displayName, age);
-
-                        if (title != null) {
-                            Log.d(Constants.TAG, "Adding event: " + title);
-                            operationList.add(insertEvent(context, calendarId, eventDate,
-                                    iteratedYear, title, eventLookupKey));
-
-                            int noOfReminderOperations = 0;
-                            for (int i = 0; i < 3; i++) {
-                                if (reminderMinutes[i] != Constants.DISABLED_REMINDER) {
-                                    ContentProviderOperation.Builder builder = ContentProviderOperation
-                                            .newInsert(getBirthdayAdapterUri(Reminders.CONTENT_URI));
-
-                                    builder.withValueBackReference(Reminders.EVENT_ID, backRef);
-                                    builder.withValue(Reminders.MINUTES, reminderMinutes[i]);
-                                    builder.withValue(Reminders.METHOD, Reminders.METHOD_ALERT);
-                                    operationList.add(builder.build());
-
-                                    noOfReminderOperations += 1;
-                                }
+                        for (int iteratedYear = startYear; iteratedYear <= endYear; iteratedYear++) {
+                            if (hasYear && iteratedYear < eventYear) {
+                                continue; // Don't create events for years before the birth year
                             }
 
-                            backRef += 1 + noOfReminderOperations;
-                        } else {
-                            Log.d(Constants.TAG, "Title is null -> Not inserting events and reminders!");
-                        }
+                            int age = iteratedYear - eventYear;
+                            boolean includeAge = hasYear && age >= 0;
 
-                        if (operationList.size() > 200) {
-                            try {
-                                contentResolver.applyBatch(CalendarContract.AUTHORITY,
-                                        operationList);
-                                backRef = 0;
-                                operationList.clear();
-                            } catch (Exception e) {
-                                Log.e(Constants.TAG, "Applying batch error!", e);
+                            String title = generateTitle(context, eventType, cursor,
+                                    eventCustomLabelColumn, includeAge, displayName, age);
+
+                            if (title != null) {
+                                Log.d(Constants.TAG, "Adding event: " + title);
+                                operationList.add(insertEvent(context, calendarId, eventDate,
+                                        iteratedYear, title, eventLookupKey));
+
+                                int noOfReminderOperations = 0;
+                                for (int i = 0; i < 3; i++) {
+                                    if (reminderMinutes[i] != Constants.DISABLED_REMINDER) {
+                                        ContentProviderOperation.Builder builder = ContentProviderOperation
+                                                .newInsert(getBirthdayAdapterUri(Reminders.CONTENT_URI));
+
+                                        builder.withValueBackReference(Reminders.EVENT_ID, backRef);
+                                        builder.withValue(Reminders.MINUTES, reminderMinutes[i]);
+                                        builder.withValue(Reminders.METHOD, Reminders.METHOD_ALERT);
+                                        operationList.add(builder.build());
+
+                                        noOfReminderOperations += 1;
+                                    }
+                                }
+
+                                backRef += 1 + noOfReminderOperations;
+                            }
+
+                            if (operationList.size() > 200) {
+                                try {
+                                    contentResolver.applyBatch(CalendarContract.AUTHORITY,
+                                            operationList);
+                                    backRef = 0;
+                                    operationList.clear();
+                                } catch (Exception e) {
+                                    Log.e(Constants.TAG, "Applying batch error!", e);
+                                }
                             }
                         }
                     }
