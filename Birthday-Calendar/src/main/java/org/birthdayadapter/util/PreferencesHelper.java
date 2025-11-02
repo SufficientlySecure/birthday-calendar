@@ -44,21 +44,6 @@ public class PreferencesHelper {
         editor.apply();
     }
 
-    public static boolean getShowWorkaroundDialog(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
-                Context.MODE_PRIVATE);
-        return prefs.getBoolean(context.getString(R.string.pref_show_workaround_dialog_key),
-                Boolean.parseBoolean(context.getString(R.string.pref_show_workaround_dialog_def)));
-    }
-
-    public static void setShowWorkaroundDialog(Context context, boolean value) {
-        SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
-                Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(context.getString(R.string.pref_show_workaround_dialog_key), value);
-        editor.apply();
-    }
-
     public static int getColor(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
                 Context.MODE_PRIVATE);

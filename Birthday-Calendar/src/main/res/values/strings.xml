@@ -1,3 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
+
+ This file is part of Birthday Adapter.
+
+ Birthday Adapter is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Birthday Adapter is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <resources>
 
     <string name="app_name">Birthday Calendar</string>
@@ -99,12 +118,5 @@
     <string name="pref_buy">Buy full version!</string>
     <string name="pref_buy_full">Open Google Play to buy full version…</string>
     <string name="pref_buy_full_summary">• Set your own reminders for events\n• Customize event titles</string>
-
-    <!-- Install Workaround Dialog -->
-    <string name="workaround_dialog_title">Workaround needed for this Android Version!</string>
-    <string name="workaround_dialog_message">Due to a bug in Android, Birthday Adapter will be disabled after restarting this device.\\n\\nThis bug was introduced in Android 4.1.1 and seems to be fixed in Android 4.2. Unfortunately, some devices, e.g., Galaxy S4, still have this bug on Android 4.2. You can install a workaround from Google Play and find more information in the bug report: http://code.google.com/p/android/issues/detail?id=34880</string>
-    <string name="workaround_dialog_dont_show_again_button">Don\'t show again</string>
-    <string name="workaround_dialog_close_button">Close</string>
-    <string name="workaround_dialog_install_button">Install Workaround</string>
 
 </resources>
