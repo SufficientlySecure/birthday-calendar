@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.1'
@@ -6,21 +7,22 @@ dependencies {
     implementation 'androidx.preference:preference:1.2.1'
     implementation 'com.afollestad.material-dialogs:core:3.3.0'
     implementation 'com.afollestad.material-dialogs:color:3.3.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
 android {
-    compileSdk 34
+    compileSdk = 34
 
     defaultConfig {
-        minSdkVersion 28
-        targetSdkVersion 34
-        versionCode 20
-        versionName "2.1.0"
+        minSdkVersion = 28
+        targetSdkVersion = 34
+        versionCode = 20
+        versionName = "2.1.0"
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
 
@@ -40,10 +42,10 @@ android {
 
         signingConfigs {
             release {
-                storeFile file(signingStoreLocation)
-                storePassword signingStorePassword
-                keyAlias signingKeyAlias
-                keyPassword signingKeyPassword
+                storeFile = file(signingStoreLocation)
+                storePassword = signingStorePassword
+                keyAlias = signingKeyAlias
+                keyPassword = signingKeyPassword
             }
         }
 
@@ -55,29 +57,29 @@ android {
     flavorDimensions += "version"
     productFlavors {
         create("full") {
-            dimension "version"
+            dimension = "version"
             applicationId = "org.birthdayadapter"
-            buildConfigField "boolean", "FULL_VERSION", "true"
-            buildConfigField "boolean", "GOOGLE_PLAY_VERSION", "false"
+            buildConfigField("boolean", "FULL_VERSION", "true")
+            buildConfigField("boolean", "GOOGLE_PLAY_VERSION", "false")
         }
         create("full_google") {
-            dimension "version"
+            dimension = "version"
             applicationId = "org.birthdayadapter"
-            buildConfigField "boolean", "FULL_VERSION", "true"
-            buildConfigField "boolean", "GOOGLE_PLAY_VERSION", "true"
+            buildConfigField("boolean", "FULL_VERSION", "true")
+            buildConfigField("boolean", "GOOGLE_PLAY_VERSION", "true")
         }
         create("free") {
-            dimension "version"
+            dimension = "version"
             applicationId = "org.birthdayadapter.free"
-            buildConfigField "boolean", "FULL_VERSION", "false"
-            buildConfigField "boolean", "GOOGLE_PLAY_VERSION", "true"
+            buildConfigField("boolean", "FULL_VERSION", "false")
+            buildConfigField("boolean", "GOOGLE_PLAY_VERSION", "true")
         }
     }
-    namespace 'org.birthdayadapter'
+    namespace = 'org.birthdayadapter'
     lint {
-        disable 'MissingTranslation', 'ExtraTranslation'
+        disable('MissingTranslation', 'ExtraTranslation')
     }
     buildFeatures {
-        buildConfig true
+        buildConfig = true
     }
 }
