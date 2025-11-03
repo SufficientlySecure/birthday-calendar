@@ -36,11 +36,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SyncResult;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.MatrixCursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -71,11 +70,14 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @SuppressLint("NewApi")
 public class CalendarSyncAdapterService extends Service {
 
     private static String CALENDAR_COLUMN_NAME = "birthday_adapter";
+    private static HashSet<Integer> jubileeYears;
 
     public CalendarSyncAdapterService() {
         super();
@@ -431,7 +433,7 @@ public class CalendarSyncAdapterService extends Service {
 
     private static boolean eventExists(ContentResolver resolver, String title, Date eventDate) {
         if (eventDate == null) return false;
-        
+
         Calendar cal = Calendar.getInstance();
         cal.setTime(eventDate);
         String dayOfYear = String.valueOf(cal.get(Calendar.DAY_OF_YEAR));
@@ -455,7 +457,7 @@ public class CalendarSyncAdapterService extends Service {
 
     private static String generateTitle(Context context, int eventType, Cursor cursor,
                                         int eventCustomLabelColumn, boolean includeAge, String displayName, int age) {
-        displayName = addJubileeIcon(displayName, age);
+        displayName = addJubileeIcon(context, displayName, age);
         String title = null;
         if (displayName != null) {
             switch (eventType) {
@@ -494,10 +496,14 @@ public class CalendarSyncAdapterService extends Service {
         return title;
     }
 
-    private static String addJubileeIcon(String displayName, int age) {
-        String jubilees = " 18, 20, 30, 40, 50, 60, 70, 75, 80, 90, 100, ";
-        boolean is_jubilee = jubilees.contains(" " + String.valueOf(age) + ",");
-        if (is_jubilee) {
+    private static String addJubileeIcon(Context context, String displayName, int age) {
+        if (jubileeYears == null) {
+            Resources res = context.getResources();
+            int[] years = res.getIntArray(R.array.jubilee_years);
+            jubileeYears = (HashSet<Integer>) IntStream.of(years).boxed().collect(Collectors.toSet());
+        }
+
+        if (jubileeYears.contains(age)) {
             displayName = "\uD83C\uDF89 " + displayName;
         }
         return displayName;
