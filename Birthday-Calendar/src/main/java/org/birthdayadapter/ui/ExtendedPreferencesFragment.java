@@ -115,12 +115,12 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                     DialogColorChooserExtKt.colorChooser(
                             dialog,
                             ColorPalette.INSTANCE.getPrimary(),
-                            null, // subColors
-                            PreferencesHelper.getColor(mActivity), // initialSelection
-                            false, // allowCustomArgb
-                            false, // showAlphaSelector
-                            true, // waitForPositiveButton
-                            false, // showNeutralButton
+                            null,
+                            PreferencesHelper.getColor(mActivity),
+                            true,
+                            true,
+                            false,
+                            false,
                             (d, color) -> {
                                 SharedPreferences.Editor editor = getPreferenceManager().getSharedPreferences().edit();
                                 editor.putInt(getString(R.string.pref_color_key), color);
@@ -129,9 +129,6 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                                 return Unit.INSTANCE;
                             }
                     );
-
-                    dialog.positiveButton(android.R.string.ok, null, (d) -> null);
-                    dialog.negativeButton(android.R.string.cancel, null, (d) -> null);
                     dialog.show();
 
                     return true;
