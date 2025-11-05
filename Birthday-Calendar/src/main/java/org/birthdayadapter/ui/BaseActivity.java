@@ -21,36 +21,25 @@
 package org.birthdayadapter.ui;
 
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import com.google.android.material.tabs.TabLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import android.view.View;
-import android.widget.ProgressBar;
+import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
-import org.birthdayadapter.util.BackgroundStatusHandler;
 import org.birthdayadapter.util.MySharedPreferenceChangeListener;
-import org.birthdayadapter.util.PreferencesHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-public class BaseActivity extends AppCompatActivity implements BackgroundStatusHandler.StatusChangeListener {
-
-    public BackgroundStatusHandler mBackgroundStatusHandler = new BackgroundStatusHandler(this);
+public class BaseActivity extends AppCompatActivity {
 
     public MySharedPreferenceChangeListener mySharedPreferenceChangeListener;
-
-    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,24 +47,18 @@ public class BaseActivity extends AppCompatActivity implements BackgroundStatusH
 
         setContentView(R.layout.base_activity);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        progressBar = (ProgressBar) findViewById(R.id.progress_spinner);
 
-        ViewPager2 viewPager = (ViewPager2) findViewById(R.id.viewpager);
+        ViewPager2 viewPager = findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = findViewById(R.id.tabs);
         new TabLayoutMediator(tabLayout, viewPager,
                 (tab, position) -> tab.setText(((ViewPagerAdapter)viewPager.getAdapter()).getPageTitle(position))
         ).attach();
 
-        mySharedPreferenceChangeListener = new MySharedPreferenceChangeListener(this,
-                mBackgroundStatusHandler);
-    }
-
-    public void setIndeterminateProgress(boolean visible) {
-        progressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
+        mySharedPreferenceChangeListener = new MySharedPreferenceChangeListener(this);
     }
 
     private void setupViewPager(ViewPager2 viewPager) {
@@ -86,11 +69,6 @@ public class BaseActivity extends AppCompatActivity implements BackgroundStatusH
         adapter.addFragment(new HelpFragment(), getString(R.string.tab_help));
         adapter.addFragment(new AboutFragment(), getString(R.string.tab_about));
         viewPager.setAdapter(adapter);
-    }
-
-    @Override
-    public void onStatusChange(boolean progress) {
-        setIndeterminateProgress(progress);
     }
 
     class ViewPagerAdapter extends FragmentStateAdapter {

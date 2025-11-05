@@ -21,22 +21,20 @@
 package org.birthdayadapter.util;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Handler;
-import android.os.Messenger;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import org.birthdayadapter.R;
-import org.birthdayadapter.service.MainIntentService;
+import org.birthdayadapter.service.BirthdayWorker;
 
 public class MySharedPreferenceChangeListener implements SharedPreferences.OnSharedPreferenceChangeListener {
     private final Context context;
-    private final Handler handler;
 
-    public MySharedPreferenceChangeListener(Context context, Handler handler) {
+    public MySharedPreferenceChangeListener(Context context) {
         super();
         this.context = context;
-        this.handler = handler;
     }
 
     @Override
@@ -50,32 +48,28 @@ public class MySharedPreferenceChangeListener implements SharedPreferences.OnSha
 
         if (key.equals(colorKey)) {
             // set new color
-            startServiceAction(MainIntentService.ACTION_CHANGE_COLOR);
+            startWork(BirthdayWorker.ACTION_CHANGE_COLOR);
         } else {
             // For any other preference change, resync all events
-            startServiceAction(MainIntentService.ACTION_MANUAL_COMPLETE_SYNC);
+            startWork(BirthdayWorker.ACTION_MANUAL_COMPLETE_SYNC);
         }
     }
 
     /**
-     * Start service with action, while executing, show progress
+     * Start a worker to perform an action
      */
-    public void startServiceAction(String action) {
+    public void startWork(String action) {
         if (context == null) return;
 
-        // Send all information needed to service to do in other thread
-        Intent intent = new Intent(context, MainIntentService.class);
+        Data inputData = new Data.Builder()
+                .putString(BirthdayWorker.ACTION, action)
+                .build();
 
-        // Create a new Messenger for the communication back
-        if (handler != null) {
-            Messenger messenger = new Messenger(handler);
-            intent.putExtra(MainIntentService.EXTRA_MESSENGER, messenger);
-        }
+        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(BirthdayWorker.class)
+                .setInputData(inputData)
+                .build();
 
-        intent.setAction(action);
-
-        // start service with intent
-        context.startService(intent);
+        WorkManager.getInstance(context).enqueue(workRequest);
     }
 
 }

@@ -71,7 +71,7 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
             return;
         }
 
-        mAccountHelper = new AccountHelper(mActivity, mActivity.mBackgroundStatusHandler);
+        mAccountHelper = new AccountHelper(mActivity);
 
         mEnabled = findPreference(getString(R.string.pref_enabled_key));
         if (mEnabled != null) {

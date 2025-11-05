@@ -8,6 +8,7 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:core:3.3.0'
     implementation 'com.afollestad.material-dialogs:color:3.3.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "androidx.work:work-runtime-ktx:2.9.0"
 }
 
 android {
@@ -45,7 +46,7 @@ android {
                 storeFile = file(signingStoreLocation)
                 storePassword = signingStorePassword
                 keyAlias = signingKeyAlias
-                keyPassword = signingKeyPassword
+                keyPassword = keyPassword
             }
         }
 

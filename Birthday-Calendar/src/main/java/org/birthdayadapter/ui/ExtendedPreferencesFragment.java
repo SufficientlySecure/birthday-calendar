@@ -70,7 +70,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
             return;
         }
 
-        mAccountHelper = new AccountHelper(mActivity, mActivity.mBackgroundStatusHandler);
+        mAccountHelper = new AccountHelper(mActivity);
 
         if (!BuildConfig.FULL_VERSION) {
             Preference buyFull = findPreference(getString(R.string.pref_buy_full_key));

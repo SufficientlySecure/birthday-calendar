@@ -21,7 +21,7 @@
 package org.birthdayadapter.util;
 
 import org.birthdayadapter.R;
-import org.birthdayadapter.service.MainIntentService;
+import org.birthdayadapter.service.BirthdayWorker;
 
 import android.Manifest;
 import android.accounts.Account;
@@ -29,22 +29,21 @@ import android.accounts.AccountManager;
 import android.accounts.AccountManagerFuture;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Messenger;
 import androidx.core.app.ActivityCompat;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import java.util.concurrent.TimeUnit;
 
 public class AccountHelper {
     private Context mContext;
-    private Handler mBackgroundStatusHandler;
 
     public AccountHelper(Context context, Handler handler) {
         mContext = context;
-        mBackgroundStatusHandler = handler;
     }
 
     public AccountHelper(Context context) {
@@ -113,25 +112,15 @@ public class AccountHelper {
     public void manualSync() {
         Log.d(Constants.TAG, "Force manual sync...");
 
-        // Disabled: Force resync in Android OS
-        // Bundle extras = new Bundle();
-        // extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-        // final Account account = new Account(Constants.ACCOUNT_NAME, mContext.getString(R.string.account_type));
-        // ContentResolver.requestSync(account, Constants.CONTENT_AUTHORITY, extras);
+        Data inputData = new Data.Builder()
+                .putString(BirthdayWorker.ACTION, BirthdayWorker.ACTION_MANUAL_COMPLETE_SYNC)
+                .build();
 
-        // Enabled: Force resync in own thread:
-        // Send all information needed to service to do in other thread
-        Intent intent = new Intent(mContext, MainIntentService.class);
+        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(BirthdayWorker.class)
+                .setInputData(inputData)
+                .build();
 
-        // Create a new Messenger for the communication back
-        if (mBackgroundStatusHandler != null) {
-            Messenger messenger = new Messenger(mBackgroundStatusHandler);
-            intent.putExtra(MainIntentService.EXTRA_MESSENGER, messenger);
-        }
-        intent.setAction(MainIntentService.ACTION_MANUAL_COMPLETE_SYNC);
-
-        // start service with intent
-        mContext.startService(intent);
+        WorkManager.getInstance(mContext).enqueue(workRequest);
     }
 
     /**

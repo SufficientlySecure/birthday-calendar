@@ -83,7 +83,6 @@
             </intent-filter>
         </activity>
 
-        <service android:name="org.birthdayadapter.service.MainIntentService" />
         <service
             android:name="org.birthdayadapter.service.AccountAuthenticatorService"
             android:exported="true"
