@@ -2,7 +2,7 @@
  * Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
  *
  * This file is part of Birthday Adapter.
- *
+ * 
  * Birthday Adapter is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -20,8 +20,14 @@
 
 package org.birthdayadapter.ui;
 
+import android.accounts.Account;
+import android.content.ContentResolver;
+import android.content.SyncStatusObserver;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ProgressBar;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -32,6 +38,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import org.birthdayadapter.R;
+import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.MySharedPreferenceChangeListener;
 
 import java.util.ArrayList;
@@ -40,6 +47,9 @@ import java.util.List;
 public class BaseActivity extends AppCompatActivity {
 
     public MySharedPreferenceChangeListener mySharedPreferenceChangeListener;
+    private SyncStatusObserver mSyncStatusObserver;
+    private Object mSyncObserverHandle;
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +60,8 @@ public class BaseActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mProgressBar = findViewById(R.id.progress_spinner);
+
         ViewPager2 viewPager = findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
@@ -59,6 +71,35 @@ public class BaseActivity extends AppCompatActivity {
         ).attach();
 
         mySharedPreferenceChangeListener = new MySharedPreferenceChangeListener(this);
+
+        mSyncStatusObserver = new SyncStatusObserver() {
+            @Override
+            public void onStatusChanged(int which) {
+                runOnUiThread(() -> {
+                    Account account = new Account(Constants.ACCOUNT_NAME, getString(R.string.account_type));
+                    boolean syncActive = ContentResolver.isSyncActive(account, Constants.CONTENT_AUTHORITY);
+                    if (mProgressBar != null) {
+                        mProgressBar.setVisibility(syncActive ? View.VISIBLE : View.GONE);
+                    }
+                });
+            }
+        };
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        final int mask = ContentResolver.SYNC_OBSERVER_TYPE_PENDING | ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE;
+        mSyncObserverHandle = ContentResolver.addStatusChangeListener(mask, mSyncStatusObserver);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mSyncObserverHandle != null) {
+            ContentResolver.removeStatusChangeListener(mSyncObserverHandle);
+            mSyncObserverHandle = null;
+        }
     }
 
     private void setupViewPager(ViewPager2 viewPager) {
