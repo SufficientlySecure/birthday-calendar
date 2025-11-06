@@ -20,36 +20,35 @@
 
 package org.birthdayadapter.ui;
 
+import android.accounts.Account;
+import android.content.ContentResolver;
+import android.content.SyncStatusObserver;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import org.birthdayadapter.BuildConfig;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
+
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
+
 import org.birthdayadapter.R;
-import org.birthdayadapter.util.BackgroundStatusHandler;
+import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.MySharedPreferenceChangeListener;
-import org.birthdayadapter.util.PreferencesHelper;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-public class BaseActivity extends AppCompatActivity implements BackgroundStatusHandler.StatusChangeListener {
-
-    public BackgroundStatusHandler mBackgroundStatusHandler = new BackgroundStatusHandler(this);
+public class BaseActivity extends AppCompatActivity {
 
     public MySharedPreferenceChangeListener mySharedPreferenceChangeListener;
-
-    private ProgressBar progressBar;
+    private SyncStatusObserver mSyncStatusObserver;
+    private Object mSyncObserverHandle;
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,79 +56,97 @@ public class BaseActivity extends AppCompatActivity implements BackgroundStatusH
 
         setContentView(R.layout.base_activity);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        progressBar = (ProgressBar) findViewById(R.id.progress_spinner);
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        mProgressBar = findViewById(R.id.progress_spinner);
+
+        ViewPager2 viewPager = findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
+        TabLayout tabLayout = findViewById(R.id.tabs);
+        new TabLayoutMediator(tabLayout, viewPager,
+                (tab, position) -> tab.setText(((ViewPagerAdapter) viewPager.getAdapter()).getPageTitle(position))
+        ).attach();
 
-        mySharedPreferenceChangeListener = new MySharedPreferenceChangeListener(this,
-                mBackgroundStatusHandler);
+        mySharedPreferenceChangeListener = new MySharedPreferenceChangeListener(this);
 
-        /*
-         * Show workaround dialog for Android bug http://code.google.com/p/android/issues/detail?id=34880
-         * Bug exists on Android 4.1 (SDK 16) and on some phones like Galaxy S4
-         */
-        if (BuildConfig.GOOGLE_PLAY_VERSION && PreferencesHelper.getShowWorkaroundDialog(this)
-                && !isPackageInstalled("org.birthdayadapter.jb.workaround")) {
-            if ((Build.VERSION.SDK_INT == 16)
-                    || Build.DEVICE.toUpperCase(Locale.US).startsWith("GT-I9000")
-                    || Build.DEVICE.toUpperCase(Locale.US).startsWith("GT-I9500")) {
-                InstallWorkaroundDialogFragment dialog = InstallWorkaroundDialogFragment.newInstance();
-                dialog.show(getSupportFragmentManager(), "workaroundDialog");
+        mSyncStatusObserver = new SyncStatusObserver() {
+            @Override
+            public void onStatusChanged(int which) {
+                runOnUiThread(() -> {
+                    if (isFinishing() || isDestroyed()) {
+                        return;
+                    }
+                    Account account = new Account(Constants.ACCOUNT_NAME, getString(R.string.account_type));
+                    boolean syncActive = ContentResolver.isSyncActive(account, Constants.CONTENT_AUTHORITY);
+                    if (mProgressBar != null) {
+                        mProgressBar.setVisibility(syncActive ? View.VISIBLE : View.GONE);
+                    }
+                });
             }
-        }
-    }
-
-    public void setIndeterminateProgress(boolean visible) {
-        progressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
-    }
-
-    private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new BasePreferenceFragment(), getString(R.string.tab_main));
-        adapter.addFragment(new ExtendedPreferencesFragment(), getString(R.string.tab_preferences));
-        adapter.addFragment(new AccountListFragment(), getString(R.string.tab_accounts));
-        adapter.addFragment(new HelpFragment(), getString(R.string.tab_help));
-        adapter.addFragment(new AboutFragment(), getString(R.string.tab_about));
-        viewPager.setAdapter(adapter);
+        };
     }
 
     @Override
-    public void onStatusChange(boolean progress) {
-        setIndeterminateProgress(progress);
+    public void onResume() {
+        super.onResume();
+        final int mask = ContentResolver.SYNC_OBSERVER_TYPE_PENDING | ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE;
+        mSyncObserverHandle = ContentResolver.addStatusChangeListener(mask, mSyncStatusObserver);
     }
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mSyncObserverHandle != null) {
+            ContentResolver.removeStatusChangeListener(mSyncObserverHandle);
+            mSyncObserverHandle = null;
+        }
+    }
 
-        public ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
+    private void setupViewPager(ViewPager2 viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(this);
+        viewPager.setAdapter(adapter);
+    }
+
+    class ViewPagerAdapter extends FragmentStateAdapter {
+        private final String[] mFragmentTitles = new String[]{
+                getString(R.string.tab_main),
+                getString(R.string.tab_preferences),
+                getString(R.string.tab_accounts),
+                getString(R.string.tab_help),
+                getString(R.string.tab_about)
+        };
+
+        public ViewPagerAdapter(FragmentActivity fa) {
+            super(fa);
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            switch (position) {
+                case 0:
+                    return new BasePreferenceFragment();
+                case 1:
+                    return new ExtendedPreferencesFragment();
+                case 2:
+                    return new AccountListFragment();
+                case 3:
+                    return new HelpFragment();
+                case 4:
+                    return new AboutFragment();
+            }
+            return new BasePreferenceFragment();
         }
 
         @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
+        public int getItemCount() {
+            return mFragmentTitles.length;
         }
 
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
-
-        public void addFragment(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
-
-        @Override
         public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
+            return mFragmentTitles[position];
         }
     }
 

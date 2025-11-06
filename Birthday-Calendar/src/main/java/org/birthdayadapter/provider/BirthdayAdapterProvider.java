@@ -27,7 +27,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
@@ -35,7 +34,6 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 
-import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
 
@@ -124,7 +122,6 @@ public class BirthdayAdapterProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
-        Log.v(Constants.TAG, "query(uri=" + uri + ", proj=" + Arrays.toString(projection) + ")");
 
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         SQLiteDatabase db = mBirthdayAdapterDatabase.getReadableDatabase();
@@ -140,8 +137,6 @@ public class BirthdayAdapterProvider extends ContentProvider {
 
         Cursor cursor = qb.query(db, projection, selection, selectionArgs, null, null, sortOrder);
 
-        if (BuildConfig.DEBUG)
-            DatabaseUtils.dumpCursor(cursor);
         // notify through cursor
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;

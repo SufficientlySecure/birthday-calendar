@@ -20,52 +20,56 @@
 
 package org.birthdayadapter.util;
 
-import org.birthdayadapter.R;
-import org.birthdayadapter.service.MainIntentService;
-
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.os.Handler;
-import android.os.Messenger;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
-public class MySharedPreferenceChangeListener implements OnSharedPreferenceChangeListener {
-    private Context context;
-    private Handler handler;
+import org.birthdayadapter.R;
+import org.birthdayadapter.service.BirthdayWorker;
 
-    public MySharedPreferenceChangeListener(Context context, Handler handler) {
+public class MySharedPreferenceChangeListener implements SharedPreferences.OnSharedPreferenceChangeListener {
+    private final Context context;
+
+    public MySharedPreferenceChangeListener(Context context) {
         super();
         this.context = context;
-        this.handler = handler;
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (context.getString(R.string.pref_color_key).equals(key)) {
+        if (key == null || context == null) {
+            return; // Safeguard against unexpected nulls
+        }
+
+        // Get the preference keys from resources
+        String colorKey = context.getString(R.string.pref_color_key);
+
+        if (key.equals(colorKey)) {
             // set new color
-            startServiceAction(MainIntentService.ACTION_CHANGE_COLOR);
+            startWork(BirthdayWorker.ACTION_CHANGE_COLOR);
         } else {
-            // resync all events
-            startServiceAction(MainIntentService.ACTION_MANUAL_COMPLETE_SYNC);
+            // For any other preference change, resync all events
+            new AccountHelper(context).manualSync();
         }
     }
 
     /**
-     * Start service with action, while executing, show progress
+     * Start a worker to perform an action
      */
-    public void startServiceAction(String action) {
-        // Send all information needed to service to do in other thread
-        Intent intent = new Intent(context, MainIntentService.class);
+    public void startWork(String action) {
+        if (context == null) return;
 
-        // Create a new Messenger for the communication back
-        Messenger messenger = new Messenger(handler);
-        intent.putExtra(MainIntentService.EXTRA_MESSENGER, messenger);
+        Data inputData = new Data.Builder()
+                .putString(BirthdayWorker.ACTION, action)
+                .build();
 
-        intent.setAction(action);
+        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(BirthdayWorker.class)
+                .setInputData(inputData)
+                .build();
 
-        // start service with intent
-        context.startService(intent);
+        WorkManager.getInstance(context).enqueue(workRequest);
     }
 
 }

@@ -1,19 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="pref_first_run_key" translatable="false">firstRun</string>
 
     <item name="pref_first_run_def" format="boolean" type="string">true</item>
 
-    <string name="pref_show_workaround_dialog_key" translatable="false">showWorkaroundDialog</string>
-
-    <item name="pref_show_workaround_dialog_def" format="boolean" type="string">true</item>
-
     <string name="pref_enabled_key" translatable="false">enabled</string>
     <string name="pref_contacts_key" translatable="false">contacts</string>
     <string name="pref_calendar_key" translatable="false">calendar</string>
     <string name="pref_color_key" translatable="false">color</string>
-
-    <!-- The first two hex numbers are for opacity and must be FF -->
-    <color name="pref_color_def">#FFA70000</color>
 
     <string name="pref_force_sync_key" translatable="false">forceSync</string>
     <string name="pref_reminder_enable_key" translatable="false">reminderEnable</string>
@@ -29,8 +23,6 @@
     <string name="pref_reminder_time_key0" translatable="false">reminderTime0</string>
     <string name="pref_reminder_time_key1" translatable="false">reminderTime1</string>
     <string name="pref_reminder_time_key2" translatable="false">reminderTime2</string>
-
-    <integer name="pref_reminder_time_def">-540</integer>
 
     <string name="pref_advanced_key" translatable="false">advanced</string>
 
@@ -53,6 +45,5 @@
     <string name="pref_title_custom_without_age_key">custom</string>
     <string name="pref_title_custom_with_age_key">customAge</string>
     <string name="pref_buy_full_key" translatable="false">buyFull</string>
-
 
 </resources>

@@ -24,6 +24,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.ContactsContract;
 
+import androidx.core.content.ContextCompat;
+
 import org.birthdayadapter.R;
 
 public class PreferencesHelper {
@@ -42,27 +44,12 @@ public class PreferencesHelper {
         editor.apply();
     }
 
-    public static boolean getShowWorkaroundDialog(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
-                Context.MODE_PRIVATE);
-        return prefs.getBoolean(context.getString(R.string.pref_show_workaround_dialog_key),
-                Boolean.parseBoolean(context.getString(R.string.pref_show_workaround_dialog_def)));
-    }
-
-    public static void setShowWorkaroundDialog(Context context, boolean value) {
-        SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
-                Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(context.getString(R.string.pref_show_workaround_dialog_key), value);
-        editor.apply();
-    }
-
     public static int getColor(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
                 Context.MODE_PRIVATE);
 
-        return prefs.getInt(context.getString(R.string.pref_color_key), context
-                .getResources().getColor(R.color.pref_color_def));
+        return prefs.getInt(context.getString(R.string.pref_color_key), 
+                ContextCompat.getColor(context, R.color.pref_color_def));
     }
 
     /**

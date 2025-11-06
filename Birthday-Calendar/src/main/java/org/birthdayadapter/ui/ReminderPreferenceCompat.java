@@ -26,8 +26,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.os.Build;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.preference.Preference;
+import androidx.appcompat.app.AlertDialog;
+import androidx.preference.Preference;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -37,7 +37,6 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 
 import org.birthdayadapter.R;
-import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
 
 public class ReminderPreferenceCompat extends Preference {
@@ -47,58 +46,47 @@ public class ReminderPreferenceCompat extends Preference {
     private Spinner spinner = null;
 
     private static final int ONE_DAY_MINUTES = 24 * 60;
-    private static final int[] DAY_BASE_MINUTES = {-ONE_DAY_MINUTES, 0, ONE_DAY_MINUTES,
-            2 * ONE_DAY_MINUTES, 4 * ONE_DAY_MINUTES, 6 * ONE_DAY_MINUTES, 9 * ONE_DAY_MINUTES,
-            13 * ONE_DAY_MINUTES};
+    private static final int[] DAY_BASE_VALUES = {0, 1, 2, 3, 5, 7, 10, 14};
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public ReminderPreferenceCompat(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        init();
     }
 
     public ReminderPreferenceCompat(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init();
     }
 
     public ReminderPreferenceCompat(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init();
     }
 
     public ReminderPreferenceCompat(Context context) {
         super(context);
+        init();
     }
 
-    @Override
-    protected void onClick() {
-        super.onClick();
-        click();
+    private void init() {
+        setOnPreferenceClickListener(new OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                click();
+                return true;
+            }
+        });
     }
 
     @Override
     protected Object onGetDefaultValue(TypedArray a, int index) {
-        return (a.getString(index));
+        return a.getInteger(index, 0);
     }
 
     @Override
-    protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
-        // convert default to Integer
-        Integer defaultInt = null;
-        if (defaultValue == null) {
-            defaultInt = 0;
-        } else if (defaultValue instanceof Number) {
-            defaultInt = (Integer) defaultValue;
-        } else {
-            defaultInt = Integer.valueOf(defaultValue.toString());
-        }
-
-        Integer time = null;
-        if (restoreValue) {
-            time = getPersistedInt(defaultInt);
-        } else {
-            time = defaultInt;
-        }
-
-        lastMinutes = time;
+    protected void onSetInitialValue(Object defaultValue) {
+        lastMinutes = getPersistedInt(defaultValue != null ? (Integer) defaultValue : 0);
     }
 
     private void click() {
@@ -112,13 +100,11 @@ public class ReminderPreferenceCompat extends Preference {
         spinner = (Spinner) view.findViewById(R.id.pref_reminder_spinner);
         picker = (TimePicker) view.findViewById(R.id.pref_reminder_timepicker);
 
-        // populate spinner with entries
         ArrayAdapter<CharSequence> dataAdapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.pref_reminder_time_drop_down, android.R.layout.simple_spinner_item);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
 
-        // set 24h format of date picker based on Android's preference
         if (DateFormat.is24HourFormat(getContext())) {
             picker.setIs24HourView(true);
         }
@@ -129,12 +115,7 @@ public class ReminderPreferenceCompat extends Preference {
                 save(true);
             }
         });
-        alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
+        alert.setNegativeButton(android.R.string.cancel, null);
 
         bind();
 
@@ -142,37 +123,50 @@ public class ReminderPreferenceCompat extends Preference {
     }
 
     private void bind() {
-        // select day of reminder based on DAY_BASE_MINUTES
+        int day = lastMinutes / ONE_DAY_MINUTES;
+        int minutesOnDay = lastMinutes % ONE_DAY_MINUTES;
+
         int daySelection = 0;
-        for (int i = 0; i < DAY_BASE_MINUTES.length; i++) {
-            if (lastMinutes >= DAY_BASE_MINUTES[i]) {
+        for (int i = 0; i < DAY_BASE_VALUES.length; i++) {
+            if (day == DAY_BASE_VALUES[i]) {
                 daySelection = i;
+                break;
             }
         }
         spinner.setSelection(daySelection);
-        int dayMinutes = ONE_DAY_MINUTES - (lastMinutes - DAY_BASE_MINUTES[daySelection]);
-        Log.d(Constants.TAG, "dayMinutes: " + dayMinutes);
 
-        // select day minutes for this specific day
-        int hour = dayMinutes / 60;
-        int minute = dayMinutes % 60;
-        picker.setCurrentHour(hour);
-        picker.setCurrentMinute(minute);
+        int hour = minutesOnDay / 60;
+        int minute = minutesOnDay % 60;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            picker.setHour(hour);
+            picker.setMinute(minute);
+        } else {
+            picker.setCurrentHour(hour);
+            picker.setCurrentMinute(minute);
+        }
     }
 
     private void save(boolean positiveResult) {
         if (positiveResult) {
-            int dayBase = DAY_BASE_MINUTES[spinner.getSelectedItemPosition()];
-            int dayTime = picker.getCurrentMinute() + picker.getCurrentHour() * 60;
+            int hour;
+            int minute;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                hour = picker.getHour();
+                minute = picker.getMinute();
+            } else {
+                hour = picker.getCurrentHour();
+                minute = picker.getCurrentMinute();
+            }
 
-            lastMinutes = dayBase + ONE_DAY_MINUTES - dayTime;
+            int selectedDayValue = DAY_BASE_VALUES[spinner.getSelectedItemPosition()];
+            int minutes = (selectedDayValue * ONE_DAY_MINUTES) + (hour * 60) + minute;
 
-            if (callChangeListener(lastMinutes)) {
-                Log.d(Constants.TAG, "persist time: " + lastMinutes);
-
-                persistInt(lastMinutes);
+            if (callChangeListener(minutes)) {
+                Log.d("BirthdayAdapter", "Persisting reminder minutes: " + minutes);
+                persistInt(minutes);
+                lastMinutes = minutes;
             }
         }
     }
-
 }

@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.preference.PreferenceCategory android:title="@string/pref_general">
-        <com.pavelsikun.vintagechroma.ChromaPreferenceCompat
+    <androidx.preference.PreferenceCategory android:title="@string/pref_general">
+        <androidx.preference.Preference
             android:key="@string/pref_color_key"
             android:persistent="true"
-            android:title="@string/pref_color"
-            app:chromaColorMode="HSV"
-            app:chromaIndicatorMode="HEX"
-            app:chromaInitialColor="@color/pref_color_def" />
-    </android.support.v7.preference.PreferenceCategory>
-    <android.support.v7.preference.PreferenceCategory android:title="@string/pref_reminders">
-        <android.support.v7.preference.CheckBoxPreference
+            android:title="@string/pref_color" />
+    </androidx.preference.PreferenceCategory>
+    <androidx.preference.PreferenceCategory android:title="@string/pref_reminders">
+        <androidx.preference.CheckBoxPreference
             android:defaultValue="@string/pref_reminder_enable_def0"
             android:key="@string/pref_reminder_enable_key0"
             android:persistent="true"
@@ -27,7 +23,7 @@
             android:summary="@string/pref_reminder_time_summary"
             android:title="@string/pref_reminder_time0" />
 
-        <android.support.v7.preference.CheckBoxPreference
+        <androidx.preference.CheckBoxPreference
             android:defaultValue="@string/pref_reminder_enable_def1"
             android:key="@string/pref_reminder_enable_key1"
             android:persistent="true"
@@ -42,7 +38,7 @@
             android:summary="@string/pref_reminder_time_summary"
             android:title="@string/pref_reminder_time1" />
 
-        <android.support.v7.preference.CheckBoxPreference
+        <androidx.preference.CheckBoxPreference
             android:defaultValue="@string/pref_reminder_enable_def2"
             android:key="@string/pref_reminder_enable_key2"
             android:persistent="true"
@@ -56,16 +52,16 @@
             android:persistent="true"
             android:summary="@string/pref_reminder_time_summary"
             android:title="@string/pref_reminder_time2" />
-    </android.support.v7.preference.PreferenceCategory>
-    <android.support.v7.preference.PreferenceCategory android:title="@string/pref_title">
-        <android.support.v7.preference.CheckBoxPreference
+    </androidx.preference.PreferenceCategory>
+    <androidx.preference.PreferenceCategory android:title="@string/pref_title">
+        <androidx.preference.CheckBoxPreference
             android:defaultValue="@string/pref_title_enable_def"
             android:key="@string/pref_title_enable_key"
             android:persistent="true"
             android:summary=""
             android:title="@string/pref_title_enable" />
 
-        <android.support.v7.preference.EditTextPreference
+        <androidx.preference.EditTextPreference
             android:defaultValue="@string/event_title_birthday_without_age"
             android:dependency="@string/pref_title_enable_key"
             android:dialogMessage="@string/pref_title_summary_without_age"
@@ -73,7 +69,7 @@
             android:key="@string/pref_title_birthday_without_age_key"
             android:persistent="true"
             android:title="@string/pref_title_birthday_without_age" />
-        <android.support.v7.preference.EditTextPreference
+        <androidx.preference.EditTextPreference
             android:defaultValue="@string/event_title_birthday_with_age"
             android:dependency="@string/pref_title_enable_key"
             android:dialogMessage="@string/pref_title_summary_with_age"
@@ -81,7 +77,7 @@
             android:key="@string/pref_title_birthday_with_age_key"
             android:persistent="true"
             android:title="@string/pref_title_birthday_with_age" />
-        <android.support.v7.preference.EditTextPreference
+        <androidx.preference.EditTextPreference
             android:defaultValue="@string/event_title_anniversary_without_age"
             android:dependency="@string/pref_title_enable_key"
             android:dialogMessage="@string/pref_title_summary_without_age"
@@ -89,7 +85,7 @@
             android:key="@string/pref_title_anniversary_without_age_key"
             android:persistent="true"
             android:title="@string/pref_title_anniversary_without_age" />
-        <android.support.v7.preference.EditTextPreference
+        <androidx.preference.EditTextPreference
             android:defaultValue="@string/event_title_anniversary_with_age"
             android:dependency="@string/pref_title_enable_key"
             android:dialogMessage="@string/pref_title_summary_with_age"
@@ -97,7 +93,7 @@
             android:key="@string/pref_title_anniversary_with_age_key"
             android:persistent="true"
             android:title="@string/pref_title_anniversary_with_age" />
-        <android.support.v7.preference.EditTextPreference
+        <androidx.preference.EditTextPreference
             android:defaultValue="@string/event_title_other_without_age"
             android:dependency="@string/pref_title_enable_key"
             android:dialogMessage="@string/pref_title_summary_without_age"
@@ -105,7 +101,7 @@
             android:key="@string/pref_title_other_without_age_key"
             android:persistent="true"
             android:title="@string/pref_title_other_without_age" />
-        <android.support.v7.preference.EditTextPreference
+        <androidx.preference.EditTextPreference
             android:defaultValue="@string/event_title_other_with_age"
             android:dependency="@string/pref_title_enable_key"
             android:dialogMessage="@string/pref_title_summary_with_age"
@@ -113,7 +109,7 @@
             android:key="@string/pref_title_other_with_age_key"
             android:persistent="true"
             android:title="@string/pref_title_other_with_age" />
-        <android.support.v7.preference.EditTextPreference
+        <androidx.preference.EditTextPreference
             android:defaultValue="@string/event_title_custom_without_age"
             android:dependency="@string/pref_title_enable_key"
             android:dialogMessage="@string/pref_title_summary_custom_without_age"
@@ -121,7 +117,7 @@
             android:key="@string/pref_title_custom_without_age_key"
             android:persistent="true"
             android:title="@string/pref_title_custom_without_age" />
-        <android.support.v7.preference.EditTextPreference
+        <androidx.preference.EditTextPreference
             android:defaultValue="@string/event_title_custom_with_age"
             android:dependency="@string/pref_title_enable_key"
             android:dialogMessage="@string/pref_title_summary_custom_with_age"
@@ -129,27 +125,27 @@
             android:key="@string/pref_title_custom_with_age_key"
             android:persistent="true"
             android:title="@string/pref_title_custom_with_age" />
-    </android.support.v7.preference.PreferenceCategory>
-    <android.support.v7.preference.PreferenceCategory android:title="@string/pref_advanced_category">
-        <android.support.v7.preference.CheckBoxPreference
+    </androidx.preference.PreferenceCategory>
+    <androidx.preference.PreferenceCategory android:title="@string/pref_advanced_category">
+        <androidx.preference.CheckBoxPreference
             android:defaultValue="@string/pref_advanced_def"
             android:key="@string/pref_advanced_key"
             android:persistent="true"
             android:summary="@string/pref_advanced_summary"
             android:title="@string/pref_advanced" />
-        <android.support.v7.preference.CheckBoxPreference
+        <androidx.preference.CheckBoxPreference
             android:defaultValue="@string/pref_prefer_dd_slash_mm_def"
             android:dependency="@string/pref_advanced_key"
             android:key="@string/pref_prefer_dd_slash_mm_key"
             android:persistent="true"
             android:summary="@string/pref_prefer_dd_slash_mm_summary"
             android:title="@string/pref_prefer_dd_slash_mm" />
-        <android.support.v7.preference.Preference
+        <androidx.preference.Preference
             android:dependency="@string/pref_advanced_key"
             android:key="@string/pref_force_sync_key"
             android:persistent="false"
             android:summary="@string/pref_force_sync_summary"
             android:title="@string/pref_force_sync" />
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
-</android.support.v7.preference.PreferenceScreen>
+</androidx.preference.PreferenceScreen>

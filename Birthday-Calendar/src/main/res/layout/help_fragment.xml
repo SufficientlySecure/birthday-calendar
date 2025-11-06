@@ -14,7 +14,7 @@
         android:paddingTop="8dp"
         android:scrollbars="vertical">
 
-        <org.sufficientlysecure.htmltextview.HtmlTextView
+        <TextView
             android:id="@+id/help_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

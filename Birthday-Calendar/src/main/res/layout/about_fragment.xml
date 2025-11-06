@@ -28,8 +28,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top"
-                    android:layout_marginRight="10dp"
-                    android:src="@mipmap/ic_launcher" />
+                    android:layout_marginEnd="10dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -48,16 +47,16 @@
                     android:id="@+id/about_version"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@android:style/TextAppearance.Small" />
+                    android:textAppearance="?attr/textAppearanceBody2" />
             </LinearLayout>
         </LinearLayout>
 
-        <org.sufficientlysecure.htmltextview.HtmlTextView
+        <TextView
             android:id="@+id/about_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textAppearance="@android:style/TextAppearance.Small" />
+            android:textAppearance="?attr/textAppearanceBody2" />
     </LinearLayout>
 
 </ScrollView>

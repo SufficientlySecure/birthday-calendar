@@ -2,7 +2,7 @@
  * Copyright (C) 2012-2013 Dominik Schürmann <dominik@dominikschuermann.de>
  *
  * This file is part of Birthday Adapter.
- * 
+ *
  * Birthday Adapter is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -22,8 +22,8 @@ package org.birthdayadapter.util;
 
 import android.accounts.Account;
 import android.content.Context;
-import android.os.Build;
-import android.support.annotation.NonNull;
+import android.graphics.drawable.Drawable;
+import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,14 +34,12 @@ import android.widget.TextView;
 
 import org.birthdayadapter.R;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
     private final LayoutInflater mInflater;
-
-    // hold a private reference to the underlying data List
-    private List<AccountListEntry> data;
 
     public AccountListAdapter(Context context) {
         super(context, -1);
@@ -51,30 +49,28 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
     public void setData(List<AccountListEntry> data) {
         clear();
         if (data != null) {
-            if (Build.VERSION.SDK_INT >= 11) {
-                addAll(data);
-            } else {
-                for (AccountListEntry entry : data) {
-                    add(entry);
-                }
-            }
-            this.data = data;
+            // addAll will call notifyDataSetChanged() for us
+            addAll(data);
         }
     }
 
     public List<AccountListEntry> getData() {
-        return data;
+        List<AccountListEntry> list = new ArrayList<>();
+        for (int i = 0; i < getCount(); i++) {
+            list.add(getItem(i));
+        }
+        return list;
     }
 
     public HashSet<Account> getAccountBlacklist() {
-        if (getData() == null) {
+        if (getCount() == 0) {
             return null;
         }
 
         HashSet<Account> blacklist = new HashSet<>();
-        for (AccountListEntry entry : getData()) {
-            Log.d(Constants.TAG, "entry: " + entry.getLabel() + " " + entry.isSelected());
-            if (!entry.isSelected()) {
+        for (int i = 0; i < getCount(); i++) {
+            AccountListEntry entry = getItem(i);
+            if (entry != null && !entry.isSelected()) {
                 blacklist.add(entry.getAccount());
             }
         }
@@ -96,11 +92,24 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
         }
 
         AccountListEntry entry = getItem(position);
-        ((TextView) view.findViewById(R.id.account_list_text)).setText(entry.getLabel());
-        ((TextView) view.findViewById(R.id.account_list_subtext)).setText(entry.getAccount().name);
-        ((ImageView) view.findViewById(R.id.account_list_icon)).setImageDrawable(entry.getIcon());
-        CheckBox cBox = (CheckBox) view.findViewById(R.id.account_list_cbox);
-        cBox.setChecked(entry.isSelected());
+        ImageView iconView = view.findViewById(R.id.account_list_icon);
+
+        if (entry != null) {
+            ((TextView) view.findViewById(R.id.account_list_text)).setText(entry.getLabel());
+            ((TextView) view.findViewById(R.id.account_list_subtext)).setText(entry.getAccount().name);
+
+            Drawable icon = entry.getIcon();
+            if (icon != null) {
+                iconView.setImageDrawable(icon);
+                iconView.setVisibility(View.VISIBLE);
+            } else {
+                // Hide the icon view if no icon is available to prevent crashes from recursive drawables
+                iconView.setVisibility(View.GONE);
+            }
+
+            CheckBox cBox = (CheckBox) view.findViewById(R.id.account_list_cbox);
+            cBox.setChecked(entry.isSelected());
+        }
 
         return view;
     }

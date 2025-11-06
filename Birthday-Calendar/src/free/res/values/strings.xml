@@ -2,4 +2,6 @@
 
     <string name="app_name">Birthday Calendar (Free)</string>
 
+    <string name="account_type">org.birthdayadapter.free.auth</string>
+
 </resources>
