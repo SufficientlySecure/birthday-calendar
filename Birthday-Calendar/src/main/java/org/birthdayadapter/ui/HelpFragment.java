@@ -52,9 +52,6 @@ public class HelpFragment extends Fragment {
             e.printStackTrace();
         }
 
-        // no flickering when clicking textview for Android < 4
-        //text.setTextColor(getResources().getColor(android.R.color.black));
-        text.setTextColor(getResources().getColor(android.R.color.black, null));
         return view;
     }
 }
