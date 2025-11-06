@@ -28,21 +28,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
+
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.MySharedPreferenceChangeListener;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -67,7 +66,7 @@ public class BaseActivity extends AppCompatActivity {
 
         TabLayout tabLayout = findViewById(R.id.tabs);
         new TabLayoutMediator(tabLayout, viewPager,
-                (tab, position) -> tab.setText(((ViewPagerAdapter)viewPager.getAdapter()).getPageTitle(position))
+                (tab, position) -> tab.setText(((ViewPagerAdapter) viewPager.getAdapter()).getPageTitle(position))
         ).attach();
 
         mySharedPreferenceChangeListener = new MySharedPreferenceChangeListener(this);
@@ -76,6 +75,9 @@ public class BaseActivity extends AppCompatActivity {
             @Override
             public void onStatusChanged(int which) {
                 runOnUiThread(() -> {
+                    if (isFinishing() || isDestroyed()) {
+                        return;
+                    }
                     Account account = new Account(Constants.ACCOUNT_NAME, getString(R.string.account_type));
                     boolean syncActive = ContentResolver.isSyncActive(account, Constants.CONTENT_AUTHORITY);
                     if (mProgressBar != null) {
@@ -104,39 +106,47 @@ public class BaseActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager2 viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(this);
-        adapter.addFragment(new BasePreferenceFragment(), getString(R.string.tab_main));
-        adapter.addFragment(new ExtendedPreferencesFragment(), getString(R.string.tab_preferences));
-        adapter.addFragment(new AccountListFragment(), getString(R.string.tab_accounts));
-        adapter.addFragment(new HelpFragment(), getString(R.string.tab_help));
-        adapter.addFragment(new AboutFragment(), getString(R.string.tab_about));
         viewPager.setAdapter(adapter);
     }
 
     class ViewPagerAdapter extends FragmentStateAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
+        private final String[] mFragmentTitles = new String[]{
+                getString(R.string.tab_main),
+                getString(R.string.tab_preferences),
+                getString(R.string.tab_accounts),
+                getString(R.string.tab_help),
+                getString(R.string.tab_about)
+        };
 
         public ViewPagerAdapter(FragmentActivity fa) {
             super(fa);
         }
 
+        @NonNull
         @Override
         public Fragment createFragment(int position) {
-            return mFragmentList.get(position);
+            switch (position) {
+                case 0:
+                    return new BasePreferenceFragment();
+                case 1:
+                    return new ExtendedPreferencesFragment();
+                case 2:
+                    return new AccountListFragment();
+                case 3:
+                    return new HelpFragment();
+                case 4:
+                    return new AboutFragment();
+            }
+            return new BasePreferenceFragment();
         }
 
         @Override
         public int getItemCount() {
-            return mFragmentList.size();
-        }
-
-        public void addFragment(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
+            return mFragmentTitles.length;
         }
 
         public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
+            return mFragmentTitles[position];
         }
     }
 

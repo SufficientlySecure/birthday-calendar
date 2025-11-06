@@ -31,6 +31,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import androidx.core.app.ActivityCompat;
 
 import java.util.concurrent.TimeUnit;
@@ -50,6 +51,11 @@ public class AccountHelper {
      * Add account for Birthday Adapter to Android system
      */
     public Bundle addAccountAndSync() {
+        if (isAccountActivated()) {
+            Log.d(Constants.TAG, "Account already exists.");
+            return null;
+        }
+
         Log.d(Constants.TAG, "Adding account...");
 
         AccountManager am = AccountManager.get(mContext);
