@@ -21,7 +21,6 @@
 package org.birthdayadapter.util;
 
 import org.birthdayadapter.R;
-import org.birthdayadapter.service.BirthdayWorker;
 
 import android.Manifest;
 import android.accounts.Account;
@@ -33,9 +32,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.core.app.ActivityCompat;
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
 
 import java.util.concurrent.TimeUnit;
 
@@ -112,15 +108,13 @@ public class AccountHelper {
     public void manualSync() {
         Log.d(Constants.TAG, "Force manual sync...");
 
-        Data inputData = new Data.Builder()
-                .putString(BirthdayWorker.ACTION, BirthdayWorker.ACTION_MANUAL_COMPLETE_SYNC)
-                .build();
+        Bundle b = new Bundle();
+        b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
 
-        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(BirthdayWorker.class)
-                .setInputData(inputData)
-                .build();
-
-        WorkManager.getInstance(mContext).enqueue(workRequest);
+        ContentResolver.requestSync(
+                new Account(Constants.ACCOUNT_NAME, mContext.getString(R.string.account_type)),
+                Constants.CONTENT_AUTHORITY, b);
     }
 
     /**

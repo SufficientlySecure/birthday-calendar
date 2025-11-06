@@ -51,7 +51,7 @@ public class MySharedPreferenceChangeListener implements SharedPreferences.OnSha
             startWork(BirthdayWorker.ACTION_CHANGE_COLOR);
         } else {
             // For any other preference change, resync all events
-            startWork(BirthdayWorker.ACTION_MANUAL_COMPLETE_SYNC);
+            new AccountHelper(context).manualSync();
         }
     }
 

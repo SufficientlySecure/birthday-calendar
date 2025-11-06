@@ -78,6 +78,8 @@ public class CalendarSyncAdapterService extends Service {
 
     private static String CALENDAR_COLUMN_NAME = "birthday_adapter";
     private static HashSet<Integer> jubileeYears;
+    private static final Object sSyncLock = new Object();
+    private static Thread sSyncThread;
 
     public CalendarSyncAdapterService() {
         super();
@@ -85,18 +87,34 @@ public class CalendarSyncAdapterService extends Service {
 
     private class CalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 
-        CalendarSyncAdapter() {
-            super(CalendarSyncAdapterService.this, true);
+        CalendarSyncAdapter(Context context) {
+            super(context, true, false);
         }
 
         @Override
         public void onPerformSync(Account account, Bundle extras, String authority,
                                   ContentProviderClient provider, SyncResult syncResult) {
+            Thread oldSyncThread;
+            synchronized (sSyncLock) {
+                oldSyncThread = sSyncThread;
+                sSyncThread = Thread.currentThread();
+            }
+            if (oldSyncThread != null) {
+                Log.d(Constants.TAG, "Interrupting previous sync");
+                oldSyncThread.interrupt();
+            }
+
             try {
-                CalendarSyncAdapterService.performSync(CalendarSyncAdapterService.this, account, extras, authority,
+                CalendarSyncAdapterService.performSync(getContext(), account, extras, authority,
                         provider, syncResult);
             } catch (OperationCanceledException e) {
-                Log.e(Constants.TAG, "OperationCanceledException", e);
+                Log.i(Constants.TAG, "Sync aborted");
+            } finally {
+                synchronized (sSyncLock) {
+                    if (sSyncThread == Thread.currentThread()) {
+                        sSyncThread = null;
+                    }
+                }
             }
         }
 
@@ -112,7 +130,7 @@ public class CalendarSyncAdapterService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        return new CalendarSyncAdapter().getSyncAdapterBinder();
+        return new CalendarSyncAdapter(this).getSyncAdapterBinder();
     }
 
     /**
@@ -142,17 +160,15 @@ public class CalendarSyncAdapterService extends Service {
 
         Log.d(Constants.TAG, "Updating calendar color to " + color + " with uri " + uri.toString());
 
-        ContentProviderClient client = contentResolver
-                .acquireContentProviderClient(CalendarContract.AUTHORITY);
-
         ContentValues values = new ContentValues();
         values.put(Calendars.CALENDAR_COLOR, color);
-        try {
+        try (ContentProviderClient client = contentResolver
+                .acquireContentProviderClient(CalendarContract.AUTHORITY)) {
+            if (client == null) return;
             client.update(uri, values, null, null);
         } catch (RemoteException e) {
             Log.e(Constants.TAG, "Error while updating calendar color!", e);
         }
-        client.release();
     }
 
     /**
@@ -174,11 +190,9 @@ public class CalendarSyncAdapterService extends Service {
 
         // be sure to select the birthday calendar only (additionally to appendQueries in
         // getBirthdayAdapterUri for Android < 4)
-        Cursor cursor = contentResolver.query(calenderUri, new String[]{BaseColumns._ID},
+        try (Cursor cursor = contentResolver.query(calenderUri, new String[]{BaseColumns._ID},
                 Calendars.ACCOUNT_NAME + " = ? AND " + Calendars.ACCOUNT_TYPE + " = ?",
-                new String[]{Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE}, null);
-
-        try {
+                new String[]{Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE}, null)) {
             if (cursor != null && cursor.moveToNext()) {
                 return cursor.getLong(0);
             } else {
@@ -209,9 +223,6 @@ public class CalendarSyncAdapterService extends Service {
                 }
                 return getCalendar(context);
             }
-        } finally {
-            if (cursor != null && !cursor.isClosed())
-                cursor.close();
         }
     }
 
@@ -219,10 +230,14 @@ public class CalendarSyncAdapterService extends Service {
      * Get a new ContentProviderOperation to insert a event
      */
     private static ContentProviderOperation insertEvent(Context context, long calendarId,
-                                                        Date eventDate, int year, String title, String lookupKey) {
-        ContentProviderOperation.Builder builder;
+                                                        Date eventDate, int year, String title, String lookupKey)
+            throws OperationCanceledException {
+        if (Thread.currentThread().isInterrupted()) {
+            throw new OperationCanceledException();
+        }
 
-        builder = ContentProviderOperation.newInsert(getBirthdayAdapterUri(Events.CONTENT_URI));
+        ContentProviderOperation.Builder builder =
+                ContentProviderOperation.newInsert(getBirthdayAdapterUri(Events.CONTENT_URI));
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(eventDate);
@@ -268,22 +283,17 @@ public class CalendarSyncAdapterService extends Service {
         SimpleDateFormat dateFormat = new SimpleDateFormat(format, Locale.US);
         dateFormat.setTimeZone(TimeZone.getDefault());
         try {
-            Date parsedDate = dateFormat.parse(input);
-
-            if (setYear1700) {
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(parsedDate);
-                cal.set(Calendar.YEAR, 1700);
-                parsedDate = cal.getTime();
-            }
-
-            return parsedDate;
+            return dateFormat.parse(input);
         } catch (ParseException e) {
             return null;
         }
     }
 
-    private static Date parseEventDateString(Context context, String eventDateString, String displayName) {
+    private static Date parseEventDateString(Context context, String eventDateString, String displayName)
+            throws OperationCanceledException {
+        if (Thread.currentThread().isInterrupted()) {
+            throw new OperationCanceledException();
+        }
         if (TextUtils.isEmpty(eventDateString)) {
             return null;
         }
@@ -299,6 +309,12 @@ public class CalendarSyncAdapterService extends Service {
             boolean setYear1700 = format.equals("--MM-dd") || format.equals("dd/MM") || format.equals("MM/dd");
             Date parsedDate = parseStringWithSimpleDateFormat(eventDateString, format, setYear1700);
             if (parsedDate != null) {
+                if (setYear1700) {
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(parsedDate);
+                    cal.set(Calendar.YEAR, 1700);
+                    parsedDate = cal.getTime();
+                }
                 return parsedDate;
             }
         }
@@ -312,10 +328,15 @@ public class CalendarSyncAdapterService extends Service {
         }
     }
 
-    private static Cursor getContactsEvents(Context context, ContentResolver contentResolver) {
+    private static Cursor getContactsEvents(Context context, ContentResolver contentResolver)
+            throws OperationCanceledException {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             Log.e(Constants.TAG, "Missing READ_CONTACTS permission!");
             return null;
+        }
+
+        if (Thread.currentThread().isInterrupted()) {
+            throw new OperationCanceledException();
         }
 
         HashSet<Account> blacklist = ProviderHelper.getAccountBlacklist(context);
@@ -328,7 +349,6 @@ public class CalendarSyncAdapterService extends Service {
                 ContactsContract.RawContacts.DISPLAY_NAME_PRIMARY,
                 ContactsContract.RawContacts.ACCOUNT_NAME,
                 ContactsContract.RawContacts.ACCOUNT_TYPE,};
-        Cursor rawContacts = contentResolver.query(rawContactsUri, rawContactsProjection, null, null, null);
 
         String[] columns = new String[]{
                 BaseColumns._ID,
@@ -340,10 +360,16 @@ public class CalendarSyncAdapterService extends Service {
         };
         MatrixCursor mc = new MatrixCursor(columns);
         int mcIndex = 0;
-        if (rawContacts == null) return mc;
 
-        try {
+        try (Cursor rawContacts = contentResolver.query(rawContactsUri, rawContactsProjection, null, null, null)) {
+            if (rawContacts == null) {
+                return mc;
+            }
             while (rawContacts.moveToNext()) {
+                if (Thread.currentThread().isInterrupted()) {
+                    throw new OperationCanceledException();
+                }
+
                 long rawId = rawContacts.getLong(rawContacts.getColumnIndex(ContactsContract.RawContacts._ID));
                 String accType = rawContacts.getString(rawContacts.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_TYPE));
                 String accName = rawContacts.getString(rawContacts.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_NAME));
@@ -374,17 +400,12 @@ public class CalendarSyncAdapterService extends Service {
                     String[] displaySelectionArgs = new String[]{
                             String.valueOf(rawId)
                     };
-                    Cursor displayCursor = contentResolver.query(ContactsContract.Data.CONTENT_URI, displayProjection,
-                            displayWhere, displaySelectionArgs, null);
-                    if(displayCursor == null) continue;
-                    try {
-                        if (displayCursor.moveToFirst()) {
+                    try (Cursor displayCursor = contentResolver.query(ContactsContract.Data.CONTENT_URI, displayProjection,
+                            displayWhere, displaySelectionArgs, null)) {
+                        if (displayCursor != null && displayCursor.moveToFirst()) {
                             displayName = displayCursor.getString(displayCursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
                             lookupKey = displayCursor.getString(displayCursor.getColumnIndex(ContactsContract.Data.LOOKUP_KEY));
                         }
-                    } finally {
-                        if (displayCursor != null)
-                            displayCursor.close();
                     }
 
                     Uri thisRawContactUri = ContentUris.withAppendedId(ContactsContract.RawContacts.CONTENT_URI, rawId);
@@ -401,11 +422,16 @@ public class CalendarSyncAdapterService extends Service {
                     String[] eventsSelectionArgs = new String[]{
                             ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
                     };
-                    Cursor eventsCursor = contentResolver.query(entityUri, eventsProjection, eventsWhere,
-                            eventsSelectionArgs, null);
-                     if(eventsCursor == null) continue;
-                    try {
+                    try (Cursor eventsCursor = contentResolver.query(entityUri, eventsProjection, eventsWhere,
+                            eventsSelectionArgs, null)) {
+                        if (eventsCursor == null) {
+                            continue;
+                        }
                         while (eventsCursor.moveToNext()) {
+                            if (Thread.currentThread().isInterrupted()) {
+                                throw new OperationCanceledException();
+                            }
+
                             startDate = eventsCursor.getString(eventsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE));
                             type = eventsCursor.getInt(eventsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE));
                             label = eventsCursor.getString(eventsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL));
@@ -417,15 +443,9 @@ public class CalendarSyncAdapterService extends Service {
                                 mcIndex++;
                             }
                         }
-                    } finally {
-                        if (eventsCursor != null)
-                            eventsCursor.close();
                     }
                 }
             }
-        } finally {
-            if (rawContacts != null)
-                rawContacts.close();
         }
 
         return mc;
@@ -443,13 +463,9 @@ public class CalendarSyncAdapterService extends Service {
         String selection = Events.TITLE + " = ? AND strftime('%j', " + Events.DTSTART + " / 1000, 'unixepoch') = ?";
         String[] selectionArgs = {title, dayOfYear};
 
-        Cursor cursor = resolver.query(uri, projection, selection, selectionArgs, null);
-
-        if (cursor != null) {
-            try {
+        try (Cursor cursor = resolver.query(uri, projection, selection, selectionArgs, null)) {
+            if (cursor != null) {
                 return cursor.getCount() > 0;
-            } finally {
-                cursor.close();
             }
         }
         return false;
@@ -534,50 +550,42 @@ public class CalendarSyncAdapterService extends Service {
         ContentResolver contentResolver = context.getContentResolver();
 
         // get cursor for all events
-        Cursor eventsCursor = contentResolver.query(getBirthdayAdapterUri(Events.CONTENT_URI),
-                new String[]{Events._ID}, Events.CALENDAR_ID + "= ?",
-                new String[]{String.valueOf(getCalendar(context))}, null);
-        int eventIdColumn = eventsCursor.getColumnIndex(Events._ID);
-
-        ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
-
         Uri remindersUri = getBirthdayAdapterUri(Reminders.CONTENT_URI);
 
-        ContentProviderOperation.Builder builder = null;
+        ArrayList<ContentProviderOperation> operationList = new ArrayList<>();
+        try (Cursor eventsCursor = contentResolver.query(getBirthdayAdapterUri(Events.CONTENT_URI),
+                new String[]{Events._ID}, Events.CALENDAR_ID + "= ?",
+                new String[]{String.valueOf(getCalendar(context))}, null)) {
 
-        // go through all events
-        try {
+            if (eventsCursor == null) return;
+            int eventIdColumn = eventsCursor.getColumnIndex(Events._ID);
+
+            // go through all events
             while (eventsCursor.moveToNext()) {
                 long eventId = eventsCursor.getLong(eventIdColumn);
 
                 Log.d(Constants.TAG, "Delete reminders for event id: " + eventId);
 
                 // get all reminders for this specific event
-                Cursor remindersCursor = contentResolver.query(remindersUri, new String[]{
+                try (Cursor remindersCursor = contentResolver.query(remindersUri, new String[]{
                                 Reminders._ID, Reminders.MINUTES}, Reminders.EVENT_ID + "= ?",
-                        new String[]{String.valueOf(eventId)}, null);
-                int remindersIdColumn = remindersCursor.getColumnIndex(Reminders._ID);
+                        new String[]{String.valueOf(eventId)}, null)) {
+                    if (remindersCursor == null) continue;
+                    int remindersIdColumn = remindersCursor.getColumnIndex(Reminders._ID);
 
-                /* Delete reminders for this event */
-                try {
+                    /* Delete reminders for this event */
                     while (remindersCursor.moveToNext()) {
                         long currentReminderId = remindersCursor.getLong(remindersIdColumn);
                         Uri currentReminderUri = ContentUris.withAppendedId(remindersUri,
                                 currentReminderId);
 
-                        builder = ContentProviderOperation.newDelete(currentReminderUri);
+                        ContentProviderOperation.Builder builder = ContentProviderOperation.newDelete(currentReminderUri);
 
                         // add operation to list, later executed
-                        if (builder != null) {
-                            operationList.add(builder.build());
-                        }
+                        operationList.add(builder.build());
                     }
-                } finally {
-                    remindersCursor.close();
                 }
             }
-        } finally {
-            eventsCursor.close();
         }
 
         try {
@@ -594,7 +602,7 @@ public class CalendarSyncAdapterService extends Service {
         performSync(context);
     }
 
-    public static void performSync(Context context) {
+    public static void performSync(Context context) throws OperationCanceledException {
         Log.d(Constants.TAG, "Starting sync...");
 
         // Check for calendar permissions before proceeding
@@ -602,6 +610,10 @@ public class CalendarSyncAdapterService extends Service {
                 ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             Log.e(Constants.TAG, "Sync failed: Missing calendar permissions.");
             return;
+        }
+
+        if (Thread.currentThread().isInterrupted()) {
+            throw new OperationCanceledException();
         }
 
         ContentResolver contentResolver = context.getContentResolver();
@@ -623,14 +635,12 @@ public class CalendarSyncAdapterService extends Service {
 
         ArrayList<ContentProviderOperation> operationList = new ArrayList<>();
 
-        Cursor cursor = getContactsEvents(context, contentResolver);
+        try (Cursor cursor = getContactsEvents(context, contentResolver)) {
+            if (cursor == null) {
+                Log.e(Constants.TAG, "Unable to get events from contacts! Cursor is null!");
+                return;
+            }
 
-        if (cursor == null) {
-            Log.e(Constants.TAG, "Unable to get events from contacts! Cursor is null!");
-            return;
-        }
-
-        try {
             int eventDateColumn = cursor
                     .getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
             int displayNameColumn = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
@@ -644,6 +654,10 @@ public class CalendarSyncAdapterService extends Service {
             int backRef = 0;
 
             while (cursor.moveToNext()) {
+                if (Thread.currentThread().isInterrupted()) {
+                    throw new OperationCanceledException();
+                }
+
                 String eventDateString = cursor.getString(eventDateColumn);
                 String displayName = cursor.getString(displayNameColumn);
                 int eventType = cursor.getInt(eventTypeColumn);
@@ -666,6 +680,10 @@ public class CalendarSyncAdapterService extends Service {
                         int endYear = currYear + 5;
 
                         for (int iteratedYear = startYear; iteratedYear <= endYear; iteratedYear++) {
+                            if (Thread.currentThread().isInterrupted()) {
+                                throw new OperationCanceledException();
+                            }
+
                             if (hasYear && iteratedYear < eventYear) {
                                 continue; // Don't create events for years before the birth year
                             }
@@ -713,9 +731,6 @@ public class CalendarSyncAdapterService extends Service {
                     }
                 }
             }
-        } finally {
-            if (!cursor.isClosed())
-                cursor.close();
         }
 
         if (operationList.size() > 0) {

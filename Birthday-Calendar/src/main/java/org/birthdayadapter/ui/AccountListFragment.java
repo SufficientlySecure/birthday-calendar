@@ -41,7 +41,6 @@ import androidx.loader.content.Loader;
 
 import org.birthdayadapter.R;
 import org.birthdayadapter.provider.ProviderHelper;
-import org.birthdayadapter.service.BirthdayWorker;
 import org.birthdayadapter.util.AccountHelper;
 import org.birthdayadapter.util.AccountListAdapter;
 import org.birthdayadapter.util.AccountListEntry;
@@ -126,7 +125,7 @@ public class AccountListFragment extends Fragment implements
     }
 
     private void applyBlacklistIfNeeded() {
-        if (mAdapter == null || mActivity == null || mActivity.mySharedPreferenceChangeListener == null) {
+        if (mAdapter == null || mActivity == null) {
             return;
         }
 
@@ -138,8 +137,7 @@ public class AccountListFragment extends Fragment implements
 
             AccountHelper accountHelper = new AccountHelper(mActivity, null);
             if (accountHelper.isAccountActivated()) {
-                mActivity.mySharedPreferenceChangeListener.startWork(
-                        BirthdayWorker.ACTION_MANUAL_COMPLETE_SYNC);
+                accountHelper.manualSync();
             }
         }
     }

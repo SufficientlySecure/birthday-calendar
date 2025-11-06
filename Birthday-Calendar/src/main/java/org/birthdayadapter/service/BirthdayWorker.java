@@ -10,7 +10,6 @@ import org.birthdayadapter.util.Log;
 public class BirthdayWorker extends Worker {
 
     public static final String ACTION = "action";
-    public static final String ACTION_MANUAL_COMPLETE_SYNC = "MANUAL_SYNC";
     public static final String ACTION_CHANGE_COLOR = "CHANGE_COLOR";
 
     public BirthdayWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
@@ -32,8 +31,6 @@ public class BirthdayWorker extends Worker {
                 if (new AccountHelper(getApplicationContext()).isAccountActivated()) {
                     CalendarSyncAdapterService.updateCalendarColor(getApplicationContext());
                 }
-            } else if (ACTION_MANUAL_COMPLETE_SYNC.equals(action)) {
-                CalendarSyncAdapterService.performSync(getApplicationContext());
             }
             return Result.success();
         } catch (Exception e) {
