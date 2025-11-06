@@ -8,11 +8,11 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:core:3.3.0'
     implementation 'com.afollestad.material-dialogs:color:3.3.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "androidx.work:work-runtime-ktx:2.9.0"
+    implementation "androidx.work:work-runtime-ktx:2.11.0"
 }
 
 android {
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdkVersion = 28
