@@ -9,6 +9,7 @@ release.properties
 ant.properties
 *.class
 *.apk
+tmp
 
 #Gradle
 .gradle
