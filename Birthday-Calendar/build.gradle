@@ -26,6 +26,12 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
+    buildTypes {
+        release {
+            minifyEnabled = true
+            shrinkResources = true
+        }
+    }
 
     /*
      * To sign release build, create file gradle.properties in ~/.gradle/ with this content:
@@ -46,7 +52,7 @@ android {
                 storeFile = file(signingStoreLocation)
                 storePassword = signingStorePassword
                 keyAlias = signingKeyAlias
-                keyPassword = keyPassword
+                keyPassword = signingKeyPassword
             }
         }
 
