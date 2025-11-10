@@ -21,6 +21,7 @@
 package org.birthdayadapter.util;
 
 import org.birthdayadapter.R;
+import org.birthdayadapter.service.BirthdaySyncWorker;
 
 import android.Manifest;
 import android.accounts.Account;
@@ -33,6 +34,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import androidx.core.app.ActivityCompat;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import java.util.concurrent.TimeUnit;
 
@@ -66,8 +70,11 @@ public class AccountHelper {
             ContentResolver.setIsSyncable(account, Constants.CONTENT_AUTHORITY, 1);
             // Enable automatic sync
             ContentResolver.setSyncAutomatically(account, Constants.CONTENT_AUTHORITY, true);
-            // Add a periodic sync every 24 hours
-            ContentResolver.addPeriodicSync(account, Constants.CONTENT_AUTHORITY, Bundle.EMPTY, TimeUnit.HOURS.toSeconds(24));
+
+            // Schedule a periodic sync every 24 hours using WorkManager
+            PeriodicWorkRequest syncRequest = new PeriodicWorkRequest.Builder(BirthdaySyncWorker.class, 24, TimeUnit.HOURS)
+                    .build();
+            WorkManager.getInstance(mContext).enqueueUniquePeriodicWork("birthday_sync", ExistingPeriodicWorkPolicy.KEEP, syncRequest);
 
             Bundle result = new Bundle();
             result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
@@ -97,6 +104,9 @@ public class AccountHelper {
         if (future.isDone()) {
             try {
                 future.getResult();
+
+                // Cancel the periodic sync
+                WorkManager.getInstance(mContext).cancelUniqueWork("birthday_sync");
 
                 return true;
             } catch (Exception e) {

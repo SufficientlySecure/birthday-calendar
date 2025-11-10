@@ -65,6 +65,7 @@ import org.birthdayadapter.util.PreferencesHelper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -78,8 +79,6 @@ public class CalendarSyncAdapterService extends Service {
 
     private static String CALENDAR_COLUMN_NAME = "birthday_adapter";
     private static HashSet<Integer> jubileeYears;
-    private static final Object sSyncLock = new Object();
-    private static Thread sSyncThread;
 
     public CalendarSyncAdapterService() {
         super();
@@ -94,27 +93,11 @@ public class CalendarSyncAdapterService extends Service {
         @Override
         public void onPerformSync(Account account, Bundle extras, String authority,
                                   ContentProviderClient provider, SyncResult syncResult) {
-            Thread oldSyncThread;
-            synchronized (sSyncLock) {
-                oldSyncThread = sSyncThread;
-                sSyncThread = Thread.currentThread();
-            }
-            if (oldSyncThread != null) {
-                Log.d(Constants.TAG, "Interrupting previous sync");
-                oldSyncThread.interrupt();
-            }
-
             try {
                 CalendarSyncAdapterService.performSync(getContext(), account, extras, authority,
                         provider, syncResult);
             } catch (OperationCanceledException e) {
                 Log.i(Constants.TAG, "Sync aborted");
-            } finally {
-                synchronized (sSyncLock) {
-                    if (sSyncThread == Thread.currentThread()) {
-                        sSyncThread = null;
-                    }
-                }
             }
         }
 
@@ -632,6 +615,7 @@ public class CalendarSyncAdapterService extends Service {
         cleanTables(contentResolver, calendarId);
         
         int[] reminderMinutes = PreferencesHelper.getAllReminderMinutes(context);
+        Log.d(Constants.TAG, "Reminder minutes: " + Arrays.toString(reminderMinutes));
 
         ArrayList<ContentProviderOperation> operationList = new ArrayList<>();
 

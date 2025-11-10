@@ -24,7 +24,7 @@ https://github.com/SufficientlySecure/birthday-calendar
 GPLv3
 
 <b>Keywords</b>
-birthday calendar, calendar integration, birthdays
+birthday calendar, birthday adapter, calendar integration, birthdays, events, special dates
 
 <b>Open source alternative to</b>
 EboBirthday, Birthdays, TKBirthdayReminder, Birthday Widget

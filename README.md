@@ -1,12 +1,12 @@
-# Birthday Calendar
+# Birthday Adapter
 
 [<img src="https://f-droid.org/badge/get-it-on.png"
       alt="Get it on F-Droid"
       height="80">](https://f-droid.org/app/org.birthdayadapter)
 
-Birthday Calendar is the first implementation to really display all contact birthdays automatically in your standard Android calendar without hassle.
+Birthday Adapter is the first implementation to really display all contact birthdays automatically in your standard Android calendar without hassle.
 
-Birthday Calendar provides birthdays, anniversaries, and other events from your contacts as a real calendar, which is displayed in your standard Android calendar application. To my knowledge, this is the first implementation that implements birthdays as a real calendar integrated in the Android calendar. All other apps only displays their own lists but have no real integration! 
+Birthday Adapter provides birthdays, anniversaries, and other events from your contacts as a real calendar, which is displayed in your standard Android calendar application. To my knowledge, this is the first implementation that implements birthdays as a real calendar integrated in the Android calendar. All other apps only displays their own lists but have no real integration! 
 
 For more information visit https://www.sufficientlysecure.org/android/
 
@@ -26,7 +26,7 @@ Different productFlavors are build with gradle:
 
 ## Contribute
 
-Fork Birthday Calendar and do a Pull Request. I will merge your changes back into the main project.
+Fork Birthday Adapter and do a Pull Request. I will merge your changes back into the main project.
 
 ## Translations
 
@@ -37,7 +37,7 @@ Translations are hosted on Transifex, which is configured by ".tx/config".
 3. Go into root folder of git repo
 4. execute ``tx pull`` (``tx pull -a`` to get all languages)
 
-see http://help.transifex.net/features/client/index.html#user-client
+see http://help.transifex.com/features/client/index.html#user-client
 
 ## Coding Style
 
@@ -58,22 +58,22 @@ See http://source.android.com/source/code-style.html
 See http://www.androidpolice.com/2009/11/04/auto-formatting-android-xml-files-with-eclipse/
 
 ## Licenses
-Birthday Calendar is licensed under the GPLv3+.
+Birthday Adapter is licensed under the GPLv3+.
 The file LICENSE includes the full license text.
 
 ### Details
-Birthday Calendar is free software: you can redistribute it and/or modify
+Birthday Adapter is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-Birthday Calendar is distributed in the hope that it will be useful,
+Birthday Adapter is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Birthday Calendar.  If not, see <http://www.gnu.org/licenses/>.
+along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
 
 ### Libraries
 * AndroidX Libraries

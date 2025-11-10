@@ -100,7 +100,6 @@
         <service
             android:name="org.birthdayadapter.service.CalendarSyncAdapterService"
             android:exported="true"
-            android:process=":calendar"
             tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
