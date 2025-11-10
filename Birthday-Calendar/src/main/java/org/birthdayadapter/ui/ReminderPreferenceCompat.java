@@ -39,6 +39,8 @@ import android.widget.TimePicker;
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.Log;
 
+import java.util.Objects;
+
 public class ReminderPreferenceCompat extends Preference {
 
     private int lastMinutes = 0;
@@ -123,9 +125,9 @@ public class ReminderPreferenceCompat extends Preference {
     }
 
     private void bind() {
-        int day = lastMinutes / ONE_DAY_MINUTES;
-        int minutesOnDay = lastMinutes % ONE_DAY_MINUTES;
-
+        // reminder on the day after midnight are negative, so we add one day for the calculation
+        int day = (lastMinutes + ONE_DAY_MINUTES) / ONE_DAY_MINUTES;
+        if (lastMinutes % ONE_DAY_MINUTES == 0) day--;
         int daySelection = 0;
         for (int i = 0; i < DAY_BASE_VALUES.length; i++) {
             if (day == DAY_BASE_VALUES[i]) {
@@ -135,8 +137,10 @@ public class ReminderPreferenceCompat extends Preference {
         }
         spinner.setSelection(daySelection);
 
-        int hour = minutesOnDay / 60;
-        int minute = minutesOnDay % 60;
+        // reminders are negative minutes from the event, let's calculate the time from that
+        int timeFromMinutes = Math.abs(lastMinutes - (day * ONE_DAY_MINUTES));
+        int hour = timeFromMinutes / 60;
+        int minute = timeFromMinutes % 60;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             picker.setHour(hour);
@@ -160,11 +164,12 @@ public class ReminderPreferenceCompat extends Preference {
             }
 
             int selectedDayValue = DAY_BASE_VALUES[spinner.getSelectedItemPosition()];
-            int minutes = (selectedDayValue * ONE_DAY_MINUTES) + (hour * 60) + minute;
+            int minutes = (selectedDayValue * ONE_DAY_MINUTES) - (hour * 60) - minute;
 
             if (callChangeListener(minutes)) {
                 Log.d("BirthdayAdapter", "Persisting reminder minutes: " + minutes);
-                persistInt(minutes);
+                // Use commit() to save synchronously and avoid race condition
+                Objects.requireNonNull(getSharedPreferences()).edit().putInt(getKey(), minutes).commit();
                 lastMinutes = minutes;
             }
         }

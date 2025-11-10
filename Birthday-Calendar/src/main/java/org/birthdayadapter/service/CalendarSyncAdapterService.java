@@ -65,6 +65,7 @@ import org.birthdayadapter.util.PreferencesHelper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -614,6 +615,7 @@ public class CalendarSyncAdapterService extends Service {
         cleanTables(contentResolver, calendarId);
         
         int[] reminderMinutes = PreferencesHelper.getAllReminderMinutes(context);
+        Log.d(Constants.TAG, "Reminder minutes: " + Arrays.toString(reminderMinutes));
 
         ArrayList<ContentProviderOperation> operationList = new ArrayList<>();
 
