@@ -1,0 +1,9 @@
+3.0
+* Update app and dependencies to Android version 14
+* Change sync logic, prevent concurrent syncs
+* Add checks for duplicates
+* Add icons to jubilee events
+* Don't create events for years before the birth year
+* Repair account filter
+* Support dark mode
+- Fix reminder time picker
