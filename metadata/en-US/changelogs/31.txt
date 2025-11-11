@@ -1,0 +1,6 @@
+3.1
+* Reduce size of release apk
+* Remove manual sync lock and rely on Android SyncAdapter framework
+* Use WorkManager for background syncs
+- Adapt metadata structure for F-Droid
+- Fix reminder time picker
