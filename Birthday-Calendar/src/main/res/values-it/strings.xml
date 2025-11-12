@@ -1,78 +1,97 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
+
+ This file is part of Birthday Adapter.
+
+ Birthday Adapter is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Birthday Adapter is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <resources>
-  <!--Calendar-->
-  <string name="calendar_display_name">Compleanni</string>
-  <string name="event_title_birthday_with_age">%1$s: Compleanno (%2$d)</string>
-  <string name="event_title_birthday_without_age">%1$s: Compleanno</string>
-  <string name="event_title_anniversary_with_age">%1$s: Anniversario (%2$d)</string>
-  <string name="event_title_anniversary_without_age">%1$s: Anniversario</string>
-  <string name="event_title_other_with_age">%1$s: Altro evento (%2$d)</string>
-  <string name="event_title_other_without_age">%1$s: Altro evento</string>
-  <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
-  <string name="event_title_custom_without_age">%1$s: %2$s</string>
-  <!--About-->
-  <string name="about_version">Versione:</string>
-  <!--Tabs-->
-  <string name="tab_main">Principale</string>
-  <string name="tab_preferences">Preferenze</string>
-  <string name="tab_accounts">Filtro account</string>
-  <string name="tab_help">Aiuto</string>
-  <string name="tab_about">Informazioni</string>
-  <!--Preferences-->
-  <string name="pref_general">Generale</string>
-  <string name="pref_color">Colore</string>
-  <string name="pref_help">Aiuto</string>
-  <string name="pref_about">Informazioni</string>
-  <string name="pref_force_sync">Sincronizza adesso!</string>
-  <string name="pref_reminders">Promemoria</string>
-  <string name="pref_reminder_enable0">Abilita promemoria 1</string>
-  <string name="pref_reminder_enable1">Abilita promemoria 2</string>
-  <string name="pref_reminder_enable2">Abilita promemoria 3</string>
-  <string name="pref_reminder_enable_summary">Abilita questo promemoria</string>
-  <string name="pref_reminder_time0">Promemoria 1</string>
-  <string name="pref_reminder_time1">Promemoria 2</string>
-  <string name="pref_reminder_time2">Promemoria 3</string>
-  <string name="pref_reminder_time_summary">Imposta l\'ora di questo promemoria</string>
-  <string-array name="pref_reminder_time_drop_down">
-    <item>Il giorno dell\'evento</item>
-    <item>Un giorno prima</item>
-    <item>2 giorni prima</item>
-    <item>3 giorni prima</item>
-    <item>5 giorni prima</item>
-    <item>7 giorni prima</item>
-    <item>10 giorni prima</item>
-    <item>14 giorni prima</item>
-  </string-array>
-  <string name="pref_title">Etichette personalizzate</string>
-  <string name="pref_title_enable">Abilita etichette personalizzate</string>
-  <string name="pref_title_birthday_without_age">Compleanno</string>
-  <string name="pref_title_birthday_with_age">Compleanno con età</string>
-  <string name="pref_title_anniversary_without_age">Anniversario</string>
-  <string name="pref_title_anniversary_with_age">Anniversario con età</string>
-  <string name="pref_title_other_without_age">Altro evento</string>
-  <string name="pref_title_other_with_age">Altro evento con età</string>
-  <string name="pref_title_custom_without_age">Personalizzata</string>
-  <string name="pref_title_custom_with_age">Personalizzata con età</string>
-  <string name="pref_title_summary_without_age">Inserisci %1$s per il nome del contatto.</string>
-  <string name="pref_title_summary_with_age">Inserisci %1$s per il nome del contatto e %2$d per l\'età.</string>
-  <string name="pref_title_summary_custom_without_age">Inserisci %1$s per il nome del contatto e %2$s per l\'etichetta personalizzata di questo evento.</string>
-  <string name="pref_title_summary_custom_with_age">Inserisci %1$s per il nome del contatto, %2$s per l\'etichetta personalizzata di questo evento e %3$d per l\'età.</string>
-  <string name="pref_prefer_dd_slash_mm">Preferisci formato gg/MM/aaaa</string>
-  <string name="pref_prefer_dd_slash_mm_summary">Preferisce gg/MM/aaaa a MM/gg/aaaa quando elabora i formati delle date</string>
-  <string name="pref_advanced">Impostazioni avanzate</string>
-  <!--Adapter Screen-->
-  <string name="pref_account_header">Impostazioni</string>
-  <string name="pref_account_settings">Configura adattatore compleanni</string>
-  <!--Accounts-->
-  <string name="account_list_empty">Nessun account</string>
-  <!--Free Version-->
-  <string name="pref_buy">Compra la versione completa!</string>
-  <string name="pref_buy_full">Apri Google Play per comprare la versione completa...</string>
-  <string name="pref_buy_full_summary">• Imposta i tuoi promemoria per gli eventi\n• Personalizza i titoli degli eventi</string>
-  <!--Install Workaround Dialog-->
-  <string name="workaround_dialog_title">Serve una soluzione per questa versione di Android!</string>
-  <string name="workaround_dialog_message">A causa di un bug in Android, l\'adattatore dei compleanni sarà essere disabilitato dopo il riavvio di questo dispositivo\n\n. Questo bug è stato introdotto in Android 4.1.1 e sembra che sia stato risolto in Android 4.2. Sfortunatamente alcuni dispositivi, ad esempio Galaxy S4, mostrano ancora questo bug in Android 4.2. Puoi installare un workaround da Google Play e trovare altre informazioni in questa segnalazione di bug: http://code.google.com/p/android/issues/detail?id=34880</string>
-  <string name="workaround_dialog_dont_show_again_button">Non mostrare di nuovo</string>
-  <string name="workaround_dialog_close_button">Chiudi</string>
-  <string name="workaround_dialog_install_button">Installa soluzione</string>
+
+    <!-- Calendar -->
+    <string name="calendar_display_name">Compleanni</string>
+    <string name="event_title_birthday_with_age">%1$s: Compleanno (%2$d)</string>
+    <string name="event_title_birthday_without_age">%1$s: Compleanno</string>
+    <string name="event_title_anniversary_with_age">%1$s: Anniversario (%2$d)</string>
+    <string name="event_title_anniversary_without_age">%1$s: Anniversario</string>
+    <string name="event_title_other_with_age">%1$s: Altro evento (%2$d)</string>
+    <string name="event_title_other_without_age">%1$s: Altro evento</string>
+    <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
+    <string name="event_title_custom_without_age">%1$s: %2$s</string>
+
+    <!-- About -->
+    <string name="about_version">Versione:</string>
+
+    <!-- Tabs -->
+    <string name="tab_main">Principale</string>
+    <string name="tab_preferences">Preferenze</string>
+    <string name="tab_accounts">Filtro account</string>
+    <string name="tab_help">Aiuto</string>
+    <string name="tab_about">Informazioni</string>
+
+    <!-- Preferences -->
+    <string name="pref_general">Generale</string>
+    <string name="pref_color">Colore</string>
+    <string name="pref_force_sync">Sincronizza adesso!</string>
+    <string name="pref_reminders">Promemoria</string>
+    <string name="pref_reminder_enable0">Abilita promemoria 1</string>
+    <string name="pref_reminder_enable1">Abilita promemoria 2</string>
+    <string name="pref_reminder_enable2">Abilita promemoria 3</string>
+    <string name="pref_reminder_enable_summary">Abilita questo promemoria</string>
+    <string name="pref_reminder_time0">Promemoria 1</string>
+    <string name="pref_reminder_time1">Promemoria 2</string>
+    <string name="pref_reminder_time2">Promemoria 3</string>
+    <string name="pref_reminder_time_summary">Imposta l\'ora di questo promemoria</string>
+
+    <string-array name="pref_reminder_time_drop_down">
+        <item>Il giorno dell\'evento</item>
+        <item>Un giorno prima</item>
+        <item>2 giorni prima</item>
+        <item>3 giorni prima</item>
+        <item>5 giorni prima</item>
+        <item>7 giorni prima</item>
+        <item>10 giorni prima</item>
+        <item>14 giorni prima</item>
+    </string-array>
+
+    <string name="pref_title">Etichette personalizzate</string>
+    <string name="pref_title_enable">Abilita etichette personalizzate</string>
+    <string name="pref_title_birthday_without_age">Compleanno</string>
+    <string name="pref_title_birthday_with_age">Compleanno con età</string>
+    <string name="pref_title_anniversary_without_age">Anniversario</string>
+    <string name="pref_title_anniversary_with_age">Anniversario con età</string>
+    <string name="pref_title_other_without_age">Altro evento</string>
+    <string name="pref_title_other_with_age">Altro evento con età</string>
+    <string name="pref_title_custom_without_age">Personalizzata</string>
+    <string name="pref_title_custom_with_age">Personalizzata con età</string>
+    <string name="pref_title_summary_without_age">Inserisci %1$s per il nome del contatto.</string>
+    <string name="pref_title_summary_with_age">Inserisci %1$s per il nome del contatto e %2$d per l\'età.</string>
+    <string name="pref_title_summary_custom_without_age">Inserisci %1$s per il nome del contatto e %2$s per l\'etichetta personalizzata di questo evento.</string>
+    <string name="pref_title_summary_custom_with_age">Inserisci %1$s per il nome del contatto, %2$s per l\'etichetta personalizzata di questo evento e %3$d per l\'età.</string>
+    <string name="pref_advanced_category">Impostazioni avanzate</string>
+    <string name="pref_prefer_dd_slash_mm">Preferisci formato gg/MM/aaaa</string>
+    <string name="pref_prefer_dd_slash_mm_summary">Preferisce gg/MM/aaaa a MM/gg/aaaa quando elabora i formati delle date</string>
+    <string name="pref_advanced">Impostazioni avanzate</string>
+    <!-- Adapter Screen -->
+    <string name="pref_account_header">Impostazioni</string>
+    <string name="pref_account_settings">Configura adattatore compleanni</string>
+
+    <string name="account_list_empty">Nessun account</string>
+
+    <!--Free Version -->
+    <string name="pref_buy">Compra la versione completa!</string>
+    <string name="pref_buy_full">Apri Google Play per comprare la versione completa...</string>
+    <string name="pref_buy_full_summary">• Imposta i tuoi promemoria per gli eventi\n• Personalizza i titoli degli eventi</string>
+
 </resources>

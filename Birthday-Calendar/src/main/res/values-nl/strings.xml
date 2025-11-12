@@ -1,82 +1,101 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
+
+ This file is part of Birthday Adapter.
+
+ Birthday Adapter is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Birthday Adapter is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <resources>
-  <!--Calendar-->
-  <string name="calendar_display_name">Verjaardagen</string>
-  <string name="event_title_birthday_with_age">%1$s: verjaardag (%2$d)</string>
-  <string name="event_title_birthday_without_age">%1$s: verjaardag</string>
-  <string name="event_title_anniversary_with_age">%1$s: jubileum (%2$d)</string>
-  <string name="event_title_anniversary_without_age">%1$s: jubileum</string>
-  <string name="event_title_other_with_age">%1$s: andere gebeurtenis (%2$d)</string>
-  <string name="event_title_other_without_age">%1$s: andere gebeurtenis</string>
-  <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
-  <string name="event_title_custom_without_age">%1$s: %2$s</string>
-  <!--About-->
-  <string name="about_version">Versie:</string>
-  <!--Tabs-->
-  <string name="tab_main">Start</string>
-  <string name="tab_preferences">Instellingen</string>
-  <string name="tab_accounts">Accountsfilter</string>
-  <string name="tab_help">Hulp</string>
-  <string name="tab_about">Over</string>
-  <!--Preferences-->
-  <string name="pref_general">Algemeen</string>
-  <string name="pref_color">Kleur</string>
-  <string name="pref_help">Hulp</string>
-  <string name="pref_about">Over</string>
-  <string name="pref_force_sync">Nu synchroniseren!</string>
-  <string name="pref_reminders">Herinneringen</string>
-  <string name="pref_reminder_enable0">Herinnering 1 inschakelen</string>
-  <string name="pref_reminder_enable1">Herinnering 2 inschakelen</string>
-  <string name="pref_reminder_enable2">Herinnering 3 inschakelen</string>
-  <string name="pref_reminder_enable_summary">Deze herinnering inschakelen</string>
-  <string name="pref_reminder_time0">Herinnering 1</string>
-  <string name="pref_reminder_time1">Herinnering 2</string>
-  <string name="pref_reminder_time2">Herinnering 3</string>
-  <string name="pref_reminder_time_summary">Stel de tijd in van de herinnering</string>
-  <string-array name="pref_reminder_time_drop_down">
-    <item>Op de dag van de gebeurtenis</item>
-    <item>1 dag van tevoren</item>
-    <item>2 dagen van tevoren</item>
-    <item>3 dagen van tevoren</item>
-    <item>5 dagen van tevoren</item>
-    <item>7 dagen van tevoren</item>
-    <item>10 dagen van tevoren</item>
-    <item>14 dagen van tevoren</item>
-  </string-array>
-  <string name="pref_title">Aangepaste labels</string>
-  <string name="pref_title_enable">Aangepaste labels inschakelen</string>
-  <string name="pref_title_birthday_without_age">Verjaardag</string>
-  <string name="pref_title_birthday_with_age">Verjaardag met leeftijdsvermelding</string>
-  <string name="pref_title_anniversary_without_age">Jubileum</string>
-  <string name="pref_title_anniversary_with_age">Jubileum met jaartalvermelding</string>
-  <string name="pref_title_other_without_age">Andere gebeurtenis</string>
-  <string name="pref_title_other_with_age">Andere gebeurtenis met jaartalvermelding</string>
-  <string name="pref_title_custom_without_age">Aangepast</string>
-  <string name="pref_title_custom_with_age">Aangepast met jaartalvermelding</string>
-  <string name="pref_title_summary_without_age">Vul %1$s in voor de naam van de contactpersoon.</string>
-  <string name="pref_title_summary_with_age">Vul %1$s in voor de naam van de contactpersoon en %2$d voor de leeftijd.</string>
-  <string name="pref_title_summary_custom_without_age">Vul %1$s in voor de naam van de contactpersoon en %2$s voor het
+
+    <!-- Calendar -->
+    <string name="calendar_display_name">Verjaardagen</string>
+    <string name="event_title_birthday_with_age">%1$s: verjaardag (%2$d)</string>
+    <string name="event_title_birthday_without_age">%1$s: verjaardag</string>
+    <string name="event_title_anniversary_with_age">%1$s: jubileum (%2$d)</string>
+    <string name="event_title_anniversary_without_age">%1$s: jubileum</string>
+    <string name="event_title_other_with_age">%1$s: andere gebeurtenis (%2$d)</string>
+    <string name="event_title_other_without_age">%1$s: andere gebeurtenis</string>
+    <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
+    <string name="event_title_custom_without_age">%1$s: %2$s</string>
+
+    <!-- About -->
+    <string name="about_version">Versie:</string>
+
+    <!-- Tabs -->
+    <string name="tab_main">Start</string>
+    <string name="tab_preferences">Instellingen</string>
+    <string name="tab_accounts">Accountsfilter</string>
+    <string name="tab_help">Hulp</string>
+    <string name="tab_about">Over</string>
+
+    <!-- Preferences -->
+    <string name="pref_general">Algemeen</string>
+    <string name="pref_color">Kleur</string>
+    <string name="pref_force_sync">Nu synchroniseren!</string>
+    <string name="pref_reminders">Herinneringen</string>
+    <string name="pref_reminder_enable0">Herinnering 1 inschakelen</string>
+    <string name="pref_reminder_enable1">Herinnering 2 inschakelen</string>
+    <string name="pref_reminder_enable2">Herinnering 3 inschakelen</string>
+    <string name="pref_reminder_enable_summary">Deze herinnering inschakelen</string>
+    <string name="pref_reminder_time0">Herinnering 1</string>
+    <string name="pref_reminder_time1">Herinnering 2</string>
+    <string name="pref_reminder_time2">Herinnering 3</string>
+    <string name="pref_reminder_time_summary">Stel de tijd in van de herinnering</string>
+
+    <string-array name="pref_reminder_time_drop_down">
+        <item>Op de dag van de gebeurtenis</item>
+        <item>1 dag van tevoren</item>
+        <item>2 dagen van tevoren</item>
+        <item>3 dagen van tevoren</item>
+        <item>5 dagen van tevoren</item>
+        <item>7 dagen van tevoren</item>
+        <item>10 dagen van tevoren</item>
+        <item>14 dagen van tevoren</item>
+    </string-array>
+
+    <string name="pref_title">Aangepaste labels</string>
+    <string name="pref_title_enable">Aangepaste labels inschakelen</string>
+    <string name="pref_title_birthday_without_age">Verjaardag</string>
+    <string name="pref_title_birthday_with_age">Verjaardag met leeftijdsvermelding</string>
+    <string name="pref_title_anniversary_without_age">Jubileum</string>
+    <string name="pref_title_anniversary_with_age">Jubileum met jaartalvermelding</string>
+    <string name="pref_title_other_without_age">Andere gebeurtenis</string>
+    <string name="pref_title_other_with_age">Andere gebeurtenis met jaartalvermelding</string>
+    <string name="pref_title_custom_without_age">Aangepast</string>
+    <string name="pref_title_custom_with_age">Aangepast met jaartalvermelding</string>
+    <string name="pref_title_summary_without_age">Vul %1$s in voor de naam van de contactpersoon.</string>
+    <string name="pref_title_summary_with_age">Vul %1$s in voor de naam van de contactpersoon en %2$d voor de leeftijd.</string>
+    <string name="pref_title_summary_custom_without_age">Vul %1$s in voor de naam van de contactpersoon en %2$s voor het
 aangepaste label.
     </string>
-  <string name="pref_title_summary_custom_with_age">Vul %1$s in voor de naam van de contactpersoon, %2$s voor het aangepaste
+    <string name="pref_title_summary_custom_with_age">Vul %1$s in voor de naam van de contactpersoon, %2$s voor het aangepaste
         label en %3$d voor de leeftijd.
     </string>
-  <string name="pref_prefer_dd_slash_mm">dd/MM/yyyy-opmaak de voorkeur geven</string>
-  <string name="pref_prefer_dd_slash_mm_summary">dd/MM/yyyy i.p.v. MM/dd/yyyy de voorkeur geven als datumopmaak</string>
-  <string name="pref_advanced">Geavanceerde instellingen</string>
-  <!--Adapter Screen-->
-  <string name="pref_account_header">Instellingen</string>
-  <string name="pref_account_settings">Birthday Adapter instellen</string>
-  <!--Accounts-->
-  <string name="account_list_empty">Geen accounts</string>
-  <!--Free Version-->
-  <string name="pref_buy">Koop de volledige versie!</string>
-  <string name="pref_buy_full">Open de Google Play Store om de volledige versie te kopen...</string>
-  <string name="pref_buy_full_summary">• Stel uw eigen herinneringen in voor gebeurtenissen\n• Pas de titels van gebeurtenissen aan</string>
-  <!--Install Workaround Dialog-->
-  <string name="workaround_dialog_title">U moet een andere manier gebruiken voor deze Android-versie!</string>
-  <string name="workaround_dialog_message">Door een bug in Android zal Birthday Adapter uitgeschakeld worden na het herstarten van het apparaat.\n\nDeze bug is opgetreden in Android 4.1.1 en lijkt opgelost te zijn in Android 4.2. Helaas ervaren sommigen met 4.2 nog steeds deze bug, bijv. op de Galaxy S4. U kunt een andere manier gebruiken middels Google Play en meer informatie vinden in het bugrapport: http://code.google.com/p/android/issues/detail?id=34880</string>
-  <string name="workaround_dialog_dont_show_again_button">Niet meer weergeven</string>
-  <string name="workaround_dialog_close_button">Sluiten</string>
-  <string name="workaround_dialog_install_button">Andere manier installeren</string>
+    <string name="pref_advanced_category">Geavanceerde instellingen</string>
+    <string name="pref_prefer_dd_slash_mm">dd/MM/yyyy-opmaak de voorkeur geven</string>
+    <string name="pref_prefer_dd_slash_mm_summary">dd/MM/yyyy i.p.v. MM/dd/yyyy de voorkeur geven als datumopmaak</string>
+    <string name="pref_advanced">Geavanceerde instellingen</string>
+    <!-- Adapter Screen -->
+    <string name="pref_account_header">Instellingen</string>
+    <string name="pref_account_settings">Birthday Adapter instellen</string>
+
+    <string name="account_list_empty">Geen accounts</string>
+
+    <!--Free Version -->
+    <string name="pref_buy">Koop de volledige versie!</string>
+    <string name="pref_buy_full">Open de Google Play Store om de volledige versie te kopen...</string>
+    <string name="pref_buy_full_summary">• Stel uw eigen herinneringen in voor gebeurtenissen\n• Pas de titels van gebeurtenissen aan</string>
+
 </resources>

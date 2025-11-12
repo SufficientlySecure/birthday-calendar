@@ -1,78 +1,97 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
+
+ This file is part of Birthday Adapter.
+
+ Birthday Adapter is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Birthday Adapter is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <resources>
-  <!--Calendar-->
-  <string name="calendar_display_name">生日</string>
-  <string name="event_title_birthday_with_age">%1$s的生日 (%2$d)</string>
-  <string name="event_title_birthday_without_age">%1$s的生日</string>
-  <string name="event_title_anniversary_with_age">%1$s的纪念日 (%2$d)</string>
-  <string name="event_title_anniversary_without_age">%1$s的纪念日</string>
-  <string name="event_title_other_with_age">%1$s的事件 (%2$d)</string>
-  <string name="event_title_other_without_age">%1$s的事件</string>
-  <string name="event_title_custom_with_age">%1$s的%2$s (%3$d)</string>
-  <string name="event_title_custom_without_age">%1$s的%2$s</string>
-  <!--About-->
-  <string name="about_version">版本</string>
-  <!--Tabs-->
-  <string name="tab_main">首页</string>
-  <string name="tab_preferences">设置</string>
-  <string name="tab_accounts">账户</string>
-  <string name="tab_help">帮助</string>
-  <string name="tab_about">关于</string>
-  <!--Preferences-->
-  <string name="pref_general">常规</string>
-  <string name="pref_color">日历颜色</string>
-  <string name="pref_help">帮助</string>
-  <string name="pref_about">关于</string>
-  <string name="pref_force_sync">立即同步</string>
-  <string name="pref_reminders">提醒</string>
-  <string name="pref_reminder_enable0">启用提醒 1</string>
-  <string name="pref_reminder_enable1">启用提醒 2</string>
-  <string name="pref_reminder_enable2">启用提醒 3</string>
-  <string name="pref_reminder_enable_summary">启用这组提醒</string>
-  <string name="pref_reminder_time0">提醒 1</string>
-  <string name="pref_reminder_time1">提醒 2</string>
-  <string name="pref_reminder_time2">提醒 3</string>
-  <string name="pref_reminder_time_summary">设置提醒时间</string>
-  <string-array name="pref_reminder_time_drop_down">
-    <item>当天</item>
-    <item>1 天前</item>
-    <item>2 天前</item>
-    <item>3 天前</item>
-    <item>5 天前</item>
-    <item>7 天前</item>
-    <item>10 天前</item>
-    <item>14 天前</item>
-  </string-array>
-  <string name="pref_title">自定义标题</string>
-  <string name="pref_title_enable">启用自定义标题</string>
-  <string name="pref_title_birthday_without_age">生日</string>
-  <string name="pref_title_birthday_with_age">生日（有年数）</string>
-  <string name="pref_title_anniversary_without_age">纪念日</string>
-  <string name="pref_title_anniversary_with_age">纪念日（有年数）</string>
-  <string name="pref_title_other_without_age">其它事件</string>
-  <string name="pref_title_other_with_age">其它事件（有年数）</string>
-  <string name="pref_title_custom_without_age">自定义事件</string>
-  <string name="pref_title_custom_with_age">自定义事件（有年数）</string>
-  <string name="pref_title_summary_without_age">输入 %1$s 替代联系人姓名。</string>
-  <string name="pref_title_summary_with_age">输入 %1$s 替代联系人姓名，%2$d 替代年数。</string>
-  <string name="pref_title_summary_custom_without_age">输入 %1$s 替代联系人姓名，%2$s 替代自定义事件的名称。</string>
-  <string name="pref_title_summary_custom_with_age">输入 %1$s 替代联系人姓名，%2$s 替代自定义事件的名称，%3$d 替代年数。</string>
-  <string name="pref_prefer_dd_slash_mm">优先使用 dd/MM/yyyy 格式</string>
-  <string name="pref_prefer_dd_slash_mm_summary">解析日期时优先使用 dd/MM/yyyy 格式（默认为 MM/dd/yyyy）</string>
-  <string name="pref_advanced">高级</string>
-  <!--Adapter Screen-->
-  <string name="pref_account_header">设置</string>
-  <string name="pref_account_settings">配置 Birthday Adapter</string>
-  <!--Accounts-->
-  <string name="account_list_empty">没有账户</string>
-  <!--Free Version-->
-  <string name="pref_buy">购买完整版！</string>
-  <string name="pref_buy_full">打开 Google Play 购买完整版</string>
-  <string name="pref_buy_full_summary">• 设置事件的提醒时间\n• 自定义事件标题</string>
-  <!--Install Workaround Dialog-->
-  <string name="workaround_dialog_title">由于系统原因，需要安装修复程序！</string>
-  <string name="workaround_dialog_message">由于 Android 中的一个 bug，Birthday Adapter 会在设备重启后停用。\n\n这个问题在 Android 4.1.1 中出现，并在 Android 4.2 中修复。很遗憾，Galaxy S4 等设备的 Android 4.2 仍存在这个问题。您可以在 Google Play 中下载修复程序，并在以下问题报告中获取更多信息：http://code.google.com/p/android/issues/detail?id=34880</string>
-  <string name="workaround_dialog_dont_show_again_button">不再显示</string>
-  <string name="workaround_dialog_close_button">关闭</string>
-  <string name="workaround_dialog_install_button">安装修复程序</string>
+
+    <!-- Calendar -->
+    <string name="calendar_display_name">生日</string>
+    <string name="event_title_birthday_with_age">%1$s的生日 (%2$d)</string>
+    <string name="event_title_birthday_without_age">%1$s的生日</string>
+    <string name="event_title_anniversary_with_age">%1$s的纪念日 (%2$d)</string>
+    <string name="event_title_anniversary_without_age">%1$s的纪念日</string>
+    <string name="event_title_other_with_age">%1$s的事件 (%2$d)</string>
+    <string name="event_title_other_without_age">%1$s的事件</string>
+    <string name="event_title_custom_with_age">%1$s的%2$s (%3$d)</string>
+    <string name="event_title_custom_without_age">%1$s的%2$s</string>
+
+    <!-- About -->
+    <string name="about_version">版本</string>
+
+    <!-- Tabs -->
+    <string name="tab_main">首页</string>
+    <string name="tab_preferences">设置</string>
+    <string name="tab_accounts">账户</string>
+    <string name="tab_help">帮助</string>
+    <string name="tab_about">关于</string>
+
+    <!-- Preferences -->
+    <string name="pref_general">常规</string>
+    <string name="pref_color">日历颜色</string>
+    <string name="pref_force_sync">立即同步</string>
+    <string name="pref_reminders">提醒</string>
+    <string name="pref_reminder_enable0">启用提醒 1</string>
+    <string name="pref_reminder_enable1">启用提醒 2</string>
+    <string name="pref_reminder_enable2">启用提醒 3</string>
+    <string name="pref_reminder_enable_summary">启用这组提醒</string>
+    <string name="pref_reminder_time0">提醒 1</string>
+    <string name="pref_reminder_time1">提醒 2</string>
+    <string name="pref_reminder_time2">提醒 3</string>
+    <string name="pref_reminder_time_summary">设置提醒时间</string>
+
+    <string-array name="pref_reminder_time_drop_down">
+        <item>当天</item>
+        <item>1 天前</item>
+        <item>2 天前</item>
+        <item>3 天前</item>
+        <item>5 天前</item>
+        <item>7 天前</item>
+        <item>10 天前</item>
+        <item>14 天前</item>
+    </string-array>
+
+    <string name="pref_title">自定义标题</string>
+    <string name="pref_title_enable">启用自定义标题</string>
+    <string name="pref_title_birthday_without_age">生日</string>
+    <string name="pref_title_birthday_with_age">生日（有年数）</string>
+    <string name="pref_title_anniversary_without_age">纪念日</string>
+    <string name="pref_title_anniversary_with_age">纪念日（有年数）</string>
+    <string name="pref_title_other_without_age">其它事件</string>
+    <string name="pref_title_other_with_age">其它事件（有年数）</string>
+    <string name="pref_title_custom_without_age">自定义事件</string>
+    <string name="pref_title_custom_with_age">自定义事件（有年数）</string>
+    <string name="pref_title_summary_without_age">输入 %1$s 替代联系人姓名。</string>
+    <string name="pref_title_summary_with_age">输入 %1$s 替代联系人姓名，%2$d 替代年数。</string>
+    <string name="pref_title_summary_custom_without_age">输入 %1$s 替代联系人姓名，%2$s 替代自定义事件的名称。</string>
+    <string name="pref_title_summary_custom_with_age">输入 %1$s 替代联系人姓名，%2$s 替代自定义事件的名称，%3$d 替代年数。</string>
+    <string name="pref_advanced_category">高级</string>
+    <string name="pref_prefer_dd_slash_mm">优先使用 dd/MM/yyyy 格式</string>
+    <string name="pref_prefer_dd_slash_mm_summary">解析日期时优先使用 dd/MM/yyyy 格式（默认为 MM/dd/yyyy）</string>
+    <string name="pref_advanced">高级</string>
+    <!-- Adapter Screen -->
+    <string name="pref_account_header">设置</string>
+    <string name="pref_account_settings">配置 Birthday Adapter</string>
+
+    <string name="account_list_empty">没有账户</string>
+
+    <!--Free Version -->
+    <string name="pref_buy">购买完整版！</string>
+    <string name="pref_buy_full">打开 Google Play 购买完整版</string>
+    <string name="pref_buy_full_summary">• 设置事件的提醒时间\n• 自定义事件标题</string>
+
 </resources>

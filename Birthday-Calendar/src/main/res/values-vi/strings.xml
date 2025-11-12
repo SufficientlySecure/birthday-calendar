@@ -1,82 +1,101 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
+
+ This file is part of Birthday Adapter.
+
+ Birthday Adapter is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Birthday Adapter is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <resources>
-  <!--Calendar-->
-  <string name="calendar_display_name">Sinh nhật</string>
-  <string name="event_title_birthday_with_age">%1$s: Sinh nhật (%2$d)</string>
-  <string name="event_title_birthday_without_age">%1$s: Sinh nhật</string>
-  <string name="event_title_anniversary_with_age">%1$s: Lễ kỷ niệm (%2$d)</string>
-  <string name="event_title_anniversary_without_age">%1$s: Lễ kỷ niệm</string>
-  <string name="event_title_other_with_age">%1$s: Sự kiện khác (%2$d)</string>
-  <string name="event_title_other_without_age">%1$s: Sự kiện khác</string>
-  <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
-  <string name="event_title_custom_without_age">%1$s: %2$s</string>
-  <!--About-->
-  <string name="about_version">Phiên bản:</string>
-  <!--Tabs-->
-  <string name="tab_main">Điều khiển chính</string>
-  <string name="tab_preferences">Tuỳ chỉnh</string>
-  <string name="tab_accounts">Lọc tài khoản</string>
-  <string name="tab_help">Trợ giúp</string>
-  <string name="tab_about">Thông tin về</string>
-  <!--Preferences-->
-  <string name="pref_general">Tổng quan</string>
-  <string name="pref_color">Màu sắc</string>
-  <string name="pref_help">Trợ giúp</string>
-  <string name="pref_about">Thông tin về</string>
-  <string name="pref_force_sync">Đồng bộ ngay!</string>
-  <string name="pref_reminders">Nhắc nhở</string>
-  <string name="pref_reminder_enable0">Bật nhắc nhở 1</string>
-  <string name="pref_reminder_enable1">Bật nhắc nhở 2</string>
-  <string name="pref_reminder_enable2">Bật nhắc nhở 3</string>
-  <string name="pref_reminder_enable_summary">Bật nhắc nhở này</string>
-  <string name="pref_reminder_time0">Nhắc nhở 1</string>
-  <string name="pref_reminder_time1">Nhắc nhở 2</string>
-  <string name="pref_reminder_time2">Nhắc nhở 3</string>
-  <string name="pref_reminder_time_summary">Đặt thời gian cho nhắc nhở này</string>
-  <string-array name="pref_reminder_time_drop_down">
-    <item>Vào ngày xảy ra sự kiện</item>
-    <item>Trước 1 ngày</item>
-    <item>Trước 2 ngày</item>
-    <item>Trước 3 ngày</item>
-    <item>Trước 5 ngày</item>
-    <item>Trước 7 ngày</item>
-    <item>Trước 10 ngày</item>
-    <item>Trước 14 ngày</item>
-  </string-array>
-  <string name="pref_title">Nhãn tuỳ chọn</string>
-  <string name="pref_title_enable">Bật nhãn tuỳ chọn</string>
-  <string name="pref_title_birthday_without_age">Sinh nhật</string>
-  <string name="pref_title_birthday_with_age">Sinh nhật kèm theo tuổi</string>
-  <string name="pref_title_anniversary_without_age">Lễ kỷ niệm</string>
-  <string name="pref_title_anniversary_with_age">Lễ kỷ niệm kèm theo tuổi</string>
-  <string name="pref_title_other_without_age">Sự kiện khác</string>
-  <string name="pref_title_other_with_age">Sự kiện khác kèm theo tuổi</string>
-  <string name="pref_title_custom_without_age">Tuỳ chọn</string>
-  <string name="pref_title_custom_with_age">Tuỳ chọn kèm theo tuổi</string>
-  <string name="pref_title_summary_without_age">Chèn %1$s vào phần tên liên hệ.</string>
-  <string name="pref_title_summary_with_age">Chèn %1$s vào phần tên liên hệ và %2$d vào phần tuổi.</string>
-  <string name="pref_title_summary_custom_without_age">Chèn %1$s vào phần tên liên hệ và %2$s vào phần nhãn
+
+    <!-- Calendar -->
+    <string name="calendar_display_name">Sinh nhật</string>
+    <string name="event_title_birthday_with_age">%1$s: Sinh nhật (%2$d)</string>
+    <string name="event_title_birthday_without_age">%1$s: Sinh nhật</string>
+    <string name="event_title_anniversary_with_age">%1$s: Lễ kỷ niệm (%2$d)</string>
+    <string name="event_title_anniversary_without_age">%1$s: Lễ kỷ niệm</string>
+    <string name="event_title_other_with_age">%1$s: Sự kiện khác (%2$d)</string>
+    <string name="event_title_other_without_age">%1$s: Sự kiện khác</string>
+    <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
+    <string name="event_title_custom_without_age">%1$s: %2$s</string>
+
+    <!-- About -->
+    <string name="about_version">Phiên bản:</string>
+
+    <!-- Tabs -->
+    <string name="tab_main">Điều khiển chính</string>
+    <string name="tab_preferences">Tuỳ chỉnh</string>
+    <string name="tab_accounts">Lọc tài khoản</string>
+    <string name="tab_help">Trợ giúp</string>
+    <string name="tab_about">Thông tin về</string>
+
+    <!-- Preferences -->
+    <string name="pref_general">Tổng quan</string>
+    <string name="pref_color">Màu sắc</string>
+    <string name="pref_force_sync">Đồng bộ ngay!</string>
+    <string name="pref_reminders">Nhắc nhở</string>
+    <string name="pref_reminder_enable0">Bật nhắc nhở 1</string>
+    <string name="pref_reminder_enable1">Bật nhắc nhở 2</string>
+    <string name="pref_reminder_enable2">Bật nhắc nhở 3</string>
+    <string name="pref_reminder_enable_summary">Bật nhắc nhở này</string>
+    <string name="pref_reminder_time0">Nhắc nhở 1</string>
+    <string name="pref_reminder_time1">Nhắc nhở 2</string>
+    <string name="pref_reminder_time2">Nhắc nhở 3</string>
+    <string name="pref_reminder_time_summary">Đặt thời gian cho nhắc nhở này</string>
+
+    <string-array name="pref_reminder_time_drop_down">
+        <item>Vào ngày xảy ra sự kiện</item>
+        <item>Trước 1 ngày</item>
+        <item>Trước 2 ngày</item>
+        <item>Trước 3 ngày</item>
+        <item>Trước 5 ngày</item>
+        <item>Trước 7 ngày</item>
+        <item>Trước 10 ngày</item>
+        <item>Trước 14 ngày</item>
+    </string-array>
+
+    <string name="pref_title">Nhãn tuỳ chọn</string>
+    <string name="pref_title_enable">Bật nhãn tuỳ chọn</string>
+    <string name="pref_title_birthday_without_age">Sinh nhật</string>
+    <string name="pref_title_birthday_with_age">Sinh nhật kèm theo tuổi</string>
+    <string name="pref_title_anniversary_without_age">Lễ kỷ niệm</string>
+    <string name="pref_title_anniversary_with_age">Lễ kỷ niệm kèm theo tuổi</string>
+    <string name="pref_title_other_without_age">Sự kiện khác</string>
+    <string name="pref_title_other_with_age">Sự kiện khác kèm theo tuổi</string>
+    <string name="pref_title_custom_without_age">Tuỳ chọn</string>
+    <string name="pref_title_custom_with_age">Tuỳ chọn kèm theo tuổi</string>
+    <string name="pref_title_summary_without_age">Chèn %1$s vào phần tên liên hệ.</string>
+    <string name="pref_title_summary_with_age">Chèn %1$s vào phần tên liên hệ và %2$d vào phần tuổi.</string>
+    <string name="pref_title_summary_custom_without_age">Chèn %1$s vào phần tên liên hệ và %2$s vào phần nhãn
 tuỳ chọn của sự kiện.
 </string>
-  <string name="pref_title_summary_custom_with_age">Chèn %1$s vào phần tên liên hệ, %2$s vào phần nhãn tuỳ chọn của
+    <string name="pref_title_summary_custom_with_age">Chèn %1$s vào phần tên liên hệ, %2$s vào phần nhãn tuỳ chọn của
 sự kiện này, và %3$d cho phần tuổi.
 </string>
-  <string name="pref_prefer_dd_slash_mm">Định dạng ưa thích dd/MM/yyyy</string>
-  <string name="pref_prefer_dd_slash_mm_summary">Chọn dd/MM/yyyy thay vì MM/dd/yyyy khi phân tích định dạng ngày tháng</string>
-  <string name="pref_advanced">Cài đặt nâng cao</string>
-  <!--Adapter Screen-->
-  <string name="pref_account_header">Cài đặt</string>
-  <string name="pref_account_settings">Cấu hình Birthday Adapter</string>
-  <!--Accounts-->
-  <string name="account_list_empty">Không có tài khoản nào</string>
-  <!--Free Version-->
-  <string name="pref_buy">Hãy mua phiên bản đầy đủ!</string>
-  <string name="pref_buy_full">Mở Google Play để mua phiên bản đầy đủ...</string>
-  <string name="pref_buy_full_summary">• Đặt trình nhắc nhở sự kiện của riêng bạn\n• Tuỳ chỉnh tiêu đề sự kiện</string>
-  <!--Install Workaround Dialog-->
-  <string name="workaround_dialog_title">Cần bản sửa lỗi cho phiên bản Android này!</string>
-  <string name="workaround_dialog_message">Vì một lỗi trên Android, Birthday Adapter sẽ bị vô hiệu hoá sau khi khởi động lại thiết bị.\n\nLỗi này bắt đầu xuất hiện từ Android 4.1.1 và dường như đã được giải quyết từ Android 4.2. Đáng tiếc là một vài thiết bị như Galaxy S4 vẫn còn bị lỗi này trên Android 4.2. Bạn có thể cài đặt bản sửa lỗi từ Google Play và tìm thêm thông tin trong bản báo cáo lỗi: http://code.google.com/p/android/issues/detail?id=34880</string>
-  <string name="workaround_dialog_dont_show_again_button">Đừng hiển thị lại</string>
-  <string name="workaround_dialog_close_button">Đóng</string>
-  <string name="workaround_dialog_install_button">Cài đặt bản sửa lỗi</string>
+    <string name="pref_advanced_category">Cài đặt nâng cao</string>
+    <string name="pref_prefer_dd_slash_mm">Định dạng ưa thích dd/MM/yyyy</string>
+    <string name="pref_prefer_dd_slash_mm_summary">Chọn dd/MM/yyyy thay vì MM/dd/yyyy khi phân tích định dạng ngày tháng</string>
+    <string name="pref_advanced">Cài đặt nâng cao</string>
+    <!-- Adapter Screen -->
+    <string name="pref_account_header">Cài đặt</string>
+    <string name="pref_account_settings">Cấu hình Birthday Adapter</string>
+
+    <string name="account_list_empty">Không có tài khoản nào</string>
+
+    <!--Free Version -->
+    <string name="pref_buy">Hãy mua phiên bản đầy đủ!</string>
+    <string name="pref_buy_full">Mở Google Play để mua phiên bản đầy đủ...</string>
+    <string name="pref_buy_full_summary">• Đặt trình nhắc nhở sự kiện của riêng bạn\n• Tuỳ chỉnh tiêu đề sự kiện</string>
+
 </resources>

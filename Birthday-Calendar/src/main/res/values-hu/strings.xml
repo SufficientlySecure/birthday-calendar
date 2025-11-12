@@ -1,82 +1,101 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
+
+ This file is part of Birthday Adapter.
+
+ Birthday Adapter is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Birthday Adapter is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <resources>
-  <!--Calendar-->
-  <string name="calendar_display_name">Születésnapok</string>
-  <string name="event_title_birthday_with_age">%1$s: Születésnap (%2$d)</string>
-  <string name="event_title_birthday_without_age">%1$s: Születésnap</string>
-  <string name="event_title_anniversary_with_age">%1$s: Évforduló (%2$d)</string>
-  <string name="event_title_anniversary_without_age">%1$s: Évforduló</string>
-  <string name="event_title_other_with_age">%1$s: Egyéb Esemény (%2$d)</string>
-  <string name="event_title_other_without_age">%1$s: Egyéb Esemény</string>
-  <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
-  <string name="event_title_custom_without_age">%1$s: %2$s</string>
-  <!--About-->
-  <string name="about_version">Verzió:</string>
-  <!--Tabs-->
-  <string name="tab_main">Fő</string>
-  <string name="tab_preferences">Preferenciák</string>
-  <string name="tab_accounts">Fiók Szűrő</string>
-  <string name="tab_help">Súgó</string>
-  <string name="tab_about">Névjegy</string>
-  <!--Preferences-->
-  <string name="pref_general">Általános</string>
-  <string name="pref_color">Szín</string>
-  <string name="pref_help">Súgó</string>
-  <string name="pref_about">Rólunk</string>
-  <string name="pref_force_sync">Szinkronizáljon most!</string>
-  <string name="pref_reminders">Emlékeztetők</string>
-  <string name="pref_reminder_enable0">Emlékeztető 1 engedélyezése</string>
-  <string name="pref_reminder_enable1">Emlékeztető 2 engedélyezése</string>
-  <string name="pref_reminder_enable2">Emlékeztető 3 engedélyezése</string>
-  <string name="pref_reminder_enable_summary">Ez az Emlékeztető engedélyezése</string>
-  <string name="pref_reminder_time0">Emlékeztető 1</string>
-  <string name="pref_reminder_time1">Emlékeztető 2</string>
-  <string name="pref_reminder_time2">Emlékeztető 3</string>
-  <string name="pref_reminder_time_summary">Ez az Emlékeztető idejének beállítása</string>
-  <string-array name="pref_reminder_time_drop_down">
-    <item>Az esemény napján</item>
-    <item>1 nappal előtte</item>
-    <item>2 nappal előtte</item>
-    <item>3 nappal előtte</item>
-    <item>5 nappal előtte</item>
-    <item>7 nappal előtte</item>
-    <item>10 nappal előtte</item>
-    <item>14 nappal előtte</item>
-  </string-array>
-  <string name="pref_title">Egyéni címkék</string>
-  <string name="pref_title_enable">Egyéni címkék engedélyezése</string>
-  <string name="pref_title_birthday_without_age">Születésnap</string>
-  <string name="pref_title_birthday_with_age">Születésnap korral</string>
-  <string name="pref_title_anniversary_without_age">Évforduló</string>
-  <string name="pref_title_anniversary_with_age">Évforduló korral</string>
-  <string name="pref_title_other_without_age">Egyéb esemény</string>
-  <string name="pref_title_other_with_age">Egyéb esemény korral</string>
-  <string name="pref_title_custom_without_age">Egyéni</string>
-  <string name="pref_title_custom_with_age">Egyéni korral</string>
-  <string name="pref_title_summary_without_age">%1$s beszúrása a névjegy nevéhez.</string>
-  <string name="pref_title_summary_with_age"> %1$s beszúrása a névjegy nevéhez és %2$d a korhoz.</string>
-  <string name="pref_title_summary_custom_without_age">%1$s beszúrása a névjegy nevéhez és %2$s ez az esemény
+
+    <!-- Calendar -->
+    <string name="calendar_display_name">Születésnapok</string>
+    <string name="event_title_birthday_with_age">%1$s: Születésnap (%2$d)</string>
+    <string name="event_title_birthday_without_age">%1$s: Születésnap</string>
+    <string name="event_title_anniversary_with_age">%1$s: Évforduló (%2$d)</string>
+    <string name="event_title_anniversary_without_age">%1$s: Évforduló</string>
+    <string name="event_title_other_with_age">%1$s: Egyéb Esemény (%2$d)</string>
+    <string name="event_title_other_without_age">%1$s: Egyéb Esemény</string>
+    <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
+    <string name="event_title_custom_without_age">%1$s: %2$s</string>
+
+    <!-- About -->
+    <string name="about_version">Verzió:</string>
+
+    <!-- Tabs -->
+    <string name="tab_main">Fő</string>
+    <string name="tab_preferences">Preferenciák</string>
+    <string name="tab_accounts">Fiók Szűrő</string>
+    <string name="tab_help">Súgó</string>
+    <string name="tab_about">Névjegy</string>
+
+    <!-- Preferences -->
+    <string name="pref_general">Általános</string>
+    <string name="pref_color">Szín</string>
+    <string name="pref_force_sync">Szinkronizáljon most!</string>
+    <string name="pref_reminders">Emlékeztetők</string>
+    <string name="pref_reminder_enable0">Emlékeztető 1 engedélyezése</string>
+    <string name="pref_reminder_enable1">Emlékeztető 2 engedélyezése</string>
+    <string name="pref_reminder_enable2">Emlékeztető 3 engedélyezése</string>
+    <string name="pref_reminder_enable_summary">Ez az Emlékeztető engedélyezése</string>
+    <string name="pref_reminder_time0">Emlékeztető 1</string>
+    <string name="pref_reminder_time1">Emlékeztető 2</string>
+    <string name="pref_reminder_time2">Emlékeztető 3</string>
+    <string name="pref_reminder_time_summary">Ez az Emlékeztető idejének beállítása</string>
+
+    <string-array name="pref_reminder_time_drop_down">
+        <item>Az esemény napján</item>
+        <item>1 nappal előtte</item>
+        <item>2 nappal előtte</item>
+        <item>3 nappal előtte</item>
+        <item>5 nappal előtte</item>
+        <item>7 nappal előtte</item>
+        <item>10 nappal előtte</item>
+        <item>14 nappal előtte</item>
+    </string-array>
+
+    <string name="pref_title">Egyéni címkék</string>
+    <string name="pref_title_enable">Egyéni címkék engedélyezése</string>
+    <string name="pref_title_birthday_without_age">Születésnap</string>
+    <string name="pref_title_birthday_with_age">Születésnap korral</string>
+    <string name="pref_title_anniversary_without_age">Évforduló</string>
+    <string name="pref_title_anniversary_with_age">Évforduló korral</string>
+    <string name="pref_title_other_without_age">Egyéb esemény</string>
+    <string name="pref_title_other_with_age">Egyéb esemény korral</string>
+    <string name="pref_title_custom_without_age">Egyéni</string>
+    <string name="pref_title_custom_with_age">Egyéni korral</string>
+    <string name="pref_title_summary_without_age">%1$s beszúrása a névjegy nevéhez.</string>
+    <string name="pref_title_summary_with_age"> %1$s beszúrása a névjegy nevéhez és %2$d a korhoz.</string>
+    <string name="pref_title_summary_custom_without_age">%1$s beszúrása a névjegy nevéhez és %2$s ez az esemény
         egyéni címkéjéhez.
     </string>
-  <string name="pref_title_summary_custom_with_age">%1$s beszúrása a névjegy nevéhez, %2$s ez az esemény
+    <string name="pref_title_summary_custom_with_age">%1$s beszúrása a névjegy nevéhez, %2$s ez az esemény
         egyéni címkéjéhez és %3$d a korhoz.
     </string>
-  <string name="pref_prefer_dd_slash_mm">nn/HH/ÉÉÉÉ formátum előnyben részesítése</string>
-  <string name="pref_prefer_dd_slash_mm_summary">nn/HH/éééé előnyben részesítése HH/nn/éééé-hez képest a dátumformátum elemzésekor</string>
-  <string name="pref_advanced">Haladó Beállítások</string>
-  <!--Adapter Screen-->
-  <string name="pref_account_header">Beállítások</string>
-  <string name="pref_account_settings">Birthday Adapter konfigurálása</string>
-  <!--Accounts-->
-  <string name="account_list_empty">Nincs fiók</string>
-  <!--Free Version-->
-  <string name="pref_buy">Teljes verzió megvásárlása!</string>
-  <string name="pref_buy_full">Google Play megnyitása a teljes verzió megvásárlásához...</string>
-  <string name="pref_buy_full_summary">• Saját emlékeztetők beállítása az eseményekhez\n• Esemény címek testreszabása</string>
-  <!--Install Workaround Dialog-->
-  <string name="workaround_dialog_title">Kerülő megoldás szükséges ehhez az Android Verzióhoz!</string>
-  <string name="workaround_dialog_message">Egy az Androidban lévő következtében a Birthday Adapter le lesz tiltva ez a készülék újraindítása után.\n\nEz a hiba az Android 4.1.1-ben volt bemutatva és javítottnak tűnik az Android 4.2-ben. Sajnos néhány készüléknek, pl.: Galaxy S4-nek még mindig megvan ez a hibája az Android 4.2-n. Telepíthet egy kerülő megoldást a Google Play-ből, és további információkat találhat a hibajelentésben: http://code.google.com/p/android/issues/detail?id=34880</string>
-  <string name="workaround_dialog_dont_show_again_button">Ne mutassa újra</string>
-  <string name="workaround_dialog_close_button">Bezár</string>
-  <string name="workaround_dialog_install_button">Kerülő megoldás telepítése</string>
+    <string name="pref_advanced_category">Haladó Beállítások</string>
+    <string name="pref_prefer_dd_slash_mm">nn/HH/ÉÉÉÉ formátum előnyben részesítése</string>
+    <string name="pref_prefer_dd_slash_mm_summary">nn/HH/éééé előnyben részesítése HH/nn/éééé-hez képest a dátumformátum elemzésekor</string>
+    <string name="pref_advanced">Haladó Beállítások</string>
+    <!-- Adapter Screen -->
+    <string name="pref_account_header">Beállítások</string>
+    <string name="pref_account_settings">Birthday Adapter konfigurálása</string>
+
+    <string name="account_list_empty">Nincs fiók</string>
+
+    <!--Free Version -->
+    <string name="pref_buy">Teljes verzió megvásárlása!</string>
+    <string name="pref_buy_full">Google Play megnyitása a teljes verzió megvásárlásához...</string>
+    <string name="pref_buy_full_summary">• Saját emlékeztetők beállítása az eseményekhez\n• Esemény címek testreszabása</string>
+
 </resources>

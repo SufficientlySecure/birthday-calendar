@@ -1,75 +1,95 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
+
+ This file is part of Birthday Adapter.
+
+ Birthday Adapter is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Birthday Adapter is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <resources>
-  <!--Calendar-->
-  <string name="calendar_display_name">Födelsedagar</string>
-  <string name="event_title_birthday_with_age">%1$s\'s Födelsedag (%2$d)</string>
-  <string name="event_title_birthday_without_age">%1$s\'s Födelsedag</string>
-  <string name="event_title_anniversary_with_age">%1$s\'s Bröllopsdag (%2$d)</string>
-  <string name="event_title_anniversary_without_age">%1$s\'s Bröllopsdag</string>
-  <string name="event_title_other_with_age">Andra Händelser med %1$s (%2$d)</string>
-  <string name="event_title_other_without_age">Andra Händelser med %1$s</string>
-  <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
-  <string name="event_title_custom_without_age">%1$s: %2$s</string>
-  <!--About-->
-  <string name="about_version">Version:</string>
-  <!--Tabs-->
-  <string name="tab_main">Huvudsaklig</string>
-  <string name="tab_preferences">Preferens</string>
-  <string name="tab_accounts">Kontofilter</string>
-  <string name="tab_help">Hjälp</string>
-  <string name="tab_about">Om</string>
-  <!--Preferences-->
-  <string name="pref_general">Allmänt</string>
-  <string name="pref_color">Färg</string>
-  <string name="pref_help">Hjälp</string>
-  <string name="pref_about">Om</string>
-  <string name="pref_force_sync">Synkronisera nu !</string>
-  <string name="pref_reminders">Påminnelser</string>
-  <string name="pref_reminder_enable0">Aktivera påminnelse 1</string>
-  <string name="pref_reminder_enable1">Aktivera påminnelse 2</string>
-  <string name="pref_reminder_enable2">Aktivera påminnelse 3</string>
-  <string name="pref_reminder_enable_summary">Aktivera denna påminnelse</string>
-  <string name="pref_reminder_time0">Påminnelse 1</string>
-  <string name="pref_reminder_time1">Påminnelse 2</string>
-  <string name="pref_reminder_time2">Påminnelse 3</string>
-  <string name="pref_reminder_time_summary">Ange tid för denna påminnelse</string>
-  <string-array name="pref_reminder_time_drop_down">
-    <item>Vid dagens händelse</item>
-    <item>1 dag innan</item>
-    <item>2 dagar innan</item>
-    <item>3 dagar innan</item>
-    <item>5 dagar innan</item>
-    <item>7 dagar innan</item>
-    <item>10 dagar innan</item>
-    <item>14 dagar innan</item>
-  </string-array>
-  <string name="pref_title">Anpassade etiketter</string>
-  <string name="pref_title_enable">Aktivera anpassade etiketter</string>
-  <string name="pref_title_birthday_without_age">Födelsedag</string>
-  <string name="pref_title_birthday_with_age">Födelsedag med ålder</string>
-  <string name="pref_title_anniversary_without_age">Årsdag</string>
-  <string name="pref_title_anniversary_with_age">Årsdag med ålder</string>
-  <string name="pref_title_other_without_age">Andra händelser</string>
-  <string name="pref_title_other_with_age">Andra händelser med ålder</string>
-  <string name="pref_title_custom_without_age">Anpassad</string>
-  <string name="pref_title_custom_with_age">Anpassad med ålder</string>
-  <string name="pref_title_summary_without_age">Ange %1$s för kontaktens namn.</string>
-  <string name="pref_title_summary_with_age">Ange %1$s för kontaktens namn och %2$d för åldern.</string>
-  <string name="pref_title_summary_custom_without_age">Ange %1$s för kontaktens namn och %2$s för anpassad etikett för denna händelse.</string>
-  <string name="pref_title_summary_custom_with_age">Ange %1$s för kontaktens namn, %2$s för anpassad etikett för denna händelse, och %3$d för åldern.</string>
-  <string name="pref_prefer_dd_slash_mm">Föredra dd/MM/yyyy format</string>
-  <string name="pref_prefer_dd_slash_mm_summary">Föredra dd/MM/yyyy än MM/dd/yyyy vid tolkning av datumformat</string>
-  <string name="pref_advanced">Avancerad Inställningar</string>
-  <!--Adapter Screen-->
-  <string name="pref_account_header">Inställningar</string>
-  <string name="pref_account_settings">Konfigurera Födelsedags Adapter</string>
-  <!--Accounts-->
-  <string name="account_list_empty">Inga konton</string>
-  <!--Free Version-->
-  <string name="pref_buy">Köp fullversion!</string>
-  <string name="pref_buy_full">Öppna Google Play för att köpa fullversion...</string>
-  <!--Install Workaround Dialog-->
-  <string name="workaround_dialog_dont_show_again_button">Visa inte igen</string>
-  <string name="workaround_dialog_close_button">Stäng</string>
-  <string name="workaround_dialog_install_button">Installera lösning</string>
-</resources>
+
+    <!-- Calendar -->
+    <string name="calendar_display_name">Födelsedagar</string>
+    <string name="event_title_birthday_with_age">%1$s\'s Födelsedag (%2$d)</string>
+    <string name="event_title_birthday_without_age">%1$s\'s Födelsedag</string>
+    <string name="event_title_anniversary_with_age">%1$s\'s Bröllopsdag (%2$d)</string>
+    <string name="event_title_anniversary_without_age">%1$s\'s Bröllopsdag</string>
+    <string name="event_title_other_with_age">Andra Händelser med %1$s (%2$d)</string>
+    <string name="event_title_other_without_age">Andra Händelser med %1$s</string>
+    <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
+    <string name="event_title_custom_without_age">%1$s: %2$s</string>
+
+    <!-- About -->
+    <string name="about_version">Version:</string>
+
+    <!-- Tabs -->
+    <string name="tab_main">Huvudsaklig</string>
+    <string name="tab_preferences">Preferens</string>
+    <string name="tab_accounts">Kontofilter</string>
+    <string name="tab_help">Hjälp</string>
+    <string name="tab_about">Om</string>
+
+    <!-- Preferences -->
+    <string name="pref_general">Allmänt</string>
+    <string name="pref_color">Färg</string>
+    <string name="pref_force_sync">Synkronisera nu !</string>
+    <string name="pref_reminders">Påminnelser</string>
+    <string name="pref_reminder_enable0">Aktivera påminnelse 1</string>
+    <string name="pref_reminder_enable1">Aktivera påminnelse 2</string>
+    <string name="pref_reminder_enable2">Aktivera påminnelse 3</string>
+    <string name="pref_reminder_enable_summary">Aktivera denna påminnelse</string>
+    <string name="pref_reminder_time0">Påminnelse 1</string>
+    <string name="pref_reminder_time1">Påminnelse 2</string>
+    <string name="pref_reminder_time2">Påminnelse 3</string>
+    <string name="pref_reminder_time_summary">Ange tid för denna påminnelse</string>
+
+    <string-array name="pref_reminder_time_drop_down">
+        <item>Vid dagens händelse</item>
+        <item>1 dag innan</item>
+        <item>2 dagar innan</item>
+        <item>3 dagar innan</item>
+        <item>5 dagar innan</item>
+        <item>7 dagar innan</item>
+        <item>10 dagar innan</item>
+        <item>14 dagar innan</item>
+    </string-array>
+
+    <string name="pref_title">Anpassade etiketter</string>
+    <string name="pref_title_enable">Aktivera anpassade etiketter</string>
+    <string name="pref_title_birthday_without_age">Födelsedag</string>
+    <string name="pref_title_birthday_with_age">Födelsedag med ålder</string>
+    <string name="pref_title_anniversary_without_age">Årsdag</string>
+    <string name="pref_title_anniversary_with_age">Årsdag med ålder</string>
+    <string name="pref_title_other_without_age">Andra händelser</string>
+    <string name="pref_title_other_with_age">Andra händelser med ålder</string>
+    <string name="pref_title_custom_without_age">Anpassad</string>
+    <string name="pref_title_custom_with_age">Anpassad med ålder</string>
+    <string name="pref_title_summary_without_age">Ange %1$s för kontaktens namn.</string>
+    <string name="pref_title_summary_with_age">Ange %1$s för kontaktens namn och %2$d för åldern.</string>
+    <string name="pref_title_summary_custom_without_age">Ange %1$s för kontaktens namn och %2$s för anpassad etikett för denna händelse.</string>
+    <string name="pref_title_summary_custom_with_age">Ange %1$s för kontaktens namn, %2$s för anpassad etikett för denna händelse, och %3$d för åldern.</string>
+    <string name="pref_advanced_category">Avancerad Inställningar</string>
+    <string name="pref_prefer_dd_slash_mm">Föredra dd/MM/yyyy format</string>
+    <string name="pref_prefer_dd_slash_mm_summary">Föredra dd/MM/yyyy än MM/dd/yyyy vid tolkning av datumformat</string>
+    <string name="pref_advanced">Avancerad Inställningar</string>
+    <!-- Adapter Screen -->
+    <string name="pref_account_header">Inställningar</string>
+    <string name="pref_account_settings">Konfigurera Födelsedags Adapter</string>
+
+    <string name="account_list_empty">Inga konton</string>
+
+    <!--Free Version -->
+    <string name="pref_buy">Köp fullversion!</string>
+    <string name="pref_buy_full">Öppna Google Play för att köpa fullversion...</string>
+    </resources>

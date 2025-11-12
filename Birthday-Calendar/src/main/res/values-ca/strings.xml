@@ -1,78 +1,97 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
+
+ This file is part of Birthday Adapter.
+
+ Birthday Adapter is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Birthday Adapter is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <resources>
-  <!--Calendar-->
-  <string name="calendar_display_name">Natalicis</string>
-  <string name="event_title_birthday_with_age">%1$s: natalici (%2$d)</string>
-  <string name="event_title_birthday_without_age">%1$s: natalici</string>
-  <string name="event_title_anniversary_with_age">%1$s: aniversari (%2$d)</string>
-  <string name="event_title_anniversary_without_age">%1$s: aniversari</string>
-  <string name="event_title_other_with_age">%1$s: un altre esdeveniment (%2$d)</string>
-  <string name="event_title_other_without_age">%1$s: un altre esdeveniment</string>
-  <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
-  <string name="event_title_custom_without_age">%1$s: %2$s</string>
-  <!--About-->
-  <string name="about_version">Versió:</string>
-  <!--Tabs-->
-  <string name="tab_main">Principal</string>
-  <string name="tab_preferences">Preferències</string>
-  <string name="tab_accounts">Filtre de comptes</string>
-  <string name="tab_help">Ajuda</string>
-  <string name="tab_about">Quant a</string>
-  <!--Preferences-->
-  <string name="pref_general">General</string>
-  <string name="pref_color">Color</string>
-  <string name="pref_help">Ajuda</string>
-  <string name="pref_about">Quant a</string>
-  <string name="pref_force_sync">Sincronitza ara!</string>
-  <string name="pref_reminders">Recordatoris</string>
-  <string name="pref_reminder_enable0">Activa el recordatori 1</string>
-  <string name="pref_reminder_enable1">Activa el recordatori 2</string>
-  <string name="pref_reminder_enable2">Activa el recordatori 3</string>
-  <string name="pref_reminder_enable_summary">Activa aquest recordatori</string>
-  <string name="pref_reminder_time0">Recordatori 1</string>
-  <string name="pref_reminder_time1">Recordatori 2</string>
-  <string name="pref_reminder_time2">Recordatori 3</string>
-  <string name="pref_reminder_time_summary">Estableix l\'hora d\'aquest recordatori</string>
-  <string-array name="pref_reminder_time_drop_down">
-    <item>El dia de l\'esdeveniment</item>
-    <item>1 dia abans</item>
-    <item>2 dies abans</item>
-    <item>3 dies abans</item>
-    <item>5 dies abans</item>
-    <item>7 dies abans</item>
-    <item>10 dies abans</item>
-    <item>14 dies abans</item>
-  </string-array>
-  <string name="pref_title">Etiquetes personalitzades</string>
-  <string name="pref_title_enable">Activa les etiquetes personalitzades</string>
-  <string name="pref_title_birthday_without_age">Natalici</string>
-  <string name="pref_title_birthday_with_age">Natalici amb edat</string>
-  <string name="pref_title_anniversary_without_age">Aniversari</string>
-  <string name="pref_title_anniversary_with_age">Aniversari amb indicació del temps</string>
-  <string name="pref_title_other_without_age">Un altre esdeveniment</string>
-  <string name="pref_title_other_with_age">Un altre esdeveniment amb indicació del temps</string>
-  <string name="pref_title_custom_without_age">Personalitzat</string>
-  <string name="pref_title_custom_with_age">Personalitzat amb indicació del temps</string>
-  <string name="pref_title_summary_without_age">Inseriu %1$s per al nom del contacte.</string>
-  <string name="pref_title_summary_with_age">Inseriu %1$s per al nom del contacte i %2$d per a l\'edat.</string>
-  <string name="pref_title_summary_custom_without_age">Inseriu %1$s per al nom del contacte i %2$s per a l\'etiqueta ⏎
+
+    <!-- Calendar -->
+    <string name="calendar_display_name">Natalicis</string>
+    <string name="event_title_birthday_with_age">%1$s: natalici (%2$d)</string>
+    <string name="event_title_birthday_without_age">%1$s: natalici</string>
+    <string name="event_title_anniversary_with_age">%1$s: aniversari (%2$d)</string>
+    <string name="event_title_anniversary_without_age">%1$s: aniversari</string>
+    <string name="event_title_other_with_age">%1$s: un altre esdeveniment (%2$d)</string>
+    <string name="event_title_other_without_age">%1$s: un altre esdeveniment</string>
+    <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
+    <string name="event_title_custom_without_age">%1$s: %2$s</string>
+
+    <!-- About -->
+    <string name="about_version">Versió:</string>
+
+    <!-- Tabs -->
+    <string name="tab_main">Principal</string>
+    <string name="tab_preferences">Preferències</string>
+    <string name="tab_accounts">Filtre de comptes</string>
+    <string name="tab_help">Ajuda</string>
+    <string name="tab_about">Quant a</string>
+
+    <!-- Preferences -->
+    <string name="pref_general">General</string>
+    <string name="pref_color">Color</string>
+    <string name="pref_force_sync">Sincronitza ara!</string>
+    <string name="pref_reminders">Recordatoris</string>
+    <string name="pref_reminder_enable0">Activa el recordatori 1</string>
+    <string name="pref_reminder_enable1">Activa el recordatori 2</string>
+    <string name="pref_reminder_enable2">Activa el recordatori 3</string>
+    <string name="pref_reminder_enable_summary">Activa aquest recordatori</string>
+    <string name="pref_reminder_time0">Recordatori 1</string>
+    <string name="pref_reminder_time1">Recordatori 2</string>
+    <string name="pref_reminder_time2">Recordatori 3</string>
+    <string name="pref_reminder_time_summary">Estableix l\'hora d\'aquest recordatori</string>
+
+    <string-array name="pref_reminder_time_drop_down">
+        <item>El dia de l\'esdeveniment</item>
+        <item>1 dia abans</item>
+        <item>2 dies abans</item>
+        <item>3 dies abans</item>
+        <item>5 dies abans</item>
+        <item>7 dies abans</item>
+        <item>10 dies abans</item>
+        <item>14 dies abans</item>
+    </string-array>
+
+    <string name="pref_title">Etiquetes personalitzades</string>
+    <string name="pref_title_enable">Activa les etiquetes personalitzades</string>
+    <string name="pref_title_birthday_without_age">Natalici</string>
+    <string name="pref_title_birthday_with_age">Natalici amb edat</string>
+    <string name="pref_title_anniversary_without_age">Aniversari</string>
+    <string name="pref_title_anniversary_with_age">Aniversari amb indicació del temps</string>
+    <string name="pref_title_other_without_age">Un altre esdeveniment</string>
+    <string name="pref_title_other_with_age">Un altre esdeveniment amb indicació del temps</string>
+    <string name="pref_title_custom_without_age">Personalitzat</string>
+    <string name="pref_title_custom_with_age">Personalitzat amb indicació del temps</string>
+    <string name="pref_title_summary_without_age">Inseriu %1$s per al nom del contacte.</string>
+    <string name="pref_title_summary_with_age">Inseriu %1$s per al nom del contacte i %2$d per a l\'edat.</string>
+    <string name="pref_title_summary_custom_without_age">Inseriu %1$s per al nom del contacte i %2$s per a l\'etiqueta ⏎
 personalitzada d\'aquest esdeveniment. ⏎</string>
-  <string name="pref_title_summary_custom_with_age">Inseriu %1$s per al nom del contacte, %2$s per a l\'etiqueta personalitzada ⏎
+    <string name="pref_title_summary_custom_with_age">Inseriu %1$s per al nom del contacte, %2$s per a l\'etiqueta personalitzada ⏎
 de l\'esdeveniment i %3$d per a l\'edat. ⏎</string>
-  <string name="pref_prefer_dd_slash_mm">Prefereix el format dd/MM/aaaa</string>
-  <string name="pref_prefer_dd_slash_mm_summary">Prefereix dd/MM/aaaa a MM/dd/aaaa quan s\'analitzen les dates</string>
-  <string name="pref_advanced">Configuració avançada</string>
-  <!--Adapter Screen-->
-  <string name="pref_account_header">Configuració</string>
-  <string name="pref_account_settings">Configura Birthday Adapter</string>
-  <!--Accounts-->
-  <string name="account_list_empty">No hi ha cap compte</string>
-  <!--Free Version-->
-  <string name="pref_buy">Compreu la versió completa!</string>
-  <string name="pref_buy_full">Obri Google Play per a comprar la versió completa...</string>
-  <!--Install Workaround Dialog-->
-  <string name="workaround_dialog_title">Solució temporal necessària per a aquesta versió d\'Android!</string>
-  <string name="workaround_dialog_dont_show_again_button">Oculta d\'ara endavant</string>
-  <string name="workaround_dialog_close_button">Tanca</string>
-  <string name="workaround_dialog_install_button">Instal·la la solució temporal</string>
-</resources>
+    <string name="pref_advanced_category">Configuració avançada</string>
+    <string name="pref_prefer_dd_slash_mm">Prefereix el format dd/MM/aaaa</string>
+    <string name="pref_prefer_dd_slash_mm_summary">Prefereix dd/MM/aaaa a MM/dd/aaaa quan s\'analitzen les dates</string>
+    <string name="pref_advanced">Configuració avançada</string>
+    <!-- Adapter Screen -->
+    <string name="pref_account_header">Configuració</string>
+    <string name="pref_account_settings">Configura Birthday Adapter</string>
+
+    <string name="account_list_empty">No hi ha cap compte</string>
+
+    <!--Free Version -->
+    <string name="pref_buy">Compreu la versió completa!</string>
+    <string name="pref_buy_full">Obri Google Play per a comprar la versió completa...</string>
+    </resources>
