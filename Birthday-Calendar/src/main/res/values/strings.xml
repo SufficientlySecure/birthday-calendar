@@ -47,19 +47,17 @@
     <!-- Preferences -->
     <string name="pref_general">General</string>
     <string name="pref_enable">1. Enable Birthday Calendar</string>
-    <string name="pref_enable_summary">"This creates calendar events from your contacts' birthdays."</string>
-    <string name="pref_enable_switch">"Birthday Calendar"</string>
-    <string name="pref_contacts">"2. Add birthdays to contacts"</string>
-    <string name="pref_contacts_summary">"Edit your friends' birthdays in your contacts app."</string>
-    <string name="pref_contacts_open">"Open contacts app"</string>
-    <string name="pref_calendar">"3. Birthdays inside calendar"</string>
-    <string name="pref_calendar_summary">"Birthdays are now shown as events in your calendar app."</string>
-    <string name="pref_calendar_open">"Open calendar app"</string>
+    <string name="pref_enable_summary">This creates calendar events from your contacts\' birthdays.</string>
+    <string name="pref_enable_switch">Birthday Calendar</string>
+    <string name="pref_contacts">2. Add birthdays to contacts</string>
+    <string name="pref_contacts_summary">Edit your friends\' birthdays in your contacts app.</string>
+    <string name="pref_contacts_open">Open contacts app</string>
+    <string name="pref_calendar">3. Birthdays inside calendar</string>
+    <string name="pref_calendar_summary">Birthdays are now shown as events in your calendar app.</string>
+    <string name="pref_calendar_open">Open calendar app</string>
     <string name="pref_color">Color</string>
     <string name="pref_force_sync">Synchronize now!</string>
-    <string name="pref_force_sync_summary">"Usually you don't need to do this, because Birthday Adapter synchronizes
-        automatically once a day."
-    </string>
+    <string name="pref_force_sync_summary">Usually you don\'t need to do this, because Birthday Adapter synchronizes automatically once a day.</string>
     <string name="pref_reminders">Reminders</string>
     <string name="pref_reminder_enable0">Enable Reminder 1</string>
     <string name="pref_reminder_enable1">Enable Reminder 2</string>
@@ -110,8 +108,7 @@
     <string name="pref_account_settings">Configure Birthday Adapter</string>
 
     <!-- Accounts -->
-    <string name="account_list_description">Only birthdays from selected accounts will be displayed in your calendar.
-    </string>
+    <string name="account_list_description">Only birthdays from selected accounts will be displayed in your calendar.</string>
     <string name="account_list_empty">No accounts</string>
 
     <!--Free Version -->

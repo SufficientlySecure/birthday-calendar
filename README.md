@@ -37,7 +37,7 @@ Translations are hosted on Transifex, which is configured by ".tx/config".
 3. Go into root folder of git repo
 4. execute ``tx pull`` (``tx pull -a`` to get all languages)
 
-see http://help.transifex.com/features/client/index.html#user-client
+Help translating at https://explore.transifex.com/mattitude/birthdayadapter/
 
 ## Coding Style
 
