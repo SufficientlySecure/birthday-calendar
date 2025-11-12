@@ -39,8 +39,6 @@ import android.widget.TimePicker;
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.Log;
 
-import java.util.Objects;
-
 public class ReminderPreferenceCompat extends Preference {
 
     private int lastMinutes = 0;
@@ -168,8 +166,7 @@ public class ReminderPreferenceCompat extends Preference {
 
             if (callChangeListener(minutes)) {
                 Log.d("BirthdayAdapter", "Persisting reminder minutes: " + minutes);
-                // Use commit() to save synchronously and avoid race condition
-                Objects.requireNonNull(getSharedPreferences()).edit().putInt(getKey(), minutes).commit();
+                persistInt(minutes);
                 lastMinutes = minutes;
             }
         }
