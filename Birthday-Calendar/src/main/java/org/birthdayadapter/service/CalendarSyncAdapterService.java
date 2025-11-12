@@ -323,15 +323,29 @@ public class CalendarSyncAdapterService extends Service {
         }
 
         HashSet<Account> blacklist = ProviderHelper.getAccountBlacklist(context);
-        HashSet<String> addedEventsIdentifiers = new HashSet<>();
 
-        Uri rawContactsUri = ContactsContract.RawContacts.CONTENT_URI;
-        String[] rawContactsProjection = new String[]{
-                ContactsContract.RawContacts._ID,
-                ContactsContract.RawContacts.CONTACT_ID,
-                ContactsContract.RawContacts.DISPLAY_NAME_PRIMARY,
+        Uri uri = ContactsContract.Data.CONTENT_URI;
+
+        String[] projection = new String[]{
+                ContactsContract.Data._ID,
+                ContactsContract.Data.DISPLAY_NAME,
+                ContactsContract.Data.LOOKUP_KEY,
+                ContactsContract.CommonDataKinds.Event.START_DATE,
+                ContactsContract.CommonDataKinds.Event.TYPE,
+                ContactsContract.CommonDataKinds.Event.LABEL,
+                ContactsContract.RawContacts.ACCOUNT_TYPE,
                 ContactsContract.RawContacts.ACCOUNT_NAME,
-                ContactsContract.RawContacts.ACCOUNT_TYPE,};
+        };
+
+        String selection = ContactsContract.Data.MIMETYPE + " = ?";
+        String[] selectionArgs = new String[]{
+                ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
+        };
+
+        Cursor cursor = contentResolver.query(uri, projection, selection, selectionArgs, null);
+        if (cursor == null) {
+            return null;
+        }
 
         String[] columns = new String[]{
                 BaseColumns._ID,
@@ -342,94 +356,45 @@ public class CalendarSyncAdapterService extends Service {
                 ContactsContract.CommonDataKinds.Event.LABEL
         };
         MatrixCursor mc = new MatrixCursor(columns);
+        HashSet<String> addedEventsIdentifiers = new HashSet<>();
         int mcIndex = 0;
 
-        try (Cursor rawContacts = contentResolver.query(rawContactsUri, rawContactsProjection, null, null, null)) {
-            if (rawContacts == null) {
-                return mc;
+        while (cursor.moveToNext()) {
+            if (Thread.currentThread().isInterrupted()) {
+                cursor.close();
+                throw new OperationCanceledException();
             }
-            while (rawContacts.moveToNext()) {
-                if (Thread.currentThread().isInterrupted()) {
-                    throw new OperationCanceledException();
-                }
 
-                long rawId = rawContacts.getLong(rawContacts.getColumnIndex(ContactsContract.RawContacts._ID));
-                String accType = rawContacts.getString(rawContacts.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_TYPE));
-                String accName = rawContacts.getString(rawContacts.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_NAME));
+            String accType = cursor.getString(cursor.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_TYPE));
+            String accName = cursor.getString(cursor.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_NAME));
 
-                boolean addEvent = false;
-                if (TextUtils.isEmpty(accType) || TextUtils.isEmpty(accName)) {
+            boolean addEvent = false;
+            if (TextUtils.isEmpty(accType) || TextUtils.isEmpty(accName)) {
+                addEvent = true;
+            } else {
+                Account acc = new Account(accName, accType);
+                if (!blacklist.contains(acc)) {
                     addEvent = true;
-                } else {
-                    Account acc = new Account(accName, accType);
-                    if (!blacklist.contains(acc)) {
-                        addEvent = true;
-                    }
                 }
+            }
 
-                if (addEvent) {
-                    String displayName = null;
-                    String lookupKey = null;
-                    String startDate;
-                    int type;
-                    String label;
+            if (addEvent) {
+                long id = cursor.getLong(cursor.getColumnIndex(ContactsContract.Data._ID));
+                String displayName = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
+                String lookupKey = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.LOOKUP_KEY));
+                String startDate = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE));
+                int type = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE));
+                String label = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL));
 
-                    String[] displayProjection = new String[]{
-                            ContactsContract.Data.RAW_CONTACT_ID,
-                            ContactsContract.Data.DISPLAY_NAME,
-                            ContactsContract.Data.LOOKUP_KEY,
-                    };
-                    String displayWhere = ContactsContract.Data.RAW_CONTACT_ID + "= ?";
-                    String[] displaySelectionArgs = new String[]{
-                            String.valueOf(rawId)
-                    };
-                    try (Cursor displayCursor = contentResolver.query(ContactsContract.Data.CONTENT_URI, displayProjection,
-                            displayWhere, displaySelectionArgs, null)) {
-                        if (displayCursor != null && displayCursor.moveToFirst()) {
-                            displayName = displayCursor.getString(displayCursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
-                            lookupKey = displayCursor.getString(displayCursor.getColumnIndex(ContactsContract.Data.LOOKUP_KEY));
-                        }
-                    }
-
-                    Uri thisRawContactUri = ContentUris.withAppendedId(ContactsContract.RawContacts.CONTENT_URI, rawId);
-                    Uri entityUri = Uri.withAppendedPath(thisRawContactUri, ContactsContract.RawContacts.Entity.CONTENT_DIRECTORY);
-                    String[] eventsProjection = new String[]{
-                            ContactsContract.RawContacts._ID,
-                            ContactsContract.RawContacts.Entity.DATA_ID,
-                            ContactsContract.CommonDataKinds.Event.START_DATE,
-                            ContactsContract.CommonDataKinds.Event.TYPE,
-                            ContactsContract.CommonDataKinds.Event.LABEL
-                    };
-                    String eventsWhere = ContactsContract.RawContacts.Entity.MIMETYPE + "= ? AND "
-                            + ContactsContract.RawContacts.Entity.DATA_ID + " IS NOT NULL";
-                    String[] eventsSelectionArgs = new String[]{
-                            ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
-                    };
-                    try (Cursor eventsCursor = contentResolver.query(entityUri, eventsProjection, eventsWhere,
-                            eventsSelectionArgs, null)) {
-                        if (eventsCursor == null) {
-                            continue;
-                        }
-                        while (eventsCursor.moveToNext()) {
-                            if (Thread.currentThread().isInterrupted()) {
-                                throw new OperationCanceledException();
-                            }
-
-                            startDate = eventsCursor.getString(eventsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE));
-                            type = eventsCursor.getInt(eventsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE));
-                            label = eventsCursor.getString(eventsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL));
-
-                            String eventIdentifier = lookupKey + type + label;
-                            if (!addedEventsIdentifiers.contains(eventIdentifier)) {
-                                addedEventsIdentifiers.add(eventIdentifier);
-                                mc.newRow().add(mcIndex).add(displayName).add(lookupKey).add(startDate).add(type).add(label);
-                                mcIndex++;
-                            }
-                        }
-                    }
+                String eventIdentifier = lookupKey + type + label;
+                if (!addedEventsIdentifiers.contains(eventIdentifier)) {
+                    addedEventsIdentifiers.add(eventIdentifier);
+                    mc.newRow().add(mcIndex).add(displayName).add(lookupKey).add(startDate).add(type).add(label);
+                    mcIndex++;
                 }
             }
         }
+        cursor.close();
 
         return mc;
     }
