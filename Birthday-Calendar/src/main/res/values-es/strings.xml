@@ -81,6 +81,7 @@
  la etiqueta de este evento.</string>
     <string name="pref_title_summary_custom_with_age">Introducir %1$s para el nombre del contacto y %2$s para personalizar
  la etiqueta de este evento, y %3$d para la edad.</string>
+    <string name="pref_advanced_category">Preferencias avanzadas.</string>
     <string name="pref_prefer_dd_slash_mm">Preferir formato dd/MM/yyyy</string>
     <string name="pref_prefer_dd_slash_mm_summary">Prefiero dd/mm/aaaa a MM/dd/aaaa al analizar los formatos de fecha</string>
     <string name="pref_advanced">Preferencias avanzadas.</string>

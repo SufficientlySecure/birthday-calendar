@@ -79,6 +79,7 @@
     <string name="pref_title_summary_with_age">Ange %1$s för kontaktens namn och %2$d för åldern.</string>
     <string name="pref_title_summary_custom_without_age">Ange %1$s för kontaktens namn och %2$s för anpassad etikett för denna händelse.</string>
     <string name="pref_title_summary_custom_with_age">Ange %1$s för kontaktens namn, %2$s för anpassad etikett för denna händelse, och %3$d för åldern.</string>
+    <string name="pref_advanced_category">Avancerad Inställningar</string>
     <string name="pref_prefer_dd_slash_mm">Föredra dd/MM/yyyy format</string>
     <string name="pref_prefer_dd_slash_mm_summary">Föredra dd/MM/yyyy än MM/dd/yyyy vid tolkning av datumformat</string>
     <string name="pref_advanced">Avancerad Inställningar</string>

@@ -49,6 +49,7 @@
     <string name="pref_title">Etiquetas personalizadas:</string>
     <string name="pref_title_other_without_age">Outro evento</string>
     <string name="pref_title_custom_without_age">Personalizar</string>
+    <string name="pref_advanced_category">Configuración avanzada</string>
     <string name="pref_advanced">Configuración avanzada</string>
     <!-- Adapter Screen -->
     <string name="pref_account_header">Axustes</string>

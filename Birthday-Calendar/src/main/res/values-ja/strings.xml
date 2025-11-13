@@ -80,6 +80,7 @@
     <string name="pref_title_summary_custom_without_age">%1$s に連絡先の名前を、%2$s にこのイベントのカスタムラベルを挿入する。</string>
     <string name="pref_title_summary_custom_with_age">%1$s に連絡先の名前を、%2$s このイベントのカスタムラベルを、
 %3$d に年齢を挿入する。</string>
+    <string name="pref_advanced_category">追加の設定</string>
     <string name="pref_prefer_dd_slash_mm">dd/MM/yyyy 形式を用いる</string>
     <string name="pref_prefer_dd_slash_mm_summary">日付形式の解析時に dd/MM/yyyy から MM/dd/yyyy を用いる</string>
     <string name="pref_advanced">追加の設定</string>

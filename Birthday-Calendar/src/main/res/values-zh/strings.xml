@@ -79,6 +79,7 @@
     <string name="pref_title_summary_with_age">输入 %1$s 替代联系人姓名，%2$d 替代年数。</string>
     <string name="pref_title_summary_custom_without_age">输入 %1$s 替代联系人姓名，%2$s 替代自定义事件的名称。</string>
     <string name="pref_title_summary_custom_with_age">输入 %1$s 替代联系人姓名，%2$s 替代自定义事件的名称，%3$d 替代年数。</string>
+    <string name="pref_advanced_category">高级</string>
     <string name="pref_prefer_dd_slash_mm">优先使用 dd/MM/yyyy 格式</string>
     <string name="pref_prefer_dd_slash_mm_summary">解析日期时优先使用 dd/MM/yyyy 格式（默认为 MM/dd/yyyy）</string>
     <string name="pref_advanced">高级</string>

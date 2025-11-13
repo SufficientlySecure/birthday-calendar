@@ -82,6 +82,7 @@ eticheta personalizată a acestui eveniment.
   </string>
     <string name="pref_title_summary_custom_with_age">Introducere %1$s, pentru nume contact, %2$s pentru eticheta
 personalizată a acestui eveniment, şi %3$d pentru vârstă.</string>
+    <string name="pref_advanced_category">Configurări Avansate</string>
     <string name="pref_prefer_dd_slash_mm">Prefer formatul dd/MM/yyyy</string>
     <string name="pref_prefer_dd_slash_mm_summary">Prefer dd/MM/yyyy în MM/dd/yyyy la analizarea formatelor de dată</string>
     <string name="pref_advanced">Configurări Avansate</string>

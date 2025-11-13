@@ -81,6 +81,7 @@
 мітки цієї події.</string>
     <string name="pref_title_summary_custom_with_age">Вставити %1$s для імені контакту, %2$s для власної мітки
  цієї події і %3$d для віку.</string>
+    <string name="pref_advanced_category">Додаткові параметри</string>
     <string name="pref_prefer_dd_slash_mm">Формат дати dd/MM/yyyy</string>
     <string name="pref_prefer_dd_slash_mm_summary">Віддає перевагу dd/MM/yyyy над MM/dd/yyyy при аналізі формату дати</string>
     <string name="pref_advanced">Додаткові параметри</string>

@@ -1,0 +1,1 @@
+Der Birthday Adapter synchronisiert Geburtstage, Jubiläen und andere Daten aus Deinen Kontakten und stellt sie als eigenständigen Kalender bereit, der mit der Kalenderanwendung Deiner Wahl angezeigt werden kann.

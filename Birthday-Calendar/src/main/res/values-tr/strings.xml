@@ -79,6 +79,7 @@
     <string name="pref_title_summary_with_age">Kişinin adı için %1$s ve yaşı için %2$d girin</string>
     <string name="pref_title_summary_custom_without_age">Bu etkinliğin kişisinin adı için %1$s ve özel etiket için %2$s girin</string>
     <string name="pref_title_summary_custom_with_age">Bu etkinliğin kişisinin adı için %1$s , özel etiket için %2$s ve yaş %3$d için girin</string>
+    <string name="pref_advanced_category">Gelişmiş Ayarlar</string>
     <string name="pref_prefer_dd_slash_mm">gg/AA/yyyy biçimini tercih et</string>
     <string name="pref_prefer_dd_slash_mm_summary">AA/gg/yyyy biçiminde tarih gösterirken gg/AA/yyyy biçimini tercih et.</string>
     <string name="pref_advanced">Gelişmiş Ayarlar</string>

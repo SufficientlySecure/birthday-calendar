@@ -83,6 +83,7 @@
     <string name="pref_title_summary_custom_with_age">Вмъква %1$s за името на контакта, %2$s за собствен етикет на
 това събитие и %3$d за години.
     </string>
+    <string name="pref_advanced_category">Подробни настройки</string>
     <string name="pref_prefer_dd_slash_mm">Предпочитан формат dd/MM/yyyy</string>
     <string name="pref_prefer_dd_slash_mm_summary">Предпочитан формат dd/MM/yyyy към MM/dd/yyyy при форматиране на дата</string>
     <string name="pref_advanced">Подробни настройки</string>
