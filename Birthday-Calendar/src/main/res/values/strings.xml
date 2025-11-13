@@ -19,9 +19,9 @@
 -->
 <resources>
 
-    <string name="app_name">Birthday Calendar</string>
+    <string name="app_name" translatable="false">Birthday Adapter</string>
 
-    <string name="account_type">org.birthdayadapter.auth</string>
+    <string name="account_type" translatable="false">org.birthdayadapter.auth</string>
 
     <!-- Calendar -->
     <string name="calendar_display_name">Birthdays</string>
