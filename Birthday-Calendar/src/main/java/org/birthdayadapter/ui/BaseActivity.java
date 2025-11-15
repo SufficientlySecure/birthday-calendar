@@ -20,9 +20,6 @@
 
 package org.birthdayadapter.ui;
 
-import android.accounts.Account;
-import android.content.ContentResolver;
-import android.content.SyncStatusObserver;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
@@ -33,21 +30,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import org.birthdayadapter.R;
-import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.MySharedPreferenceChangeListener;
+
+import java.util.List;
 
 public class BaseActivity extends AppCompatActivity {
 
     public MySharedPreferenceChangeListener mySharedPreferenceChangeListener;
-    private SyncStatusObserver mSyncStatusObserver;
-    private Object mSyncObserverHandle;
     private ProgressBar mProgressBar;
 
     @Override
@@ -71,37 +70,49 @@ public class BaseActivity extends AppCompatActivity {
 
         mySharedPreferenceChangeListener = new MySharedPreferenceChangeListener(this);
 
-        mSyncStatusObserver = new SyncStatusObserver() {
-            @Override
-            public void onStatusChanged(int which) {
-                runOnUiThread(() -> {
-                    if (isFinishing() || isDestroyed()) {
-                        return;
-                    }
-                    Account account = new Account(Constants.ACCOUNT_NAME, getString(R.string.account_type));
-                    boolean syncActive = ContentResolver.isSyncActive(account, Constants.CONTENT_AUTHORITY);
-                    if (mProgressBar != null) {
-                        mProgressBar.setVisibility(syncActive ? View.VISIBLE : View.GONE);
+        // Observe both manual and periodic sync workers
+        WorkManager.getInstance(this).getWorkInfosForUniqueWorkLiveData("manual_sync")
+                .observe(this, new Observer<List<WorkInfo>>() {
+                    @Override
+                    public void onChanged(List<WorkInfo> workInfos) {
+                        updateSpinner(workInfos);
                     }
                 });
+        WorkManager.getInstance(this).getWorkInfosForUniqueWorkLiveData("birthday_sync")
+                .observe(this, new Observer<List<WorkInfo>>() {
+                    @Override
+                    public void onChanged(List<WorkInfo> workInfos) {
+                        updateSpinner(workInfos);
+                    }
+                });
+    }
+
+    private void updateSpinner(List<WorkInfo> workInfos) {
+        if (workInfos == null || workInfos.isEmpty()) {
+            return;
+        }
+
+        boolean isSyncing = false;
+        for (WorkInfo workInfo : workInfos) {
+            if (workInfo.getState() == WorkInfo.State.RUNNING || workInfo.getState() == WorkInfo.State.ENQUEUED) {
+                isSyncing = true;
+                break;
             }
-        };
+        }
+
+        if (mProgressBar != null) {
+            mProgressBar.setVisibility(isSyncing ? View.VISIBLE : View.GONE);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        final int mask = ContentResolver.SYNC_OBSERVER_TYPE_PENDING | ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE;
-        mSyncObserverHandle = ContentResolver.addStatusChangeListener(mask, mSyncStatusObserver);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (mSyncObserverHandle != null) {
-            ContentResolver.removeStatusChangeListener(mSyncObserverHandle);
-            mSyncObserverHandle = null;
-        }
     }
 
     private void setupViewPager(ViewPager2 viewPager) {
