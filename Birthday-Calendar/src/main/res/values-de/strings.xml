@@ -21,15 +21,6 @@
 
     <!-- Calendar -->
     <string name="calendar_display_name">Geburtstage</string>
-    <string name="event_title_birthday_with_age">%1$s: Geburtstag (%2$d)</string>
-    <string name="event_title_birthday_without_age">%1$s: Geburtstag</string>
-    <string name="event_title_anniversary_with_age">%1$s: Jahrestag (%2$d)</string>
-    <string name="event_title_anniversary_without_age">%1$s: Jahrestag</string>
-    <string name="event_title_other_with_age">%1$s: Anderer Termin (%2$d)</string>
-    <string name="event_title_other_without_age">%1$s: Anderer Termin</string>
-    <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
-    <string name="event_title_custom_without_age">%1$s: %2$s</string>
-
     <!-- About -->
     <string name="about_version">Version:</string>
 
@@ -85,10 +76,6 @@
     <string name="pref_title_other_with_age">Anderes Ereignis mit Alter</string>
     <string name="pref_title_custom_without_age">Benutzerdefiniert</string>
     <string name="pref_title_custom_with_age">Benutzerdefiniert mit Alter</string>
-    <string name="pref_title_summary_without_age">Benutze %1$s um den Kontaktnamen einzufügen.</string>
-    <string name="pref_title_summary_with_age">Benutze %1$s um den Kontaktnamen und %2$d um das Alter einzufügen.</string>
-    <string name="pref_title_summary_custom_without_age">Benutze %1$s um den Kontaktnamen und %2$s um den benutzerdefinierten Titel einzufügen.</string>
-    <string name="pref_title_summary_custom_with_age">Benutze %1$s um den Kontaktnamen, %2$s um den benutzerdefinierten Titel und %3$d um das Alter einzufügen.</string>
     <string name="pref_advanced_category">Erweiterte Einstellungen</string>
     <string name="pref_prefer_dd_slash_mm">dd/MM/yyyy Format bevorzugen</string>
     <string name="pref_prefer_dd_slash_mm_summary">Bevorzuge dd/MM/yyyy gegenüber MM/dd/yyyy beim Parsen von Datumsformaten</string>

@@ -21,15 +21,6 @@
 
     <!-- Calendar -->
     <string name="calendar_display_name">Дни рождения</string>
-    <string name="event_title_birthday_with_age">День рождения у %1$s (%2$d)</string>
-    <string name="event_title_birthday_without_age">День рождения у %1$s</string>
-    <string name="event_title_anniversary_with_age">Годовщина у %1$s (%2$d)</string>
-    <string name="event_title_anniversary_without_age">Годовщина у %1$s</string>
-    <string name="event_title_other_with_age">Событие у %1$s (%2$d)</string>
-    <string name="event_title_other_without_age">Событие у %1$s</string>
-    <string name="event_title_custom_with_age">%2$s у %1$s (%3$d)</string>
-    <string name="event_title_custom_without_age">%2$s у %1$s</string>
-
     <!-- About -->
     <string name="about_version">Версия:</string>
 
@@ -75,10 +66,6 @@
     <string name="pref_title_other_with_age">Другое событие с возрастом</string>
     <string name="pref_title_custom_without_age">Специальное</string>
     <string name="pref_title_custom_with_age">Специальное с возрастом</string>
-    <string name="pref_title_summary_without_age">Используйте %1$s вместо имени контакта.</string>
-    <string name="pref_title_summary_with_age">Используйте %1$s вместо имени контакта и %2$d вместо возраста.</string>
-    <string name="pref_title_summary_custom_without_age">Используйте %1$s вместо имени контакта и %2$s вместо специальной метки события.</string>
-    <string name="pref_title_summary_custom_with_age">Используйте %1$s вместо имени контакта, %2$s вместо специальной метки события и %3$d вместо возраста.</string>
     <string name="pref_advanced_category">Расширенные настройки</string>
     <string name="pref_prefer_dd_slash_mm">Предпочитать формат dd/MM/yyyy</string>
     <string name="pref_prefer_dd_slash_mm_summary">Предпочитать формат dd/MM/yyyy вместо MM/dd/yyyy при разборе даты</string>

@@ -456,56 +456,44 @@ public class CalendarSyncAdapterService extends Service {
 
     private static String generateTitle(Context context, int eventType, Cursor cursor,
                                         int eventCustomLabelColumn, boolean includeAge, String displayName, int age) {
-        String title = null;
-        if (displayName != null) {
-            switch (eventType) {
-                case ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM:
-                    String eventCustomLabel = cursor.getString(eventCustomLabelColumn);
+        if (displayName == null) {
+            return null;
+        }
 
-                    if (eventCustomLabel != null) {
-                        title = PreferencesHelper.getLabel(context,
-                                ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM, includeAge);
-                        title = title.replace("/NAME/", "%1$s");
-                        title = title.replace("/LABEL/", "%2$s");
-                        title = title.replace("/AGE/", "%3$s");
-                        title = String.format(title, displayName, eventCustomLabel, age);
-                    } else {
-                        title = PreferencesHelper.getLabel(context,
-                                ContactsContract.CommonDataKinds.Event.TYPE_OTHER, includeAge);
-                        title = title.replace("/NAME/", "%1$s");
-                        title = title.replace("/AGE/", "%2$s");
-                        title = String.format(title, displayName, age);
-                    }
-                    break;
-                case ContactsContract.CommonDataKinds.Event.TYPE_ANNIVERSARY:
-                    title = PreferencesHelper.getLabel(context,
-                            ContactsContract.CommonDataKinds.Event.TYPE_ANNIVERSARY, includeAge);
-                    title = title.replace("/NAME/", "%1$s");
-                    title = title.replace("/AGE/", "%2$s");
-                    title = String.format(title, displayName, age);
-                    break;
-                case ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY:
-                    title = PreferencesHelper.getLabel(context,
-                            ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY, includeAge);
-                    title = title.replace("/NAME/", "%1$s");
-                    title = title.replace("/AGE/", "%2$s");
-                    title = String.format(title, displayName, age);
-                    break;
-                default:
-                    // also ContactsContract.CommonDataKinds.Event.TYPE_OTHER
-                    title = PreferencesHelper.getLabel(context,
-                            ContactsContract.CommonDataKinds.Event.TYPE_OTHER, includeAge);
-                    title = title.replace("/NAME/", "%1$s");
-                    title = title.replace("/AGE/", "%2$s");
-                    title = String.format(title, displayName, age);
-                    break;
-            }
-            if (includeAge) {
-                // add icon if event is a jubilee
-                title = addJubileeIcon(context, title, age);
+        int effectiveEventType = eventType;
+        String eventCustomLabel = null;
+        if (eventType == ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM) {
+            eventCustomLabel = cursor.getString(eventCustomLabelColumn);
+            if (eventCustomLabel == null) {
+                // Fallback to OTHER if custom label is missing
+                effectiveEventType = ContactsContract.CommonDataKinds.Event.TYPE_OTHER;
             }
         }
-        return title;
+
+        String title = PreferencesHelper.getLabel(context, effectiveEventType, includeAge);
+
+        // add jubilee icon
+        if (includeAge) {
+            title = addJubileeIcon(context, title, age);
+        }
+
+        // Replace user-friendly placeholders with String.format specifiers
+        if (eventCustomLabel != null) {
+            title = title.replace("{NAME}", "%1$s");
+            title = title.replace("{LABEL}", "%2$s");
+            if (includeAge) {
+                title = title.replace("{AGE}", "%3$d");
+                return String.format(title, displayName, eventCustomLabel, age);
+            }
+            return String.format(title, displayName, eventCustomLabel);
+        } else {
+            title = title.replace("{NAME}", "%1$s");
+            if (includeAge) {
+                title = title.replace("{AGE}", "%2$d");
+                return String.format(title, displayName, age);
+            }
+            return String.format(title, displayName);
+        }
     }
 
     private static String addJubileeIcon(Context context, String title, int age) {
@@ -515,7 +503,7 @@ public class CalendarSyncAdapterService extends Service {
             jubileeYears = (HashSet<Integer>) IntStream.of(years).boxed().collect(Collectors.toSet());
         }
         if (jubileeYears.contains(age)) {
-            title = "\uD83C\uDF89 " + title;
+            return "\uD83C\uDF89 " + title;
         }
         return title;
     }

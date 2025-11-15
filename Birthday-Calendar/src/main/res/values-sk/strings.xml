@@ -21,15 +21,6 @@
 
     <!-- Calendar -->
     <string name="calendar_display_name">Narodeniny</string>
-    <string name="event_title_birthday_with_age">%1$s: Narodeniny (%2$d)</string>
-    <string name="event_title_birthday_without_age">%1$s: Narodeniny</string>
-    <string name="event_title_anniversary_with_age">%1$s: Výročie (%2$d)</string>
-    <string name="event_title_anniversary_without_age">%1$s: Výročie</string>
-    <string name="event_title_other_with_age">%1$s: Iná udalosť (%2$d)</string>
-    <string name="event_title_other_without_age">%1$s: Iná udalosť</string>
-    <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
-    <string name="event_title_custom_without_age">%1$s: %2$s</string>
-
     <!-- About -->
     <string name="about_version">Verzia:</string>
 
@@ -75,12 +66,6 @@
     <string name="pref_title_other_with_age">Iná udalosť s vekom</string>
     <string name="pref_title_custom_without_age">Vlastné</string>
     <string name="pref_title_custom_with_age">Vlastné s vekom</string>
-    <string name="pref_title_summary_without_age">Vložiť %1$s pre meno kontaktu.</string>
-    <string name="pref_title_summary_with_age">Vložiť %1$s pre meno kontaktu a %2$d pre vek.</string>
-    <string name="pref_title_summary_custom_without_age">Vložiť %1$s pre meno kontaktu a %2$s pre vlastný
-popisok tejto udalosti.</string>
-    <string name="pref_title_summary_custom_with_age">Vložiť %1$s pre meno kontaktu, %2$s pre vlastný popisok tejto udalosti
-a %3$d pre vek.</string>
     <string name="pref_advanced_category">Rozšírené nastavenia</string>
     <string name="pref_prefer_dd_slash_mm">Navrhnúť dd/MM/rrrr formát</string>
     <string name="pref_prefer_dd_slash_mm_summary">Navrhnúť dd/MM/rrrr na MM/dd/rrrr pri parsovaní formátov dátumu</string>

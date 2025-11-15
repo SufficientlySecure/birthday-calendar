@@ -21,15 +21,6 @@
 
     <!-- Calendar -->
     <string name="calendar_display_name">Urtebetetzea</string>
-    <string name="event_title_birthday_with_age">%1$s: Urtebetetzea (%2$d)</string>
-    <string name="event_title_birthday_without_age">%1$s: Urtebetetzea</string>
-    <string name="event_title_anniversary_with_age">%1$s: Urteurrena (%2$d)</string>
-    <string name="event_title_anniversary_without_age">%1$s: Urteurrena</string>
-    <string name="event_title_other_with_age">%1$s: Beste Gertaerak (%2$d)</string>
-    <string name="event_title_other_without_age">%1$s: Beste Gertaerak</string>
-    <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
-    <string name="event_title_custom_without_age">%1$s: %2$s</string>
-
     <!-- About -->
     <string name="about_version">Bertsioa:</string>
 
@@ -75,13 +66,6 @@
     <string name="pref_title_other_with_age">Beste gertaerak adinarekin</string>
     <string name="pref_title_custom_without_age">Norberea</string>
     <string name="pref_title_custom_with_age">Norberea adinarekin</string>
-    <string name="pref_title_summary_without_age">Txertatu %1$s harreman izenerako.</string>
-    <string name="pref_title_summary_with_age">Txertatu  %1$s harreman izenerako eta %2$d adinerako.</string>
-    <string name="pref_title_summary_custom_without_age">Txertatu %1$s harremanaren izenerako eta %2$s gertaera honen
-        norbere izenerako.
-    </string>
-    <string name="pref_title_summary_custom_with_age">Txertatu %1$s harremanaren izenerako, %2$s gertaera honen
-        norbere etiketarako eta %3$d adinerako.</string>
     <string name="pref_advanced_category">Ezarpen Aurreratuak</string>
     <string name="pref_prefer_dd_slash_mm">Hobetsi dd/MM/yyyy heuskarria</string>
     <string name="pref_prefer_dd_slash_mm_summary">Hobetsi MM/dd/yyyy -&gt; dd/MM/yyyy gain egun heuskarriak aztertzerakoan</string>

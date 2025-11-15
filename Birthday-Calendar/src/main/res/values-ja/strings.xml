@@ -21,15 +21,6 @@
 
     <!-- Calendar -->
     <string name="calendar_display_name">誕生日</string>
-    <string name="event_title_birthday_with_age">%1$s: 誕生日 (%2$d)</string>
-    <string name="event_title_birthday_without_age">%1$s: 誕生日</string>
-    <string name="event_title_anniversary_with_age">%1$s: 記念日 (%2$d)</string>
-    <string name="event_title_anniversary_without_age">%1$s: 記念日</string>
-    <string name="event_title_other_with_age">%1$s: その他のイベント (%2$d)</string>
-    <string name="event_title_other_without_age">%1$s: その他のイベント</string>
-    <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
-    <string name="event_title_custom_without_age">%1$s: %2$s</string>
-
     <!-- About -->
     <string name="about_version">バージョン:</string>
 
@@ -75,11 +66,6 @@
     <string name="pref_title_other_with_age">その他のイベントと年齢</string>
     <string name="pref_title_custom_without_age">カスタム</string>
     <string name="pref_title_custom_with_age">カスタムと年齢</string>
-    <string name="pref_title_summary_without_age">%1$s に連絡先の名前を挿入する。</string>
-    <string name="pref_title_summary_with_age">%1$s に連絡先の名前を、%2$d に年齢を挿入する。</string>
-    <string name="pref_title_summary_custom_without_age">%1$s に連絡先の名前を、%2$s にこのイベントのカスタムラベルを挿入する。</string>
-    <string name="pref_title_summary_custom_with_age">%1$s に連絡先の名前を、%2$s このイベントのカスタムラベルを、
-%3$d に年齢を挿入する。</string>
     <string name="pref_advanced_category">追加の設定</string>
     <string name="pref_prefer_dd_slash_mm">dd/MM/yyyy 形式を用いる</string>
     <string name="pref_prefer_dd_slash_mm_summary">日付形式の解析時に dd/MM/yyyy から MM/dd/yyyy を用いる</string>

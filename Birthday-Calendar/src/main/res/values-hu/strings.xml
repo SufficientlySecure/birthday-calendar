@@ -21,15 +21,6 @@
 
     <!-- Calendar -->
     <string name="calendar_display_name">Születésnapok</string>
-    <string name="event_title_birthday_with_age">%1$s: Születésnap (%2$d)</string>
-    <string name="event_title_birthday_without_age">%1$s: Születésnap</string>
-    <string name="event_title_anniversary_with_age">%1$s: Évforduló (%2$d)</string>
-    <string name="event_title_anniversary_without_age">%1$s: Évforduló</string>
-    <string name="event_title_other_with_age">%1$s: Egyéb Esemény (%2$d)</string>
-    <string name="event_title_other_without_age">%1$s: Egyéb Esemény</string>
-    <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
-    <string name="event_title_custom_without_age">%1$s: %2$s</string>
-
     <!-- About -->
     <string name="about_version">Verzió:</string>
 
@@ -75,14 +66,6 @@
     <string name="pref_title_other_with_age">Egyéb esemény korral</string>
     <string name="pref_title_custom_without_age">Egyéni</string>
     <string name="pref_title_custom_with_age">Egyéni korral</string>
-    <string name="pref_title_summary_without_age">%1$s beszúrása a névjegy nevéhez.</string>
-    <string name="pref_title_summary_with_age"> %1$s beszúrása a névjegy nevéhez és %2$d a korhoz.</string>
-    <string name="pref_title_summary_custom_without_age">%1$s beszúrása a névjegy nevéhez és %2$s ez az esemény
-        egyéni címkéjéhez.
-    </string>
-    <string name="pref_title_summary_custom_with_age">%1$s beszúrása a névjegy nevéhez, %2$s ez az esemény
-        egyéni címkéjéhez és %3$d a korhoz.
-    </string>
     <string name="pref_advanced_category">Haladó Beállítások</string>
     <string name="pref_prefer_dd_slash_mm">nn/HH/ÉÉÉÉ formátum előnyben részesítése</string>
     <string name="pref_prefer_dd_slash_mm_summary">nn/HH/éééé előnyben részesítése HH/nn/éééé-hez képest a dátumformátum elemzésekor</string>

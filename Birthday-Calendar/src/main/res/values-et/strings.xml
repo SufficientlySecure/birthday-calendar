@@ -21,10 +21,6 @@
 
     <!-- Calendar -->
     <string name="calendar_display_name">Sünnipäevad</string>
-    <string name="event_title_birthday_with_age">%1$s: Sünnipäev (%2$d)</string>
-    <string name="event_title_birthday_without_age">%1$s: Sünnipäev</string>
-    <string name="event_title_anniversary_without_age">%1$s: Aastapäev</string>
-    <string name="event_title_other_with_age">%1$s: Muu üritus (%2$d)</string>
     <!-- About -->
     <string name="about_version">Versioon:</string>
 

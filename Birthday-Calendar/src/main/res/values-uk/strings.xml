@@ -21,15 +21,6 @@
 
     <!-- Calendar -->
     <string name="calendar_display_name">Дні народження</string>
-    <string name="event_title_birthday_with_age">День народження у %1$s (%2$d)</string>
-    <string name="event_title_birthday_without_age">День народження у %1$s</string>
-    <string name="event_title_anniversary_with_age">Річниця у %1$s (%2$d)</string>
-    <string name="event_title_anniversary_without_age">Річниця у %1$s</string>
-    <string name="event_title_other_with_age">Подія у %1$s (%2$d)</string>
-    <string name="event_title_other_without_age">Подія у %1$s</string>
-    <string name="event_title_custom_with_age">%2$s у %1$s (%3$d)</string>
-    <string name="event_title_custom_without_age">%2$s у %1$s</string>
-
     <!-- About -->
     <string name="about_version">Версія:</string>
 
@@ -75,12 +66,6 @@
     <string name="pref_title_other_with_age">Інша подія з віком</string>
     <string name="pref_title_custom_without_age">Звичай</string>
     <string name="pref_title_custom_with_age">Звичай з віком</string>
-    <string name="pref_title_summary_without_age">Вставити %1$s для імені контакту.</string>
-    <string name="pref_title_summary_with_age">Вставити %1$s для імені контакті та %2$d для віку.</string>
-    <string name="pref_title_summary_custom_without_age">Вставити %1$s для імені контакту та %2$s для власної 
-мітки цієї події.</string>
-    <string name="pref_title_summary_custom_with_age">Вставити %1$s для імені контакту, %2$s для власної мітки
- цієї події і %3$d для віку.</string>
     <string name="pref_advanced_category">Додаткові параметри</string>
     <string name="pref_prefer_dd_slash_mm">Формат дати dd/MM/yyyy</string>
     <string name="pref_prefer_dd_slash_mm_summary">Віддає перевагу dd/MM/yyyy над MM/dd/yyyy при аналізі формату дати</string>

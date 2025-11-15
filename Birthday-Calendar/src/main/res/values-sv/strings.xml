@@ -21,15 +21,6 @@
 
     <!-- Calendar -->
     <string name="calendar_display_name">Födelsedagar</string>
-    <string name="event_title_birthday_with_age">%1$s\'s Födelsedag (%2$d)</string>
-    <string name="event_title_birthday_without_age">%1$s\'s Födelsedag</string>
-    <string name="event_title_anniversary_with_age">%1$s\'s Bröllopsdag (%2$d)</string>
-    <string name="event_title_anniversary_without_age">%1$s\'s Bröllopsdag</string>
-    <string name="event_title_other_with_age">Andra Händelser med %1$s (%2$d)</string>
-    <string name="event_title_other_without_age">Andra Händelser med %1$s</string>
-    <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
-    <string name="event_title_custom_without_age">%1$s: %2$s</string>
-
     <!-- About -->
     <string name="about_version">Version:</string>
 
@@ -75,10 +66,6 @@
     <string name="pref_title_other_with_age">Andra händelser med ålder</string>
     <string name="pref_title_custom_without_age">Anpassad</string>
     <string name="pref_title_custom_with_age">Anpassad med ålder</string>
-    <string name="pref_title_summary_without_age">Ange %1$s för kontaktens namn.</string>
-    <string name="pref_title_summary_with_age">Ange %1$s för kontaktens namn och %2$d för åldern.</string>
-    <string name="pref_title_summary_custom_without_age">Ange %1$s för kontaktens namn och %2$s för anpassad etikett för denna händelse.</string>
-    <string name="pref_title_summary_custom_with_age">Ange %1$s för kontaktens namn, %2$s för anpassad etikett för denna händelse, och %3$d för åldern.</string>
     <string name="pref_advanced_category">Avancerad Inställningar</string>
     <string name="pref_prefer_dd_slash_mm">Föredra dd/MM/yyyy format</string>
     <string name="pref_prefer_dd_slash_mm_summary">Föredra dd/MM/yyyy än MM/dd/yyyy vid tolkning av datumformat</string>

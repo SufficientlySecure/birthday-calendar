@@ -21,15 +21,6 @@
 
     <!-- Calendar -->
     <string name="calendar_display_name">Γενέθλια</string>
-    <string name="event_title_birthday_with_age">%1$s: Γενέθλια (%2$d)</string>
-    <string name="event_title_birthday_without_age">%1$s: Γενέθλια</string>
-    <string name="event_title_anniversary_with_age">%1$s: Επέτειος (%2$d)</string>
-    <string name="event_title_anniversary_without_age">%1$s: Επέτειος</string>
-    <string name="event_title_other_with_age">%1$s: Άλλη Εκδήλωση (%2$d)</string>
-    <string name="event_title_other_without_age">%1$s: Άλλη Εκδήλωση</string>
-    <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
-    <string name="event_title_custom_without_age">%1$s: %2$s</string>
-
     <!-- About -->
     <string name="about_version">Έκδοση:</string>
 
@@ -64,11 +55,6 @@
     <string name="pref_title_other_with_age">Άλλη εκδήλωση με ηλικία</string>
     <string name="pref_title_custom_without_age">Προσαρμοσμένο</string>
     <string name="pref_title_custom_with_age">Προσαρμοσμένο με ηλικία</string>
-    <string name="pref_title_summary_without_age">Εισαγωγή %1$s ονόματος της επαφής.</string>
-    <string name="pref_title_summary_with_age">Εισαγωγή %1$s για το όνομα της επαφής και %2$d για την ηλικία.</string>
-    <string name="pref_title_summary_custom_without_age">Εισαγωγή %1$s για το όνομα και την %2$s για την προσαρμοσμένη
-ετικέτα της εκδήλωσης αυτής.</string>
-    <string name="pref_title_summary_custom_with_age">Εισαγωγή %1$s για το όνομα της επαφής, %2$s για την προσαρμοσμένη ετικέτα του γεγονότος αυτου, και %3$d για την ηλικία.</string>
     <string name="pref_advanced_category">Προηγμένες Ρυθμίσεις</string>
     <string name="pref_prefer_dd_slash_mm">Προτιμήση dd/MM/yyyy τυπου</string>
     <string name="pref_prefer_dd_slash_mm_summary">Προτιμήση  dd/MM/yyyy σε MM/dd/yyyy κατά την ανάλυση μορφών ημερομηνίας</string>

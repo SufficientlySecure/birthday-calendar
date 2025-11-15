@@ -21,15 +21,6 @@
 
     <!-- Calendar -->
     <string name="calendar_display_name">Рождени дни</string>
-    <string name="event_title_birthday_with_age">%1$s: Рождени дни (%2$d)</string>
-    <string name="event_title_birthday_without_age">%1$s: Рожден ден</string>
-    <string name="event_title_anniversary_with_age">%1$s: Годишнини (%2$d)</string>
-    <string name="event_title_anniversary_without_age">%1$s: Годишнина</string>
-    <string name="event_title_other_with_age">%1$s: Друго (%2$d)</string>
-    <string name="event_title_other_without_age">%1$s: Друго</string>
-    <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
-    <string name="event_title_custom_without_age">%1$s: %2$s</string>
-
     <!-- About -->
     <string name="about_version">Версия:</string>
 
@@ -75,14 +66,6 @@
     <string name="pref_title_other_with_age">Други с години</string>
     <string name="pref_title_custom_without_age">Собствени</string>
     <string name="pref_title_custom_with_age">Собствени с години</string>
-    <string name="pref_title_summary_without_age">Вмъква %1$s за името на контакта.</string>
-    <string name="pref_title_summary_with_age">Вмъква %1$s за името на контакта и %2$d за години.</string>
-    <string name="pref_title_summary_custom_without_age">Вмъква %1$s за името на контакта %2$s за собствен
- етикет на това събитие .
-    </string>
-    <string name="pref_title_summary_custom_with_age">Вмъква %1$s за името на контакта, %2$s за собствен етикет на
-това събитие и %3$d за години.
-    </string>
     <string name="pref_advanced_category">Подробни настройки</string>
     <string name="pref_prefer_dd_slash_mm">Предпочитан формат dd/MM/yyyy</string>
     <string name="pref_prefer_dd_slash_mm_summary">Предпочитан формат dd/MM/yyyy към MM/dd/yyyy при форматиране на дата</string>

@@ -21,11 +21,6 @@
 
     <!-- Calendar -->
     <string name="calendar_display_name">Aniversarios</string>
-    <string name="event_title_other_with_age">%1$s: Outro evento (%2$d)</string>
-    <string name="event_title_other_without_age">%1$s: Outro evento</string>
-    <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
-    <string name="event_title_custom_without_age">%1$s: %2$s</string>
-
     <!-- About -->
     <string name="about_version">Versión:</string>
 

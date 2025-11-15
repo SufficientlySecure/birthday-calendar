@@ -21,15 +21,6 @@
 
     <!-- Calendar -->
     <string name="calendar_display_name">Cumpleaños</string>
-    <string name="event_title_birthday_with_age">%1$s: Cumpleaños (%2$d)</string>
-    <string name="event_title_birthday_without_age">%1$s: Cumpleaños</string>
-    <string name="event_title_anniversary_with_age">%1$s: Aniversario (%2$d)</string>
-    <string name="event_title_anniversary_without_age">%1$s: Aniversario</string>
-    <string name="event_title_other_with_age">%1$s: Otro evento (%2$d)</string>
-    <string name="event_title_other_without_age">%1$s: Otro evento</string>
-    <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
-    <string name="event_title_custom_without_age">%1$s: %2$s</string>
-
     <!-- About -->
     <string name="about_version">Versión:</string>
 
@@ -75,12 +66,6 @@
     <string name="pref_title_other_with_age">Otro evento con edad</string>
     <string name="pref_title_custom_without_age">Personalizado</string>
     <string name="pref_title_custom_with_age">Personalizado con edad</string>
-    <string name="pref_title_summary_without_age">Ingresar %1$s para el nombre del contacto.</string>
-    <string name="pref_title_summary_with_age">Ingresar %1$s para el nombre del contacto y %2$d para la edad.</string>
-    <string name="pref_title_summary_custom_without_age">Introducir %1$s para el nombre del contacto y %2$s para personalizar
- la etiqueta de este evento.</string>
-    <string name="pref_title_summary_custom_with_age">Introducir %1$s para el nombre del contacto y %2$s para personalizar
- la etiqueta de este evento, y %3$d para la edad.</string>
     <string name="pref_advanced_category">Preferencias avanzadas.</string>
     <string name="pref_prefer_dd_slash_mm">Preferir formato dd/MM/yyyy</string>
     <string name="pref_prefer_dd_slash_mm_summary">Prefiero dd/mm/aaaa a MM/dd/aaaa al analizar los formatos de fecha</string>

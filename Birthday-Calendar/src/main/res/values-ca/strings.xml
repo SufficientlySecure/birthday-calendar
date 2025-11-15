@@ -21,15 +21,6 @@
 
     <!-- Calendar -->
     <string name="calendar_display_name">Natalicis</string>
-    <string name="event_title_birthday_with_age">%1$s: natalici (%2$d)</string>
-    <string name="event_title_birthday_without_age">%1$s: natalici</string>
-    <string name="event_title_anniversary_with_age">%1$s: aniversari (%2$d)</string>
-    <string name="event_title_anniversary_without_age">%1$s: aniversari</string>
-    <string name="event_title_other_with_age">%1$s: un altre esdeveniment (%2$d)</string>
-    <string name="event_title_other_without_age">%1$s: un altre esdeveniment</string>
-    <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
-    <string name="event_title_custom_without_age">%1$s: %2$s</string>
-
     <!-- About -->
     <string name="about_version">Versió:</string>
 
@@ -75,12 +66,6 @@
     <string name="pref_title_other_with_age">Un altre esdeveniment amb indicació del temps</string>
     <string name="pref_title_custom_without_age">Personalitzat</string>
     <string name="pref_title_custom_with_age">Personalitzat amb indicació del temps</string>
-    <string name="pref_title_summary_without_age">Inseriu %1$s per al nom del contacte.</string>
-    <string name="pref_title_summary_with_age">Inseriu %1$s per al nom del contacte i %2$d per a l\'edat.</string>
-    <string name="pref_title_summary_custom_without_age">Inseriu %1$s per al nom del contacte i %2$s per a l\'etiqueta ⏎
-personalitzada d\'aquest esdeveniment. ⏎</string>
-    <string name="pref_title_summary_custom_with_age">Inseriu %1$s per al nom del contacte, %2$s per a l\'etiqueta personalitzada ⏎
-de l\'esdeveniment i %3$d per a l\'edat. ⏎</string>
     <string name="pref_advanced_category">Configuració avançada</string>
     <string name="pref_prefer_dd_slash_mm">Prefereix el format dd/MM/aaaa</string>
     <string name="pref_prefer_dd_slash_mm_summary">Prefereix dd/MM/aaaa a MM/dd/aaaa quan s\'analitzen les dates</string>

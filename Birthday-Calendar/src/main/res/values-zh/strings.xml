@@ -21,15 +21,6 @@
 
     <!-- Calendar -->
     <string name="calendar_display_name">生日</string>
-    <string name="event_title_birthday_with_age">%1$s的生日 (%2$d)</string>
-    <string name="event_title_birthday_without_age">%1$s的生日</string>
-    <string name="event_title_anniversary_with_age">%1$s的纪念日 (%2$d)</string>
-    <string name="event_title_anniversary_without_age">%1$s的纪念日</string>
-    <string name="event_title_other_with_age">%1$s的事件 (%2$d)</string>
-    <string name="event_title_other_without_age">%1$s的事件</string>
-    <string name="event_title_custom_with_age">%1$s的%2$s (%3$d)</string>
-    <string name="event_title_custom_without_age">%1$s的%2$s</string>
-
     <!-- About -->
     <string name="about_version">版本</string>
 
@@ -75,10 +66,6 @@
     <string name="pref_title_other_with_age">其它事件（有年数）</string>
     <string name="pref_title_custom_without_age">自定义事件</string>
     <string name="pref_title_custom_with_age">自定义事件（有年数）</string>
-    <string name="pref_title_summary_without_age">输入 %1$s 替代联系人姓名。</string>
-    <string name="pref_title_summary_with_age">输入 %1$s 替代联系人姓名，%2$d 替代年数。</string>
-    <string name="pref_title_summary_custom_without_age">输入 %1$s 替代联系人姓名，%2$s 替代自定义事件的名称。</string>
-    <string name="pref_title_summary_custom_with_age">输入 %1$s 替代联系人姓名，%2$s 替代自定义事件的名称，%3$d 替代年数。</string>
     <string name="pref_advanced_category">高级</string>
     <string name="pref_prefer_dd_slash_mm">优先使用 dd/MM/yyyy 格式</string>
     <string name="pref_prefer_dd_slash_mm_summary">解析日期时优先使用 dd/MM/yyyy 格式（默认为 MM/dd/yyyy）</string>

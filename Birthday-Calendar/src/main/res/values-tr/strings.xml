@@ -21,15 +21,6 @@
 
     <!-- Calendar -->
     <string name="calendar_display_name">Doğumgünleri</string>
-    <string name="event_title_birthday_with_age">%1$s: Doğumgünü (%2$d)</string>
-    <string name="event_title_birthday_without_age">%1$s: Doğumgünü</string>
-    <string name="event_title_anniversary_with_age">%1$s: Yıldönümü (%2$d)</string>
-    <string name="event_title_anniversary_without_age">%1$s: Yıldönümü</string>
-    <string name="event_title_other_with_age">%1$s: Diğer Etkinlik (%2$d)</string>
-    <string name="event_title_other_without_age">%1$s: Diğer Etkinlik</string>
-    <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
-    <string name="event_title_custom_without_age">%1$s: %2$s</string>
-
     <!-- About -->
     <string name="about_version">Sürüm:</string>
 
@@ -75,10 +66,6 @@
     <string name="pref_title_other_with_age">Yıl ile diğer olay</string>
     <string name="pref_title_custom_without_age">Özel</string>
     <string name="pref_title_custom_with_age">Yıl ile Özel</string>
-    <string name="pref_title_summary_without_age">Kişinin adı için %1$s girin</string>
-    <string name="pref_title_summary_with_age">Kişinin adı için %1$s ve yaşı için %2$d girin</string>
-    <string name="pref_title_summary_custom_without_age">Bu etkinliğin kişisinin adı için %1$s ve özel etiket için %2$s girin</string>
-    <string name="pref_title_summary_custom_with_age">Bu etkinliğin kişisinin adı için %1$s , özel etiket için %2$s ve yaş %3$d için girin</string>
     <string name="pref_advanced_category">Gelişmiş Ayarlar</string>
     <string name="pref_prefer_dd_slash_mm">gg/AA/yyyy biçimini tercih et</string>
     <string name="pref_prefer_dd_slash_mm_summary">AA/gg/yyyy biçiminde tarih gösterirken gg/AA/yyyy biçimini tercih et.</string>

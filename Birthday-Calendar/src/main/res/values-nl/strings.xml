@@ -21,15 +21,6 @@
 
     <!-- Calendar -->
     <string name="calendar_display_name">Verjaardagen</string>
-    <string name="event_title_birthday_with_age">%1$s: verjaardag (%2$d)</string>
-    <string name="event_title_birthday_without_age">%1$s: verjaardag</string>
-    <string name="event_title_anniversary_with_age">%1$s: jubileum (%2$d)</string>
-    <string name="event_title_anniversary_without_age">%1$s: jubileum</string>
-    <string name="event_title_other_with_age">%1$s: andere gebeurtenis (%2$d)</string>
-    <string name="event_title_other_without_age">%1$s: andere gebeurtenis</string>
-    <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
-    <string name="event_title_custom_without_age">%1$s: %2$s</string>
-
     <!-- About -->
     <string name="about_version">Versie:</string>
 
@@ -75,14 +66,6 @@
     <string name="pref_title_other_with_age">Andere gebeurtenis met jaartalvermelding</string>
     <string name="pref_title_custom_without_age">Aangepast</string>
     <string name="pref_title_custom_with_age">Aangepast met jaartalvermelding</string>
-    <string name="pref_title_summary_without_age">Vul %1$s in voor de naam van de contactpersoon.</string>
-    <string name="pref_title_summary_with_age">Vul %1$s in voor de naam van de contactpersoon en %2$d voor de leeftijd.</string>
-    <string name="pref_title_summary_custom_without_age">Vul %1$s in voor de naam van de contactpersoon en %2$s voor het
-aangepaste label.
-    </string>
-    <string name="pref_title_summary_custom_with_age">Vul %1$s in voor de naam van de contactpersoon, %2$s voor het aangepaste
-        label en %3$d voor de leeftijd.
-    </string>
     <string name="pref_advanced_category">Geavanceerde instellingen</string>
     <string name="pref_prefer_dd_slash_mm">dd/MM/yyyy-opmaak de voorkeur geven</string>
     <string name="pref_prefer_dd_slash_mm_summary">dd/MM/yyyy i.p.v. MM/dd/yyyy de voorkeur geven als datumopmaak</string>
