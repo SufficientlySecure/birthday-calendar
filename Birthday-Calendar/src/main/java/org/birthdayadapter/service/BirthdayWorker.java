@@ -38,10 +38,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
-import java.util.Map;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -51,6 +49,8 @@ public class BirthdayWorker extends Worker {
     public static final String ACTION = "action";
     public static final String ACTION_CHANGE_COLOR = "CHANGE_COLOR";
     public static final String ACTION_SYNC = "SYNC";
+
+    private static final Object sSyncLock = new Object();
 
     private HashSet<Integer> jubileeYears;
 
@@ -124,180 +124,147 @@ public class BirthdayWorker extends Worker {
     }
 
     private void performSync(Context context) throws OperationCanceledException {
-        Log.d(Constants.TAG, "Starting sync...");
+        // Use a static lock to prevent concurrent syncs from interfering with each other,
+        // which would cause race conditions and duplicate events.
+        synchronized (sSyncLock) {
+            Log.d(Constants.TAG, "Starting sync inside lock...");
 
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-            Log.e(Constants.TAG, "Sync failed: Missing calendar permissions.");
-            return;
-        }
-
-        if (Thread.currentThread().isInterrupted()) {
-            throw new OperationCanceledException();
-        }
-
-        ContentResolver contentResolver = context.getContentResolver();
-
-        if (contentResolver == null) {
-            Log.e(Constants.TAG, "Unable to get content resolver!");
-            return;
-        }
-
-        long calendarId = CalendarHelper.getCalendar(context);
-        if (calendarId == -1) {
-            Log.e("BirthdaySyncWorker", "Unable to create or find calendar");
-            return;
-        }
-
-        // --- Mark and Sweep approach to prevent orphaned events --- 
-        // 1. Get all existing events from our calendar to find orphans later.
-        Map<String, Long> existingEvents = new HashMap<>();
-        Uri existingEventsUri = CalendarContract.Events.CONTENT_URI;
-        String[] projection = {
-                CalendarContract.Events._ID,
-                CalendarContract.Events.TITLE,
-                CalendarContract.Events.DTSTART
-        };
-        String selection = CalendarContract.Events.CALENDAR_ID + " = ?";
-        String[] selectionArgs = {String.valueOf(calendarId)};
-
-        try (Cursor c = contentResolver.query(existingEventsUri, projection, selection, selectionArgs, null)) {
-            if (c != null) {
-                int idColumn = c.getColumnIndex(CalendarContract.Events._ID);
-                int titleColumn = c.getColumnIndex(CalendarContract.Events.TITLE);
-                int dtstartColumn = c.getColumnIndex(CalendarContract.Events.DTSTART);
-                while (c.moveToNext()) {
-                    String title = c.getString(titleColumn);
-                    long dtstart = c.getLong(dtstartColumn);
-                    long id = c.getLong(idColumn);
-                    existingEvents.put(title + dtstart, id);
-                }
-            }
-        }
-
-        int[] reminderMinutes = PreferencesHelper.getAllReminderMinutes(context);
-        Log.d(Constants.TAG, "Reminder minutes: " + Arrays.toString(reminderMinutes));
-
-        ArrayList<ContentProviderOperation> operationList = new ArrayList<>();
-
-        try (Cursor cursor = getContactsEvents(context, contentResolver)) {
-            if (cursor == null) {
-                Log.e(Constants.TAG, "Unable to get events from contacts! Cursor is null!");
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+                Log.e(Constants.TAG, "Sync failed: Missing calendar permissions.");
                 return;
             }
 
-            int eventDateColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
-            int displayNameColumn = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
-            int eventTypeColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE);
-            int eventCustomLabelColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL);
-            int eventLookupKeyColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.LOOKUP_KEY);
+            if (Thread.currentThread().isInterrupted()) {
+                throw new OperationCanceledException();
+            }
 
-            int backRef = 0;
+            ContentResolver contentResolver = context.getContentResolver();
 
-            while (cursor.moveToNext()) {
-                if (Thread.currentThread().isInterrupted()) {
-                    throw new OperationCanceledException();
+            if (contentResolver == null) {
+                Log.e(Constants.TAG, "Unable to get content resolver!");
+                return;
+            }
+
+            long calendarId = CalendarHelper.getCalendar(context);
+            if (calendarId == -1) {
+                Log.e("BirthdaySyncWorker", "Unable to create or find calendar");
+                return;
+            }
+
+            // Wipe all existing events from the calendar before syncing
+            cleanTables(contentResolver, calendarId);
+
+            int[] reminderMinutes = PreferencesHelper.getAllReminderMinutes(context);
+            Log.d(Constants.TAG, "Reminder minutes: " + Arrays.toString(reminderMinutes));
+
+            ArrayList<ContentProviderOperation> operationList = new ArrayList<>();
+
+            try (Cursor cursor = getContactsEvents(context, contentResolver)) {
+                if (cursor == null) {
+                    Log.e(Constants.TAG, "Unable to get events from contacts! Cursor is null!");
+                    return;
                 }
 
-                String eventDateString = cursor.getString(eventDateColumn);
-                String displayName = cursor.getString(displayNameColumn);
-                int eventType = cursor.getInt(eventTypeColumn);
-                String eventLookupKey = cursor.getString(eventLookupKeyColumn);
+                int eventDateColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
+                int displayNameColumn = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+                int eventTypeColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE);
+                int eventCustomLabelColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL);
+                int eventLookupKeyColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.LOOKUP_KEY);
 
-                Date eventDate = parseEventDateString(context, eventDateString, displayName);
+                int backRef = 0;
 
-                if (eventDate != null) {
-                    Calendar eventCal = Calendar.getInstance();
-                    eventCal.setTime(eventDate);
-                    int eventYear = eventCal.get(Calendar.YEAR);
+                while (cursor.moveToNext()) {
+                    if (Thread.currentThread().isInterrupted()) {
+                        throw new OperationCanceledException();
+                    }
 
-                    boolean hasYear = eventYear >= 1800;
-                    int currYear = Calendar.getInstance().get(Calendar.YEAR);
+                    String eventDateString = cursor.getString(eventDateColumn);
+                    String displayName = cursor.getString(displayNameColumn);
+                    int eventType = cursor.getInt(eventTypeColumn);
+                    String eventLookupKey = cursor.getString(eventLookupKeyColumn);
 
-                    int startYear = currYear - 3;
-                    int endYear = currYear + 5;
+                    Date eventDate = parseEventDateString(context, eventDateString, displayName);
 
-                    for (int iteratedYear = startYear; iteratedYear <= endYear; iteratedYear++) {
-                        if (Thread.currentThread().isInterrupted()) {
-                            throw new OperationCanceledException();
-                        }
+                    if (eventDate != null) {
+                        Calendar eventCal = Calendar.getInstance();
+                        eventCal.setTime(eventDate);
+                        int eventYear = eventCal.get(Calendar.YEAR);
 
-                        if (hasYear && iteratedYear < eventYear) {
-                            continue; // Don't create events for years before the birth year
-                        }
+                        boolean hasYear = eventYear >= 1800;
+                        int currYear = Calendar.getInstance().get(Calendar.YEAR);
 
-                        int age = iteratedYear - eventYear;
-                        boolean includeAge = hasYear && age >= 0;
+                        int startYear = currYear - 3;
+                        int endYear = currYear + 5;
 
-                        String title = generateTitle(context, eventType, cursor,
-                                eventCustomLabelColumn, includeAge, displayName, age);
-
-                        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-                        cal.setTime(eventDate);
-                        cal.set(Calendar.YEAR, iteratedYear);
-                        cal.set(Calendar.HOUR_OF_DAY, 0);
-                        cal.set(Calendar.MINUTE, 0);
-                        cal.set(Calendar.SECOND, 0);
-                        cal.set(Calendar.MILLISECOND, 0);
-                        long dtstart = cal.getTimeInMillis();
-
-                        String eventKey = title + dtstart;
-
-                        if (existingEvents.containsKey(eventKey)) {
-                            // Event already exists and is correct. Mark it as "not an orphan".
-                            existingEvents.remove(eventKey);
-                        } else {
-                            // Event does not exist, so add it.
-                            Log.d(Constants.TAG, "Event does not exist, adding: " + title);
-                            operationList.add(insertEvent(context, calendarId, dtstart, title, eventLookupKey));
-
-                            int noOfReminderOperations = 0;
-                            for (int i = 0; i < 3; i++) {
-                                if (reminderMinutes[i] != Constants.DISABLED_REMINDER) {
-                                    ContentProviderOperation.Builder builder = ContentProviderOperation
-                                            .newInsert(CalendarHelper.getBirthdayAdapterUri(CalendarContract.Reminders.CONTENT_URI));
-
-                                    builder.withValueBackReference(CalendarContract.Reminders.EVENT_ID, backRef);
-                                    builder.withValue(CalendarContract.Reminders.MINUTES, reminderMinutes[i]);
-                                    builder.withValue(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
-                                    operationList.add(builder.build());
-
-                                    noOfReminderOperations += 1;
-                                }
+                        for (int iteratedYear = startYear; iteratedYear <= endYear; iteratedYear++) {
+                            if (Thread.currentThread().isInterrupted()) {
+                                throw new OperationCanceledException();
                             }
 
-                            backRef += 1 + noOfReminderOperations;
-                        }
+                            if (hasYear && iteratedYear < eventYear) {
+                                continue; // Don't create events for years before the birth year
+                            }
 
-                        if (operationList.size() > 200) {
-                            try {
-                                contentResolver.applyBatch(CalendarContract.AUTHORITY,
-                                        operationList);
-                                backRef = 0;
-                                operationList.clear();
-                            } catch (Exception e) {
-                                Log.e(Constants.TAG, "Applying batch error!", e);
+                            int age = iteratedYear - eventYear;
+                            boolean includeAge = hasYear && age >= 0;
+
+                            String title = generateTitle(context, eventType, cursor,
+                                    eventCustomLabelColumn, includeAge, displayName, age);
+
+                            if (title != null) {
+                                // Calculate the exact start time for this specific instance of the event
+                                Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                                cal.setTime(eventDate);
+                                cal.set(Calendar.YEAR, iteratedYear);
+                                cal.set(Calendar.HOUR_OF_DAY, 0);
+                                cal.set(Calendar.MINUTE, 0);
+                                cal.set(Calendar.SECOND, 0);
+                                cal.set(Calendar.MILLISECOND, 0);
+                                long dtstart = cal.getTimeInMillis();
+
+                                Log.d(Constants.TAG, "Adding event: " + title);
+                                operationList.add(insertEvent(context, calendarId, dtstart, title, eventLookupKey));
+
+                                int noOfReminderOperations = 0;
+                                for (int i = 0; i < 3; i++) {
+                                    if (reminderMinutes[i] != Constants.DISABLED_REMINDER) {
+                                        ContentProviderOperation.Builder builder = ContentProviderOperation
+                                                .newInsert(CalendarHelper.getBirthdayAdapterUri(CalendarContract.Reminders.CONTENT_URI));
+
+                                        builder.withValueBackReference(CalendarContract.Reminders.EVENT_ID, backRef);
+                                        builder.withValue(CalendarContract.Reminders.MINUTES, reminderMinutes[i]);
+                                        builder.withValue(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+                                        operationList.add(builder.build());
+
+                                        noOfReminderOperations += 1;
+                                    }
+                                }
+
+                                backRef += 1 + noOfReminderOperations;
+                            }
+
+                            if (operationList.size() > 200) {
+                                try {
+                                    contentResolver.applyBatch(CalendarContract.AUTHORITY,
+                                            operationList);
+                                    backRef = 0;
+                                    operationList.clear();
+                                } catch (Exception e) {
+                                    Log.e(Constants.TAG, "Applying batch error!", e);
+                                }
                             }
                         }
                     }
                 }
             }
-        }
 
-        // 4. Any events left in `existingEvents` are orphans. Delete them.
-        if (!existingEvents.isEmpty()) {
-            Log.d(Constants.TAG, "Deleting " + existingEvents.size() + " orphaned events.");
-            for (long eventIdToDelete : existingEvents.values()) {
-                Uri deleteUri = ContentUris.withAppendedId(CalendarHelper.getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI), eventIdToDelete);
-                operationList.add(ContentProviderOperation.newDelete(deleteUri).build());
-            }
-        }
-
-        if (operationList.size() > 0) {
-            try {
-                contentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
-            } catch (Exception e) {
-                Log.e(Constants.TAG, "Applying batch error!", e);
+            if (operationList.size() > 0) {
+                try {
+                    contentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
+                } catch (Exception e) {
+                    Log.e(Constants.TAG, "Applying batch error!", e);
+                }
             }
         }
     }
@@ -478,6 +445,13 @@ public class BirthdayWorker extends Worker {
             return "\uD83C\uDF89 " + title;
         }
         return title;
+    }
+
+    private void cleanTables(ContentResolver contentResolver, long calendarId) {
+        int delEventsRows = contentResolver.delete(CalendarHelper.getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI),
+                CalendarContract.Events.CALENDAR_ID + " = ?", new String[]{String.valueOf(calendarId)});
+        Log.i(Constants.TAG, "Events of birthday calendar is now empty, deleted " + delEventsRows
+                + " rows!");
     }
 
     private ContentProviderOperation insertEvent(Context context, long calendarId,
