@@ -20,6 +20,7 @@
 
 package org.birthdayadapter.ui;
 
+import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,14 +28,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.birthdayadapter.R;
 
 public class ColorPickerAdapter extends RecyclerView.Adapter<ColorPickerAdapter.ViewHolder> {
 
+    public static final int CUSTOM_COLOR = Integer.MAX_VALUE;
+
     private final int[] colors;
-    private final OnColorSelectedListener listener;
+    private final OnColorSelectedListener colorListener;
+    private final OnCustomColorSelectedListener customColorListener;
     private final int numColumns;
     private int itemSize;
 
@@ -42,10 +47,15 @@ public class ColorPickerAdapter extends RecyclerView.Adapter<ColorPickerAdapter.
         void onColorSelected(int color);
     }
 
-    ColorPickerAdapter(int[] colors, int numColumns, OnColorSelectedListener listener) {
+    public interface OnCustomColorSelectedListener {
+        void onCustomColorSelected();
+    }
+
+    ColorPickerAdapter(int[] colors, int numColumns, OnColorSelectedListener colorListener, OnCustomColorSelectedListener customColorListener) {
         this.colors = colors;
         this.numColumns = numColumns;
-        this.listener = listener;
+        this.colorListener = colorListener;
+        this.customColorListener = customColorListener;
     }
 
     @Override
@@ -79,7 +89,7 @@ public class ColorPickerAdapter extends RecyclerView.Adapter<ColorPickerAdapter.
             layoutParams.height = size;
             holder.itemView.setLayoutParams(layoutParams);
         }
-        holder.bind(colors[position], listener);
+        holder.bind(colors[position], colorListener, customColorListener);
     }
 
     @Override
@@ -95,12 +105,19 @@ public class ColorPickerAdapter extends RecyclerView.Adapter<ColorPickerAdapter.
             colorView = (ImageView) view;
         }
 
-        void bind(final int color, final OnColorSelectedListener listener) {
-            if (colorView.getBackground() instanceof GradientDrawable) {
-                GradientDrawable background = (GradientDrawable) colorView.getBackground().mutate();
-                background.setColor(color);
+        void bind(final int color, final OnColorSelectedListener colorListener, final OnCustomColorSelectedListener customColorListener) {
+            if (color == CUSTOM_COLOR) {
+                colorView.setBackgroundResource(R.drawable.color_picker_custom_background);
+                itemView.setOnClickListener(v -> customColorListener.onCustomColorSelected());
+            } else {
+                // Make sure the default background is set for recycling views
+                colorView.setBackgroundResource(R.drawable.color_picker_item_background);
+                if (colorView.getBackground() instanceof GradientDrawable) {
+                    GradientDrawable background = (GradientDrawable) colorView.getBackground().mutate();
+                    background.setColor(color);
+                }
+                itemView.setOnClickListener(v -> colorListener.onColorSelected(color));
             }
-            itemView.setOnClickListener(v -> listener.onColorSelected(color));
         }
     }
 }
