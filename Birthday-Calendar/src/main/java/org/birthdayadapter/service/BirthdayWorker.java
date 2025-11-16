@@ -7,6 +7,7 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -266,6 +267,10 @@ public class BirthdayWorker extends Worker {
                     Log.e(Constants.TAG, "Applying batch error!", e);
                 }
             }
+
+            // Store the last sync timestamp in a separate file to avoid triggering listeners
+            SharedPreferences syncPrefs = context.getSharedPreferences("sync_status_prefs", Context.MODE_PRIVATE);
+            syncPrefs.edit().putLong("last_sync_timestamp", System.currentTimeMillis()).apply();
         }
     }
 

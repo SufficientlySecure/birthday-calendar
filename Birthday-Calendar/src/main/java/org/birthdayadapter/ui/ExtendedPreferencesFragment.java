@@ -20,6 +20,7 @@
 
 package org.birthdayadapter.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -30,6 +31,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -42,9 +44,12 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.common.util.concurrent.ListenableFuture;
 
 import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
@@ -53,12 +58,22 @@ import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.PreferencesHelper;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
 
     BaseActivity mActivity;
     private AccountHelper mAccountHelper;
     private Preference colorPref;
+    private Preference forceSyncPref;
+    private SharedPreferences mSyncStatusPrefs;
+
+    private final SharedPreferences.OnSharedPreferenceChangeListener mSyncStatusListener = (sharedPreferences, key) -> {
+        if ("last_sync_timestamp".equals(key) && getActivity() != null) {
+            getActivity().runOnUiThread(this::updateSyncStatus);
+        }
+    };
 
     private final int[] baseColors = new int[]{
             0xfff44336, 0xffe91e63, 0xff9c27b0, 0xff673ab7, 0xff3f51b5, 0xff2196f3, 0xff03a9f4, 0xff00bcd4,
@@ -82,8 +97,21 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         }
 
         mAccountHelper = new AccountHelper(mActivity);
+        mSyncStatusPrefs = mActivity.getSharedPreferences("sync_status_prefs", Context.MODE_PRIVATE);
 
-        // ... (code for buyFull and forceSync preferences) ...
+        // ... (code for buyFull preference) ...
+
+        forceSyncPref = findPreference(getString(R.string.pref_force_sync_key));
+        if (forceSyncPref != null) {
+            forceSyncPref.setOnPreferenceClickListener(preference -> {
+                mAccountHelper.manualSync();
+                // Give WorkManager a moment to update the status
+                view.postDelayed(this::updateSyncStatus, 1000);
+                return true;
+            });
+        }
+
+        updateSyncStatus();
 
         colorPref = findPreference(getString(R.string.pref_color_key));
         if (colorPref != null) {
@@ -93,6 +121,38 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                 return true;
             });
         }
+    }
+
+    private void updateSyncStatus() {
+        if (forceSyncPref == null || mActivity == null) return;
+
+        long lastSync = mSyncStatusPrefs.getLong("last_sync_timestamp", 0);
+        String summary;
+
+        if (lastSync == 0) {
+            summary = getString(R.string.last_sync_never);
+        } else {
+            summary = getString(R.string.last_sync, DateUtils.getRelativeTimeSpanString(lastSync, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS));
+        }
+
+        if (mAccountHelper != null && mAccountHelper.isAccountActivated()) {
+            ListenableFuture<List<WorkInfo>> workFuture = WorkManager.getInstance(mActivity).getWorkInfosForUniqueWork("birthday_sync");
+            try {
+                List<WorkInfo> workInfos = workFuture.get();
+                if (workInfos != null && !workInfos.isEmpty()) {
+                    WorkInfo workInfo = workInfos.get(0);
+                    long nextRun = workInfo.getNextScheduleTimeMillis();
+                    if (nextRun > 0) {
+                        summary += "\n" + getString(R.string.next_sync, DateUtils.getRelativeTimeSpanString(nextRun, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS));
+                    }
+                }
+            } catch (ExecutionException | InterruptedException e) {
+                Thread.currentThread().interrupt();
+                // Could not get next sync time
+            }
+        }
+
+        forceSyncPref.setSummary(summary);
     }
 
     private void showColorPickerDialog() {
@@ -200,10 +260,11 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         return coloredCircle;
     }
 
-    // ... (onResume, onPause, and other preference setup code) ...
-     @Override
+    @Override
     public void onResume() {
         super.onResume();
+        updateSyncStatus();
+        mSyncStatusPrefs.registerOnSharedPreferenceChangeListener(mSyncStatusListener);
         // Set up a listener whenever a key changes
         if (mActivity != null && mActivity.mySharedPreferenceChangeListener != null) {
             getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(
@@ -214,6 +275,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     @Override
     public void onPause() {
         super.onPause();
+        mSyncStatusPrefs.unregisterOnSharedPreferenceChangeListener(mSyncStatusListener);
         // Unregister the listener whenever a key changes
         if (mActivity != null && mActivity.mySharedPreferenceChangeListener != null) {
             getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(
