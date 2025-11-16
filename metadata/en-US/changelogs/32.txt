@@ -1,0 +1,10 @@
+3.2
+* Show last and	next sync timestamps in	settings
+* Make custom reminders more user friendly
+* Setup transifex
+* Robustness improvements of contact syncs and sync scheduler
+* Migrate deprecated material-dialoges to MaterialAlertDialogBuilder
+- Add adaptive monochrome icon
+- Ensure jubilee icon is positioned at beginning of title
+- Upgrade gradle version
+- Use Birthday Adapter as name consistently
