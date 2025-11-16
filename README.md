@@ -80,9 +80,7 @@ along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
   https://developer.android.com/jetpack/androidx
   Apache License 2.0
 
-* Material Dialogs
-  https://github.com/afollestad/material-dialogs
-  Apache License 2.0
+* Gemini support in Android Studio
 
 ### Images
 

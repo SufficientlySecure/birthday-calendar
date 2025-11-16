@@ -31,12 +31,13 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.color.ColorPalette;
-import com.afollestad.materialdialogs.color.DialogColorChooserExtKt;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
@@ -44,13 +45,17 @@ import org.birthdayadapter.util.AccountHelper;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.PreferencesHelper;
 
-import kotlin.Unit;
-
 public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
 
     BaseActivity mActivity;
     private AccountHelper mAccountHelper;
     private Preference colorPref;
+
+    private final int[] colors = new int[]{
+            0xfff44336, 0xffe91e63, 0xff9c27b0, 0xff673ab7, 0xff3f51b5, 0xff2196f3, 0xff03a9f4, 0xff00bcd4,
+            0xff009688, 0xff4caf50, 0xff8bc34a, 0xffcddc39, 0xffffeb3b, 0xffffc107, 0xffff9800, 0xffff5722,
+            0xff795548, 0xff9e9e9e, 0xff607d8b
+    };
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
@@ -75,64 +80,54 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         if (!BuildConfig.FULL_VERSION) {
             Preference buyFull = findPreference(getString(R.string.pref_buy_full_key));
             if (buyFull != null) {
-                buyFull.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference preference) {
-                        try {
-                            startActivity(new Intent(Intent.ACTION_VIEW,
-                                    Uri.parse("market://details?id=" + Constants.FULL_PACKAGE_NAME)));
-                        } catch (android.content.ActivityNotFoundException e) {
-                            startActivity(new Intent(Intent.ACTION_VIEW,
-                                    Uri.parse("http://play.google.com/store/apps/details?id="
-                                            + Constants.FULL_PACKAGE_NAME)));
-                        }
-                        return false;
+                buyFull.setOnPreferenceClickListener(preference -> {
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW,
+                                Uri.parse("market://details?id=" + Constants.FULL_PACKAGE_NAME)));
+                    } catch (android.content.ActivityNotFoundException e) {
+                        startActivity(new Intent(Intent.ACTION_VIEW,
+                                Uri.parse("http://play.google.com/store/apps/details?id="
+                                        + Constants.FULL_PACKAGE_NAME)));
                     }
+                    return false;
                 });
             }
         }
 
         Preference forceSync = findPreference(getString(R.string.pref_force_sync_key));
         if (forceSync != null) {
-            forceSync.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    mAccountHelper.manualSync();
-                    return false;
-                }
+            forceSync.setOnPreferenceClickListener(preference -> {
+                mAccountHelper.manualSync();
+                return false;
             });
         }
 
         colorPref = findPreference(getString(R.string.pref_color_key));
         if (colorPref != null) {
             updateColorPreferenceIcon();
-            colorPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    MaterialDialog dialog = new MaterialDialog(mActivity, MaterialDialog.getDEFAULT_BEHAVIOR());
-                    dialog.title(R.string.pref_color, null);
+            colorPref.setOnPreferenceClickListener(preference -> {
+                View dialogView = getLayoutInflater().inflate(R.layout.dialog_color_picker, null);
+                RecyclerView recyclerView = dialogView.findViewById(R.id.colorPicker);
 
-                    DialogColorChooserExtKt.colorChooser(
-                            dialog,
-                            ColorPalette.INSTANCE.getPrimary(),
-                            null,
-                            PreferencesHelper.getColor(mActivity),
-                            true,
-                            true,
-                            false,
-                            false,
-                            (d, color) -> {
-                                SharedPreferences.Editor editor = getPreferenceManager().getSharedPreferences().edit();
-                                editor.putInt(getString(R.string.pref_color_key), color);
-                                editor.apply();
-                                updateColorPreferenceIcon();
-                                return Unit.INSTANCE;
-                            }
-                    );
-                    dialog.show();
+                AlertDialog dialog = new MaterialAlertDialogBuilder(mActivity)
+                        .setTitle(R.string.pref_color)
+                        .setView(dialogView)
+                        .create();
 
-                    return true;
-                }
+                int numColumns = 4;
+                ColorPickerAdapter adapter = new ColorPickerAdapter(colors, numColumns, color -> {
+                    SharedPreferences.Editor editor = getPreferenceManager().getSharedPreferences().edit();
+                    editor.putInt(getString(R.string.pref_color_key), color);
+                    editor.apply();
+                    updateColorPreferenceIcon();
+                    dialog.dismiss();
+                });
+                recyclerView.setLayoutManager(new GridLayoutManager(mActivity, numColumns));
+                recyclerView.setAdapter(adapter);
+
+                dialog.show();
+
+                return true;
             });
         }
     }
