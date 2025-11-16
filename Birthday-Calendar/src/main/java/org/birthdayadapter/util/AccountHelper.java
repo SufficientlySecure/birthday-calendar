@@ -80,12 +80,12 @@ public class AccountHelper {
         }
 
         // Ensure the periodic sync is always scheduled if the account is active.
-        // Using REPLACE ensures that if the work already exists, it's updated if needed,
+        // Using UPDATE ensures that if the work already exists, it's updated if needed,
         // and if it doesn't exist, it's created.
-        Log.d(Constants.TAG, "Enqueuing periodic sync with REPLACE policy.");
+        Log.d(Constants.TAG, "Enqueuing periodic sync with UPDATE policy.");
         PeriodicWorkRequest periodicSyncRequest = new PeriodicWorkRequest.Builder(BirthdayWorker.class, Constants.SYNC_INTERVAL_HOURS, TimeUnit.HOURS)
                 .build();
-        WorkManager.getInstance(mContext).enqueueUniquePeriodicWork("birthday_sync", ExistingPeriodicWorkPolicy.REPLACE, periodicSyncRequest);
+        WorkManager.getInstance(mContext).enqueueUniquePeriodicWork("birthday_sync", ExistingPeriodicWorkPolicy.UPDATE, periodicSyncRequest);
 
         // Force a first/manual sync now.
         manualSync();
