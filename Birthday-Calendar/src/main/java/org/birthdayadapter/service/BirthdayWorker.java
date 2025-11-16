@@ -184,6 +184,7 @@ public class BirthdayWorker extends Worker {
                     String displayName = cursor.getString(displayNameColumn);
                     int eventType = cursor.getInt(eventTypeColumn);
                     String eventLookupKey = cursor.getString(eventLookupKeyColumn);
+                    String eventCustomLabel = cursor.getString(eventCustomLabelColumn);
 
                     Date eventDate = parseEventDateString(context, eventDateString, displayName);
 
@@ -224,8 +225,15 @@ public class BirthdayWorker extends Worker {
                                 cal.set(Calendar.MILLISECOND, 0);
                                 long dtstart = cal.getTimeInMillis();
 
+                                // Create a stable, unique ID for the event instance based on raw data
+                                String uidCore = eventLookupKey + ":" + eventDateString + ":" + eventType;
+                                if (eventType == ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM && eventCustomLabel != null) {
+                                    uidCore += ":" + eventCustomLabel;
+                                }
+                                String eventUid = uidCore + ":" + iteratedYear;
+
                                 Log.d(Constants.TAG, "Adding event: " + title);
-                                operationList.add(insertEvent(context, calendarId, dtstart, title, eventLookupKey));
+                                operationList.add(insertEvent(context, calendarId, dtstart, title, eventLookupKey, eventUid));
 
                                 int noOfReminderOperations = 0;
                                 for (int i = 0; i < 3; i++) {
@@ -460,7 +468,7 @@ public class BirthdayWorker extends Worker {
     }
 
     private ContentProviderOperation insertEvent(Context context, long calendarId,
-                                                 long dtstart, String title, String lookupKey)
+                                                 long dtstart, String title, String lookupKey, String eventUid)
             throws OperationCanceledException {
         if (Thread.currentThread().isInterrupted()) {
             throw new OperationCanceledException();
@@ -479,6 +487,7 @@ public class BirthdayWorker extends Worker {
         builder.withValue(CalendarContract.Events.ALL_DAY, 1);
         builder.withValue(CalendarContract.Events.TITLE, title);
         builder.withValue(CalendarContract.Events.STATUS, CalendarContract.Events.STATUS_CONFIRMED);
+        builder.withValue(CalendarContract.Events.UID_2445, eventUid);
 
         builder.withValue(CalendarContract.Events.HAS_ALARM, 1);
 
