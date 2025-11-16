@@ -56,24 +56,18 @@ public class AccountHelper {
     }
 
     /**
-     * Add account for Birthday Adapter to Android system and triggers a sync.
+     * Ensures the account exists, schedules the periodic sync, and triggers an immediate sync.
      */
     public Bundle addAccountAndSync() {
-        boolean accountExisted = isAccountActivated();
         Bundle result = null;
 
-        if (!accountExisted) {
-            Log.d(Constants.TAG, "Adding account...");
+        if (!isAccountActivated()) {
+            Log.d(Constants.TAG, "Account does not exist. Adding account...");
 
             AccountManager am = AccountManager.get(mContext);
             final Account account = new Account(Constants.ACCOUNT_NAME, mContext.getString(R.string.account_type));
 
             if (am.addAccountExplicitly(account, null, null)) {
-                // Schedule a periodic sync every 24 hours using WorkManager
-                PeriodicWorkRequest periodicSyncRequest = new PeriodicWorkRequest.Builder(BirthdayWorker.class, 24, TimeUnit.HOURS)
-                        .build();
-                WorkManager.getInstance(mContext).enqueueUniquePeriodicWork("birthday_sync", ExistingPeriodicWorkPolicy.REPLACE, periodicSyncRequest);
-
                 result = new Bundle();
                 result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
                 result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
@@ -85,9 +79,15 @@ public class AccountHelper {
             Log.d(Constants.TAG, "Account already exists.");
         }
 
-        // Force a sync!
-        // This is called whether the account was just created or already existed,
-        // ensuring the initial sync happens after the permission flow.
+        // Ensure the periodic sync is always scheduled if the account is active.
+        // Using REPLACE ensures that if the work already exists, it's updated if needed,
+        // and if it doesn't exist, it's created.
+        Log.d(Constants.TAG, "Enqueuing periodic sync with REPLACE policy.");
+        PeriodicWorkRequest periodicSyncRequest = new PeriodicWorkRequest.Builder(BirthdayWorker.class, 24, TimeUnit.HOURS)
+                .build();
+        WorkManager.getInstance(mContext).enqueueUniquePeriodicWork("birthday_sync", ExistingPeriodicWorkPolicy.REPLACE, periodicSyncRequest);
+
+        // Force a first/manual sync now.
         manualSync();
 
         return result;
