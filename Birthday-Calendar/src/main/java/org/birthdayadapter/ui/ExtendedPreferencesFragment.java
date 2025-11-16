@@ -60,6 +60,7 @@ import org.birthdayadapter.util.PreferencesHelper;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
 
@@ -142,8 +143,11 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                 if (workInfos != null && !workInfos.isEmpty()) {
                     WorkInfo workInfo = workInfos.get(0);
                     long nextRun = workInfo.getNextScheduleTimeMillis();
-                    if (nextRun > 0) {
-                        summary += "\n" + getString(R.string.next_sync, DateUtils.getRelativeTimeSpanString(nextRun, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS));
+                    long now = System.currentTimeMillis();
+                    long sanityThreshold = now + TimeUnit.HOURS.toMillis(Constants.SYNC_INTERVAL_HOURS * 2);
+
+                    if (nextRun > now && nextRun < sanityThreshold) {
+                        summary += "\n" + getString(R.string.next_sync, DateUtils.getRelativeTimeSpanString(nextRun, now, DateUtils.MINUTE_IN_MILLIS));
                     }
                 }
             } catch (ExecutionException | InterruptedException e) {

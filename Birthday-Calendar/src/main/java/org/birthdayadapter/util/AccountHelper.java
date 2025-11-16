@@ -83,7 +83,7 @@ public class AccountHelper {
         // Using REPLACE ensures that if the work already exists, it's updated if needed,
         // and if it doesn't exist, it's created.
         Log.d(Constants.TAG, "Enqueuing periodic sync with REPLACE policy.");
-        PeriodicWorkRequest periodicSyncRequest = new PeriodicWorkRequest.Builder(BirthdayWorker.class, 24, TimeUnit.HOURS)
+        PeriodicWorkRequest periodicSyncRequest = new PeriodicWorkRequest.Builder(BirthdayWorker.class, Constants.SYNC_INTERVAL_HOURS, TimeUnit.HOURS)
                 .build();
         WorkManager.getInstance(mContext).enqueueUniquePeriodicWork("birthday_sync", ExistingPeriodicWorkPolicy.REPLACE, periodicSyncRequest);
 
