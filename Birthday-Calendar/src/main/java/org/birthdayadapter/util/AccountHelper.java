@@ -56,37 +56,41 @@ public class AccountHelper {
     }
 
     /**
-     * Add account for Birthday Adapter to Android system
+     * Add account for Birthday Adapter to Android system and triggers a sync.
      */
     public Bundle addAccountAndSync() {
-        if (isAccountActivated()) {
-            Log.d(Constants.TAG, "Account already exists.");
-            return null;
-        }
+        boolean accountExisted = isAccountActivated();
+        Bundle result = null;
 
-        Log.d(Constants.TAG, "Adding account...");
+        if (!accountExisted) {
+            Log.d(Constants.TAG, "Adding account...");
 
-        AccountManager am = AccountManager.get(mContext);
-        final Account account = new Account(Constants.ACCOUNT_NAME, mContext.getString(R.string.account_type));
+            AccountManager am = AccountManager.get(mContext);
+            final Account account = new Account(Constants.ACCOUNT_NAME, mContext.getString(R.string.account_type));
 
-        if (am.addAccountExplicitly(account, null, null)) {
-            // Schedule a periodic sync every 24 hours using WorkManager
-            PeriodicWorkRequest periodicSyncRequest = new PeriodicWorkRequest.Builder(BirthdayWorker.class, 24, TimeUnit.HOURS)
-                    .build();
-            WorkManager.getInstance(mContext).enqueueUniquePeriodicWork("birthday_sync", ExistingPeriodicWorkPolicy.REPLACE, periodicSyncRequest);
+            if (am.addAccountExplicitly(account, null, null)) {
+                // Schedule a periodic sync every 24 hours using WorkManager
+                PeriodicWorkRequest periodicSyncRequest = new PeriodicWorkRequest.Builder(BirthdayWorker.class, 24, TimeUnit.HOURS)
+                        .build();
+                WorkManager.getInstance(mContext).enqueueUniquePeriodicWork("birthday_sync", ExistingPeriodicWorkPolicy.REPLACE, periodicSyncRequest);
 
-            Bundle result = new Bundle();
-            result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
-            result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
-
-            // Force a first sync!
-            manualSync();
-
-            return result;
+                result = new Bundle();
+                result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
+                result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
+            } else {
+                Log.e(Constants.TAG, "Failed to add account explicitly.");
+                return null; // Return early if account creation failed
+            }
         } else {
-            Log.e(Constants.TAG, "Failed to add account explicitly.");
-            return null;
+            Log.d(Constants.TAG, "Account already exists.");
         }
+
+        // Force a sync!
+        // This is called whether the account was just created or already existed,
+        // ensuring the initial sync happens after the permission flow.
+        manualSync();
+
+        return result;
     }
 
     /**
