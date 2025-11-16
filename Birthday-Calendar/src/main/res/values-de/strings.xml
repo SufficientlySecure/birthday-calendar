@@ -21,6 +21,15 @@
 
     <!-- Calendar -->
     <string name="calendar_display_name">Geburtstage</string>
+    <string name="event_title_birthday_with_age">{NAME}: Geburtstag ({AGE})</string>
+    <string name="event_title_birthday_without_age">{NAME}: Geburtstag</string>
+    <string name="event_title_anniversary_with_age">{NAME}: Jahrestag ({AGE})</string>
+    <string name="event_title_anniversary_without_age">{NAME}: Jahrestag</string>
+    <string name="event_title_other_with_age">{NAME}: Sonstiges ({AGE})</string>
+    <string name="event_title_other_without_age">{NAME}: Sonstiges</string>
+    <string name="event_title_custom_with_age">{NAME}: {LABEL} ({AGE})</string>
+    <string name="event_title_custom_without_age">{NAME}: {LABEL}</string>
+
     <!-- About -->
     <string name="about_version">Version:</string>
 
@@ -76,11 +85,24 @@
     <string name="pref_title_other_with_age">Anderes Ereignis mit Alter</string>
     <string name="pref_title_custom_without_age">Benutzerdefiniert</string>
     <string name="pref_title_custom_with_age">Benutzerdefiniert mit Alter</string>
+    <string name="pref_title_summary_without_age">Verwende {NAME} als Platzhalter für den Namen des Kontaktes.</string>
+    <string name="pref_title_summary_with_age">Verwende {NAME} als Platzhalter für den Namen des Kontaktes und {AGE} für das Alter.</string>
+    <string name="pref_title_summary_custom_without_age">Verwende {NAME} als Platzhalter für den Namen des Kontaktes und {LABEL} für die ausgelesene Bezeichnung des Datums.</string>
+    <string name="pref_title_summary_custom_with_age">Verwende {NAME} als Platzhalter für den Namen des Kontaktes, {LABEL} für die ausgelesene Bezeichnung des Datums und {AGE} für das Alter.</string>
     <string name="pref_advanced_category">Erweiterte Einstellungen</string>
     <string name="pref_prefer_dd_slash_mm">dd/MM/yyyy Format bevorzugen</string>
     <string name="pref_prefer_dd_slash_mm_summary">Bevorzuge dd/MM/yyyy gegenüber MM/dd/yyyy beim Parsen von Datumsformaten</string>
     <string name="pref_advanced">Erweiterte Einstellungen</string>
     <string name="pref_advanced_summary">Aktiviere die erweiterten Einstellungen</string>
+
+    <!-- Sync Status -->
+    <string name="last_sync">Zuletzt synchronisiert: %s</string>
+    <string name="last_sync_never">Zuletzt synchronisiert: nie</string>
+    <string name="next_sync">Nächster automatisierter Abgleich: %s</string>
+
+    <!-- Color Picker -->
+    <string name="hex_color_title">Gebe den Hex-Farbwert ein</string>
+    <string name="hex_color_hint">#RRGGBB</string>
 
     <!-- Adapter Screen -->
     <string name="pref_account_header">Einstellungen</string>
