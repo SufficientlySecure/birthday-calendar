@@ -2,7 +2,7 @@
  * Copyright (C) 2012-2013 Dominik Schürmann <dominik@dominikschuermann.de>
  *
  * This file is part of Birthday Adapter.
- * 
+ *
  * Birthday Adapter is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -20,23 +20,27 @@
 
 package org.birthdayadapter.util;
 
-import org.birthdayadapter.R;
-import org.birthdayadapter.service.BirthdaySyncWorker;
-
 import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerFuture;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+
 import androidx.core.app.ActivityCompat;
+import androidx.work.Data;
 import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.OutOfQuotaPolicy;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
+
+import org.birthdayadapter.R;
+import org.birthdayadapter.service.BirthdayWorker;
 
 import java.util.concurrent.TimeUnit;
 
@@ -52,42 +56,41 @@ public class AccountHelper {
     }
 
     /**
-     * Add account for Birthday Adapter to Android system
+     * Ensures the account exists, schedules the periodic sync, and triggers an immediate sync.
      */
     public Bundle addAccountAndSync() {
-        if (isAccountActivated()) {
-            Log.d(Constants.TAG, "Account already exists.");
-            return null;
-        }
+        Bundle result = null;
 
-        Log.d(Constants.TAG, "Adding account...");
+        if (!isAccountActivated()) {
+            Log.d(Constants.TAG, "Account does not exist. Adding account...");
 
-        AccountManager am = AccountManager.get(mContext);
-        final Account account = new Account(Constants.ACCOUNT_NAME, mContext.getString(R.string.account_type));
+            AccountManager am = AccountManager.get(mContext);
+            final Account account = new Account(Constants.ACCOUNT_NAME, mContext.getString(R.string.account_type));
 
-        if (am.addAccountExplicitly(account, null, null)) {
-            // Set the sync adapter to be syncable
-            ContentResolver.setIsSyncable(account, Constants.CONTENT_AUTHORITY, 1);
-            // Enable automatic sync
-            ContentResolver.setSyncAutomatically(account, Constants.CONTENT_AUTHORITY, true);
-
-            // Schedule a periodic sync every 24 hours using WorkManager
-            PeriodicWorkRequest syncRequest = new PeriodicWorkRequest.Builder(BirthdaySyncWorker.class, 24, TimeUnit.HOURS)
-                    .build();
-            WorkManager.getInstance(mContext).enqueueUniquePeriodicWork("birthday_sync", ExistingPeriodicWorkPolicy.KEEP, syncRequest);
-
-            Bundle result = new Bundle();
-            result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
-            result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
-
-            // Force a sync! Even when background sync is disabled, this will force one sync!
-            manualSync();
-
-            return result;
+            if (am.addAccountExplicitly(account, null, null)) {
+                result = new Bundle();
+                result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
+                result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
+            } else {
+                Log.e(Constants.TAG, "Failed to add account explicitly.");
+                return null; // Return early if account creation failed
+            }
         } else {
-            Log.e(Constants.TAG, "Failed to add account explicitly.");
-            return null;
+            Log.d(Constants.TAG, "Account already exists.");
         }
+
+        // Ensure the periodic sync is always scheduled if the account is active.
+        // Using REPLACE ensures that if the work already exists, it's updated if needed,
+        // and if it doesn't exist, it's created.
+        Log.d(Constants.TAG, "Enqueuing periodic sync with REPLACE policy.");
+        PeriodicWorkRequest periodicSyncRequest = new PeriodicWorkRequest.Builder(BirthdayWorker.class, 24, TimeUnit.HOURS)
+                .build();
+        WorkManager.getInstance(mContext).enqueueUniquePeriodicWork("birthday_sync", ExistingPeriodicWorkPolicy.REPLACE, periodicSyncRequest);
+
+        // Force a first/manual sync now.
+        manualSync();
+
+        return result;
     }
 
     /**
@@ -119,18 +122,31 @@ public class AccountHelper {
     }
 
     /**
-     * Force a manual sync now!
+     * Force a manual sync now using WorkManager.
+     * This sync is enqueued as unique work with a REPLACE policy, ensuring
+     * that only one manual sync is pending or running at a time. The last one wins.
      */
     public void manualSync() {
-        Log.d(Constants.TAG, "Force manual sync...");
+        Log.d(Constants.TAG, "Forcing manual sync using WorkManager...");
 
-        Bundle b = new Bundle();
-        b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-        b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        // Define the action for the worker to perform a sync
+        Data inputData = new Data.Builder()
+                .putString(BirthdayWorker.ACTION, BirthdayWorker.ACTION_SYNC)
+                .build();
 
-        ContentResolver.requestSync(
-                new Account(Constants.ACCOUNT_NAME, mContext.getString(R.string.account_type)),
-                Constants.CONTENT_AUTHORITY, b);
+        // Create a one-time work request for the BirthdayWorker
+        OneTimeWorkRequest manualSyncRequest = new OneTimeWorkRequest.Builder(BirthdayWorker.class)
+                // Mark it as "expedited" so the system attempts to run it as soon as possible.
+                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                .setInputData(inputData)
+                .build();
+
+        // Enqueue the request as unique work, replacing any existing pending manual sync.
+        // This prevents multiple syncs from queuing up if the user taps the button repeatedly.
+        WorkManager.getInstance(mContext).enqueueUniqueWork(
+                "manual_sync",
+                ExistingWorkPolicy.REPLACE,
+                manualSyncRequest);
     }
 
     /**

@@ -1,82 +1,84 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
+
+ This file is part of Birthday Adapter.
+
+ Birthday Adapter is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Birthday Adapter is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <resources>
-  <!--Calendar-->
-  <string name="calendar_display_name">Рождени дни</string>
-  <string name="event_title_birthday_with_age">%1$s: Рождени дни (%2$d)</string>
-  <string name="event_title_birthday_without_age">%1$s: Рожден ден</string>
-  <string name="event_title_anniversary_with_age">%1$s: Годишнини (%2$d)</string>
-  <string name="event_title_anniversary_without_age">%1$s: Годишнина</string>
-  <string name="event_title_other_with_age">%1$s: Друго (%2$d)</string>
-  <string name="event_title_other_without_age">%1$s: Друго</string>
-  <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
-  <string name="event_title_custom_without_age">%1$s: %2$s</string>
-  <!--About-->
-  <string name="about_version">Версия:</string>
-  <!--Tabs-->
-  <string name="tab_main">Основни</string>
-  <string name="tab_preferences">Настройки</string>
-  <string name="tab_accounts">Филтър профил</string>
-  <string name="tab_help">Помощ</string>
-  <string name="tab_about">Относно</string>
-  <!--Preferences-->
-  <string name="pref_general">Главни</string>
-  <string name="pref_color">Цвят</string>
-  <string name="pref_help">Помощ</string>
-  <string name="pref_about">Относно</string>
-  <string name="pref_force_sync">Синхронизирай сега!</string>
-  <string name="pref_reminders">Напомняния</string>
-  <string name="pref_reminder_enable0">Включва Напомняне 1</string>
-  <string name="pref_reminder_enable1">Включва Напомняне 2</string>
-  <string name="pref_reminder_enable2">Включва Напомняне 3</string>
-  <string name="pref_reminder_enable_summary">Включва това Напомняне</string>
-  <string name="pref_reminder_time0">Напомняне 1</string>
-  <string name="pref_reminder_time1">Напомняне 2</string>
-  <string name="pref_reminder_time2">Напомняне 3</string>
-  <string name="pref_reminder_time_summary">Настройка часа на това Напомняне</string>
-  <string-array name="pref_reminder_time_drop_down">
-    <item>Брой дни</item>
-    <item>1 ден преди</item>
-    <item>2 дни преди</item>
-    <item>3 дни преди</item>
-    <item>5 дни преди</item>
-    <item>7 дни преди</item>
-    <item>10 дни преди</item>
-    <item>14 дни преди</item>
-  </string-array>
-  <string name="pref_title">Собствени етикети</string>
-  <string name="pref_title_enable">Включва собствени Етикети</string>
-  <string name="pref_title_birthday_without_age">Рожден ден</string>
-  <string name="pref_title_birthday_with_age">Рожден ден с възраст</string>
-  <string name="pref_title_anniversary_without_age">Годишнина</string>
-  <string name="pref_title_anniversary_with_age">Годишнина с години</string>
-  <string name="pref_title_other_without_age">Други</string>
-  <string name="pref_title_other_with_age">Други с години</string>
-  <string name="pref_title_custom_without_age">Собствени</string>
-  <string name="pref_title_custom_with_age">Собствени с години</string>
-  <string name="pref_title_summary_without_age">Вмъква %1$s за името на контакта.</string>
-  <string name="pref_title_summary_with_age">Вмъква %1$s за името на контакта и %2$d за години.</string>
-  <string name="pref_title_summary_custom_without_age">Вмъква %1$s за името на контакта %2$s за собствен
- етикет на това събитие .
-    </string>
-  <string name="pref_title_summary_custom_with_age">Вмъква %1$s за името на контакта, %2$s за собствен етикет на
-това събитие и %3$d за години.
-    </string>
-  <string name="pref_prefer_dd_slash_mm">Предпочитан формат dd/MM/yyyy</string>
-  <string name="pref_prefer_dd_slash_mm_summary">Предпочитан формат dd/MM/yyyy към MM/dd/yyyy при форматиране на дата</string>
-  <string name="pref_advanced">Подробни настройки</string>
-  <!--Adapter Screen-->
-  <string name="pref_account_header">Настройки</string>
-  <string name="pref_account_settings">Конфигуриране на Адаптер Рожден ден</string>
-  <!--Accounts-->
-  <string name="account_list_empty">Няма профили</string>
-  <!--Free Version-->
-  <string name="pref_buy">Купи пълната версия!</string>
-  <string name="pref_buy_full">Отвори Google Play, за да купиш пълната версия…</string>
-  <string name="pref_buy_full_summary">• Настрой собствени напомняния за събития\n• Персонализиране заглавия на събития</string>
-  <!--Install Workaround Dialog-->
-  <string name="workaround_dialog_title">Необходим е Workaround за тази версия на Android !</string>
-  <string name="workaround_dialog_message">Поради грешка, Адаптера Рожден ден ще бъде изключен след рестартиране на устройството.\n\nТази грешка е повлияна от Android 4.1.1 и ще бъде отсранена в Android 4.2. За съжаление, някои устройства като, Galaxy S4, биха имали грешка в Android 4.2. Можете да инсталирате workaround от  Google Play и да потърсите информация относно грешката на адрес: http://code.google.com/p/android/issues/detail?id=34880</string>
-  <string name="workaround_dialog_dont_show_again_button">Не показвай отново</string>
-  <string name="workaround_dialog_close_button">Затвори</string>
-  <string name="workaround_dialog_install_button">Инсталиране Workaround</string>
+
+    <!-- Calendar -->
+    <string name="calendar_display_name">Рождени дни</string>
+    <!-- About -->
+    <string name="about_version">Версия:</string>
+
+    <!-- Tabs -->
+    <string name="tab_main">Основни</string>
+    <string name="tab_preferences">Настройки</string>
+    <string name="tab_accounts">Филтър профил</string>
+    <string name="tab_help">Помощ</string>
+    <string name="tab_about">Относно</string>
+
+    <!-- Preferences -->
+    <string name="pref_general">Главни</string>
+    <string name="pref_color">Цвят</string>
+    <string name="pref_force_sync">Синхронизирай сега!</string>
+    <string name="pref_reminders">Напомняния</string>
+    <string name="pref_reminder_enable0">Включва Напомняне 1</string>
+    <string name="pref_reminder_enable1">Включва Напомняне 2</string>
+    <string name="pref_reminder_enable2">Включва Напомняне 3</string>
+    <string name="pref_reminder_enable_summary">Включва това Напомняне</string>
+    <string name="pref_reminder_time0">Напомняне 1</string>
+    <string name="pref_reminder_time1">Напомняне 2</string>
+    <string name="pref_reminder_time2">Напомняне 3</string>
+    <string name="pref_reminder_time_summary">Настройка часа на това Напомняне</string>
+
+    <string-array name="pref_reminder_time_drop_down">
+        <item>Брой дни</item>
+        <item>1 ден преди</item>
+        <item>2 дни преди</item>
+        <item>3 дни преди</item>
+        <item>5 дни преди</item>
+        <item>7 дни преди</item>
+        <item>10 дни преди</item>
+        <item>14 дни преди</item>
+    </string-array>
+
+    <string name="pref_title">Собствени етикети</string>
+    <string name="pref_title_enable">Включва собствени Етикети</string>
+    <string name="pref_title_birthday_without_age">Рожден ден</string>
+    <string name="pref_title_birthday_with_age">Рожден ден с възраст</string>
+    <string name="pref_title_anniversary_without_age">Годишнина</string>
+    <string name="pref_title_anniversary_with_age">Годишнина с години</string>
+    <string name="pref_title_other_without_age">Други</string>
+    <string name="pref_title_other_with_age">Други с години</string>
+    <string name="pref_title_custom_without_age">Собствени</string>
+    <string name="pref_title_custom_with_age">Собствени с години</string>
+    <string name="pref_advanced_category">Подробни настройки</string>
+    <string name="pref_prefer_dd_slash_mm">Предпочитан формат dd/MM/yyyy</string>
+    <string name="pref_prefer_dd_slash_mm_summary">Предпочитан формат dd/MM/yyyy към MM/dd/yyyy при форматиране на дата</string>
+    <string name="pref_advanced">Подробни настройки</string>
+    <!-- Adapter Screen -->
+    <string name="pref_account_header">Настройки</string>
+    <string name="pref_account_settings">Конфигуриране на Адаптер Рожден ден</string>
+
+    <string name="account_list_empty">Няма профили</string>
+
+    <!--Free Version -->
+    <string name="pref_buy">Купи пълната версия!</string>
+    <string name="pref_buy_full">Отвори Google Play, за да купиш пълната версия…</string>
+    <string name="pref_buy_full_summary">• Настрой собствени напомняния за събития\n• Персонализиране заглавия на събития</string>
+
 </resources>

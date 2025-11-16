@@ -1,78 +1,84 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
+
+ This file is part of Birthday Adapter.
+
+ Birthday Adapter is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Birthday Adapter is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <resources>
-  <!--Calendar-->
-  <string name="calendar_display_name">Дни рождения</string>
-  <string name="event_title_birthday_with_age">День рождения у %1$s (%2$d)</string>
-  <string name="event_title_birthday_without_age">День рождения у %1$s</string>
-  <string name="event_title_anniversary_with_age">Годовщина у %1$s (%2$d)</string>
-  <string name="event_title_anniversary_without_age">Годовщина у %1$s</string>
-  <string name="event_title_other_with_age">Событие у %1$s (%2$d)</string>
-  <string name="event_title_other_without_age">Событие у %1$s</string>
-  <string name="event_title_custom_with_age">%2$s у %1$s (%3$d)</string>
-  <string name="event_title_custom_without_age">%2$s у %1$s</string>
-  <!--About-->
-  <string name="about_version">Версия:</string>
-  <!--Tabs-->
-  <string name="tab_main">Главное</string>
-  <string name="tab_preferences">Настройки</string>
-  <string name="tab_accounts">Фильтр учётных записей</string>
-  <string name="tab_help">Помощь</string>
-  <string name="tab_about">О приложении</string>
-  <!--Preferences-->
-  <string name="pref_general">Основные</string>
-  <string name="pref_color">Цвет</string>
-  <string name="pref_help">Помощь</string>
-  <string name="pref_about">О приложении</string>
-  <string name="pref_force_sync">Синхронизировать сейчас!</string>
-  <string name="pref_reminders">Напоминания</string>
-  <string name="pref_reminder_enable0">Включить напоминание 1</string>
-  <string name="pref_reminder_enable1">Включить напоминание 2</string>
-  <string name="pref_reminder_enable2">Включить напоминание 3</string>
-  <string name="pref_reminder_enable_summary">Включить это напоминание</string>
-  <string name="pref_reminder_time0">Напоминание 1</string>
-  <string name="pref_reminder_time1">Напоминание 2</string>
-  <string name="pref_reminder_time2">Напоминание 3</string>
-  <string name="pref_reminder_time_summary">Задать время для этого напоминания</string>
-  <string-array name="pref_reminder_time_drop_down">
-    <item>В день события</item>
-    <item>За день</item>
-    <item>За 2 дня</item>
-    <item>За 3 дня</item>
-    <item>За 5 дней</item>
-    <item>За 7 дней</item>
-    <item>За 10 дней</item>
-    <item>За 14 дней</item>
-  </string-array>
-  <string name="pref_title">Пользовательские метки</string>
-  <string name="pref_title_enable">Включить пользовательские метки</string>
-  <string name="pref_title_birthday_without_age">День рождения</string>
-  <string name="pref_title_birthday_with_age">День рождения с возрастом</string>
-  <string name="pref_title_anniversary_without_age">Годовщина</string>
-  <string name="pref_title_anniversary_with_age">Годовщина с возрастом</string>
-  <string name="pref_title_other_without_age">Другое событие</string>
-  <string name="pref_title_other_with_age">Другое событие с возрастом</string>
-  <string name="pref_title_custom_without_age">Специальное</string>
-  <string name="pref_title_custom_with_age">Специальное с возрастом</string>
-  <string name="pref_title_summary_without_age">Используйте %1$s вместо имени контакта.</string>
-  <string name="pref_title_summary_with_age">Используйте %1$s вместо имени контакта и %2$d вместо возраста.</string>
-  <string name="pref_title_summary_custom_without_age">Используйте %1$s вместо имени контакта и %2$s вместо специальной метки события.</string>
-  <string name="pref_title_summary_custom_with_age">Используйте %1$s вместо имени контакта, %2$s вместо специальной метки события и %3$d вместо возраста.</string>
-  <string name="pref_prefer_dd_slash_mm">Предпочитать формат dd/MM/yyyy</string>
-  <string name="pref_prefer_dd_slash_mm_summary">Предпочитать формат dd/MM/yyyy вместо MM/dd/yyyy при разборе даты</string>
-  <string name="pref_advanced">Расширенные настройки</string>
-  <!--Adapter Screen-->
-  <string name="pref_account_header">Настройки</string>
-  <string name="pref_account_settings">Настройки Birthday Adapter</string>
-  <!--Accounts-->
-  <string name="account_list_empty">Нет учётных записей</string>
-  <!--Free Version-->
-  <string name="pref_buy">Купить полную версию!</string>
-  <string name="pref_buy_full">Открыть Google Play для покупки полной версии…</string>
-  <string name="pref_buy_full_summary">• Установить собственные напоминания для событий • Настройка заголовков событий</string>
-  <!--Install Workaround Dialog-->
-  <string name="workaround_dialog_title">Необходимо обходное решение для этой версии Android!</string>
-  <string name="workaround_dialog_message">Birthday Adapter будет отключен после перезапуска устройства из-за ошибки в Android.\n\nЭта ошибка появилась в Android 4.1.1 и, похоже, исправлена в Android 4.2. К сожалению некоторые устройства, например Galaxy S4, всё ещё содержат эту ошибку в Android 4.2. Вы можете установить обходное решение из Google Play и найти дополнительную информацию в отчёте об ошибке: http://code.google.com/p/android/issues/detail?id=34880</string>
-  <string name="workaround_dialog_dont_show_again_button">Больше не показывать</string>
-  <string name="workaround_dialog_close_button">Закрыть</string>
-  <string name="workaround_dialog_install_button">Установить обходное решение</string>
+
+    <!-- Calendar -->
+    <string name="calendar_display_name">Дни рождения</string>
+    <!-- About -->
+    <string name="about_version">Версия:</string>
+
+    <!-- Tabs -->
+    <string name="tab_main">Главное</string>
+    <string name="tab_preferences">Настройки</string>
+    <string name="tab_accounts">Фильтр учётных записей</string>
+    <string name="tab_help">Помощь</string>
+    <string name="tab_about">О приложении</string>
+
+    <!-- Preferences -->
+    <string name="pref_general">Основные</string>
+    <string name="pref_color">Цвет</string>
+    <string name="pref_force_sync">Синхронизировать сейчас!</string>
+    <string name="pref_reminders">Напоминания</string>
+    <string name="pref_reminder_enable0">Включить напоминание 1</string>
+    <string name="pref_reminder_enable1">Включить напоминание 2</string>
+    <string name="pref_reminder_enable2">Включить напоминание 3</string>
+    <string name="pref_reminder_enable_summary">Включить это напоминание</string>
+    <string name="pref_reminder_time0">Напоминание 1</string>
+    <string name="pref_reminder_time1">Напоминание 2</string>
+    <string name="pref_reminder_time2">Напоминание 3</string>
+    <string name="pref_reminder_time_summary">Задать время для этого напоминания</string>
+
+    <string-array name="pref_reminder_time_drop_down">
+        <item>В день события</item>
+        <item>За день</item>
+        <item>За 2 дня</item>
+        <item>За 3 дня</item>
+        <item>За 5 дней</item>
+        <item>За 7 дней</item>
+        <item>За 10 дней</item>
+        <item>За 14 дней</item>
+    </string-array>
+
+    <string name="pref_title">Пользовательские метки</string>
+    <string name="pref_title_enable">Включить пользовательские метки</string>
+    <string name="pref_title_birthday_without_age">День рождения</string>
+    <string name="pref_title_birthday_with_age">День рождения с возрастом</string>
+    <string name="pref_title_anniversary_without_age">Годовщина</string>
+    <string name="pref_title_anniversary_with_age">Годовщина с возрастом</string>
+    <string name="pref_title_other_without_age">Другое событие</string>
+    <string name="pref_title_other_with_age">Другое событие с возрастом</string>
+    <string name="pref_title_custom_without_age">Специальное</string>
+    <string name="pref_title_custom_with_age">Специальное с возрастом</string>
+    <string name="pref_advanced_category">Расширенные настройки</string>
+    <string name="pref_prefer_dd_slash_mm">Предпочитать формат dd/MM/yyyy</string>
+    <string name="pref_prefer_dd_slash_mm_summary">Предпочитать формат dd/MM/yyyy вместо MM/dd/yyyy при разборе даты</string>
+    <string name="pref_advanced">Расширенные настройки</string>
+    <!-- Adapter Screen -->
+    <string name="pref_account_header">Настройки</string>
+    <string name="pref_account_settings">Настройки Birthday Adapter</string>
+
+    <string name="account_list_empty">Нет учётных записей</string>
+
+    <!--Free Version -->
+    <string name="pref_buy">Купить полную версию!</string>
+    <string name="pref_buy_full">Открыть Google Play для покупки полной версии…</string>
+    <string name="pref_buy_full_summary">• Установить собственные напоминания для событий • Настройка заголовков событий</string>
+
 </resources>

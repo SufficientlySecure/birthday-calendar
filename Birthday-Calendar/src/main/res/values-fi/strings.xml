@@ -1,52 +1,61 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
+
+ This file is part of Birthday Adapter.
+
+ Birthday Adapter is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Birthday Adapter is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <resources>
-  <!--Calendar-->
-  <string name="calendar_display_name">Syntymäpäivät</string>
-  <string name="event_title_birthday_with_age">%1$s: Syntymäpäivä (%2$d)</string>
-  <string name="event_title_birthday_without_age">%1$s: Syntymäpäivä</string>
-  <string name="event_title_anniversary_with_age">%1$s: Vuosipäivä (%2$d)</string>
-  <string name="event_title_anniversary_without_age">%1$s: Vuosipäivä</string>
-  <string name="event_title_other_with_age">%1$s: Muu tapahtuma (%2$d)</string>
-  <string name="event_title_other_without_age">%1$s: Muu tapahtuma</string>
-  <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
-  <string name="event_title_custom_without_age">%1$s: %2$s</string>
-  <!--About-->
-  <string name="about_version">Versio:</string>
-  <!--Tabs-->
-  <string name="tab_main">Päätaso</string>
-  <string name="tab_preferences">Asetukset</string>
-  <string name="tab_help">Apua</string>
-  <string name="tab_about">Tietoja</string>
-  <!--Preferences-->
-  <string name="pref_general">Yleiset</string>
-  <string name="pref_color">Väri</string>
-  <string name="pref_help">Apua</string>
-  <string name="pref_about">Tietoja</string>
-  <string name="pref_force_sync">Synkronoi nyt!</string>
-  <string name="pref_reminders">Muistutukset</string>
-  <string name="pref_reminder_enable0">Aktivoi muistutus 1</string>
-  <string name="pref_reminder_enable1">Aktivoi muistutus 2</string>
-  <string name="pref_reminder_enable2">Aktivoi muistutus 3</string>
-  <string name="pref_reminder_enable_summary">Aktivoi tämä muistutus</string>
-  <string name="pref_reminder_time0">Muistutus 1</string>
-  <string name="pref_reminder_time1">Muistutus 2</string>
-  <string name="pref_reminder_time2">Muistutus 3</string>
-  <string name="pref_reminder_time_summary">Aseta tämän muistutuksen ajankohta</string>
-  <string name="pref_title_birthday_without_age">Syntymäpäivä</string>
-  <string name="pref_title_birthday_with_age">Syntymäpäivä ja ikä</string>
-  <string name="pref_title_anniversary_without_age">Vuosipäivä</string>
-  <string name="pref_title_anniversary_with_age">Vuosipäivä ja ikä</string>
-  <string name="pref_title_other_without_age">Muu tapahtuma</string>
-  <string name="pref_title_other_with_age">Muu tapahtuma ja ikä</string>
-  <string name="pref_title_summary_without_age">Lisää %1$s yhteystiedon nimeen.</string>
-  <string name="pref_title_summary_with_age">Lisää %1$s yhteystiedon nimeen ja %2$d ikään.</string>
-  <string name="pref_prefer_dd_slash_mm">Käytä muotoa pp/KK/vvv</string>
-  <string name="pref_prefer_dd_slash_mm_summary">Käytä muotoa pp/KK/vvvv muodon KK/pp/vvvv sijaan päiväyksiä käsiteltäessä.</string>
-  <string name="pref_advanced">Lisäasetukset</string>
-  <!--Adapter Screen-->
-  <string name="pref_account_header">Asetukset</string>
-  <string name="pref_account_settings">Määritä Birthday Adapterin ominaisuudet</string>
-  <!--Accounts-->
-  <!--Free Version-->
-  <!--Install Workaround Dialog-->
-</resources>
+
+    <!-- Calendar -->
+    <string name="calendar_display_name">Syntymäpäivät</string>
+    <!-- About -->
+    <string name="about_version">Versio:</string>
+
+    <!-- Tabs -->
+    <string name="tab_main">Päätaso</string>
+    <string name="tab_preferences">Asetukset</string>
+    <string name="tab_help">Apua</string>
+    <string name="tab_about">Tietoja</string>
+
+    <!-- Preferences -->
+    <string name="pref_general">Yleiset</string>
+    <string name="pref_color">Väri</string>
+    <string name="pref_force_sync">Synkronoi nyt!</string>
+    <string name="pref_reminders">Muistutukset</string>
+    <string name="pref_reminder_enable0">Aktivoi muistutus 1</string>
+    <string name="pref_reminder_enable1">Aktivoi muistutus 2</string>
+    <string name="pref_reminder_enable2">Aktivoi muistutus 3</string>
+    <string name="pref_reminder_enable_summary">Aktivoi tämä muistutus</string>
+    <string name="pref_reminder_time0">Muistutus 1</string>
+    <string name="pref_reminder_time1">Muistutus 2</string>
+    <string name="pref_reminder_time2">Muistutus 3</string>
+    <string name="pref_reminder_time_summary">Aseta tämän muistutuksen ajankohta</string>
+
+    <string name="pref_title_birthday_without_age">Syntymäpäivä</string>
+    <string name="pref_title_birthday_with_age">Syntymäpäivä ja ikä</string>
+    <string name="pref_title_anniversary_without_age">Vuosipäivä</string>
+    <string name="pref_title_anniversary_with_age">Vuosipäivä ja ikä</string>
+    <string name="pref_title_other_without_age">Muu tapahtuma</string>
+    <string name="pref_title_other_with_age">Muu tapahtuma ja ikä</string>
+    <string name="pref_advanced_category">Lisäasetukset</string>
+    <string name="pref_prefer_dd_slash_mm">Käytä muotoa pp/KK/vvv</string>
+    <string name="pref_prefer_dd_slash_mm_summary">Käytä muotoa pp/KK/vvvv muodon KK/pp/vvvv sijaan päiväyksiä käsiteltäessä.</string>
+    <string name="pref_advanced">Lisäasetukset</string>
+    <!-- Adapter Screen -->
+    <string name="pref_account_header">Asetukset</string>
+    <string name="pref_account_settings">Määritä Birthday Adapterin ominaisuudet</string>
+
+    </resources>

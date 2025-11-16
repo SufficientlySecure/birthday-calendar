@@ -1,79 +1,84 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
+
+ This file is part of Birthday Adapter.
+
+ Birthday Adapter is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Birthday Adapter is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <resources>
-  <!--Calendar-->
-  <string name="calendar_display_name">誕生日</string>
-  <string name="event_title_birthday_with_age">%1$s: 誕生日 (%2$d)</string>
-  <string name="event_title_birthday_without_age">%1$s: 誕生日</string>
-  <string name="event_title_anniversary_with_age">%1$s: 記念日 (%2$d)</string>
-  <string name="event_title_anniversary_without_age">%1$s: 記念日</string>
-  <string name="event_title_other_with_age">%1$s: その他のイベント (%2$d)</string>
-  <string name="event_title_other_without_age">%1$s: その他のイベント</string>
-  <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
-  <string name="event_title_custom_without_age">%1$s: %2$s</string>
-  <!--About-->
-  <string name="about_version">バージョン:</string>
-  <!--Tabs-->
-  <string name="tab_main">メイン</string>
-  <string name="tab_preferences">設定</string>
-  <string name="tab_accounts">アカウントフィルター</string>
-  <string name="tab_help">ヘルプ</string>
-  <string name="tab_about">アプリについて</string>
-  <!--Preferences-->
-  <string name="pref_general">全般</string>
-  <string name="pref_color">色</string>
-  <string name="pref_help">ヘルプ</string>
-  <string name="pref_about">アプリについて</string>
-  <string name="pref_force_sync">今すぐ同期!</string>
-  <string name="pref_reminders">リマインダー</string>
-  <string name="pref_reminder_enable0">リマインダー 1 を有効にする</string>
-  <string name="pref_reminder_enable1">リマインダー 2 を有効にする</string>
-  <string name="pref_reminder_enable2">リマインダー 3 を有効にする</string>
-  <string name="pref_reminder_enable_summary">このリマインダーを有効にする</string>
-  <string name="pref_reminder_time0">リマインダー 1</string>
-  <string name="pref_reminder_time1">リマインダー 2</string>
-  <string name="pref_reminder_time2">リマインダー 3</string>
-  <string name="pref_reminder_time_summary">このリマインダーの時間をセット</string>
-  <string-array name="pref_reminder_time_drop_down">
-    <item>イベント当日</item>
-    <item>1 日前</item>
-    <item>2 日前</item>
-    <item>3 日前</item>
-    <item>5 日前</item>
-    <item>7 日前</item>
-    <item>10 日前</item>
-    <item>14 日前</item>
-  </string-array>
-  <string name="pref_title">カスタムラベル</string>
-  <string name="pref_title_enable">カスタムラベルを有効にする</string>
-  <string name="pref_title_birthday_without_age">誕生日</string>
-  <string name="pref_title_birthday_with_age">誕生日と年齢</string>
-  <string name="pref_title_anniversary_without_age">記念日</string>
-  <string name="pref_title_anniversary_with_age">記念日と年齢</string>
-  <string name="pref_title_other_without_age">その他のイベント</string>
-  <string name="pref_title_other_with_age">その他のイベントと年齢</string>
-  <string name="pref_title_custom_without_age">カスタム</string>
-  <string name="pref_title_custom_with_age">カスタムと年齢</string>
-  <string name="pref_title_summary_without_age">%1$s に連絡先の名前を挿入する。</string>
-  <string name="pref_title_summary_with_age">%1$s に連絡先の名前を、%2$d に年齢を挿入する。</string>
-  <string name="pref_title_summary_custom_without_age">%1$s に連絡先の名前を、%2$s にこのイベントのカスタムラベルを挿入する。</string>
-  <string name="pref_title_summary_custom_with_age">%1$s に連絡先の名前を、%2$s このイベントのカスタムラベルを、
-%3$d に年齢を挿入する。</string>
-  <string name="pref_prefer_dd_slash_mm">dd/MM/yyyy 形式を用いる</string>
-  <string name="pref_prefer_dd_slash_mm_summary">日付形式の解析時に dd/MM/yyyy から MM/dd/yyyy を用いる</string>
-  <string name="pref_advanced">追加の設定</string>
-  <!--Adapter Screen-->
-  <string name="pref_account_header">設定</string>
-  <string name="pref_account_settings">誕生日アダプターを構成</string>
-  <!--Accounts-->
-  <string name="account_list_empty">アカウントがありません</string>
-  <!--Free Version-->
-  <string name="pref_buy">完全バージョンを購入!</string>
-  <string name="pref_buy_full">完全バージョンを購入するためGoogle Playを開く…</string>
-  <string name="pref_buy_full_summary">• あなた自身のイベントのリマインダーをセットしてください\n• イベントのタイトルをカスタマイズしてください</string>
-  <!--Install Workaround Dialog-->
-  <string name="workaround_dialog_title">このAndroidのバージョンで必要な回避策!</string>
-  <string name="workaround_dialog_message">Androidのバグのため、このデバイスを再起動した後で誕生日アダプターは無効にされます。\n\nこのバグはAndroid4.1.1で導入され、Android4.2で修正されているようです。残念ながら、たとえばGalaxy S4などいくつかのデバイスは、まだAndroidの4.2でこのバグがあります。Googleプレイから回避策をインストールすること、バグレポートでさらに多くの情報を見つけることができます: http://code.google.com/p/android/issues/detail?id=34880</string>
-  <string name="workaround_dialog_dont_show_again_button">今後表示しない</string>
-  <string name="workaround_dialog_close_button">閉じる</string>
-  <string name="workaround_dialog_install_button">回避策をインストール</string>
+
+    <!-- Calendar -->
+    <string name="calendar_display_name">誕生日</string>
+    <!-- About -->
+    <string name="about_version">バージョン:</string>
+
+    <!-- Tabs -->
+    <string name="tab_main">メイン</string>
+    <string name="tab_preferences">設定</string>
+    <string name="tab_accounts">アカウントフィルター</string>
+    <string name="tab_help">ヘルプ</string>
+    <string name="tab_about">アプリについて</string>
+
+    <!-- Preferences -->
+    <string name="pref_general">全般</string>
+    <string name="pref_color">色</string>
+    <string name="pref_force_sync">今すぐ同期!</string>
+    <string name="pref_reminders">リマインダー</string>
+    <string name="pref_reminder_enable0">リマインダー 1 を有効にする</string>
+    <string name="pref_reminder_enable1">リマインダー 2 を有効にする</string>
+    <string name="pref_reminder_enable2">リマインダー 3 を有効にする</string>
+    <string name="pref_reminder_enable_summary">このリマインダーを有効にする</string>
+    <string name="pref_reminder_time0">リマインダー 1</string>
+    <string name="pref_reminder_time1">リマインダー 2</string>
+    <string name="pref_reminder_time2">リマインダー 3</string>
+    <string name="pref_reminder_time_summary">このリマインダーの時間をセット</string>
+
+    <string-array name="pref_reminder_time_drop_down">
+        <item>イベント当日</item>
+        <item>1 日前</item>
+        <item>2 日前</item>
+        <item>3 日前</item>
+        <item>5 日前</item>
+        <item>7 日前</item>
+        <item>10 日前</item>
+        <item>14 日前</item>
+    </string-array>
+
+    <string name="pref_title">カスタムラベル</string>
+    <string name="pref_title_enable">カスタムラベルを有効にする</string>
+    <string name="pref_title_birthday_without_age">誕生日</string>
+    <string name="pref_title_birthday_with_age">誕生日と年齢</string>
+    <string name="pref_title_anniversary_without_age">記念日</string>
+    <string name="pref_title_anniversary_with_age">記念日と年齢</string>
+    <string name="pref_title_other_without_age">その他のイベント</string>
+    <string name="pref_title_other_with_age">その他のイベントと年齢</string>
+    <string name="pref_title_custom_without_age">カスタム</string>
+    <string name="pref_title_custom_with_age">カスタムと年齢</string>
+    <string name="pref_advanced_category">追加の設定</string>
+    <string name="pref_prefer_dd_slash_mm">dd/MM/yyyy 形式を用いる</string>
+    <string name="pref_prefer_dd_slash_mm_summary">日付形式の解析時に dd/MM/yyyy から MM/dd/yyyy を用いる</string>
+    <string name="pref_advanced">追加の設定</string>
+    <!-- Adapter Screen -->
+    <string name="pref_account_header">設定</string>
+    <string name="pref_account_settings">誕生日アダプターを構成</string>
+
+    <string name="account_list_empty">アカウントがありません</string>
+
+    <!--Free Version -->
+    <string name="pref_buy">完全バージョンを購入!</string>
+    <string name="pref_buy_full">完全バージョンを購入するためGoogle Playを開く…</string>
+    <string name="pref_buy_full_summary">• あなた自身のイベントのリマインダーをセットしてください\n• イベントのタイトルをカスタマイズしてください</string>
+
 </resources>

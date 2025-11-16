@@ -97,18 +97,6 @@
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
-        <service
-            android:name="org.birthdayadapter.service.CalendarSyncAdapterService"
-            android:exported="true"
-            tools:ignore="ExportedService">
-            <intent-filter>
-                <action android:name="android.content.SyncAdapter" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.content.SyncAdapter"
-                android:resource="@xml/sync_calendar" />
-        </service>
 
         <!-- Provider defined in free, full, and full_google Manifests to prevent conflicts -->
         <!--<provider-->

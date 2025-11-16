@@ -15,7 +15,7 @@ If you have problems with this app, please report them on the following website:
 https://github.com/SufficientlySecure/birthday-calendar/issues
 
 <b>Translations</b>
-Help translating Birthday Adapter on https://www.transifex.net/projects/p/birthday-adapter (unavailable at the moment)
+Help translating Birthday Adapter on https://explore.transifex.com/mattitude/birthdayadapter/
 
 <b>Source code and information</b>
 https://github.com/SufficientlySecure/birthday-calendar

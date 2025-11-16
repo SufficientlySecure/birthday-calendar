@@ -1,79 +1,84 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
+
+ This file is part of Birthday Adapter.
+
+ Birthday Adapter is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Birthday Adapter is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <resources>
-  <!--Calendar-->
-  <string name="calendar_display_name">Doğumgünleri</string>
-  <string name="event_title_birthday_with_age">%1$s: Doğumgünü (%2$d)</string>
-  <string name="event_title_birthday_without_age">%1$s: Doğumgünü</string>
-  <string name="event_title_anniversary_with_age">%1$s: Yıldönümü (%2$d)</string>
-  <string name="event_title_anniversary_without_age">%1$s: Yıldönümü</string>
-  <string name="event_title_other_with_age">%1$s: Diğer Etkinlik (%2$d)</string>
-  <string name="event_title_other_without_age">%1$s: Diğer Etkinlik</string>
-  <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
-  <string name="event_title_custom_without_age">%1$s: %2$s</string>
-  <!--About-->
-  <string name="about_version">Sürüm:</string>
-  <!--Tabs-->
-  <string name="tab_main">Ana</string>
-  <string name="tab_preferences">Tercihler</string>
-  <string name="tab_accounts">Hesap Süzgeci</string>
-  <string name="tab_help">Yardım</string>
-  <string name="tab_about">Hakkında</string>
-  <!--Preferences-->
-  <string name="pref_general">Genel</string>
-  <string name="pref_color">Renk</string>
-  <string name="pref_help">Yardım</string>
-  <string name="pref_about">Hakkında</string>
-  <string name="pref_force_sync">Şimdi eşitle!</string>
-  <string name="pref_reminders">Hatırlatmalar</string>
-  <string name="pref_reminder_enable0">Hatırlatma 1 Etkinleştir</string>
-  <string name="pref_reminder_enable1">Hatırlatma 2 Etkinleştir</string>
-  <string name="pref_reminder_enable2">Hatırlatma 3 Etkinleştir</string>
-  <string name="pref_reminder_enable_summary">Bu Hatırlatmayı etkinleştir</string>
-  <string name="pref_reminder_time0">Hatırlatma 1</string>
-  <string name="pref_reminder_time1">Hatırlatma 2</string>
-  <string name="pref_reminder_time2">Hatırlatma 3</string>
-  <string name="pref_reminder_time_summary">Hatırlatma zamanı ayarla</string>
-  <string-array name="pref_reminder_time_drop_down">
-    <item>Etkinlik gününden</item>
-    <item>1 gün önce</item>
-    <item>2 gün önce</item>
-    <item>3 gün önce</item>
-    <item>5 gün önce</item>
-    <item>7 gün önce</item>
-    <item>10 gün önce</item>
-    <item>14 gün önce</item>
-  </string-array>
-  <string name="pref_title">Özel Etiketler</string>
-  <string name="pref_title_enable">Özel Etiketleri Etkinleştir</string>
-  <string name="pref_title_birthday_without_age">Doğumgünü</string>
-  <string name="pref_title_birthday_with_age">Yaş ile doğumgünü</string>
-  <string name="pref_title_anniversary_without_age">Yıldönümü</string>
-  <string name="pref_title_anniversary_with_age">Yıl ile yıldönümü</string>
-  <string name="pref_title_other_without_age">Diğer etkinlik</string>
-  <string name="pref_title_other_with_age">Yıl ile diğer olay</string>
-  <string name="pref_title_custom_without_age">Özel</string>
-  <string name="pref_title_custom_with_age">Yıl ile Özel</string>
-  <string name="pref_title_summary_without_age">Kişinin adı için %1$s girin</string>
-  <string name="pref_title_summary_with_age">Kişinin adı için %1$s ve yaşı için %2$d girin</string>
-  <string name="pref_title_summary_custom_without_age">Bu etkinliğin kişisinin adı için %1$s ve özel etiket için %2$s girin</string>
-  <string name="pref_title_summary_custom_with_age">Bu etkinliğin kişisinin adı için %1$s , özel etiket için %2$s ve yaş %3$d için girin</string>
-  <string name="pref_prefer_dd_slash_mm">gg/AA/yyyy biçimini tercih et</string>
-  <string name="pref_prefer_dd_slash_mm_summary">AA/gg/yyyy biçiminde tarih gösterirken gg/AA/yyyy biçimini tercih et.</string>
-  <string name="pref_advanced">Gelişmiş Ayarlar</string>
-  <!--Adapter Screen-->
-  <string name="pref_account_header">Ayarlar</string>
-  <string name="pref_account_settings">Birthday Adapter Yapılandır</string>
-  <!--Accounts-->
-  <string name="account_list_empty">Hesap yok</string>
-  <!--Free Version-->
-  <string name="pref_buy">Tam sürümünü satın al!</string>
-  <string name="pref_buy_full">Tam sürümünü satın almak için Google Play\'i aç...</string>
-  <string name="pref_buy_full_summary">• Etkinlikler için kendinize hatırlatıcılar kurun\n• Etkinlik başlıklarını özelleştirin</string>
-  <!--Install Workaround Dialog-->
-  <string name="workaround_dialog_title">Bu Android sürümü için Workaround gerekli!</string>
-  <string name="workaround_dialog_message">Android\'in bir hatasından dolayı, cihazınızı yeniden başlattıktan sonra Birthday Adapter devre dışı bırakılacak.\n\nBu hata Android 4.1.1 sürümünde bulundu ve Android 4.2 sürümünde düzeltildi. Ne yazık ki Galaxy S4 gibi Android 4.2 sürümü kullanılan bazı cihazlarda hala bu hata mevcut. Geçici çözüm olarak Google Play den yükleyebilir ve bağlantıdaki hata rapor sayfasında daha fazla bilgi edinebilirsiniz:
-http://code.google.com/p/android/issues/detail?id=34880</string>
-  <string name="workaround_dialog_dont_show_again_button">Bir daha gösterme</string>
-  <string name="workaround_dialog_close_button">Kapat</string>
-  <string name="workaround_dialog_install_button">Workaround Kur</string>
+
+    <!-- Calendar -->
+    <string name="calendar_display_name">Doğumgünleri</string>
+    <!-- About -->
+    <string name="about_version">Sürüm:</string>
+
+    <!-- Tabs -->
+    <string name="tab_main">Ana</string>
+    <string name="tab_preferences">Tercihler</string>
+    <string name="tab_accounts">Hesap Süzgeci</string>
+    <string name="tab_help">Yardım</string>
+    <string name="tab_about">Hakkında</string>
+
+    <!-- Preferences -->
+    <string name="pref_general">Genel</string>
+    <string name="pref_color">Renk</string>
+    <string name="pref_force_sync">Şimdi eşitle!</string>
+    <string name="pref_reminders">Hatırlatmalar</string>
+    <string name="pref_reminder_enable0">Hatırlatma 1 Etkinleştir</string>
+    <string name="pref_reminder_enable1">Hatırlatma 2 Etkinleştir</string>
+    <string name="pref_reminder_enable2">Hatırlatma 3 Etkinleştir</string>
+    <string name="pref_reminder_enable_summary">Bu Hatırlatmayı etkinleştir</string>
+    <string name="pref_reminder_time0">Hatırlatma 1</string>
+    <string name="pref_reminder_time1">Hatırlatma 2</string>
+    <string name="pref_reminder_time2">Hatırlatma 3</string>
+    <string name="pref_reminder_time_summary">Hatırlatma zamanı ayarla</string>
+
+    <string-array name="pref_reminder_time_drop_down">
+        <item>Etkinlik gününden</item>
+        <item>1 gün önce</item>
+        <item>2 gün önce</item>
+        <item>3 gün önce</item>
+        <item>5 gün önce</item>
+        <item>7 gün önce</item>
+        <item>10 gün önce</item>
+        <item>14 gün önce</item>
+    </string-array>
+
+    <string name="pref_title">Özel Etiketler</string>
+    <string name="pref_title_enable">Özel Etiketleri Etkinleştir</string>
+    <string name="pref_title_birthday_without_age">Doğumgünü</string>
+    <string name="pref_title_birthday_with_age">Yaş ile doğumgünü</string>
+    <string name="pref_title_anniversary_without_age">Yıldönümü</string>
+    <string name="pref_title_anniversary_with_age">Yıl ile yıldönümü</string>
+    <string name="pref_title_other_without_age">Diğer etkinlik</string>
+    <string name="pref_title_other_with_age">Yıl ile diğer olay</string>
+    <string name="pref_title_custom_without_age">Özel</string>
+    <string name="pref_title_custom_with_age">Yıl ile Özel</string>
+    <string name="pref_advanced_category">Gelişmiş Ayarlar</string>
+    <string name="pref_prefer_dd_slash_mm">gg/AA/yyyy biçimini tercih et</string>
+    <string name="pref_prefer_dd_slash_mm_summary">AA/gg/yyyy biçiminde tarih gösterirken gg/AA/yyyy biçimini tercih et.</string>
+    <string name="pref_advanced">Gelişmiş Ayarlar</string>
+    <!-- Adapter Screen -->
+    <string name="pref_account_header">Ayarlar</string>
+    <string name="pref_account_settings">Birthday Adapter Yapılandır</string>
+
+    <string name="account_list_empty">Hesap yok</string>
+
+    <!--Free Version -->
+    <string name="pref_buy">Tam sürümünü satın al!</string>
+    <string name="pref_buy_full">Tam sürümünü satın almak için Google Play\'i aç...</string>
+    <string name="pref_buy_full_summary">• Etkinlikler için kendinize hatırlatıcılar kurun\n• Etkinlik başlıklarını özelleştirin</string>
+
 </resources>

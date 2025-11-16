@@ -1,44 +1,57 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
+
+ This file is part of Birthday Adapter.
+
+ Birthday Adapter is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Birthday Adapter is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <resources>
-  <!--Calendar-->
-  <string name="calendar_display_name">Sünnipäevad</string>
-  <string name="event_title_birthday_with_age">%1$s: Sünnipäev (%2$d)</string>
-  <string name="event_title_birthday_without_age">%1$s: Sünnipäev</string>
-  <string name="event_title_anniversary_without_age">%1$s: Aastapäev</string>
-  <string name="event_title_other_with_age">%1$s: Muu üritus (%2$d)</string>
-  <!--About-->
-  <string name="about_version">Versioon:</string>
-  <!--Tabs-->
-  <string name="tab_preferences">Eelistused</string>
-  <string name="tab_help">Abiinfo</string>
-  <string name="tab_about">Rakendusest</string>
-  <!--Preferences-->
-  <string name="pref_general">Üldine</string>
-  <string name="pref_color">Värv</string>
-  <string name="pref_help">Abiinfo</string>
-  <string name="pref_about">Rakendusest</string>
-  <string name="pref_force_sync">Sünkroniseeri kohe!</string>
-  <string name="pref_reminders">Meeldetuletused</string>
-  <string name="pref_reminder_enable0">Luba meeldetuletus 1</string>
-  <string name="pref_reminder_enable1">Luba meeldetuletus 2</string>
-  <string name="pref_reminder_enable2">Luba meeldetuletus 3</string>
-  <string name="pref_reminder_enable_summary"> Luba see meeldetuletus</string>
-  <string name="pref_reminder_time0">Meeldetuletus 1</string>
-  <string name="pref_reminder_time1">Meeldetuletus 2</string>
-  <string name="pref_reminder_time2">Meeldetuletus 3</string>
-  <string name="pref_title_birthday_without_age">Sünnipäev</string>
-  <string name="pref_title_birthday_with_age">Sünnipäev koos vanusega</string>
-  <string name="pref_title_anniversary_without_age">Aastapäev</string>
-  <string name="pref_title_anniversary_with_age">Aastapäev koos vanusega</string>
-  <string name="pref_title_other_without_age">Muu üritus</string>
-  <string name="pref_title_other_with_age">Muu üritus koos vanusega</string>
-  <string name="pref_prefer_dd_slash_mm">Eelista pp/aaaa formaati</string>
-  <string name="pref_prefer_dd_slash_mm_summary">Eelista pp/aaaa kk/aaaa asemel </string>
-  <string name="pref_advanced">Täpsemad seaded</string>
-  <!--Adapter Screen-->
-  <string name="pref_account_header">Seaded</string>
-  <string name="pref_account_settings">Seadista sünnipäevade adapterit</string>
-  <!--Accounts-->
-  <!--Free Version-->
-  <!--Install Workaround Dialog-->
-</resources>
+
+    <!-- Calendar -->
+    <string name="calendar_display_name">Sünnipäevad</string>
+    <!-- About -->
+    <string name="about_version">Versioon:</string>
+
+    <string name="tab_preferences">Eelistused</string>
+    <string name="tab_help">Abiinfo</string>
+    <string name="tab_about">Rakendusest</string>
+
+    <!-- Preferences -->
+    <string name="pref_general">Üldine</string>
+    <string name="pref_color">Värv</string>
+    <string name="pref_force_sync">Sünkroniseeri kohe!</string>
+    <string name="pref_reminders">Meeldetuletused</string>
+    <string name="pref_reminder_enable0">Luba meeldetuletus 1</string>
+    <string name="pref_reminder_enable1">Luba meeldetuletus 2</string>
+    <string name="pref_reminder_enable2">Luba meeldetuletus 3</string>
+    <string name="pref_reminder_enable_summary"> Luba see meeldetuletus</string>
+    <string name="pref_reminder_time0">Meeldetuletus 1</string>
+    <string name="pref_reminder_time1">Meeldetuletus 2</string>
+    <string name="pref_reminder_time2">Meeldetuletus 3</string>
+    <string name="pref_title_birthday_without_age">Sünnipäev</string>
+    <string name="pref_title_birthday_with_age">Sünnipäev koos vanusega</string>
+    <string name="pref_title_anniversary_without_age">Aastapäev</string>
+    <string name="pref_title_anniversary_with_age">Aastapäev koos vanusega</string>
+    <string name="pref_title_other_without_age">Muu üritus</string>
+    <string name="pref_title_other_with_age">Muu üritus koos vanusega</string>
+    <string name="pref_advanced_category">Täpsemad seaded</string>
+    <string name="pref_prefer_dd_slash_mm">Eelista pp/aaaa formaati</string>
+    <string name="pref_prefer_dd_slash_mm_summary">Eelista pp/aaaa kk/aaaa asemel </string>
+    <string name="pref_advanced">Täpsemad seaded</string>
+    <!-- Adapter Screen -->
+    <string name="pref_account_header">Seaded</string>
+    <string name="pref_account_settings">Seadista sünnipäevade adapterit</string>
+
+    </resources>

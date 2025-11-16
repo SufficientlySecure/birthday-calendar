@@ -37,7 +37,7 @@ Translations are hosted on Transifex, which is configured by ".tx/config".
 3. Go into root folder of git repo
 4. execute ``tx pull`` (``tx pull -a`` to get all languages)
 
-see http://help.transifex.com/features/client/index.html#user-client
+Help translating at https://explore.transifex.com/mattitude/birthdayadapter/
 
 ## Coding Style
 
@@ -80,9 +80,7 @@ along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
   https://developer.android.com/jetpack/androidx
   Apache License 2.0
 
-* Material Dialogs
-  https://github.com/afollestad/material-dialogs
-  Apache License 2.0
+* Gemini support in Android Studio
 
 ### Images
 

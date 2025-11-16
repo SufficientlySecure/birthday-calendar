@@ -1,81 +1,121 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources>
-  <!--Calendar-->
-  <string name="calendar_display_name">Geburtstage</string>
-  <string name="event_title_birthday_with_age">%1$s: Geburtstag (%2$d)</string>
-  <string name="event_title_birthday_without_age">%1$s: Geburtstag</string>
-  <string name="event_title_anniversary_with_age">%1$s: Jahrestag (%2$d)</string>
-  <string name="event_title_anniversary_without_age">%1$s: Jahrestag</string>
-  <string name="event_title_other_with_age">%1$s: Anderer Termin (%2$d)</string>
-  <string name="event_title_other_without_age">%1$s: Anderer Termin</string>
-  <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
-  <string name="event_title_custom_without_age">%1$s: %2$s</string>
-  <!--About-->
-  <string name="about_version">Version:</string>
-  <!--Tabs-->
-  <string name="tab_main">Hauptmenu</string>
-  <string name="tab_preferences">Einstellungen</string>
-  <string name="tab_accounts">Konten-Filter</string>
-  <string name="tab_help">Hilfe</string>
-  <string name="tab_about">Über</string>
-  <!--Preferences-->
-  <string name="pref_general">Allgemein</string>
-  <string name="pref_color">Farbe</string>
-  <string name="pref_help">Hilfe</string>
-  <string name="pref_about">Über</string>
-  <string name="pref_force_sync">Jetzt synchronisieren!</string>
-  <string name="pref_reminders">Erinnerungen</string>
-  <string name="pref_reminder_enable0">Erinnerung 1 aktivieren</string>
-  <string name="pref_reminder_enable1">Erinnerung 2 aktivieren</string>
-  <string name="pref_reminder_enable2">Erinnerung 3 aktivieren</string>
-  <string name="pref_reminder_enable_summary">Diese Erinnerung aktivieren</string>
-  <string name="pref_reminder_time0">Erinnerung 1</string>
-  <string name="pref_reminder_time1">Erinnerung 2</string>
-  <string name="pref_reminder_time2">Erinnerung 3</string>
-  <string name="pref_reminder_time_summary">Tag und Uhrzeit dieser Erinnerung einstellen</string>
-  <string-array name="pref_reminder_time_drop_down">
-    <item>Am Ereignistag</item>
-    <item>1 Tag vorher</item>
-    <item>2 Tage vorher</item>
-    <item>3 Tage vorher</item>
-    <item>5 Tage vorher</item>
-    <item>7 Tage vorher</item>
-    <item>10 Tage vorher</item>
-    <item>14 Tage vorher</item>
-  </string-array>
-  <string name="pref_title">Benutzerdefinierte Bezeichnungen</string>
-  <string name="pref_title_enable">Benutzerdefinierte Bezeichnungen aktivieren</string>
-  <string name="pref_title_birthday_without_age">Geburtstag</string>
-  <string name="pref_title_birthday_with_age">Geburtstag mit Alter</string>
-  <string name="pref_title_anniversary_without_age">Jahrestag</string>
-  <string name="pref_title_anniversary_with_age">Jahrestag mit Alter</string>
-  <string name="pref_title_other_without_age">Anderes Ereignis</string>
-  <string name="pref_title_other_with_age">Anderes Ereignis mit Alter</string>
-  <string name="pref_title_custom_without_age">Benutzerdefiniert</string>
-  <string name="pref_title_custom_with_age">Benutzerdefiniert mit Alter</string>
-  <string name="pref_title_summary_without_age">Benutze %1$s um den Kontaktnamen einzufügen.</string>
-  <string name="pref_title_summary_with_age">Benutze %1$s um den Kontaktnamen und %2$d um das Alter einzufügen.</string>
-  <string name="pref_title_summary_custom_without_age">Benutze %1$s um den Kontaktnamen und %2$s um den benutzerdefinierten Titel einzufügen.</string>
-  <string name="pref_title_summary_custom_with_age">Benutze %1$s um den Kontaktnamen, %2$s um den benutzerdefinierten Titel und %3$d um das Alter einzufügen.</string>
-  <string name="pref_prefer_dd_slash_mm">dd/MM/yyyy Format bevorzugen</string>
-  <string name="pref_prefer_dd_slash_mm_summary">Bevorzuge dd/MM/yyyy gegenüber MM/dd/yyyy beim Parsen von Datumsformaten</string>
-  <string name="pref_advanced">Erweiterte Einstellungen</string>
-  <!--Adapter Screen-->
-  <string name="pref_account_header">Einstellungen</string>
-  <string name="pref_account_settings">Birthday Adapter konfigurieren</string>
-  <!--Accounts-->
-  <string name="account_list_empty">Keine Konten vorhanden</string>
-  <!--Free Version-->
-  <string name="pref_buy">Vollversion kaufen</string>
-  <string name="pref_buy_full">Google Play öffnen um Vollversion zu kaufen…</string>
-  <string name="pref_buy_full_summary">• Erinnerungsfunktion
-• Benutzerdefinierte Titel für Ereignisse</string>
-  <!--Install Workaround Dialog-->
-  <string name="workaround_dialog_title">Für diese Android-Version muss ein Workaround installiert werden!</string>
-  <string name="workaround_dialog_message">Aufgrund eines Fehlers in Android, wird Birthday Adapter nach einem Neustart des Geräts deaktiviert sein.
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
 
-Dieser Fehler tritt ab Android 4.1.1 auf und wurde in Android 4.2 gefixt. Unglücklicherweise ist er dennoch auf einigen Geräten mit Android 4.2 vorhanden, z.B. auf dem Galaxy S4. Um das Problem zu umgehen, kann ein Workaround von Google Play installiert werden. Weitere Informationen finden sich auf http://code.google.com/p/android/issues/detail?id=34880</string>
-  <string name="workaround_dialog_dont_show_again_button">Nicht wieder anzeigen</string>
-  <string name="workaround_dialog_close_button">Schließen</string>
-  <string name="workaround_dialog_install_button">Workaround installieren</string>
+ This file is part of Birthday Adapter.
+
+ Birthday Adapter is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Birthday Adapter is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Calendar -->
+    <string name="calendar_display_name">Geburtstage</string>
+    <string name="event_title_birthday_with_age">{NAME}: Geburtstag ({AGE})</string>
+    <string name="event_title_birthday_without_age">{NAME}: Geburtstag</string>
+    <string name="event_title_anniversary_with_age">{NAME}: Jahrestag ({AGE})</string>
+    <string name="event_title_anniversary_without_age">{NAME}: Jahrestag</string>
+    <string name="event_title_other_with_age">{NAME}: Sonstiges ({AGE})</string>
+    <string name="event_title_other_without_age">{NAME}: Sonstiges</string>
+    <string name="event_title_custom_with_age">{NAME}: {LABEL} ({AGE})</string>
+    <string name="event_title_custom_without_age">{NAME}: {LABEL}</string>
+
+    <!-- About -->
+    <string name="about_version">Version:</string>
+
+    <!-- Tabs -->
+    <string name="tab_main">Hauptmenu</string>
+    <string name="tab_preferences">Einstellungen</string>
+    <string name="tab_accounts">Konten-Filter</string>
+    <string name="tab_help">Hilfe</string>
+    <string name="tab_about">Über</string>
+
+    <!-- Preferences -->
+    <string name="pref_general">Allgemein</string>
+    <string name="pref_enable">1. Aktiviere Birthday Adapter</string>
+    <string name="pref_enable_summary">Dies erstellt den Systemkalender mit den Daten Deiner Kontakte.</string>
+    <string name="pref_enable_switch">Birthday Calendar</string>
+    <string name="pref_contacts">2. Geburtstage Deiner Kontakte</string>
+    <string name="pref_contacts_summary">Bearbeite die Geburtstage Deiner Kontakte in Deiner Kontakte-App.</string>
+    <string name="pref_contacts_open">Öffne Deine Kontakte-App</string>
+    <string name="pref_calendar">3. Geburtstage im Kalender.</string>
+    <string name="pref_calendar_summary">Geburtstage werden nun in Deiner Kalender-App angezeigt.</string>
+    <string name="pref_calendar_open">Öffne Deine Kalender-App</string>
+    <string name="pref_color">Farbe</string>
+    <string name="pref_force_sync">Jetzt synchronisieren!</string>
+    <string name="pref_force_sync_summary">Im Normalfall brauchst du keine manuelle Synchronisation, da der Birthday Adapter die Daten automatisch täglich aktualisiert.</string>
+    <string name="pref_reminders">Erinnerungen</string>
+    <string name="pref_reminder_enable0">Erinnerung 1 aktivieren</string>
+    <string name="pref_reminder_enable1">Erinnerung 2 aktivieren</string>
+    <string name="pref_reminder_enable2">Erinnerung 3 aktivieren</string>
+    <string name="pref_reminder_enable_summary">Diese Erinnerung aktivieren</string>
+    <string name="pref_reminder_time0">Erinnerung 1</string>
+    <string name="pref_reminder_time1">Erinnerung 2</string>
+    <string name="pref_reminder_time2">Erinnerung 3</string>
+    <string name="pref_reminder_time_summary">Tag und Uhrzeit dieser Erinnerung einstellen</string>
+
+    <string-array name="pref_reminder_time_drop_down">
+        <item>Am Ereignistag</item>
+        <item>1 Tag vorher</item>
+        <item>2 Tage vorher</item>
+        <item>3 Tage vorher</item>
+        <item>5 Tage vorher</item>
+        <item>7 Tage vorher</item>
+        <item>10 Tage vorher</item>
+        <item>14 Tage vorher</item>
+    </string-array>
+
+    <string name="pref_title">Benutzerdefinierte Bezeichnungen</string>
+    <string name="pref_title_enable">Benutzerdefinierte Bezeichnungen aktivieren</string>
+    <string name="pref_title_birthday_without_age">Geburtstag</string>
+    <string name="pref_title_birthday_with_age">Geburtstag mit Alter</string>
+    <string name="pref_title_anniversary_without_age">Jahrestag</string>
+    <string name="pref_title_anniversary_with_age">Jahrestag mit Alter</string>
+    <string name="pref_title_other_without_age">Anderes Ereignis</string>
+    <string name="pref_title_other_with_age">Anderes Ereignis mit Alter</string>
+    <string name="pref_title_custom_without_age">Benutzerdefiniert</string>
+    <string name="pref_title_custom_with_age">Benutzerdefiniert mit Alter</string>
+    <string name="pref_title_summary_without_age">Verwende {NAME} als Platzhalter für den Namen des Kontaktes.</string>
+    <string name="pref_title_summary_with_age">Verwende {NAME} als Platzhalter für den Namen des Kontaktes und {AGE} für das Alter.</string>
+    <string name="pref_title_summary_custom_without_age">Verwende {NAME} als Platzhalter für den Namen des Kontaktes und {LABEL} für die ausgelesene Bezeichnung des Datums.</string>
+    <string name="pref_title_summary_custom_with_age">Verwende {NAME} als Platzhalter für den Namen des Kontaktes, {LABEL} für die ausgelesene Bezeichnung des Datums und {AGE} für das Alter.</string>
+    <string name="pref_advanced_category">Erweiterte Einstellungen</string>
+    <string name="pref_prefer_dd_slash_mm">dd/MM/yyyy Format bevorzugen</string>
+    <string name="pref_prefer_dd_slash_mm_summary">Bevorzuge dd/MM/yyyy gegenüber MM/dd/yyyy beim Parsen von Datumsformaten</string>
+    <string name="pref_advanced">Erweiterte Einstellungen</string>
+    <string name="pref_advanced_summary">Aktiviere die erweiterten Einstellungen</string>
+
+    <!-- Sync Status -->
+    <string name="last_sync">Zuletzt synchronisiert: %s</string>
+    <string name="last_sync_never">Zuletzt synchronisiert: nie</string>
+    <string name="next_sync">Nächster automatisierter Abgleich: %s</string>
+
+    <!-- Color Picker -->
+    <string name="hex_color_title">Gebe den Hex-Farbwert ein</string>
+    <string name="hex_color_hint">#RRGGBB</string>
+
+    <!-- Adapter Screen -->
+    <string name="pref_account_header">Einstellungen</string>
+    <string name="pref_account_settings">Birthday Adapter konfigurieren</string>
+
+    <!-- Accounts -->
+    <string name="account_list_description">Nur die Geburtstage aus den gewählten Konten werden in Deinem Kalender angezeigt.</string>
+    <string name="account_list_empty">Keine Konten vorhanden</string>
+
+    <!--Free Version -->
+    <string name="pref_buy">Vollversion kaufen</string>
+    <string name="pref_buy_full">Google Play öffnen um Vollversion zu kaufen…</string>
+    <string name="pref_buy_full_summary">• Erinnerungsfunktion
+• Benutzerdefinierte Titel für Ereignisse</string>
+
 </resources>

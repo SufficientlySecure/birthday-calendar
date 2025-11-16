@@ -1,42 +1,56 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
+
+ This file is part of Birthday Adapter.
+
+ Birthday Adapter is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Birthday Adapter is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <resources>
-  <!--Calendar-->
-  <string name="calendar_display_name">Aniversarios</string>
-  <string name="event_title_other_with_age">%1$s: Outro evento (%2$d)</string>
-  <string name="event_title_other_without_age">%1$s: Outro evento</string>
-  <string name="event_title_custom_with_age">%1$s: %2$s (%3$d)</string>
-  <string name="event_title_custom_without_age">%1$s: %2$s</string>
-  <!--About-->
-  <string name="about_version">Versión:</string>
-  <!--Tabs-->
-  <string name="tab_main">Principal</string>
-  <string name="tab_preferences">Preferencias</string>
-  <string name="tab_accounts">Filtro de contas</string>
-  <string name="tab_help">Axuda</string>
-  <string name="tab_about">Acerca de</string>
-  <!--Preferences-->
-  <string name="pref_general">Xeral</string>
-  <string name="pref_color">Cor</string>
-  <string name="pref_help">Axuda</string>
-  <string name="pref_about">Acerca de</string>
-  <string name="pref_force_sync">Sincronizar agora!</string>
-  <string name="pref_reminders">Recordatorios</string>
-  <string name="pref_reminder_time0">Recordatorio 1</string>
-  <string name="pref_reminder_time1">Recordatorio 2</string>
-  <string name="pref_reminder_time2">Recordatorio 3</string>
-  <string name="pref_reminder_time_summary">Establecer a hora deste recordatorio</string>
-  <string name="pref_title">Etiquetas personalizadas:</string>
-  <string name="pref_title_other_without_age">Outro evento</string>
-  <string name="pref_title_custom_without_age">Personalizar</string>
-  <string name="pref_advanced">Configuración avanzada</string>
-  <!--Adapter Screen-->
-  <string name="pref_account_header">Axustes</string>
-  <!--Accounts-->
-  <string name="account_list_empty">Non hai ningunha conta</string>
-  <!--Free Version-->
-  <string name="pref_buy">Mercar a versión completa!</string>
-  <string name="pref_buy_full">Abrir Google Play para mercar a versión completa...</string>
-  <!--Install Workaround Dialog-->
-  <string name="workaround_dialog_dont_show_again_button">Non volver preguntar máis</string>
-  <string name="workaround_dialog_close_button">Pechar</string>
-</resources>
+
+    <!-- Calendar -->
+    <string name="calendar_display_name">Aniversarios</string>
+    <!-- About -->
+    <string name="about_version">Versión:</string>
+
+    <!-- Tabs -->
+    <string name="tab_main">Principal</string>
+    <string name="tab_preferences">Preferencias</string>
+    <string name="tab_accounts">Filtro de contas</string>
+    <string name="tab_help">Axuda</string>
+    <string name="tab_about">Acerca de</string>
+
+    <!-- Preferences -->
+    <string name="pref_general">Xeral</string>
+    <string name="pref_color">Cor</string>
+    <string name="pref_force_sync">Sincronizar agora!</string>
+    <string name="pref_reminders">Recordatorios</string>
+    <string name="pref_reminder_time0">Recordatorio 1</string>
+    <string name="pref_reminder_time1">Recordatorio 2</string>
+    <string name="pref_reminder_time2">Recordatorio 3</string>
+    <string name="pref_reminder_time_summary">Establecer a hora deste recordatorio</string>
+
+    <string name="pref_title">Etiquetas personalizadas:</string>
+    <string name="pref_title_other_without_age">Outro evento</string>
+    <string name="pref_title_custom_without_age">Personalizar</string>
+    <string name="pref_advanced_category">Configuración avanzada</string>
+    <string name="pref_advanced">Configuración avanzada</string>
+    <!-- Adapter Screen -->
+    <string name="pref_account_header">Axustes</string>
+    <string name="account_list_empty">Non hai ningunha conta</string>
+
+    <!--Free Version -->
+    <string name="pref_buy">Mercar a versión completa!</string>
+    <string name="pref_buy_full">Abrir Google Play para mercar a versión completa...</string>
+    </resources>
