@@ -68,7 +68,7 @@ public class BaseActivity extends AppCompatActivity {
                 (tab, position) -> tab.setText(((ViewPagerAdapter) viewPager.getAdapter()).getPageTitle(position))
         ).attach();
 
-        mySharedPreferenceChangeListener = new MySharedPreferenceChangeListener(this);
+        mySharedPreferenceChangeListener = new MySharedPreferenceChangeListener(getApplicationContext());
 
         // Observe both manual and periodic sync workers
         WorkManager.getInstance(this).getWorkInfosForUniqueWorkLiveData("manual_sync")

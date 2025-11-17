@@ -30,7 +30,9 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mAccountHelper = new AccountHelper(getActivity());
+        if (getActivity() != null) {
+            mAccountHelper = new AccountHelper(getActivity().getApplicationContext());
+        }
     }
 
     @Override
@@ -40,13 +42,19 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements
 
         // open contact app
         Preference openContactsPref = findPreference(getString(R.string.pref_contacts_key));
-        openContactsPref.setOnPreferenceClickListener(this);
+        if (openContactsPref != null) {
+            openContactsPref.setOnPreferenceClickListener(this);
+        }
 
         mForceSyncPref = findPreference(getString(R.string.pref_force_sync_key));
-        mForceSyncPref.setOnPreferenceClickListener(this);
+        if (mForceSyncPref != null) {
+            mForceSyncPref.setOnPreferenceClickListener(this);
+        }
 
         Preference colorPref = findPreference(getString(R.string.pref_color_key));
-        colorPref.setOnPreferenceClickListener(this);
+        if (colorPref != null) {
+            colorPref.setOnPreferenceClickListener(this);
+        }
     }
 
     @Override
@@ -54,7 +62,10 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements
         super.onResume();
 
         // register listener
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        SharedPreferences sharedPreferences = getPreferenceScreen().getSharedPreferences();
+        if (sharedPreferences != null) {
+            sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        }
     }
 
     @Override
@@ -62,16 +73,24 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements
         super.onPause();
 
         // unregister listener
-        getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(this);
+        SharedPreferences sharedPreferences = getPreferenceScreen().getSharedPreferences();
+        if (sharedPreferences != null) {
+            sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        }
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (mAccountHelper != null &&
+                (key.startsWith("pref_reminder") || key.startsWith("pref_title"))) {
+            mAccountHelper.updateReminders();
+        }
     }
 
     @Override
     public boolean onPreferenceClick(Preference preference) {
+        if (getActivity() == null) return false;
+
         if (preference.getKey().equals(getString(R.string.pref_contacts_key))) {
             // open contacts here
             Intent intent = new Intent(Intent.ACTION_VIEW, ContactsContract.Contacts.CONTENT_URI);
@@ -79,11 +98,15 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements
 
             return true;
         } else if (preference.getKey().equals(getString(R.string.pref_force_sync_key))) {
-            mAccountHelper.manualSync();
+            if (mAccountHelper != null) {
+                mAccountHelper.manualSync();
+            }
             return true;
         } else if (preference.getKey().equals(getString(R.string.pref_color_key))) {
             // open color picker
-            ((ColorChangedListener) getActivity()).showColorPickerDialog(PreferencesHelper.getColor(getActivity()));
+            if (getActivity() instanceof ColorChangedListener) {
+                ((ColorChangedListener) getActivity()).showColorPickerDialog(PreferencesHelper.getColor(getActivity()));
+            }
         }
 
         return false;

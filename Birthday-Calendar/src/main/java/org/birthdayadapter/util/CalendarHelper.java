@@ -76,6 +76,29 @@ public class CalendarHelper {
     }
 
     /**
+     * Deletes the birthday calendar and all its events.
+     */
+    public static void deleteCalendar(Context context) {
+        Log.d(Constants.TAG, "Deleting birthday calendar...");
+
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            Log.e(Constants.TAG, "Missing calendar permissions to delete calendar!");
+            return;
+        }
+
+        ContentResolver contentResolver = context.getContentResolver();
+        Uri calendarUri = getBirthdayAdapterUri(CalendarContract.Calendars.CONTENT_URI);
+
+        int deletedRows = contentResolver.delete(calendarUri, null, null);
+
+        if (deletedRows > 0) {
+            Log.i(Constants.TAG, "Successfully deleted birthday calendar.");
+        } else {
+            Log.w(Constants.TAG, "Birthday calendar not found or could not be deleted.");
+        }
+    }
+
+    /**
      * Builds URI for Birthday Adapter based on account. Ensures that only the calendar of Birthday
      * Adapter is chosen.
      */
