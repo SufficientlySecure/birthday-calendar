@@ -144,7 +144,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                     WorkInfo workInfo = workInfos.get(0);
                     long nextRun = workInfo.getNextScheduleTimeMillis();
                     long now = System.currentTimeMillis();
-                    long sanityThreshold = now + TimeUnit.HOURS.toMillis(Constants.SYNC_INTERVAL_HOURS * 2);
+                    long sanityThreshold = now + TimeUnit.DAYS.toMillis(Constants.SYNC_INTERVAL_DAYS * 2);
 
                     if (nextRun > now && nextRun < sanityThreshold) {
                         summary += "\n" + getString(R.string.next_sync, DateUtils.getRelativeTimeSpanString(nextRun, now, DateUtils.MINUTE_IN_MILLIS));

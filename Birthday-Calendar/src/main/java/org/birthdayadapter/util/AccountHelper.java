@@ -81,7 +81,7 @@ public class AccountHelper {
         // Using UPDATE ensures that if the work already exists, it's updated if needed,
         // and if it doesn't exist, it's created.
         Log.d(Constants.TAG, "Enqueuing periodic sync with UPDATE policy.");
-        PeriodicWorkRequest periodicSyncRequest = new PeriodicWorkRequest.Builder(BirthdayWorker.class, Constants.SYNC_INTERVAL_HOURS, TimeUnit.HOURS)
+        PeriodicWorkRequest periodicSyncRequest = new PeriodicWorkRequest.Builder(BirthdayWorker.class, Constants.SYNC_INTERVAL_DAYS, TimeUnit.DAYS)
                 .build();
         WorkManager.getInstance(mContext).enqueueUniquePeriodicWork("birthday_sync", ExistingPeriodicWorkPolicy.UPDATE, periodicSyncRequest);
 

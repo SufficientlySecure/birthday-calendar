@@ -37,5 +37,5 @@ public class Constants {
 
     public static final int DISABLED_REMINDER = -99999;
 
-    public static final int SYNC_INTERVAL_HOURS = 24;
+    public static final int SYNC_INTERVAL_DAYS = 5;
 }
