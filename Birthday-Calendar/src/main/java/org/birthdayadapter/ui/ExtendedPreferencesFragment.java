@@ -21,18 +21,17 @@
 package org.birthdayadapter.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
-import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,9 +48,7 @@ import androidx.work.WorkManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.common.util.concurrent.ListenableFuture;
 
-import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.AccountHelper;
 import org.birthdayadapter.util.Constants;
@@ -59,7 +56,6 @@ import org.birthdayadapter.util.PreferencesHelper;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
@@ -69,6 +65,10 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     private Preference colorPref;
     private Preference forceSyncPref;
     private SharedPreferences mSyncStatusPrefs;
+    private WorkInfo mBirthdaySyncWorkInfo;
+
+    private final Handler mSyncUpdateHandler = new Handler(Looper.getMainLooper());
+    private Runnable mSyncUpdateRunnable;
 
     private final SharedPreferences.OnSharedPreferenceChangeListener mSyncStatusListener = (sharedPreferences, key) -> {
         if ("last_sync_timestamp".equals(key) && getActivity() != null) {
@@ -106,13 +106,9 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         if (forceSyncPref != null) {
             forceSyncPref.setOnPreferenceClickListener(preference -> {
                 mAccountHelper.manualSync();
-                // Give WorkManager a moment to update the status
-                view.postDelayed(this::updateSyncStatus, 1000);
                 return true;
             });
         }
-
-        updateSyncStatus();
 
         colorPref = findPreference(getString(R.string.pref_color_key));
         if (colorPref != null) {
@@ -121,6 +117,20 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                 showColorPickerDialog();
                 return true;
             });
+        }
+
+        if (mAccountHelper.isAccountActivated()) {
+            WorkManager.getInstance(mActivity).getWorkInfosForUniqueWorkLiveData("birthday_sync")
+                    .observe(getViewLifecycleOwner(), workInfos -> {
+                        if (workInfos != null && !workInfos.isEmpty()) {
+                            mBirthdaySyncWorkInfo = workInfos.get(0);
+                        } else {
+                            mBirthdaySyncWorkInfo = null;
+                        }
+                        updateSyncStatus();
+                    });
+        } else {
+            updateSyncStatus();
         }
     }
 
@@ -137,22 +147,14 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         }
 
         if (mAccountHelper != null && mAccountHelper.isAccountActivated()) {
-            ListenableFuture<List<WorkInfo>> workFuture = WorkManager.getInstance(mActivity).getWorkInfosForUniqueWork("birthday_sync");
-            try {
-                List<WorkInfo> workInfos = workFuture.get();
-                if (workInfos != null && !workInfos.isEmpty()) {
-                    WorkInfo workInfo = workInfos.get(0);
-                    long nextRun = workInfo.getNextScheduleTimeMillis();
-                    long now = System.currentTimeMillis();
-                    long sanityThreshold = now + TimeUnit.DAYS.toMillis(Constants.SYNC_INTERVAL_DAYS * 2);
+            if (mBirthdaySyncWorkInfo != null) {
+                long nextRun = mBirthdaySyncWorkInfo.getNextScheduleTimeMillis();
+                long now = System.currentTimeMillis();
+                long sanityThreshold = now + TimeUnit.DAYS.toMillis(Constants.SYNC_INTERVAL_DAYS * 2);
 
-                    if (nextRun > now && nextRun < sanityThreshold) {
-                        summary += "\n" + getString(R.string.next_sync, DateUtils.getRelativeTimeSpanString(nextRun, now, DateUtils.MINUTE_IN_MILLIS));
-                    }
+                if (nextRun > now && nextRun < sanityThreshold) {
+                    summary += "\n" + getString(R.string.next_sync, DateUtils.getRelativeTimeSpanString(nextRun, now, DateUtils.MINUTE_IN_MILLIS));
                 }
-            } catch (ExecutionException | InterruptedException e) {
-                Thread.currentThread().interrupt();
-                // Could not get next sync time
             }
         }
 
@@ -267,18 +269,31 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     @Override
     public void onResume() {
         super.onResume();
-        updateSyncStatus();
         mSyncStatusPrefs.registerOnSharedPreferenceChangeListener(mSyncStatusListener);
         // Set up a listener whenever a key changes
         if (mActivity != null && mActivity.mySharedPreferenceChangeListener != null) {
             getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(
                     mActivity.mySharedPreferenceChangeListener);
         }
+
+        mSyncUpdateRunnable = new Runnable() {
+            @Override
+            public void run() {
+                updateSyncStatus();
+                // Rerun every minute
+                mSyncUpdateHandler.postDelayed(this, DateUtils.MINUTE_IN_MILLIS);
+            }
+        };
+        // Immediately run and start the cycle
+        mSyncUpdateHandler.post(mSyncUpdateRunnable);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        // Stop the periodic UI updates
+        mSyncUpdateHandler.removeCallbacks(mSyncUpdateRunnable);
+
         mSyncStatusPrefs.unregisterOnSharedPreferenceChangeListener(mSyncStatusListener);
         // Unregister the listener whenever a key changes
         if (mActivity != null && mActivity.mySharedPreferenceChangeListener != null) {
