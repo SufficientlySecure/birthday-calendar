@@ -32,6 +32,7 @@ import org.birthdayadapter.util.CalendarHelper;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
 import org.birthdayadapter.util.PreferencesHelper;
+import org.birthdayadapter.util.SyncStatusManager;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -70,6 +71,11 @@ public class BirthdayWorker extends Worker {
             action = ACTION_SYNC;
         }
 
+        // For user-initiated syncs, show the spinner
+        if (ACTION_SYNC.equals(action) || ACTION_REMINDERS_CHANGED.equals(action)) {
+            SyncStatusManager.getInstance().setSyncing(true);
+        }
+
         try {
             if (!new AccountHelper(getApplicationContext()).isAccountActivated()) {
                 Log.d(Constants.TAG, "Account not active, skipping work.");
@@ -94,6 +100,9 @@ public class BirthdayWorker extends Worker {
         } catch (Exception e) {
             Log.e(Constants.TAG, "Worker failed", e);
             return Result.failure();
+        } finally {
+            // Always hide the spinner when the work is finished
+            SyncStatusManager.getInstance().setSyncing(false);
         }
     }
 
