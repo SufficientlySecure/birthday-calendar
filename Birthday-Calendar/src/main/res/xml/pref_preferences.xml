@@ -125,6 +125,11 @@
             android:key="@string/pref_title_custom_with_age_key"
             android:persistent="true"
             android:title="@string/pref_title_custom_with_age" />
+        <Preference
+            android:key="@string/pref_jubilee_years_key"
+            android:persistent="true"
+            android:summary="@string/pref_jubilee_years_summary"
+            android:title="@string/pref_jubilee_years_title" />
     </androidx.preference.PreferenceCategory>
     <androidx.preference.PreferenceCategory android:title="@string/pref_advanced_category">
         <androidx.preference.CheckBoxPreference
@@ -141,7 +146,6 @@
             android:summary="@string/pref_prefer_dd_slash_mm_summary"
             android:title="@string/pref_prefer_dd_slash_mm" />
         <androidx.preference.Preference
-            android:dependency="@string/pref_advanced_key"
             android:key="@string/pref_force_sync_key"
             android:persistent="false"
             android:summary="@string/pref_force_sync_summary"

@@ -9,7 +9,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
@@ -43,8 +42,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class BirthdayWorker extends Worker {
 
@@ -270,7 +267,7 @@ public class BirthdayWorker extends Worker {
                                     for (int minute : reminderMinutes) {
                                         if (minute != Constants.DISABLED_REMINDER) {
                                             ContentProviderOperation.Builder builder = ContentProviderOperation
-                                                    .newInsert(CalendarHelper.getBirthdayAdapterUri(CalendarContract.Reminders.CONTENT_URI));
+                                                    .newInsert(CalendarHelper.getBirthdayAdapterUri(context, CalendarContract.Reminders.CONTENT_URI));
 
                                             builder.withValueBackReference(CalendarContract.Reminders.EVENT_ID, backRef);
                                             builder.withValue(CalendarContract.Reminders.MINUTES, minute);
@@ -316,7 +313,7 @@ public class BirthdayWorker extends Worker {
                 Log.d(Constants.TAG, "Deleting " + deletedEventsCount + " old events.");
                 ArrayList<ContentProviderOperation> deleteOperationList = new ArrayList<>();
                 for (String uid : existingEventUids) {
-                    deleteOperationList.add(ContentProviderOperation.newDelete(CalendarHelper.getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI))
+                    deleteOperationList.add(ContentProviderOperation.newDelete(CalendarHelper.getBirthdayAdapterUri(context, CalendarContract.Events.CONTENT_URI))
                             .withSelection(CalendarContract.Events.UID_2445 + " = ?", new String[]{uid})
                             .build());
                 }
@@ -340,11 +337,7 @@ public class BirthdayWorker extends Worker {
 
     private ArrayList<String> getExistingEventUids(Context context, ContentResolver contentResolver, long calendarId) {
         ArrayList<String> existingUids = new ArrayList<>();
-        Uri.Builder builder = CalendarContract.Events.CONTENT_URI.buildUpon();
-        builder.appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true");
-        builder.appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, Constants.ACCOUNT_NAME);
-        builder.appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, context.getString(R.string.account_type));
-        Uri uri = builder.build();
+        Uri uri = CalendarHelper.getBirthdayAdapterUri(context, CalendarContract.Events.CONTENT_URI);
 
         try (Cursor cursor = contentResolver.query(uri,
                 new String[]{CalendarContract.Events.UID_2445},
@@ -501,13 +494,22 @@ public class BirthdayWorker extends Worker {
         }
     }
 
-
     private String addJubileeIcon(Context context, String title, int age) {
         if (jubileeYears == null) {
-            Resources res = context.getResources();
-            int[] years = res.getIntArray(R.array.jubilee_years);
-            jubileeYears = (HashSet<Integer>) IntStream.of(years).boxed().collect(Collectors.toSet());
+            // Always initialize the set to prevent NullPointerException
+            jubileeYears = new HashSet<>();
+            String jubileeYearsStr = PreferencesHelper.getJubileeYears(context);
+            if (!TextUtils.isEmpty(jubileeYearsStr)) {
+                try {
+                    Arrays.stream(jubileeYearsStr.split(",")).map(String::trim).map(Integer::parseInt).forEach(jubileeYears::add);
+                } catch (NumberFormatException e) {
+                    Log.e(Constants.TAG, "Invalid jubilee years format in preferences. No jubilee icons will be shown.", e);
+                    // In case of error, clear the set to be safe
+                    jubileeYears.clear();
+                }
+            }
         }
+
         if (jubileeYears.contains(age)) {
             return "\uD83C\uDF89 " + title;
         }
@@ -522,7 +524,7 @@ public class BirthdayWorker extends Worker {
         }
 
         ContentProviderOperation.Builder builder =
-                ContentProviderOperation.newInsert(CalendarHelper.getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI));
+                ContentProviderOperation.newInsert(CalendarHelper.getBirthdayAdapterUri(context, CalendarContract.Events.CONTENT_URI));
 
         long dtend = dtstart + DateUtils.DAY_IN_MILLIS;
 

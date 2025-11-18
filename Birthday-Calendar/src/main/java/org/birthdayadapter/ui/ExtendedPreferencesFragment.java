@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
 import android.view.View;
@@ -55,8 +56,8 @@ import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.PreferencesHelper;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
 
@@ -64,6 +65,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     private AccountHelper mAccountHelper;
     private Preference colorPref;
     private Preference forceSyncPref;
+    private Preference mJubileeYearsPref;
     private SharedPreferences mSyncStatusPrefs;
     private WorkInfo mBirthdaySyncWorkInfo;
 
@@ -94,8 +96,6 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         mAccountHelper = new AccountHelper(mActivity);
         mSyncStatusPrefs = mActivity.getSharedPreferences("sync_status_prefs", Context.MODE_PRIVATE);
 
-        // ... (code for buyFull preference) ...
-
         forceSyncPref = findPreference(getString(R.string.pref_force_sync_key));
         if (forceSyncPref != null) {
             forceSyncPref.setOnPreferenceClickListener(preference -> {
@@ -113,6 +113,15 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
             });
         }
 
+        mJubileeYearsPref = findPreference(getString(R.string.pref_jubilee_years_key));
+        if (mJubileeYearsPref != null) {
+            updateJubileeYearsSummary();
+            mJubileeYearsPref.setOnPreferenceClickListener(preference -> {
+                showJubileeYearsInputDialog();
+                return true;
+            });
+        }
+
         if (mAccountHelper.isAccountActivated()) {
             WorkManager.getInstance(mActivity).getWorkInfosForUniqueWorkLiveData("birthday_sync")
                     .observe(getViewLifecycleOwner(), workInfos -> {
@@ -123,6 +132,74 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                         }
                     });
         }
+    }
+
+    private void updateJubileeYearsSummary() {
+        if (mJubileeYearsPref != null && mActivity != null) {
+            String jubileeYears = PreferencesHelper.getJubileeYears(mActivity);
+            mJubileeYearsPref.setSummary(jubileeYears);
+        }
+    }
+
+    private boolean isValidJubileeYears(String value) {
+        if (TextUtils.isEmpty(value)) return true; // allow empty
+        return Pattern.matches("^[1-9][0-9]*(?:\\s*,\\s*[1-9][0-9]*)*$", value.trim());
+    }
+
+    private void showJubileeYearsInputDialog() {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_jubilee_input, null);
+        final EditText jubileeInput = dialogView.findViewById(R.id.jubileeInput);
+        final TextInputLayout jubileeInputLayout = dialogView.findViewById(R.id.jubileeInputLayout);
+
+        String currentJubileeYears = PreferencesHelper.getJubileeYears(mActivity);
+        jubileeInput.setText(currentJubileeYears);
+
+        AlertDialog jubileeDialog = new MaterialAlertDialogBuilder(mActivity)
+                .setTitle(R.string.pref_jubilee_years_title)
+                .setView(dialogView)
+                .setPositiveButton(android.R.string.ok, (d, which) -> {
+                    String jubileeYears = jubileeInput.getText().toString();
+                    saveJubileeYears(jubileeYears);
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .create();
+
+        jubileeDialog.show();
+
+        final Button positiveButton = jubileeDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        positiveButton.setEnabled(isValidJubileeYears(currentJubileeYears));
+
+        jubileeInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (isValidJubileeYears(s.toString())) {
+                    positiveButton.setEnabled(true);
+                    if (jubileeInputLayout != null) {
+                        jubileeInputLayout.setError(null);
+                    }
+                } else {
+                    positiveButton.setEnabled(false);
+                    if (jubileeInputLayout != null) {
+                        jubileeInputLayout.setError("Invalid format");
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
+    private void saveJubileeYears(String jubileeYears) {
+        SharedPreferences.Editor editor = getPreferenceManager().getSharedPreferences().edit();
+        editor.putString(getString(R.string.pref_jubilee_years_key), jubileeYears);
+        editor.apply();
+        updateJubileeYearsSummary();
     }
 
     private void updateSyncStatus() {
@@ -211,7 +288,8 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
 
         hexInput.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -231,7 +309,8 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
     }
 
@@ -260,6 +339,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     @Override
     public void onResume() {
         super.onResume();
+        updateJubileeYearsSummary();
         // Set up a listener whenever a key changes
         if (mActivity != null && mActivity.mySharedPreferenceChangeListener != null) {
             getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(

@@ -35,13 +35,13 @@ public class CalendarHelper {
         ContentResolver contentResolver = context.getContentResolver();
 
         // Find the calendar if we've got one
-        Uri calenderUri = getBirthdayAdapterUri(CalendarContract.Calendars.CONTENT_URI);
+        Uri calenderUri = getBirthdayAdapterUri(context, CalendarContract.Calendars.CONTENT_URI);
 
         // be sure to select the birthday calendar only (additionally to appendQueries in
         // getBirthdayAdapterUri for Android < 4)
         try (Cursor cursor = contentResolver.query(calenderUri, new String[]{BaseColumns._ID},
                 CalendarContract.Calendars.ACCOUNT_NAME + " = ? AND " + CalendarContract.Calendars.ACCOUNT_TYPE + " = ?",
-                new String[]{Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE}, null)) {
+                new String[]{Constants.ACCOUNT_NAME, context.getString(R.string.account_type)}, null)) {
             if (cursor != null && cursor.moveToNext()) {
                 return cursor.getLong(0);
             } else {
@@ -50,7 +50,7 @@ public class CalendarHelper {
                 ContentProviderOperation.Builder builder = ContentProviderOperation
                         .newInsert(calenderUri);
                 builder.withValue(CalendarContract.Calendars.ACCOUNT_NAME, Constants.ACCOUNT_NAME);
-                builder.withValue(CalendarContract.Calendars.ACCOUNT_TYPE, Constants.ACCOUNT_TYPE);
+                builder.withValue(CalendarContract.Calendars.ACCOUNT_TYPE, context.getString(R.string.account_type));
                 builder.withValue(CalendarContract.Calendars.NAME, CALENDAR_COLUMN_NAME);
                 builder.withValue(CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
                         context.getString(R.string.calendar_display_name));
@@ -87,7 +87,7 @@ public class CalendarHelper {
         }
 
         ContentResolver contentResolver = context.getContentResolver();
-        Uri calendarUri = getBirthdayAdapterUri(CalendarContract.Calendars.CONTENT_URI);
+        Uri calendarUri = getBirthdayAdapterUri(context, CalendarContract.Calendars.CONTENT_URI);
 
         int deletedRows = contentResolver.delete(calendarUri, null, null);
 
@@ -102,10 +102,10 @@ public class CalendarHelper {
      * Builds URI for Birthday Adapter based on account. Ensures that only the calendar of Birthday
      * Adapter is chosen.
      */
-    public static Uri getBirthdayAdapterUri(Uri uri) {
+    public static Uri getBirthdayAdapterUri(Context context, Uri uri) {
         return uri.buildUpon().appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
                 .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, Constants.ACCOUNT_NAME)
-                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, Constants.ACCOUNT_TYPE).build();
+                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, context.getString(R.string.account_type)).build();
     }
 
 }
