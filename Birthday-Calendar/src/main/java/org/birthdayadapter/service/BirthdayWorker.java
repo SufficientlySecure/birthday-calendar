@@ -173,22 +173,22 @@ public class BirthdayWorker extends Worker {
             final int totalEventsBeforeSync = existingEventUids.size();
             int newEventsCount = 0;
 
-            int[] reminderMinutes = PreferencesHelper.getAllReminderMinutes(context);
-            Log.d(Constants.TAG, "Reminder minutes: " + Arrays.toString(reminderMinutes));
-            boolean hasReminders = false;
-            for (int minute : reminderMinutes) {
-                if (minute != Constants.DISABLED_REMINDER) {
-                    hasReminders = true;
-                    break;
-                }
-            }
-
             ArrayList<ContentProviderOperation> operationList = new ArrayList<>();
 
             try (Cursor cursor = getContactsEvents(context, contentResolver)) {
                 if (cursor == null) {
                     Log.e(Constants.TAG, "Unable to get events from contacts! Cursor is null!");
                     return;
+                }
+
+                int[] reminderMinutes = PreferencesHelper.getAllReminderMinutes(context);
+                Log.d(Constants.TAG, "Reminder minutes: " + Arrays.toString(reminderMinutes));
+                boolean hasReminders = false;
+                for (int minute : reminderMinutes) {
+                    if (minute != Constants.DISABLED_REMINDER) {
+                        hasReminders = true;
+                        break;
+                    }
                 }
 
                 int eventDateColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
@@ -250,7 +250,7 @@ public class BirthdayWorker extends Worker {
                             String title = generateTitle(context, eventType, cursor,
                                     eventCustomLabelColumn, includeAge, displayName, age);
 
-                            if (title != null) {
+                            if (title != null && !title.trim().isEmpty()) {
                                 newEventsCount++;
                                 // Calculate the exact start time for this specific instance of the event
                                 Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
