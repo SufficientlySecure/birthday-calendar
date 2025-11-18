@@ -70,12 +70,6 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     private final Handler mSyncUpdateHandler = new Handler(Looper.getMainLooper());
     private Runnable mSyncUpdateRunnable;
 
-    private final SharedPreferences.OnSharedPreferenceChangeListener mSyncStatusListener = (sharedPreferences, key) -> {
-        if ("last_sync_timestamp".equals(key) && getActivity() != null) {
-            getActivity().runOnUiThread(this::updateSyncStatus);
-        }
-    };
-
     private final int[] baseColors = new int[]{
             0xfff44336, 0xffe91e63, 0xff9c27b0, 0xff673ab7, 0xff3f51b5, 0xff2196f3, 0xff03a9f4, 0xff00bcd4,
             0xff009688, 0xff4caf50, 0xff8bc34a, 0xffcddc39, 0xffffeb3b, 0xffffc107, 0xffff9800, 0xffff5722,
@@ -127,10 +121,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                         } else {
                             mBirthdaySyncWorkInfo = null;
                         }
-                        updateSyncStatus();
                     });
-        } else {
-            updateSyncStatus();
         }
     }
 
@@ -269,7 +260,6 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     @Override
     public void onResume() {
         super.onResume();
-        mSyncStatusPrefs.registerOnSharedPreferenceChangeListener(mSyncStatusListener);
         // Set up a listener whenever a key changes
         if (mActivity != null && mActivity.mySharedPreferenceChangeListener != null) {
             getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(
@@ -294,7 +284,6 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         // Stop the periodic UI updates
         mSyncUpdateHandler.removeCallbacks(mSyncUpdateRunnable);
 
-        mSyncStatusPrefs.unregisterOnSharedPreferenceChangeListener(mSyncStatusListener);
         // Unregister the listener whenever a key changes
         if (mActivity != null && mActivity.mySharedPreferenceChangeListener != null) {
             getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(
