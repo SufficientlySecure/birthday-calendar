@@ -415,6 +415,8 @@ public class BirthdayWorker extends Worker {
             int lookupKeyColumn = dataCursor.getColumnIndex(ContactsContract.Data.LOOKUP_KEY);
             int typeColumn = dataCursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE);
             int labelColumn = dataCursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL);
+            int startDateColumn = dataCursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
+            int displayNameColumn = dataCursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME);
 
             int idCounter = 0;
             while (dataCursor.moveToNext()) {
@@ -437,15 +439,16 @@ public class BirthdayWorker extends Worker {
                     String lookupKey = dataCursor.getString(lookupKeyColumn);
                     int type = dataCursor.getInt(typeColumn);
                     String label = dataCursor.getString(labelColumn);
+                    String startDate = dataCursor.getString(startDateColumn);
 
                     // Prevent adding the same event (birthday, anniversary) for the same contact twice
-                    String eventIdentifier = lookupKey + type + label;
+                    String eventIdentifier = lookupKey + type + label + startDate;
                     if (addedEventsIdentifiers.add(eventIdentifier)) {
                         resultCursor.newRow()
                                 .add(idCounter++)
-                                .add(dataCursor.getString(dataCursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME)))
+                                .add(dataCursor.getString(displayNameColumn))
                                 .add(lookupKey)
-                                .add(dataCursor.getString(dataCursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE)))
+                                .add(startDate)
                                 .add(type)
                                 .add(label);
                     }
