@@ -54,6 +54,7 @@ import org.birthdayadapter.R;
 import org.birthdayadapter.util.AccountHelper;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.PreferencesHelper;
+import org.birthdayadapter.util.SyncStatusManager;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -71,6 +72,12 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
 
     private final Handler mSyncUpdateHandler = new Handler(Looper.getMainLooper());
     private Runnable mSyncUpdateRunnable;
+
+    private final SharedPreferences.OnSharedPreferenceChangeListener mSyncStatusListener = (sharedPreferences, key) -> {
+        if ("last_sync_timestamp".equals(key) && getActivity() != null) {
+            getActivity().runOnUiThread(this::updateSyncStatus);
+        }
+    };
 
     private final int[] baseColors = new int[]{
             0xfff44336, 0xffe91e63, 0xff9c27b0, 0xff673ab7, 0xff3f51b5, 0xff2196f3, 0xff03a9f4, 0xff00bcd4,
@@ -99,7 +106,9 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         forceSyncPref = findPreference(getString(R.string.pref_force_sync_key));
         if (forceSyncPref != null) {
             forceSyncPref.setOnPreferenceClickListener(preference -> {
+                SyncStatusManager.getInstance().setSyncing(true);
                 mAccountHelper.manualSync();
+                updateSyncStatus();
                 return true;
             });
         }
@@ -130,6 +139,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                         } else {
                             mBirthdaySyncWorkInfo = null;
                         }
+                        updateSyncStatus();
                     });
         }
     }
@@ -340,6 +350,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     public void onResume() {
         super.onResume();
         updateJubileeYearsSummary();
+        mSyncStatusPrefs.registerOnSharedPreferenceChangeListener(mSyncStatusListener);
         // Set up a listener whenever a key changes
         if (mActivity != null && mActivity.mySharedPreferenceChangeListener != null) {
             getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(
@@ -361,6 +372,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     @Override
     public void onPause() {
         super.onPause();
+        mSyncStatusPrefs.unregisterOnSharedPreferenceChangeListener(mSyncStatusListener);
         // Stop the periodic UI updates
         mSyncUpdateHandler.removeCallbacks(mSyncUpdateRunnable);
 
