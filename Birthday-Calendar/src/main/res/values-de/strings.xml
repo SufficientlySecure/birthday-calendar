@@ -119,7 +119,4 @@
     <!--Free Version -->
     <string name="pref_buy">Vollversion kaufen</string>
     <string name="pref_buy_full">Google Play öffnen um Vollversion zu kaufen…</string>
-    <string name="pref_buy_full_summary">• Erinnerungsfunktion
-• Benutzerdefinierte Titel für Ereignisse</string>
-
-</resources>
+    </resources>

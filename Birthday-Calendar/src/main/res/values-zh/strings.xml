@@ -66,6 +66,7 @@
     <string name="pref_title_other_with_age">其它事件（有年数）</string>
     <string name="pref_title_custom_without_age">自定义事件</string>
     <string name="pref_title_custom_with_age">自定义事件（有年数）</string>
+
     <string name="pref_advanced_category">高级</string>
     <string name="pref_prefer_dd_slash_mm">优先使用 dd/MM/yyyy 格式</string>
     <string name="pref_prefer_dd_slash_mm_summary">解析日期时优先使用 dd/MM/yyyy 格式（默认为 MM/dd/yyyy）</string>
@@ -79,6 +80,4 @@
     <!--Free Version -->
     <string name="pref_buy">购买完整版！</string>
     <string name="pref_buy_full">打开 Google Play 购买完整版</string>
-    <string name="pref_buy_full_summary">• 设置事件的提醒时间\n• 自定义事件标题</string>
-
-</resources>
+    </resources>

@@ -66,6 +66,7 @@
     <string name="pref_title_other_with_age">Outro evento com idade</string>
     <string name="pref_title_custom_without_age">Personalizado</string>
     <string name="pref_title_custom_with_age">Personalizado com idade</string>
+
     <string name="pref_advanced_category">Definições avançadas</string>
     <string name="pref_prefer_dd_slash_mm">Utilizar dd/MM/aaaa</string>
     <string name="pref_prefer_dd_slash_mm_summary">Utilizar dd/MM/aaaa em vez de MM/dd/aaaa para datas</string>
@@ -79,6 +80,4 @@
     <!--Free Version -->
     <string name="pref_buy">Comprar versão completa!</string>
     <string name="pref_buy_full">Abrir Google Play para comprar a versão completa...</string>
-    <string name="pref_buy_full_summary">• Definir seus próprios lembres para eventos\n• Personalizar o título dos eventos</string>
-
-</resources>
+    </resources>

@@ -66,6 +66,7 @@
     <string name="pref_title_other_with_age">Otro evento con edad</string>
     <string name="pref_title_custom_without_age">Personalizado</string>
     <string name="pref_title_custom_with_age">Personalizado con edad</string>
+
     <string name="pref_advanced_category">Preferencias avanzadas.</string>
     <string name="pref_prefer_dd_slash_mm">Preferir formato dd/MM/yyyy</string>
     <string name="pref_prefer_dd_slash_mm_summary">Prefiero dd/mm/aaaa a MM/dd/aaaa al analizar los formatos de fecha</string>
@@ -79,6 +80,4 @@
     <!--Free Version -->
     <string name="pref_buy">¡Comprar la versión completa!</string>
     <string name="pref_buy_full">Ir a Google Play para comprar la versión completa...</string>
-    <string name="pref_buy_full_summary">• Establecer sus propios recordatorios de eventos\n • Personalizar títulos de los eventos</string>
-
-</resources>
+    </resources>
