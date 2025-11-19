@@ -60,6 +60,9 @@ public class AccountHelper {
     public Bundle addAccountAndSync() {
         Bundle result = null;
 
+        // Clear any old events before creating a new account and calendar
+        CalendarHelper.clearAllEvents(mContext);
+
         if (!isAccountActivated()) {
             Log.d(Constants.TAG, "Account does not exist. Adding account...");
 

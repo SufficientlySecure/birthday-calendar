@@ -65,12 +65,16 @@ public class CalendarHelper {
                 builder.withValue(CalendarContract.Calendars.VISIBLE, 1);
                 operationList.add(builder.build());
                 try {
-                    contentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
+                    android.content.ContentProviderResult[] results = contentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
+                    if (results.length > 0) {
+                        return android.content.ContentUris.parseId(results[0].uri);
+                    } else {
+                        return -1;
+                    }
                 } catch (Exception e) {
                     Log.e(Constants.TAG, "getCalendar() failed", e);
                     return -1;
                 }
-                return getCalendar(context);
             }
         }
     }
@@ -95,6 +99,30 @@ public class CalendarHelper {
             Log.i(Constants.TAG, "Successfully deleted birthday calendar.");
         } else {
             Log.w(Constants.TAG, "Birthday calendar not found or could not be deleted.");
+        }
+    }
+
+    /**
+     * Deletes all events from the birthday calendar.
+     */
+    public static void clearAllEvents(Context context) {
+        Log.d(Constants.TAG, "Clearing all events from birthday calendar...");
+
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            Log.e(Constants.TAG, "Missing calendar permissions to clear events!");
+            return;
+        }
+
+        ContentResolver contentResolver = context.getContentResolver();
+        Uri eventsUri = getBirthdayAdapterUri(context, CalendarContract.Events.CONTENT_URI);
+
+        // A selection is required when using CALLER_IS_SYNCADAPTER=true
+        int deletedRows = contentResolver.delete(eventsUri, "1", null);
+
+        if (deletedRows > 0) {
+            Log.i(Constants.TAG, "Successfully cleared " + deletedRows + " old events.");
+        } else {
+            Log.d(Constants.TAG, "Calendar was already empty. No events to clear.");
         }
     }
 
