@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
 import org.birthdayadapter.provider.ProviderHelper;
 import org.birthdayadapter.util.AccountHelper;
@@ -471,7 +472,7 @@ public class BirthdayWorker extends Worker {
         String title = PreferencesHelper.getLabel(context, effectiveEventType, includeAge);
 
         // add jubilee icon
-        if (includeAge) {
+        if ((BuildConfig.FULL_VERSION) && (includeAge)) {
             title = addJubileeIcon(context, title, age);
         }
 

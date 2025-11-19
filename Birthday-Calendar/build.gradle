@@ -66,18 +66,24 @@ android {
             applicationId = "org.birthdayadapter"
             buildConfigField("boolean", "FULL_VERSION", "true")
             buildConfigField("boolean", "GOOGLE_PLAY_VERSION", "false")
+            manifestPlaceholders = [authority: "org.birthdayadapter"]
+            resValue "string", "account_type", "org.birthdayadapter.auth"
         }
         create("full_google") {
             dimension = "version"
             applicationId = "org.birthdayadapter"
             buildConfigField("boolean", "FULL_VERSION", "true")
             buildConfigField("boolean", "GOOGLE_PLAY_VERSION", "true")
+            manifestPlaceholders = [authority: "org.birthdayadapter"]
+            resValue "string", "account_type", "org.birthdayadapter.auth"
         }
         create("free") {
             dimension = "version"
             applicationId = "org.birthdayadapter.free"
             buildConfigField("boolean", "FULL_VERSION", "false")
             buildConfigField("boolean", "GOOGLE_PLAY_VERSION", "true")
+            manifestPlaceholders = [authority: "org.birthdayadapter.free"]
+            resValue "string", "account_type", "org.birthdayadapter.free.auth"
         }
     }
     namespace = 'org.birthdayadapter'

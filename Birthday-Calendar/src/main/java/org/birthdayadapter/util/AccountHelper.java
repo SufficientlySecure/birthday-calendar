@@ -37,6 +37,7 @@ import androidx.work.OutOfQuotaPolicy;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
+import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
 import org.birthdayadapter.service.BirthdayWorker;
 
@@ -77,13 +78,15 @@ public class AccountHelper {
             Log.d(Constants.TAG, "Account already exists.");
         }
 
-        // Ensure the periodic sync is always scheduled if the account is active.
-        // Using UPDATE ensures that if the work already exists, it's updated if needed,
-        // and if it doesn't exist, it's created.
-        Log.d(Constants.TAG, "Enqueuing periodic sync with UPDATE policy.");
-        PeriodicWorkRequest periodicSyncRequest = new PeriodicWorkRequest.Builder(BirthdayWorker.class, Constants.SYNC_INTERVAL_DAYS, TimeUnit.DAYS)
-                .build();
-        WorkManager.getInstance(mContext).enqueueUniquePeriodicWork("birthday_sync", ExistingPeriodicWorkPolicy.UPDATE, periodicSyncRequest);
+        if (BuildConfig.FULL_VERSION) {
+            // Ensure the periodic sync is always scheduled if the account is active.
+            // Using UPDATE ensures that if the work already exists, it's updated if needed,
+            // and if it doesn't exist, it's created.
+            Log.d(Constants.TAG, "Enqueuing periodic sync with UPDATE policy.");
+            PeriodicWorkRequest periodicSyncRequest = new PeriodicWorkRequest.Builder(BirthdayWorker.class, Constants.SYNC_INTERVAL_DAYS, TimeUnit.DAYS)
+                    .build();
+            WorkManager.getInstance(mContext).enqueueUniquePeriodicWork("birthday_sync", ExistingPeriodicWorkPolicy.UPDATE, periodicSyncRequest);
+        }
 
         // Force a first/manual sync now.
         manualSync();

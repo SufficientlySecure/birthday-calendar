@@ -21,8 +21,6 @@
 
     <string name="app_name" translatable="false">Birthday Adapter</string>
 
-    <string name="account_type" translatable="false">org.birthdayadapter.auth</string>
-
     <!-- Calendar -->
     <string name="calendar_display_name">Birthdays</string>
     <string name="event_title_birthday_with_age">{NAME}: Birthday ({AGE})</string>
@@ -127,6 +125,6 @@
     <!--Free Version -->
     <string name="pref_buy">Buy full version!</string>
     <string name="pref_buy_full">Open Google Play to buy full version…</string>
-    <string name="pref_buy_full_summary">• Set your own reminders for events\n• Customize event titles</string>
+    <string name="pref_buy_full_summary">Regular background syncs, custom reminders and custom event titles, highlighting jubilee birthdays</string>
 
 </resources>

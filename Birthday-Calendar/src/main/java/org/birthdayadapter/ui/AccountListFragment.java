@@ -155,7 +155,7 @@ public class AccountListFragment extends Fragment implements
         if (mAdapter != null) {
             initialBlacklist = mAdapter.getAccountBlacklist();
         }
-        
+
         if (data == null || data.isEmpty()) {
             mListView.setVisibility(View.GONE);
             mEmptyView.setVisibility(View.VISIBLE);
