@@ -131,17 +131,15 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
             });
         }
 
-        if (mAccountHelper.isAccountActivated()) {
-            WorkManager.getInstance(mActivity).getWorkInfosForUniqueWorkLiveData("birthday_sync")
-                    .observe(getViewLifecycleOwner(), workInfos -> {
-                        if (workInfos != null && !workInfos.isEmpty()) {
-                            mBirthdaySyncWorkInfo = workInfos.get(0);
-                        } else {
-                            mBirthdaySyncWorkInfo = null;
-                        }
-                        updateSyncStatus();
-                    });
-        }
+        WorkManager.getInstance(mActivity).getWorkInfosForUniqueWorkLiveData("birthday_sync")
+                .observe(getViewLifecycleOwner(), workInfos -> {
+                    if (workInfos != null && !workInfos.isEmpty()) {
+                        mBirthdaySyncWorkInfo = workInfos.get(0);
+                    } else {
+                        mBirthdaySyncWorkInfo = null;
+                    }
+                    updateSyncStatus();
+                });
     }
 
     private void updateJubileeYearsSummary() {
