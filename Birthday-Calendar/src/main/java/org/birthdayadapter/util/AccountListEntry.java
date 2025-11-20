@@ -33,6 +33,8 @@ public class AccountListEntry {
     private Drawable icon;
     private boolean selected;
     private Account account;
+    private int contactCount;
+    private int dateCount;
 
     public AccountListEntry(Context context, Account account, AuthenticatorDescription description,
                             boolean selected) {
@@ -80,6 +82,22 @@ public class AccountListEntry {
 
     public void setSelected(boolean selected) {
         this.selected = selected;
+    }
+
+    public int getContactCount() {
+        return contactCount;
+    }
+
+    public void setContactCount(int contactCount) {
+        this.contactCount = contactCount;
+    }
+
+    public int getDateCount() {
+        return dateCount;
+    }
+
+    public void setDateCount(int dateCount) {
+        this.dateCount = dateCount;
     }
 
     @Override
