@@ -1,0 +1,9 @@
+3.3
+* Make jubilee dates configurable, leave empty to deactivate
+* Deactivate certain event types by setting an empty custom label
+* New strategy for background syncs: identify changes and apply only these
+* Reduce background syncs to every 5 days
+- Optimize contact retrieval function                            
+- Allow for multiple dates of same type per contact
+- Set persistent id to calendar entries
+- Reduce needed Android app permissions
