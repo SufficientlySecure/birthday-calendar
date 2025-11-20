@@ -24,9 +24,10 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AuthenticatorDescription;
 import android.content.Context;
+import android.database.Cursor;
+import android.provider.ContactsContract;
 import androidx.loader.content.AsyncTaskLoader;
 
-import org.birthdayadapter.R;
 import org.birthdayadapter.provider.ProviderHelper;
 
 import java.text.Collator;
@@ -48,13 +49,22 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
     }
 
     /**
-     * Perform alphabetical comparison of account entry objects.
+     * Perform comparison of account entry objects, sorting by the sum of contacts and dates.
      */
-    public static final Comparator<AccountListEntry> ALPHA_COMPARATOR = new Comparator<AccountListEntry>() {
+    public static final Comparator<AccountListEntry> TOTAL_COUNT_COMPARATOR = new Comparator<AccountListEntry>() {
         private final Collator sCollator = Collator.getInstance();
 
         @Override
         public int compare(AccountListEntry object1, AccountListEntry object2) {
+            int total1 = object1.getContactCount() + object1.getDateCount();
+            int total2 = object2.getContactCount() + object2.getDateCount();
+
+            // Sort by total count descending
+            int countCompare = Integer.compare(total2, total1);
+            if (countCompare != 0) {
+                return countCompare;
+            }
+            // If counts are equal, sort by label ascending
             return sCollator.compare(object1.getLabel(), object2.getLabel());
         }
     };
@@ -77,18 +87,63 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
             for (AuthenticatorDescription description : descriptions) {
                 if (description.type.equals(account.type)) {
                     boolean enabled = !accountBlacklist.contains(account);
-                    entries.add(new AccountListEntry(getContext(), account, description, enabled));
+                    AccountListEntry entry = new AccountListEntry(getContext(), account, description, enabled);
+                    int[] counts = getAccountStats(account);
+                    entry.setContactCount(counts[0]);
+                    entry.setDateCount(counts[1]);
+                    entries.add(entry);
                     break; // Found descriptor, no need to look further
                 }
             }
         }
 
         // Sort the list.
-        Collections.sort(entries, ALPHA_COMPARATOR);
+        Collections.sort(entries, TOTAL_COUNT_COMPARATOR);
 
         // Done!
         return entries;
     }
+
+    private int[] getAccountStats(Account account) {
+        // Query 1: Get total number of raw contacts for the account
+        int totalContacts = 0;
+        final String[] rawContactsProjection = {ContactsContract.RawContacts._ID};
+        final String rawContactsSelection = ContactsContract.RawContacts.ACCOUNT_TYPE + " = ? AND " + ContactsContract.RawContacts.ACCOUNT_NAME + " = ?";
+        final String[] rawContactsSelectionArgs = {account.type, account.name};
+
+        try (Cursor rawContactsCursor = getContext().getContentResolver().query(
+                ContactsContract.RawContacts.CONTENT_URI,
+                rawContactsProjection,
+                rawContactsSelection,
+                rawContactsSelectionArgs,
+                null
+        )) {
+            if (rawContactsCursor != null) {
+                totalContacts = rawContactsCursor.getCount();
+            }
+        }
+
+        // Query 2: Get total number of dates (events) for the account
+        int totalDates = 0;
+        final String[] eventsProjection = {ContactsContract.Data._ID}; // Just need to count
+        final String eventsSelection = ContactsContract.Data.MIMETYPE + " = ? AND " +
+                ContactsContract.RawContacts.ACCOUNT_TYPE + " = ? AND " +
+                ContactsContract.RawContacts.ACCOUNT_NAME + " = ?";
+        final String[] eventsSelectionArgs = {
+                ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE,
+                account.type,
+                account.name
+        };
+
+        try (Cursor eventsCursor = getContext().getContentResolver().query(ContactsContract.Data.CONTENT_URI, eventsProjection, eventsSelection, eventsSelectionArgs, null)) {
+            if (eventsCursor != null) {
+                totalDates = eventsCursor.getCount();
+            }
+        }
+
+        return new int[]{totalContacts, totalDates};
+    }
+
 
     @Override
     public void deliverResult(List<AccountListEntry> accounts) {

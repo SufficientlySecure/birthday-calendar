@@ -121,6 +121,15 @@
     <!-- Accounts -->
     <string name="account_list_description">Only birthdays from selected accounts will be displayed in your calendar.</string>
     <string name="account_list_empty">No accounts</string>
+    <string name="account_list_counters_format">%1$s, %2$s</string>
+    <plurals name="contacts_count">
+        <item quantity="one">%d contact</item>
+        <item quantity="other">%d contacts</item>
+    </plurals>
+    <plurals name="dates_count">
+        <item quantity="one">%d date</item>
+        <item quantity="other">%d dates</item>
+    </plurals>
 
     <!--Free Version -->
     <string name="pref_buy">Buy full version!</string>

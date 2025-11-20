@@ -22,8 +22,9 @@ package org.birthdayadapter.util;
 
 import android.accounts.Account;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import androidx.annotation.NonNull;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,9 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import org.birthdayadapter.R;
 
@@ -93,10 +97,40 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
 
         AccountListEntry entry = getItem(position);
         ImageView iconView = view.findViewById(R.id.account_list_icon);
+        TextView titleView = view.findViewById(R.id.account_list_text);
+        TextView subtitleView = view.findViewById(R.id.account_list_subtext);
+        TextView countersView = view.findViewById(R.id.account_list_counters);
 
         if (entry != null) {
-            ((TextView) view.findViewById(R.id.account_list_text)).setText(entry.getLabel());
-            ((TextView) view.findViewById(R.id.account_list_subtext)).setText(entry.getAccount().name);
+            titleView.setText(entry.getLabel());
+            subtitleView.setText(entry.getAccount().name);
+
+            int contactCount = entry.getContactCount();
+            int dateCount = entry.getDateCount();
+
+            String contactsStr = getContext().getResources().getQuantityString(R.plurals.contacts_count, contactCount, contactCount);
+            String datesStr = getContext().getResources().getQuantityString(R.plurals.dates_count, dateCount, dateCount);
+
+            String countersSummary = getContext().getString(R.string.account_list_counters_format, contactsStr, datesStr);
+            countersView.setText(countersSummary);
+
+            int textColor;
+            int secondaryTextColor;
+            if (entry.getDateCount() == 0) {
+                textColor = Color.GRAY;
+                secondaryTextColor = Color.GRAY;
+            } else {
+                TypedValue typedValue = new TypedValue();
+                getContext().getTheme().resolveAttribute(android.R.attr.textColorPrimary, typedValue, true);
+                textColor = ContextCompat.getColor(getContext(), typedValue.resourceId);
+
+                TypedValue secondaryTypedValue = new TypedValue();
+                getContext().getTheme().resolveAttribute(android.R.attr.textColorSecondary, secondaryTypedValue, true);
+                secondaryTextColor = ContextCompat.getColor(getContext(), secondaryTypedValue.resourceId);
+            }
+            titleView.setTextColor(textColor);
+            subtitleView.setTextColor(secondaryTextColor);
+            countersView.setTextColor(secondaryTextColor);
 
             Drawable icon = entry.getIcon();
             if (icon != null) {
