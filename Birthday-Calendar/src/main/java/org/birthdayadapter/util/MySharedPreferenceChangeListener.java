@@ -40,25 +40,38 @@ public class MySharedPreferenceChangeListener implements SharedPreferences.OnSha
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key == null || context == null) {
-            return; // Safeguard against unexpected nulls
+            return; // Safeguard
         }
 
-        // Get the preference keys from resources
+        Log.d("BirthdayAdapter", "Preference changed: " + key);
+
+        // --- Special case: Color change is a lightweight action ---
         String colorKey = context.getString(R.string.pref_color_key);
-
         if (key.equals(colorKey)) {
-            // set new color
             startWork(BirthdayWorker.ACTION_CHANGE_COLOR);
-        } else {
-            // For any other preference change, resync all events
-            new AccountHelper(context).manualSync();
+            return;
         }
+
+        // --- Keys for UI elements or one-off actions that should NOT trigger a sync ---
+        String advancedKey = context.getString(R.string.pref_advanced_key);
+        String contactsKey = context.getString(R.string.pref_contacts_key);
+        String forceSyncKey = context.getString(R.string.pref_force_sync_key);
+
+        if (key.equals(advancedKey) || key.equals(contactsKey) || key.equals(forceSyncKey)) {
+            // These are UI toggles or have their own click listeners, so we do nothing here.
+            return;
+        }
+
+        // --- Catch-all for any other preference change ---
+        // Assume it affects event data (reminders, titles, date formats, etc.) and trigger the full resync.
+        Log.d("BirthdayAdapter", "Triggering full calendar resync for key: " + key);
+        new AccountHelper(context).updateReminders();
     }
 
     /**
      * Start a worker to perform an action
      */
-    public void startWork(String action) {
+    private void startWork(String action) {
         if (context == null) return;
 
         Data inputData = new Data.Builder()

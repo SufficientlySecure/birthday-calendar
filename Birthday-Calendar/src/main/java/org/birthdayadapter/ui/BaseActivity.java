@@ -2,7 +2,7 @@
  * Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
  *
  * This file is part of Birthday Adapter.
- * 
+ *
  * Birthday Adapter is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -30,19 +30,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Observer;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
-import androidx.work.WorkInfo;
-import androidx.work.WorkManager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.MySharedPreferenceChangeListener;
-
-import java.util.List;
+import org.birthdayadapter.util.SyncStatusManager;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -68,41 +64,14 @@ public class BaseActivity extends AppCompatActivity {
                 (tab, position) -> tab.setText(((ViewPagerAdapter) viewPager.getAdapter()).getPageTitle(position))
         ).attach();
 
-        mySharedPreferenceChangeListener = new MySharedPreferenceChangeListener(this);
+        mySharedPreferenceChangeListener = new MySharedPreferenceChangeListener(getApplicationContext());
 
-        // Observe both manual and periodic sync workers
-        WorkManager.getInstance(this).getWorkInfosForUniqueWorkLiveData("manual_sync")
-                .observe(this, new Observer<List<WorkInfo>>() {
-                    @Override
-                    public void onChanged(List<WorkInfo> workInfos) {
-                        updateSpinner(workInfos);
-                    }
-                });
-        WorkManager.getInstance(this).getWorkInfosForUniqueWorkLiveData("birthday_sync")
-                .observe(this, new Observer<List<WorkInfo>>() {
-                    @Override
-                    public void onChanged(List<WorkInfo> workInfos) {
-                        updateSpinner(workInfos);
-                    }
-                });
-    }
-
-    private void updateSpinner(List<WorkInfo> workInfos) {
-        if (workInfos == null || workInfos.isEmpty()) {
-            return;
-        }
-
-        boolean isSyncing = false;
-        for (WorkInfo workInfo : workInfos) {
-            if (workInfo.getState() == WorkInfo.State.RUNNING || workInfo.getState() == WorkInfo.State.ENQUEUED) {
-                isSyncing = true;
-                break;
+        // Observe the global sync status
+        SyncStatusManager.getInstance().isSyncing().observe(this, isSyncing -> {
+            if (mProgressBar != null) {
+                mProgressBar.setVisibility(isSyncing ? View.VISIBLE : View.GONE);
             }
-        }
-
-        if (mProgressBar != null) {
-            mProgressBar.setVisibility(isSyncing ? View.VISIBLE : View.GONE);
-        }
+        });
     }
 
     @Override

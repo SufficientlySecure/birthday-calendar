@@ -2,7 +2,7 @@
  * Copyright (C) 2012-2013 Dominik Schürmann <dominik@dominikschuermann.de>
  *
  * This file is part of Birthday Adapter.
- *
+ * 
  * Birthday Adapter is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -23,12 +23,9 @@ package org.birthdayadapter.util;
 import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.accounts.AccountManagerFuture;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 import androidx.work.Data;
@@ -39,6 +36,7 @@ import androidx.work.OutOfQuotaPolicy;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
+import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
 import org.birthdayadapter.service.BirthdayWorker;
 
@@ -46,10 +44,6 @@ import java.util.concurrent.TimeUnit;
 
 public class AccountHelper {
     private Context mContext;
-
-    public AccountHelper(Context context, Handler handler) {
-        mContext = context;
-    }
 
     public AccountHelper(Context context) {
         mContext = context;
@@ -60,6 +54,9 @@ public class AccountHelper {
      */
     public Bundle addAccountAndSync() {
         Bundle result = null;
+
+        // Clear any old events before creating a new account and calendar
+        CalendarHelper.clearAllEvents(mContext);
 
         if (!isAccountActivated()) {
             Log.d(Constants.TAG, "Account does not exist. Adding account...");
@@ -79,74 +76,85 @@ public class AccountHelper {
             Log.d(Constants.TAG, "Account already exists.");
         }
 
-        // Ensure the periodic sync is always scheduled if the account is active.
-        // Using REPLACE ensures that if the work already exists, it's updated if needed,
-        // and if it doesn't exist, it's created.
-        Log.d(Constants.TAG, "Enqueuing periodic sync with REPLACE policy.");
-        PeriodicWorkRequest periodicSyncRequest = new PeriodicWorkRequest.Builder(BirthdayWorker.class, 24, TimeUnit.HOURS)
-                .build();
-        WorkManager.getInstance(mContext).enqueueUniquePeriodicWork("birthday_sync", ExistingPeriodicWorkPolicy.REPLACE, periodicSyncRequest);
-
-        // Force a first/manual sync now.
+        // Trigger a sync
         manualSync();
 
         return result;
     }
 
     /**
-     * Remove account from Android system
+     * Remove account from Android system and deletes the associated calendar.
      */
-    public boolean removeAccount() {
-        Log.d(Constants.TAG, "Removing account...");
+    public void removeAccount() {
+        Log.d(Constants.TAG, "Removing account and calendar...");
 
+        // First, delete the calendar
+        CalendarHelper.deleteCalendar(mContext);
+
+        // Then, remove the account
         AccountManager am = AccountManager.get(mContext);
         final Account account = new Account(Constants.ACCOUNT_NAME, mContext.getString(R.string.account_type));
 
-        // remove account
-        AccountManagerFuture<Boolean> future = am.removeAccount(account, null, null);
-        if (future.isDone()) {
+        am.removeAccount(account, null, future -> {
             try {
-                future.getResult();
-
-                // Cancel the periodic sync
-                WorkManager.getInstance(mContext).cancelUniqueWork("birthday_sync");
-
-                return true;
+                if (future.getResult().getBoolean(AccountManager.KEY_BOOLEAN_RESULT)) {
+                    Log.i(Constants.TAG, "Account removed successfully.");
+                    // Cancel any pending syncs
+                    WorkManager.getInstance(mContext).cancelUniqueWork("birthday_sync");
+                } else {
+                    Log.e(Constants.TAG, "Failed to remove account.");
+                }
             } catch (Exception e) {
-                Log.e(Constants.TAG, "Problem while removing account!", e);
-                return false;
+                Log.e(Constants.TAG, "Error while removing account", e);
             }
-        } else {
-            return false;
-        }
+        }, null);
     }
 
     /**
-     * Force a manual sync now using WorkManager.
-     * This sync is enqueued as unique work with a REPLACE policy, ensuring
-     * that only one manual sync is pending or running at a time. The last one wins.
+     * Force a manual sync now using WorkManager and reschedule the periodic sync for the full version.
      */
     public void manualSync() {
-        Log.d(Constants.TAG, "Forcing manual sync using WorkManager...");
+        // (Re)schedule a periodic sync upon a manual sync
+        if (BuildConfig.FULL_VERSION) {
+            Log.d(Constants.TAG, "Enqueuing periodic sync with UPDATE policy.");
+            PeriodicWorkRequest periodicSyncRequest = new PeriodicWorkRequest.Builder(BirthdayWorker.class, Constants.SYNC_INTERVAL_DAYS, TimeUnit.DAYS).build();
+            WorkManager.getInstance(mContext).enqueueUniquePeriodicWork("birthday_sync", ExistingPeriodicWorkPolicy.UPDATE, periodicSyncRequest);
+        }
 
-        // Define the action for the worker to perform a sync
+        // Trigger the immediate sync
+        syncWithAction("manual_sync", BirthdayWorker.ACTION_SYNC);
+    }
+
+    /**
+     * Enqueues a worker to update all reminders on existing events.
+     */
+    public void updateReminders() {
+        Log.d(Constants.TAG, "Reminder settings changed, enqueuing worker with ACTION_REMINDERS_CHANGED.");
+        syncWithAction("reminder_update", BirthdayWorker.ACTION_REMINDERS_CHANGED);
+    }
+
+    /**
+     * Enqueues a one-time work request with a specific action and unique name.
+     *
+     * @param uniqueWorkName   A unique name for the work request.
+     * @param action           The action to be performed by the worker.
+     */
+    private void syncWithAction(String uniqueWorkName, String action) {
+        Log.d(Constants.TAG, "Enqueuing one-time work with name '" + uniqueWorkName + "' and action '" + action + "'");
+
         Data inputData = new Data.Builder()
-                .putString(BirthdayWorker.ACTION, BirthdayWorker.ACTION_SYNC)
+                .putString(BirthdayWorker.ACTION, action)
                 .build();
 
-        // Create a one-time work request for the BirthdayWorker
-        OneTimeWorkRequest manualSyncRequest = new OneTimeWorkRequest.Builder(BirthdayWorker.class)
-                // Mark it as "expedited" so the system attempts to run it as soon as possible.
+        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(BirthdayWorker.class)
                 .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                 .setInputData(inputData)
                 .build();
 
-        // Enqueue the request as unique work, replacing any existing pending manual sync.
-        // This prevents multiple syncs from queuing up if the user taps the button repeatedly.
         WorkManager.getInstance(mContext).enqueueUniqueWork(
-                "manual_sync",
-                ExistingWorkPolicy.REPLACE,
-                manualSyncRequest);
+                uniqueWorkName,
+                ExistingWorkPolicy.APPEND_OR_REPLACE,
+                workRequest);
     }
 
     /**

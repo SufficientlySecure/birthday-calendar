@@ -21,18 +21,18 @@
 package org.birthdayadapter.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
-import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,17 +49,16 @@ import androidx.work.WorkManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.common.util.concurrent.ListenableFuture;
 
-import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.AccountHelper;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.PreferencesHelper;
+import org.birthdayadapter.util.SyncStatusManager;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
 
@@ -67,7 +66,12 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     private AccountHelper mAccountHelper;
     private Preference colorPref;
     private Preference forceSyncPref;
+    private Preference mJubileeYearsPref;
     private SharedPreferences mSyncStatusPrefs;
+    private WorkInfo mBirthdaySyncWorkInfo;
+
+    private final Handler mSyncUpdateHandler = new Handler(Looper.getMainLooper());
+    private Runnable mSyncUpdateRunnable;
 
     private final SharedPreferences.OnSharedPreferenceChangeListener mSyncStatusListener = (sharedPreferences, key) -> {
         if ("last_sync_timestamp".equals(key) && getActivity() != null) {
@@ -99,19 +103,15 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         mAccountHelper = new AccountHelper(mActivity);
         mSyncStatusPrefs = mActivity.getSharedPreferences("sync_status_prefs", Context.MODE_PRIVATE);
 
-        // ... (code for buyFull preference) ...
-
         forceSyncPref = findPreference(getString(R.string.pref_force_sync_key));
         if (forceSyncPref != null) {
             forceSyncPref.setOnPreferenceClickListener(preference -> {
+                SyncStatusManager.getInstance().setSyncing(true);
                 mAccountHelper.manualSync();
-                // Give WorkManager a moment to update the status
-                view.postDelayed(this::updateSyncStatus, 1000);
+                updateSyncStatus();
                 return true;
             });
         }
-
-        updateSyncStatus();
 
         colorPref = findPreference(getString(R.string.pref_color_key));
         if (colorPref != null) {
@@ -121,6 +121,93 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                 return true;
             });
         }
+
+        mJubileeYearsPref = findPreference(getString(R.string.pref_jubilee_years_key));
+        if (mJubileeYearsPref != null) {
+            updateJubileeYearsSummary();
+            mJubileeYearsPref.setOnPreferenceClickListener(preference -> {
+                showJubileeYearsInputDialog();
+                return true;
+            });
+        }
+
+        WorkManager.getInstance(mActivity).getWorkInfosForUniqueWorkLiveData("birthday_sync")
+                .observe(getViewLifecycleOwner(), workInfos -> {
+                    if (workInfos != null && !workInfos.isEmpty()) {
+                        mBirthdaySyncWorkInfo = workInfos.get(0);
+                    } else {
+                        mBirthdaySyncWorkInfo = null;
+                    }
+                    updateSyncStatus();
+                });
+    }
+
+    private void updateJubileeYearsSummary() {
+        if (mJubileeYearsPref != null && mActivity != null) {
+            String jubileeYears = PreferencesHelper.getJubileeYears(mActivity);
+            mJubileeYearsPref.setSummary(jubileeYears);
+        }
+    }
+
+    private boolean isValidJubileeYears(String value) {
+        if (TextUtils.isEmpty(value)) return true; // allow empty
+        return Pattern.matches("^[1-9][0-9]*(?:\\s*,\\s*[1-9][0-9]*)*$", value.trim());
+    }
+
+    private void showJubileeYearsInputDialog() {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_jubilee_input, null);
+        final EditText jubileeInput = dialogView.findViewById(R.id.jubileeInput);
+        final TextInputLayout jubileeInputLayout = dialogView.findViewById(R.id.jubileeInputLayout);
+
+        String currentJubileeYears = PreferencesHelper.getJubileeYears(mActivity);
+        jubileeInput.setText(currentJubileeYears);
+
+        AlertDialog jubileeDialog = new MaterialAlertDialogBuilder(mActivity)
+                .setTitle(R.string.pref_jubilee_years_title)
+                .setView(dialogView)
+                .setPositiveButton(android.R.string.ok, (d, which) -> {
+                    String jubileeYears = jubileeInput.getText().toString();
+                    saveJubileeYears(jubileeYears);
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .create();
+
+        jubileeDialog.show();
+
+        final Button positiveButton = jubileeDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        positiveButton.setEnabled(isValidJubileeYears(currentJubileeYears));
+
+        jubileeInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (isValidJubileeYears(s.toString())) {
+                    positiveButton.setEnabled(true);
+                    if (jubileeInputLayout != null) {
+                        jubileeInputLayout.setError(null);
+                    }
+                } else {
+                    positiveButton.setEnabled(false);
+                    if (jubileeInputLayout != null) {
+                        jubileeInputLayout.setError("Invalid format");
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
+    private void saveJubileeYears(String jubileeYears) {
+        SharedPreferences.Editor editor = getPreferenceManager().getSharedPreferences().edit();
+        editor.putString(getString(R.string.pref_jubilee_years_key), jubileeYears);
+        editor.apply();
+        updateJubileeYearsSummary();
     }
 
     private void updateSyncStatus() {
@@ -136,19 +223,14 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         }
 
         if (mAccountHelper != null && mAccountHelper.isAccountActivated()) {
-            ListenableFuture<List<WorkInfo>> workFuture = WorkManager.getInstance(mActivity).getWorkInfosForUniqueWork("birthday_sync");
-            try {
-                List<WorkInfo> workInfos = workFuture.get();
-                if (workInfos != null && !workInfos.isEmpty()) {
-                    WorkInfo workInfo = workInfos.get(0);
-                    long nextRun = workInfo.getNextScheduleTimeMillis();
-                    if (nextRun > 0) {
-                        summary += "\n" + getString(R.string.next_sync, DateUtils.getRelativeTimeSpanString(nextRun, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS));
-                    }
+            if (mBirthdaySyncWorkInfo != null) {
+                long nextRun = mBirthdaySyncWorkInfo.getNextScheduleTimeMillis();
+                long now = System.currentTimeMillis();
+                long sanityThreshold = now + TimeUnit.DAYS.toMillis(Constants.SYNC_INTERVAL_DAYS * 2);
+
+                if (nextRun > now && nextRun < sanityThreshold) {
+                    summary += "\n" + getString(R.string.next_sync, DateUtils.getRelativeTimeSpanString(nextRun, now, DateUtils.MINUTE_IN_MILLIS));
                 }
-            } catch (ExecutionException | InterruptedException e) {
-                Thread.currentThread().interrupt();
-                // Could not get next sync time
             }
         }
 
@@ -214,7 +296,8 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
 
         hexInput.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -234,7 +317,8 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
     }
 
@@ -263,19 +347,33 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     @Override
     public void onResume() {
         super.onResume();
-        updateSyncStatus();
+        updateJubileeYearsSummary();
         mSyncStatusPrefs.registerOnSharedPreferenceChangeListener(mSyncStatusListener);
         // Set up a listener whenever a key changes
         if (mActivity != null && mActivity.mySharedPreferenceChangeListener != null) {
             getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(
                     mActivity.mySharedPreferenceChangeListener);
         }
+
+        mSyncUpdateRunnable = new Runnable() {
+            @Override
+            public void run() {
+                updateSyncStatus();
+                // Rerun every minute
+                mSyncUpdateHandler.postDelayed(this, DateUtils.MINUTE_IN_MILLIS);
+            }
+        };
+        // Immediately run and start the cycle
+        mSyncUpdateHandler.post(mSyncUpdateRunnable);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mSyncStatusPrefs.unregisterOnSharedPreferenceChangeListener(mSyncStatusListener);
+        // Stop the periodic UI updates
+        mSyncUpdateHandler.removeCallbacks(mSyncUpdateRunnable);
+
         // Unregister the listener whenever a key changes
         if (mActivity != null && mActivity.mySharedPreferenceChangeListener != null) {
             getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(

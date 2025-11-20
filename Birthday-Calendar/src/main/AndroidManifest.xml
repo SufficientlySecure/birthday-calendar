@@ -28,7 +28,6 @@
         android:xlargeScreens="true" />
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS_PRIVILEGED" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
@@ -46,10 +45,10 @@
 
     <application
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:label="@string/app_name"
-        tools:ignore="GoogleAppIndexingWarning">
+        android:label="@string/app_name">
         <activity
             android:name="org.birthdayadapter.ui.BaseActivity"
             android:theme="@style/MyMaterialTheme.Base"
@@ -98,11 +97,10 @@
                 android:resource="@xml/authenticator" />
         </service>
 
-        <!-- Provider defined in free, full, and full_google Manifests to prevent conflicts -->
-        <!--<provider-->
-        <!--android:name="org.birthdayadapter.provider.BirthdayAdapterProvider"-->
-        <!--android:authorities="org.birthdayadapter"-->
-        <!--android:exported="false"/>-->
+        <provider
+            android:name="org.birthdayadapter.provider.BirthdayAdapterProvider"
+            android:authorities="${authority}"
+            android:exported="false"/>
     </application>
 
 </manifest>

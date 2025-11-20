@@ -66,6 +66,7 @@
     <string name="pref_title_other_with_age">Други с години</string>
     <string name="pref_title_custom_without_age">Собствени</string>
     <string name="pref_title_custom_with_age">Собствени с години</string>
+
     <string name="pref_advanced_category">Подробни настройки</string>
     <string name="pref_prefer_dd_slash_mm">Предпочитан формат dd/MM/yyyy</string>
     <string name="pref_prefer_dd_slash_mm_summary">Предпочитан формат dd/MM/yyyy към MM/dd/yyyy при форматиране на дата</string>
@@ -79,6 +80,4 @@
     <!--Free Version -->
     <string name="pref_buy">Купи пълната версия!</string>
     <string name="pref_buy_full">Отвори Google Play, за да купиш пълната версия…</string>
-    <string name="pref_buy_full_summary">• Настрой собствени напомняния за събития\n• Персонализиране заглавия на събития</string>
-
-</resources>
+    </resources>

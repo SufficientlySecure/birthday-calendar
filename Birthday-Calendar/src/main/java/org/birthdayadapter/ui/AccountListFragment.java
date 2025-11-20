@@ -135,7 +135,7 @@ public class AccountListFragment extends Fragment implements
         if (newBlacklist != null && !newBlacklist.equals(initialBlacklist)) {
             ProviderHelper.setAccountBlacklist(getActivity(), newBlacklist);
 
-            AccountHelper accountHelper = new AccountHelper(mActivity, null);
+            AccountHelper accountHelper = new AccountHelper(mActivity);
             if (accountHelper.isAccountActivated()) {
                 accountHelper.manualSync();
             }
@@ -155,7 +155,7 @@ public class AccountListFragment extends Fragment implements
         if (mAdapter != null) {
             initialBlacklist = mAdapter.getAccountBlacklist();
         }
-        
+
         if (data == null || data.isEmpty()) {
             mListView.setVisibility(View.GONE);
             mEmptyView.setVisibility(View.VISIBLE);

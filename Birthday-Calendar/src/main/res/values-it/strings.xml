@@ -66,6 +66,7 @@
     <string name="pref_title_other_with_age">Altro evento con età</string>
     <string name="pref_title_custom_without_age">Personalizzata</string>
     <string name="pref_title_custom_with_age">Personalizzata con età</string>
+
     <string name="pref_advanced_category">Impostazioni avanzate</string>
     <string name="pref_prefer_dd_slash_mm">Preferisci formato gg/MM/aaaa</string>
     <string name="pref_prefer_dd_slash_mm_summary">Preferisce gg/MM/aaaa a MM/gg/aaaa quando elabora i formati delle date</string>
@@ -79,6 +80,4 @@
     <!--Free Version -->
     <string name="pref_buy">Compra la versione completa!</string>
     <string name="pref_buy_full">Apri Google Play per comprare la versione completa...</string>
-    <string name="pref_buy_full_summary">• Imposta i tuoi promemoria per gli eventi\n• Personalizza i titoli degli eventi</string>
-
-</resources>
+    </resources>

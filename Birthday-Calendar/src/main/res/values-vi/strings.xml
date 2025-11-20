@@ -66,6 +66,7 @@
     <string name="pref_title_other_with_age">Sự kiện khác kèm theo tuổi</string>
     <string name="pref_title_custom_without_age">Tuỳ chọn</string>
     <string name="pref_title_custom_with_age">Tuỳ chọn kèm theo tuổi</string>
+
     <string name="pref_advanced_category">Cài đặt nâng cao</string>
     <string name="pref_prefer_dd_slash_mm">Định dạng ưa thích dd/MM/yyyy</string>
     <string name="pref_prefer_dd_slash_mm_summary">Chọn dd/MM/yyyy thay vì MM/dd/yyyy khi phân tích định dạng ngày tháng</string>
@@ -79,6 +80,4 @@
     <!--Free Version -->
     <string name="pref_buy">Hãy mua phiên bản đầy đủ!</string>
     <string name="pref_buy_full">Mở Google Play để mua phiên bản đầy đủ...</string>
-    <string name="pref_buy_full_summary">• Đặt trình nhắc nhở sự kiện của riêng bạn\n• Tuỳ chỉnh tiêu đề sự kiện</string>
-
-</resources>
+    </resources>

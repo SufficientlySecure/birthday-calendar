@@ -32,15 +32,7 @@ public class BirthdayAdapterContract {
         String ACCOUNT_TYPE = "account_type";
     }
 
-    public static final String CONTENT_AUTHORITY;
-
-    static {
-        if (BuildConfig.FULL_VERSION) {
-            CONTENT_AUTHORITY = "org.birthdayadapter";
-        } else {
-            CONTENT_AUTHORITY = "org.birthdayadapter.free";
-        }
-    }
+    public static final String CONTENT_AUTHORITY = BuildConfig.APPLICATION_ID;
 
     private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 

@@ -66,6 +66,7 @@
     <string name="pref_title_other_with_age">その他のイベントと年齢</string>
     <string name="pref_title_custom_without_age">カスタム</string>
     <string name="pref_title_custom_with_age">カスタムと年齢</string>
+
     <string name="pref_advanced_category">追加の設定</string>
     <string name="pref_prefer_dd_slash_mm">dd/MM/yyyy 形式を用いる</string>
     <string name="pref_prefer_dd_slash_mm_summary">日付形式の解析時に dd/MM/yyyy から MM/dd/yyyy を用いる</string>
@@ -79,6 +80,4 @@
     <!--Free Version -->
     <string name="pref_buy">完全バージョンを購入!</string>
     <string name="pref_buy_full">完全バージョンを購入するためGoogle Playを開く…</string>
-    <string name="pref_buy_full_summary">• あなた自身のイベントのリマインダーをセットしてください\n• イベントのタイトルをカスタマイズしてください</string>
-
-</resources>
+    </resources>

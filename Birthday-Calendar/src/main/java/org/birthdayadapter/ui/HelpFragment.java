@@ -22,6 +22,7 @@ package org.birthdayadapter.ui;
 
 import android.os.Bundle;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -40,6 +41,7 @@ public class HelpFragment extends Fragment {
         View view = inflater.inflate(R.layout.help_fragment, container, false);
 
         TextView text = (TextView) view.findViewById(R.id.help_text);
+        text.setMovementMethod(LinkMovementMethod.getInstance());
 
         // load html into textview
         try {

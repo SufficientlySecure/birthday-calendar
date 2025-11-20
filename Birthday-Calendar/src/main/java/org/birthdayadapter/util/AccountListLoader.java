@@ -67,11 +67,10 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
         ArrayList<AccountListEntry> entries = new ArrayList<>();
 
         HashSet<Account> accountBlacklist = ProviderHelper.getAccountBlacklist(getContext());
-        String selfAccountType = getContext().getString(R.string.account_type);
 
         for (Account account : accounts) {
             // Don't show the app's own account in the filter list
-            if (account.type.equals(selfAccountType)) {
+            if (account.type.startsWith("org.birthdayadapter")) {
                 continue;
             }
 

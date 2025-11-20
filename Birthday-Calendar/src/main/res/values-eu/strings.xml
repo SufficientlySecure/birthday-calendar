@@ -66,6 +66,7 @@
     <string name="pref_title_other_with_age">Beste gertaerak adinarekin</string>
     <string name="pref_title_custom_without_age">Norberea</string>
     <string name="pref_title_custom_with_age">Norberea adinarekin</string>
+
     <string name="pref_advanced_category">Ezarpen Aurreratuak</string>
     <string name="pref_prefer_dd_slash_mm">Hobetsi dd/MM/yyyy heuskarria</string>
     <string name="pref_prefer_dd_slash_mm_summary">Hobetsi MM/dd/yyyy -&gt; dd/MM/yyyy gain egun heuskarriak aztertzerakoan</string>
@@ -79,6 +80,4 @@
     <!--Free Version -->
     <string name="pref_buy">Erosi bertsio osoa!</string>
     <string name="pref_buy_full">Ireki Google Play bertsio osoa erosteko...</string>
-    <string name="pref_buy_full_summary">• Ezarri zuere gogoratzaileak gertaerentzat.\n• Norbereratu gertaera izenburuak</string>
-
-</resources>
+    </resources>

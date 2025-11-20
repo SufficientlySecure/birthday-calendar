@@ -141,4 +141,11 @@ public class PreferencesHelper {
                 Boolean.parseBoolean(context.getString(R.string.pref_prefer_dd_slash_mm_def)));
     }
 
+    public static String getJubileeYears(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
+                Context.MODE_PRIVATE);
+        return prefs.getString(context.getString(R.string.pref_jubilee_years_key),
+                context.getString(R.string.pref_jubilee_years_def));
+    }
+
 }

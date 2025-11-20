@@ -36,4 +36,6 @@ public class Constants {
     public static final String PREFS_NAME = "preferences";
 
     public static final int DISABLED_REMINDER = -99999;
+
+    public static final int SYNC_INTERVAL_DAYS = 5;
 }

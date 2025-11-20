@@ -55,6 +55,7 @@
     <string name="pref_title_other_with_age">Άλλη εκδήλωση με ηλικία</string>
     <string name="pref_title_custom_without_age">Προσαρμοσμένο</string>
     <string name="pref_title_custom_with_age">Προσαρμοσμένο με ηλικία</string>
+
     <string name="pref_advanced_category">Προηγμένες Ρυθμίσεις</string>
     <string name="pref_prefer_dd_slash_mm">Προτιμήση dd/MM/yyyy τυπου</string>
     <string name="pref_prefer_dd_slash_mm_summary">Προτιμήση  dd/MM/yyyy σε MM/dd/yyyy κατά την ανάλυση μορφών ημερομηνίας</string>
@@ -68,6 +69,4 @@
     <!--Free Version -->
     <string name="pref_buy">Αγοράστε την πλήρη έκδοση!</string>
     <string name="pref_buy_full">Ανοίξτε το Google Play για να αγοράσετε την πλήρη έκδοση...</string>
-    <string name="pref_buy_full_summary">• Ρυθμίστε τις δικες σας υπενθυμίσεις για εκδηλώσεις\n• Προσαρμογή τίτλων εκδήλωσης</string>
-
-</resources>
+    </resources>

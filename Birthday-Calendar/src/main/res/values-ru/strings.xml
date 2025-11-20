@@ -66,6 +66,7 @@
     <string name="pref_title_other_with_age">Другое событие с возрастом</string>
     <string name="pref_title_custom_without_age">Специальное</string>
     <string name="pref_title_custom_with_age">Специальное с возрастом</string>
+
     <string name="pref_advanced_category">Расширенные настройки</string>
     <string name="pref_prefer_dd_slash_mm">Предпочитать формат dd/MM/yyyy</string>
     <string name="pref_prefer_dd_slash_mm_summary">Предпочитать формат dd/MM/yyyy вместо MM/dd/yyyy при разборе даты</string>
@@ -79,6 +80,4 @@
     <!--Free Version -->
     <string name="pref_buy">Купить полную версию!</string>
     <string name="pref_buy_full">Открыть Google Play для покупки полной версии…</string>
-    <string name="pref_buy_full_summary">• Установить собственные напоминания для событий • Настройка заголовков событий</string>
-
-</resources>
+    </resources>
