@@ -2,7 +2,7 @@
  * Copyright (C) 2012-2013 Dominik Schürmann <dominik@dominikschuermann.de>
  *
  * This file is part of Birthday Adapter.
- *
+ * 
  * Birthday Adapter is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -26,7 +26,6 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
 
 import androidx.core.app.ActivityCompat;
 import androidx.work.Data;
@@ -45,10 +44,6 @@ import java.util.concurrent.TimeUnit;
 
 public class AccountHelper {
     private Context mContext;
-
-    public AccountHelper(Context context, Handler handler) {
-        mContext = context;
-    }
 
     public AccountHelper(Context context) {
         mContext = context;
@@ -81,17 +76,7 @@ public class AccountHelper {
             Log.d(Constants.TAG, "Account already exists.");
         }
 
-        if (BuildConfig.FULL_VERSION) {
-            // Ensure the periodic sync is always scheduled if the account is active.
-            // Using UPDATE ensures that if the work already exists, it's updated if needed,
-            // and if it doesn't exist, it's created.
-            Log.d(Constants.TAG, "Enqueuing periodic sync with UPDATE policy.");
-            PeriodicWorkRequest periodicSyncRequest = new PeriodicWorkRequest.Builder(BirthdayWorker.class, Constants.SYNC_INTERVAL_DAYS, TimeUnit.DAYS)
-                    .build();
-            WorkManager.getInstance(mContext).enqueueUniquePeriodicWork("birthday_sync", ExistingPeriodicWorkPolicy.UPDATE, periodicSyncRequest);
-        }
-
-        // Force a first/manual sync now.
+        // Trigger a sync
         manualSync();
 
         return result;
@@ -126,10 +111,18 @@ public class AccountHelper {
     }
 
     /**
-     * Force a manual sync now using WorkManager.
+     * Force a manual sync now using WorkManager and reschedule the periodic sync for the full version.
      */
     public void manualSync() {
-        syncWithAction("manual_sync", BirthdayWorker.ACTION_SYNC, ExistingWorkPolicy.APPEND_OR_REPLACE);
+        // (Re)schedule a periodic sync upon a manual sync
+        if (BuildConfig.FULL_VERSION) {
+            Log.d(Constants.TAG, "Enqueuing periodic sync with UPDATE policy.");
+            PeriodicWorkRequest periodicSyncRequest = new PeriodicWorkRequest.Builder(BirthdayWorker.class, Constants.SYNC_INTERVAL_DAYS, TimeUnit.DAYS).build();
+            WorkManager.getInstance(mContext).enqueueUniquePeriodicWork("birthday_sync", ExistingPeriodicWorkPolicy.UPDATE, periodicSyncRequest);
+        }
+
+        // Trigger the immediate sync
+        syncWithAction("manual_sync", BirthdayWorker.ACTION_SYNC);
     }
 
     /**
@@ -137,7 +130,7 @@ public class AccountHelper {
      */
     public void updateReminders() {
         Log.d(Constants.TAG, "Reminder settings changed, enqueuing worker with ACTION_REMINDERS_CHANGED.");
-        syncWithAction("reminder_update", BirthdayWorker.ACTION_REMINDERS_CHANGED, ExistingWorkPolicy.APPEND_OR_REPLACE);
+        syncWithAction("reminder_update", BirthdayWorker.ACTION_REMINDERS_CHANGED);
     }
 
     /**
@@ -145,9 +138,8 @@ public class AccountHelper {
      *
      * @param uniqueWorkName   A unique name for the work request.
      * @param action           The action to be performed by the worker.
-     * @param existingWorkPolicy The policy to apply if work with that name already exists.
      */
-    private void syncWithAction(String uniqueWorkName, String action, ExistingWorkPolicy existingWorkPolicy) {
+    private void syncWithAction(String uniqueWorkName, String action) {
         Log.d(Constants.TAG, "Enqueuing one-time work with name '" + uniqueWorkName + "' and action '" + action + "'");
 
         Data inputData = new Data.Builder()
@@ -161,7 +153,7 @@ public class AccountHelper {
 
         WorkManager.getInstance(mContext).enqueueUniqueWork(
                 uniqueWorkName,
-                existingWorkPolicy,
+                ExistingWorkPolicy.APPEND_OR_REPLACE,
                 workRequest);
     }
 
