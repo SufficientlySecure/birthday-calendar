@@ -32,6 +32,7 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
@@ -75,7 +76,12 @@ public class AboutFragment extends Fragment {
             PackageManager manager = getActivity().getPackageManager();
             PackageInfo info = manager.getPackageInfo(getActivity().getPackageName(), 0);
 
-            result = String.format("%s (%s)", info.versionName, info.versionCode);
+            String commitHash = org.birthdayadapter.BuildConfig.GIT_COMMIT_HASH;
+            if (commitHash != null && !commitHash.isEmpty()) {
+                result = String.format("%s (%s build %s)", info.versionName, info.versionCode, commitHash);
+            } else {
+                result = String.format("%s (%s)", info.versionName, info.versionCode);
+            }
         } catch (PackageManager.NameNotFoundException e) {
             Log.w(Constants.TAG, "Unable to get application version", e);
             result = "Unable to get application version.";
