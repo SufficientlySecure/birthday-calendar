@@ -119,4 +119,6 @@
     <!--Free Version -->
     <string name="pref_buy">Vollversion kaufen</string>
     <string name="pref_buy_full">Google Play öffnen um Vollversion zu kaufen…</string>
-    </resources>
+    <string name="pref_buy_full_summary">Automatische Hintergrundsynchronisierung, benutzerdefinierte Erinnerungen und Beschriftungen der Kalendereinträge, Hervorhebung von Jubiläen</string>
+
+</resources>
