@@ -51,7 +51,7 @@
     <string name="pref_contacts_summary">Edit your friends\' birthdays in your contacts app.</string>
     <string name="pref_contacts_open">Open contacts app</string>
     <string name="pref_calendar">3. Birthdays inside calendar</string>
-    <string name="pref_calendar_summary">Birthdays are now shown as events in your calendar app.</string>
+    <string name="pref_calendar_summary">Activate the birthday calendar in the accounts of your favorite calendar app.</string>
     <string name="pref_calendar_open">Open calendar app</string>
     <string name="pref_color">Color</string>
     <string name="pref_force_sync">Synchronize now!</string>
