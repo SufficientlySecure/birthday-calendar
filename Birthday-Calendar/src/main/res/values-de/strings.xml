@@ -49,7 +49,6 @@
     <string name="pref_contacts_summary">Bearbeite die Geburtstage Deiner Kontakte in Deiner Kontakte-App.</string>
     <string name="pref_contacts_open">Öffne Deine Kontakte-App</string>
     <string name="pref_calendar">3. Geburtstage im Kalender.</string>
-    <string name="pref_calendar_summary">Geburtstage werden nun in Deiner Kalender-App angezeigt.</string>
     <string name="pref_calendar_open">Öffne Deine Kalender-App</string>
     <string name="pref_color">Farbe</string>
     <string name="pref_force_sync">Jetzt synchronisieren!</string>
@@ -115,7 +114,6 @@
     <!-- Accounts -->
     <string name="account_list_description">Nur die Geburtstage aus den gewählten Konten werden in Deinem Kalender angezeigt.</string>
     <string name="account_list_empty">Keine Konten vorhanden</string>
-
     <!--Free Version -->
     <string name="pref_buy">Vollversion kaufen</string>
     <string name="pref_buy_full">Google Play öffnen um Vollversion zu kaufen…</string>
