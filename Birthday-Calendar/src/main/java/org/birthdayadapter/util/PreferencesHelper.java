@@ -63,7 +63,7 @@ public class PreferencesHelper {
         int[] minutes = new int[3];
         for (int i = 0; i < 3; i++) {
             String keyEnabled = context.getString(R.string.pref_reminder_enable_key) + i;
-            boolean enabled = prefs.getBoolean(keyEnabled, false);
+            boolean enabled = prefs.getBoolean(keyEnabled, i == 0 && context.getResources().getBoolean(R.bool.pref_reminder_enable_def));
 
             if (enabled) {
                 String key = context.getString(R.string.pref_reminder_time_key) + i;
