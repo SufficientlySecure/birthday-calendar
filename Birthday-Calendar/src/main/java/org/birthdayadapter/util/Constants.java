@@ -20,10 +20,16 @@
 
 package org.birthdayadapter.util;
 
+import android.content.Context;
+
+import org.birthdayadapter.R;
+
 public class Constants {
     public static final String TAG = "Birthday Calendar";
 
-    public static final String ACCOUNT_NAME = "Birthday Adapter";
+    public static String getAccountName(Context context) {
+        return context.getString(R.string.app_name);
+    }
 
     public static final String PREFS_NAME = "preferences";
 

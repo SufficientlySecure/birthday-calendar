@@ -125,7 +125,7 @@ public class BirthdayWorker extends Worker {
 
         calendarUri = calendarUri.buildUpon()
                 .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, Constants.ACCOUNT_NAME)
+                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, Constants.getAccountName(context))
                 .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, context.getString(R.string.account_type))
                 .build();
 
@@ -260,7 +260,7 @@ public class BirthdayWorker extends Worker {
                                 cal.set(Calendar.MILLISECOND, 0);
                                 long dtstart = cal.getTimeInMillis();
 
-                                Log.d(Constants.TAG, "Adding event: " + title);
+                                Log.v(Constants.TAG, "Adding event: " + title);
                                 operationList.add(insertEvent(context, calendarId, dtstart, title, eventLookupKey, eventUid, hasReminders));
 
                                 if (hasReminders) {
