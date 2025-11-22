@@ -58,14 +58,6 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
         }
     }
 
-    public List<AccountListEntry> getData() {
-        List<AccountListEntry> list = new ArrayList<>();
-        for (int i = 0; i < getCount(); i++) {
-            list.add(getItem(i));
-        }
-        return list;
-    }
-
     public HashSet<Account> getAccountBlacklist() {
         if (getCount() == 0) {
             return null;
@@ -141,7 +133,7 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
                 iconView.setVisibility(View.GONE);
             }
 
-            CheckBox cBox = (CheckBox) view.findViewById(R.id.account_list_cbox);
+            CheckBox cBox = view.findViewById(R.id.account_list_cbox);
             cBox.setChecked(entry.isSelected());
         }
 

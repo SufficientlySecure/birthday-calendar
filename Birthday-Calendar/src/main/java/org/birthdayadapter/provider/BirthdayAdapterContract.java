@@ -61,9 +61,6 @@ public class BirthdayAdapterContract {
             return CONTENT_URI.buildUpon().appendPath(id).build();
         }
 
-        public static String getId(Uri uri) {
-            return uri.getLastPathSegment();
-        }
     }
 
     private BirthdayAdapterContract() {

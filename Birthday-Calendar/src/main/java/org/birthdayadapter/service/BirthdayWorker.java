@@ -299,7 +299,7 @@ public class BirthdayWorker extends Worker {
                 }
             }
 
-            if (operationList.size() > 0) {
+            if (!operationList.isEmpty()) {
                 try {
                     contentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
                 } catch (Exception e) {
@@ -477,8 +477,8 @@ public class BirthdayWorker extends Worker {
         }
 
         // Replace user-friendly placeholders with String.format specifiers
+        title = title.replace("{NAME}", "%1$s");
         if (eventCustomLabel != null) {
-            title = title.replace("{NAME}", "%1$s");
             title = title.replace("{LABEL}", "%2$s");
             if (includeAge) {
                 title = title.replace("{AGE}", "%3$d");
@@ -486,7 +486,6 @@ public class BirthdayWorker extends Worker {
             }
             return String.format(title, displayName, eventCustomLabel);
         } else {
-            title = title.replace("{NAME}", "%1$s");
             if (includeAge) {
                 title = title.replace("{AGE}", "%2$d");
                 return String.format(title, displayName, age);

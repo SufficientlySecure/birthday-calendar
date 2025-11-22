@@ -32,7 +32,6 @@ import org.birthdayadapter.provider.ProviderHelper;
 
 import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -51,7 +50,7 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
     /**
      * Perform comparison of account entry objects, sorting by the sum of contacts and dates.
      */
-    public static final Comparator<AccountListEntry> TOTAL_COUNT_COMPARATOR = new Comparator<AccountListEntry>() {
+    public static final Comparator<AccountListEntry> TOTAL_COUNT_COMPARATOR = new Comparator<>() {
         private final Collator sCollator = Collator.getInstance();
 
         @Override
@@ -98,7 +97,7 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
         }
 
         // Sort the list.
-        Collections.sort(entries, TOTAL_COUNT_COMPARATOR);
+        entries.sort(TOTAL_COUNT_COMPARATOR);
 
         // Done!
         return entries;
@@ -149,7 +148,7 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
     public void deliverResult(List<AccountListEntry> accounts) {
         if (isReset()) {
             if (accounts != null) {
-                onReleaseResources(accounts);
+                onReleaseResources();
             }
         }
         mAccounts = accounts;
@@ -159,7 +158,7 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
         }
 
         if (accounts != null) {
-            onReleaseResources(accounts);
+            onReleaseResources();
         }
     }
 
@@ -182,7 +181,7 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
     @Override
     public void onCanceled(List<AccountListEntry> apps) {
         super.onCanceled(apps);
-        onReleaseResources(apps);
+        onReleaseResources();
     }
 
     @Override
@@ -191,11 +190,11 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
         onStopLoading();
 
         if (mAccounts != null) {
-            onReleaseResources(mAccounts);
+            onReleaseResources();
             mAccounts = null;
         }
     }
 
-    protected void onReleaseResources(List<AccountListEntry> accounts) {
+    protected void onReleaseResources() {
     }
 }
