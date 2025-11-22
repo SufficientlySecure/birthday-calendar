@@ -24,7 +24,6 @@ import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
-import android.accounts.NetworkErrorException;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -34,7 +33,7 @@ import android.os.IBinder;
 import org.birthdayadapter.ui.AddAccountActivity;
 
 /**
- * Based on https://developer.android.com/training/sync-adapters/creating-authenticator.html
+ * Based on <a href="https://developer.android.com/training/sync-adapters/creating-authenticator.html">the Android developer guide on creating an authenticator</a>.
  */
 public class AccountAuthenticatorService extends Service {
     private Authenticator mAuthenticator;
@@ -51,7 +50,7 @@ public class AccountAuthenticatorService extends Service {
     }
 
     private static class Authenticator extends AbstractAccountAuthenticator {
-        private Context mContext;
+        private final Context mContext;
 
         Authenticator(Context context) {
             super(context);
@@ -60,8 +59,7 @@ public class AccountAuthenticatorService extends Service {
 
         @Override
         public Bundle addAccount(AccountAuthenticatorResponse response, String accountType,
-                                 String authTokenType, String[] requiredFeatures, Bundle options)
-                throws NetworkErrorException {
+                                 String authTokenType, String[] requiredFeatures, Bundle options) {
 
             Intent intent = new Intent(mContext, AddAccountActivity.class);
             intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
@@ -84,7 +82,7 @@ public class AccountAuthenticatorService extends Service {
 
         @Override
         public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account,
-                                   String authTokenType, Bundle options) throws NetworkErrorException {
+                                   String authTokenType, Bundle options) {
             throw new UnsupportedOperationException();
         }
 
@@ -95,7 +93,7 @@ public class AccountAuthenticatorService extends Service {
 
         @Override
         public Bundle hasFeatures(AccountAuthenticatorResponse response, Account account,
-                                  String[] features) throws NetworkErrorException {
+                                  String[] features) {
             throw new UnsupportedOperationException();
         }
 

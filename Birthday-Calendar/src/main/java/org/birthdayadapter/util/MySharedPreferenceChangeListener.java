@@ -48,7 +48,7 @@ public class MySharedPreferenceChangeListener implements SharedPreferences.OnSha
         // --- Special case: Color change is a lightweight action ---
         String colorKey = context.getString(R.string.pref_color_key);
         if (key.equals(colorKey)) {
-            startWork(BirthdayWorker.ACTION_CHANGE_COLOR);
+            startWork();
             return;
         }
 
@@ -71,11 +71,11 @@ public class MySharedPreferenceChangeListener implements SharedPreferences.OnSha
     /**
      * Start a worker to perform an action
      */
-    private void startWork(String action) {
+    private void startWork() {
         if (context == null) return;
 
         Data inputData = new Data.Builder()
-                .putString(BirthdayWorker.ACTION, action)
+                .putString(BirthdayWorker.ACTION, BirthdayWorker.ACTION_CHANGE_COLOR)
                 .build();
 
         OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(BirthdayWorker.class)

@@ -18,8 +18,6 @@ import java.util.ArrayList;
 
 public class CalendarHelper {
 
-    private static String CALENDAR_COLUMN_NAME = "birthday_adapter";
-
     /**
      * Gets calendar id, when no calendar is present, create one!
      */
@@ -51,6 +49,7 @@ public class CalendarHelper {
                         .newInsert(calenderUri);
                 builder.withValue(CalendarContract.Calendars.ACCOUNT_NAME, Constants.ACCOUNT_NAME);
                 builder.withValue(CalendarContract.Calendars.ACCOUNT_TYPE, context.getString(R.string.account_type));
+                String CALENDAR_COLUMN_NAME = "birthday_adapter";
                 builder.withValue(CalendarContract.Calendars.NAME, CALENDAR_COLUMN_NAME);
                 builder.withValue(CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
                         context.getString(R.string.calendar_display_name));
@@ -67,6 +66,7 @@ public class CalendarHelper {
                 try {
                     android.content.ContentProviderResult[] results = contentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
                     if (results.length > 0) {
+                        assert results[0].uri != null;
                         return android.content.ContentUris.parseId(results[0].uri);
                     } else {
                         return -1;

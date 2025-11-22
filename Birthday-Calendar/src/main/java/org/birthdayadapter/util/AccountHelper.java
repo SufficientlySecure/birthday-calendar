@@ -43,7 +43,7 @@ import org.birthdayadapter.service.BirthdayWorker;
 import java.util.concurrent.TimeUnit;
 
 public class AccountHelper {
-    private Context mContext;
+    private final Context mContext;
 
     public AccountHelper(Context context) {
         mContext = context;

@@ -28,11 +28,13 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.drawable.Drawable;
 
+import androidx.annotation.NonNull;
+
 public class AccountListEntry {
     private String label;
     private Drawable icon;
     private boolean selected;
-    private Account account;
+    private final Account account;
     private int contactCount;
     private int dateCount;
 
@@ -40,13 +42,13 @@ public class AccountListEntry {
                             boolean selected) {
         this.account = account;
         this.selected = selected;
-        init(context, account, description);
+        init(context, description);
     }
 
     /**
      * Load label and icon for this entry
      */
-    public void init(Context context, Account account, AuthenticatorDescription description) {
+    public void init(Context context, AuthenticatorDescription description) {
         PackageManager pm = context.getPackageManager();
         label = description.packageName;
         try {
@@ -100,6 +102,7 @@ public class AccountListEntry {
         this.dateCount = dateCount;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "name: " + account.name + ", type: " + account.type;
