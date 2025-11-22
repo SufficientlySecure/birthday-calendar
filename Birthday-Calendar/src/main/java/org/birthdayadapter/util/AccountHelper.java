@@ -62,7 +62,7 @@ public class AccountHelper {
             Log.d(Constants.TAG, "Account does not exist. Adding account...");
 
             AccountManager am = AccountManager.get(mContext);
-            final Account account = new Account(Constants.ACCOUNT_NAME, mContext.getString(R.string.account_type));
+            final Account account = new Account(Constants.getAccountName(mContext), mContext.getString(R.string.account_type));
 
             if (am.addAccountExplicitly(account, null, null)) {
                 result = new Bundle();
@@ -93,7 +93,7 @@ public class AccountHelper {
 
         // Then, remove the account
         AccountManager am = AccountManager.get(mContext);
-        final Account account = new Account(Constants.ACCOUNT_NAME, mContext.getString(R.string.account_type));
+        final Account account = new Account(Constants.getAccountName(mContext), mContext.getString(R.string.account_type));
 
         am.removeAccount(account, null, future -> {
             try {
@@ -169,7 +169,7 @@ public class AccountHelper {
         }
         Account[] availableAccounts = am.getAccountsByType(mContext.getString(R.string.account_type));
         for (Account currentAccount : availableAccounts) {
-            if (currentAccount.name.equals(Constants.ACCOUNT_NAME)) {
+            if (currentAccount.name.equals(Constants.getAccountName(mContext))) {
                 return true;
             }
         }
