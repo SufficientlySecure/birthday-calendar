@@ -26,6 +26,7 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import androidx.preference.PreferenceManager;
 
 import androidx.core.app.ActivityCompat;
 import androidx.work.Data;
@@ -61,6 +62,8 @@ public class AccountHelper {
         if (!isAccountActivated()) {
             Log.d(Constants.TAG, "Account does not exist. Adding account...");
 
+            setDefaultValues();
+
             AccountManager am = AccountManager.get(mContext);
             final Account account = new Account(Constants.getAccountName(mContext), mContext.getString(R.string.account_type));
 
@@ -80,6 +83,10 @@ public class AccountHelper {
         manualSync();
 
         return result;
+    }
+
+    private void setDefaultValues() {
+        PreferenceManager.setDefaultValues(mContext, Constants.PREFS_NAME, Context.MODE_PRIVATE, R.xml.pref_preferences, false);
     }
 
     /**

@@ -9,7 +9,7 @@
     </androidx.preference.PreferenceCategory>
     <androidx.preference.PreferenceCategory android:title="@string/pref_reminders">
         <androidx.preference.CheckBoxPreference
-            android:defaultValue="@string/pref_reminder_enable_def0"
+            android:defaultValue="@bool/pref_reminder_enable_def"
             android:key="@string/pref_reminder_enable_key0"
             android:persistent="true"
             android:summary="@string/pref_reminder_enable_summary"
@@ -24,10 +24,10 @@
             android:title="@string/pref_reminder_time0" />
 
         <androidx.preference.CheckBoxPreference
-            android:defaultValue="@string/pref_reminder_enable_def1"
+            android:defaultValue="false"
             android:key="@string/pref_reminder_enable_key1"
             android:persistent="true"
-            android:summary="@string/pref_reminder_enable_summary"
+            android.summary="@string/pref_reminder_enable_summary"
             android:title="@string/pref_reminder_enable1" />
 
         <org.birthdayadapter.ui.ReminderPreferenceCompat
@@ -39,7 +39,7 @@
             android:title="@string/pref_reminder_time1" />
 
         <androidx.preference.CheckBoxPreference
-            android:defaultValue="@string/pref_reminder_enable_def2"
+            android:defaultValue="false"
             android:key="@string/pref_reminder_enable_key2"
             android:persistent="true"
             android:summary="@string/pref_reminder_enable_summary"
@@ -107,7 +107,7 @@
             android:dialogMessage="@string/pref_title_summary_with_age"
             android:dialogTitle="@string/pref_title_other_with_age"
             android:key="@string/pref_title_other_with_age_key"
-            android:persistent="true"
+            android.persistent="true"
             android:title="@string/pref_title_other_with_age" />
         <androidx.preference.EditTextPreference
             android:defaultValue="@string/event_title_custom_without_age"

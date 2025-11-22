@@ -1,0 +1,3 @@
+<resources>
+    <bool name="pref_reminder_enable_def">true</bool>
+</resources>
