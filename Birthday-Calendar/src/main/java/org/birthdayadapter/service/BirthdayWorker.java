@@ -489,19 +489,25 @@ public class BirthdayWorker extends Worker {
                         if (blacklistedGroups.contains(null)) {
                             // Account is fully blacklisted
                             isBlacklisted = true;
-                        } else {
+                        } else if (!blacklistedGroups.isEmpty()) {
                             // Account is partially blacklisted, check groups
                             String rawContactId = dataCursor.getString(rawContactIdColumn);
                             List<String> contactGroups = contactGroupMembership.get(rawContactId);
 
-                            if (contactGroups != null) {
+                            if (contactGroups != null && !contactGroups.isEmpty()) {
+                                // A contact is only blacklisted if ALL of its groups are blacklisted
+                                boolean allGroupsBlacklisted = true;
                                 for (String groupTitle : contactGroups) {
-                                    if (blacklistedGroups.contains(groupTitle)) {
-                                        isBlacklisted = true;
+                                    if (!blacklistedGroups.contains(groupTitle)) {
+                                        allGroupsBlacklisted = false;
                                         break;
                                     }
                                 }
+                                if (allGroupsBlacklisted) {
+                                    isBlacklisted = true;
+                                }
                             }
+                            // if contact has no groups, it's not blacklisted by a group filter
                         }
                     }
                 }
