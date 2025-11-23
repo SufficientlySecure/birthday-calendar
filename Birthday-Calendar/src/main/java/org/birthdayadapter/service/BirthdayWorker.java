@@ -40,8 +40,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 public class BirthdayWorker extends Worker {
@@ -172,6 +174,7 @@ public class BirthdayWorker extends Worker {
             int newEventsCount = 0;
 
             ArrayList<ContentProviderOperation> operationList = new ArrayList<>();
+            Map<String, String> firstNameCache = new HashMap<>();
 
             try (Cursor cursor = getContactsEvents(context, contentResolver)) {
                 if (cursor == null) {
@@ -246,7 +249,7 @@ public class BirthdayWorker extends Worker {
                             boolean includeAge = hasYear && age >= 0;
 
                             String title = generateTitle(context, eventType, cursor,
-                                    eventCustomLabelColumn, includeAge, displayName, age);
+                                    eventCustomLabelColumn, includeAge, displayName, age, eventLookupKey, firstNameCache);
 
                             if (title != null && !title.trim().isEmpty()) {
                                 newEventsCount++;
@@ -454,7 +457,7 @@ public class BirthdayWorker extends Worker {
     }
 
     private String generateTitle(Context context, int eventType, Cursor cursor,
-                                 int eventCustomLabelColumn, boolean includeAge, String displayName, int age) {
+                                 int eventCustomLabelColumn, boolean includeAge, String displayName, int age, String lookupKey, Map<String, String> firstNameCache) {
         if (displayName == null) {
             return null;
         }
@@ -476,22 +479,68 @@ public class BirthdayWorker extends Worker {
             title = addJubileeIcon(context, title, age);
         }
 
-        // Replace user-friendly placeholders with String.format specifiers
-        title = title.replace("{NAME}", "%1$s");
-        if (eventCustomLabel != null) {
-            title = title.replace("{LABEL}", "%2$s");
-            if (includeAge) {
-                title = title.replace("{AGE}", "%3$d");
-                return String.format(title, displayName, eventCustomLabel, age);
-            }
-            return String.format(title, displayName, eventCustomLabel);
-        } else {
-            if (includeAge) {
-                title = title.replace("{AGE}", "%2$d");
-                return String.format(title, displayName, age);
-            }
-            return String.format(title, displayName);
+        // Replace placeholders
+        if (title.contains("{FIRSTNAME}")) {
+            String firstName = getFirstName(context, lookupKey, displayName, firstNameCache);
+            title = title.replace("{FIRSTNAME}", firstName);
         }
+        title = title.replace("{NAME}", displayName);
+        if (includeAge) {
+            title = title.replace("{AGE}", String.valueOf(age));
+        }
+        if (eventCustomLabel != null) {
+            title = title.replace("{LABEL}", eventCustomLabel);
+        }
+
+        return title;
+    }
+
+    private String getFirstName(Context context, String lookupKey, String displayName, Map<String, String> firstNameCache) {
+        String firstName = firstNameCache.get(lookupKey);
+        if (firstName == null && lookupKey != null) {
+            firstName = getFirstNameFromLookupKey(context, lookupKey);
+            // Fallback to splitting the display name if structured name is not available
+            if (TextUtils.isEmpty(firstName)) {
+                firstName = displayName.split("\\s+")[0];
+            }
+            firstNameCache.put(lookupKey, firstName);
+        } else if (firstName == null) {
+            // Fallback for when lookupKey is null for some reason
+            firstName = displayName.split("\\s+")[0];
+        }
+
+        // Final fallback to ensure firstname is not empty if display name is not
+        if (TextUtils.isEmpty(firstName) && !TextUtils.isEmpty(displayName)) {
+            firstName = displayName;
+        }
+        return firstName;
+    }
+
+    private String getFirstNameFromLookupKey(Context context, String lookupKey) {
+        if (lookupKey == null) {
+            return null;
+        }
+        Uri lookupUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
+        Uri dataUri = Uri.withAppendedPath(lookupUri, ContactsContract.Contacts.Data.CONTENT_DIRECTORY);
+
+        String[] projection = {ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME};
+        String selection = ContactsContract.Data.MIMETYPE + " = ?";
+        String[] selectionArgs = {ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE};
+
+        try (Cursor cursor = context.getContentResolver().query(dataUri, projection, selection, selectionArgs, null)) {
+            if (cursor != null && cursor.moveToFirst()) {
+                int givenNameColumnIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME);
+                if (givenNameColumnIndex != -1) {
+                    String givenName = cursor.getString(givenNameColumnIndex);
+                    if (!TextUtils.isEmpty(givenName)) {
+                        return givenName;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.e(Constants.TAG, "Error querying for given name using lookup key: " + lookupKey, e);
+        }
+        return null;
     }
 
     private String addJubileeIcon(Context context, String title, int age) {
