@@ -118,6 +118,8 @@
     <string name="account_list_description">Only birthdays from selected accounts will be displayed in your calendar.</string>
     <string name="account_list_empty">No accounts</string>
     <string name="account_list_counters_format">%1$s, %2$s</string>
+    <string name="account_list_group_button_description">Show group details</string>
+    <string name="account_list_no_group">No Group</string>
     <plurals name="contacts_count">
         <item quantity="one">%d contact</item>
         <item quantity="other">%d contacts</item>

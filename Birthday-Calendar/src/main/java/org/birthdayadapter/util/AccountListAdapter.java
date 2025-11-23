@@ -21,6 +21,7 @@
 package org.birthdayadapter.util;
 
 import android.accounts.Account;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -38,7 +39,6 @@ import androidx.core.content.ContextCompat;
 
 import org.birthdayadapter.R;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -92,6 +92,7 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
         TextView titleView = view.findViewById(R.id.account_list_text);
         TextView subtitleView = view.findViewById(R.id.account_list_subtext);
         TextView countersView = view.findViewById(R.id.account_list_counters);
+        ImageView infoButton = view.findViewById(R.id.account_list_info_button);
 
         if (entry != null) {
             titleView.setText(entry.getLabel());
@@ -105,6 +106,27 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
 
             String countersSummary = getContext().getString(R.string.account_list_counters_format, contactsStr, datesStr);
             countersView.setText(countersSummary);
+
+            if (entry.getGroups().isEmpty()) {
+                infoButton.setVisibility(View.GONE);
+            } else {
+                infoButton.setVisibility(View.VISIBLE);
+                infoButton.setOnClickListener(v -> {
+                    StringBuilder groupsBuilder = new StringBuilder();
+                    for (GroupListEntry group : entry.getGroups()) {
+                        String groupContactsStr = getContext().getResources().getQuantityString(R.plurals.contacts_count, group.getContactCount(), group.getContactCount());
+                        String groupDatesStr = getContext().getResources().getQuantityString(R.plurals.dates_count, group.getDateCount(), group.getDateCount());
+                        String groupCounters = getContext().getString(R.string.account_list_counters_format, groupContactsStr, groupDatesStr);
+                        groupsBuilder.append(group.getTitle()).append(" (").append(groupCounters).append(")\n");
+                    }
+
+                    new AlertDialog.Builder(getContext())
+                            .setTitle(entry.getLabel())
+                            .setMessage(groupsBuilder.toString().trim())
+                            .setPositiveButton(android.R.string.ok, null)
+                            .show();
+                });
+            }
 
             int textColor;
             int secondaryTextColor;

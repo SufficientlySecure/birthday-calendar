@@ -30,6 +30,11 @@ import android.graphics.drawable.Drawable;
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class AccountListEntry {
     private String label;
     private Drawable icon;
@@ -37,6 +42,7 @@ public class AccountListEntry {
     private final Account account;
     private int contactCount;
     private int dateCount;
+    private List<GroupListEntry> groups = new ArrayList<>();
 
     public AccountListEntry(Context context, Account account, AuthenticatorDescription description,
                             boolean selected) {
@@ -100,6 +106,14 @@ public class AccountListEntry {
 
     public void setDateCount(int dateCount) {
         this.dateCount = dateCount;
+    }
+
+    public List<GroupListEntry> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<GroupListEntry> groups) {
+        this.groups = groups;
     }
 
     @NonNull
