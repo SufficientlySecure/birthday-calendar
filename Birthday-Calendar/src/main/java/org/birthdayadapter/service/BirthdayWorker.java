@@ -42,6 +42,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -362,6 +363,57 @@ public class BirthdayWorker extends Worker {
         return existingUids;
     }
 
+    private Map<String, List<String>> getRawContactGroupTitles(Context context, ContentResolver contentResolver) {
+        Map<String, String> groupIdToTitleMap = new HashMap<>();
+        final String[] groupProjection = {ContactsContract.Groups._ID, ContactsContract.Groups.TITLE};
+        final String groupSelection = ContactsContract.Groups.DELETED + " = 0";
+
+        // Query all groups to create a mapping from group ID to group title
+        try (Cursor groupCursor = contentResolver.query(ContactsContract.Groups.CONTENT_URI,
+                groupProjection, groupSelection, null, null)) {
+            if (groupCursor != null) {
+                int idColumn = groupCursor.getColumnIndex(ContactsContract.Groups._ID);
+                int titleColumn = groupCursor.getColumnIndex(ContactsContract.Groups.TITLE);
+                while (groupCursor.moveToNext()) {
+                    String id = groupCursor.getString(idColumn);
+                    String title = groupCursor.getString(titleColumn);
+                    // We are not interested in system groups
+                    if (!TextUtils.isEmpty(title) && !title.startsWith("System Group:")) {
+                        groupIdToTitleMap.put(id, title);
+                    }
+                }
+            }
+        }
+
+        Map<String, List<String>> rawContactToGroupTitlesMap = new HashMap<>();
+        final String[] membershipProjection = {
+                ContactsContract.Data.RAW_CONTACT_ID,
+                ContactsContract.CommonDataKinds.GroupMembership.GROUP_ROW_ID
+        };
+        final String membershipSelection = ContactsContract.Data.MIMETYPE + " = ?";
+        final String[] membershipSelectionArgs = {ContactsContract.CommonDataKinds.GroupMembership.CONTENT_ITEM_TYPE};
+
+        // Query all group memberships to link contacts to groups
+        try (Cursor membershipCursor = contentResolver.query(ContactsContract.Data.CONTENT_URI,
+                membershipProjection, membershipSelection, membershipSelectionArgs, null)) {
+            if (membershipCursor != null) {
+                int rawContactIdColumn = membershipCursor.getColumnIndex(ContactsContract.Data.RAW_CONTACT_ID);
+                int groupIdColumn = membershipCursor.getColumnIndex(ContactsContract.CommonDataKinds.GroupMembership.GROUP_ROW_ID);
+                while (membershipCursor.moveToNext()) {
+                    String rawContactId = membershipCursor.getString(rawContactIdColumn);
+                    String groupId = membershipCursor.getString(groupIdColumn);
+                    String groupTitle = groupIdToTitleMap.get(groupId);
+                    if (groupTitle != null) {
+                        rawContactToGroupTitlesMap
+                                .computeIfAbsent(rawContactId, k -> new ArrayList<>())
+                                .add(groupTitle);
+                    }
+                }
+            }
+        }
+        return rawContactToGroupTitlesMap;
+    }
+
     private Cursor getContactsEvents(Context context, ContentResolver contentResolver) throws OperationCanceledException {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             Log.e(Constants.TAG, "Missing READ_CONTACTS permission!");
@@ -372,7 +424,8 @@ public class BirthdayWorker extends Worker {
             throw new OperationCanceledException();
         }
 
-        HashSet<Account> blacklist = ProviderHelper.getAccountBlacklist(context);
+        Map<String, List<String>> contactGroupMembership = getRawContactGroupTitles(context, contentResolver);
+        HashMap<Account, HashSet<String>> blacklist = ProviderHelper.getAccountBlacklist(context);
         HashSet<String> addedEventsIdentifiers = new HashSet<>();
 
         // Define the columns we want to fetch in a single query
@@ -384,7 +437,8 @@ public class BirthdayWorker extends Worker {
                 ContactsContract.CommonDataKinds.Event.TYPE,
                 ContactsContract.CommonDataKinds.Event.LABEL,
                 ContactsContract.RawContacts.ACCOUNT_TYPE,
-                ContactsContract.RawContacts.ACCOUNT_NAME
+                ContactsContract.RawContacts.ACCOUNT_NAME,
+                ContactsContract.Data.RAW_CONTACT_ID
         };
 
         // The query is performed on the Data table, filtering for the Event mimetype
@@ -409,6 +463,7 @@ public class BirthdayWorker extends Worker {
 
             int accTypeColumn = dataCursor.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_TYPE);
             int accNameColumn = dataCursor.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_NAME);
+            int rawContactIdColumn = dataCursor.getColumnIndex(ContactsContract.Data.RAW_CONTACT_ID);
             int lookupKeyColumn = dataCursor.getColumnIndex(ContactsContract.Data.LOOKUP_KEY);
             int typeColumn = dataCursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE);
             int labelColumn = dataCursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL);
@@ -427,8 +482,27 @@ public class BirthdayWorker extends Worker {
 
                 boolean isBlacklisted = false;
                 if (!TextUtils.isEmpty(accType) && !TextUtils.isEmpty(accName)) {
-                    if (blacklist.contains(new Account(accName, accType))) {
-                        isBlacklisted = true;
+                    Account account = new Account(accName, accType);
+                    HashSet<String> blacklistedGroups = blacklist.get(account);
+
+                    if (blacklistedGroups != null) {
+                        if (blacklistedGroups.contains(null)) {
+                            // Account is fully blacklisted
+                            isBlacklisted = true;
+                        } else {
+                            // Account is partially blacklisted, check groups
+                            String rawContactId = dataCursor.getString(rawContactIdColumn);
+                            List<String> contactGroups = contactGroupMembership.get(rawContactId);
+
+                            if (contactGroups != null) {
+                                for (String groupTitle : contactGroups) {
+                                    if (blacklistedGroups.contains(groupTitle)) {
+                                        isBlacklisted = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 

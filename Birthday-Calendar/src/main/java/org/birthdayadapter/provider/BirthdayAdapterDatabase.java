@@ -30,7 +30,7 @@ import org.birthdayadapter.util.Log;
 
 public class BirthdayAdapterDatabase extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "birthdayadapter.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public interface Tables {
         String ACCOUNT_BLACKLIST = "account_blacklist";
@@ -39,7 +39,8 @@ public class BirthdayAdapterDatabase extends SQLiteOpenHelper {
     private static final String CREATE_ACCOUNT_BLACKLIST = "CREATE TABLE IF NOT EXISTS "
             + Tables.ACCOUNT_BLACKLIST + "(" + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + BirthdayAdapterContract.AccountBlacklistColumns.ACCOUNT_NAME + " TEXT, "
-            + BirthdayAdapterContract.AccountBlacklistColumns.ACCOUNT_TYPE + " TEXT)";
+            + BirthdayAdapterContract.AccountBlacklistColumns.ACCOUNT_TYPE + " TEXT, "
+            + BirthdayAdapterContract.AccountBlacklistColumns.ACCOUNT_GROUP + " TEXT)";
 
     BirthdayAdapterDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -56,11 +57,12 @@ public class BirthdayAdapterDatabase extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.w(Constants.TAG, "Upgrading database from version " + oldVersion + " to " + newVersion);
 
-//        if (oldVersion <= 1) {
-//
-//        } else {
-        db.execSQL("DROP TABLE IF EXISTS " + Tables.ACCOUNT_BLACKLIST);
-        onCreate(db);
-//        }
+        if (oldVersion < 2) {
+            db.execSQL("ALTER TABLE " + Tables.ACCOUNT_BLACKLIST + " ADD COLUMN "
+                    + BirthdayAdapterContract.AccountBlacklistColumns.ACCOUNT_GROUP + " TEXT");
+        } else {
+            db.execSQL("DROP TABLE IF EXISTS " + Tables.ACCOUNT_BLACKLIST);
+            onCreate(db);
+        }
     }
 }

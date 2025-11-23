@@ -81,37 +81,41 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
         Account[] accounts = manager.getAccounts();
         ArrayList<AccountListEntry> entries = new ArrayList<>();
 
-        HashSet<Account> accountBlacklist = ProviderHelper.getAccountBlacklist(getContext());
+        HashMap<Account, HashSet<String>> accountGroupBlacklist = ProviderHelper.getAccountBlacklist(getContext());
 
         for (Account account : accounts) {
-            // Don't show the app's own account in the filter list
             if (account.type.startsWith("org.birthdayadapter")) {
                 continue;
             }
 
             for (AuthenticatorDescription description : descriptions) {
                 if (description.type.equals(account.type)) {
-                    boolean enabled = !accountBlacklist.contains(account);
+                    HashSet<String> blacklistedGroups = accountGroupBlacklist.get(account);
+                    boolean accountFullyBlacklisted = (blacklistedGroups != null && blacklistedGroups.contains(null));
+                    boolean enabled = !accountFullyBlacklisted;
+
                     AccountListEntry entry = new AccountListEntry(getContext(), account, description, enabled);
-                    loadAccountDetails(entry);
+                    loadAccountDetails(entry, blacklistedGroups);
+
+                    if (enabled && blacklistedGroups != null && !blacklistedGroups.isEmpty()) {
+                        entry.setIndeterminate(true);
+                    }
+
                     entries.add(entry);
-                    break; // Found descriptor, no need to look further
+                    break;
                 }
             }
         }
 
-        // Sort the list.
         entries.sort(TOTAL_COUNT_COMPARATOR);
 
-        // Done!
         return entries;
     }
 
-    private void loadAccountDetails(AccountListEntry entry) {
+    private void loadAccountDetails(AccountListEntry entry, HashSet<String> blacklistedGroups) {
         Account account = entry.getAccount();
         ContentResolver resolver = getContext().getContentResolver();
 
-        // 1. Get all groups for the account to map ID to Title
         Map<String, String> groupTitleMap = new HashMap<>();
         final String[] groupProjection = {ContactsContract.Groups._ID, ContactsContract.Groups.TITLE};
         final String groupSelection = ContactsContract.Groups.ACCOUNT_TYPE + " = ? AND " +
@@ -133,7 +137,6 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
             }
         }
 
-        // 2. Get ALL raw contacts for the account. This gives us the definitive total count.
         Set<String> allRawContactIds = new HashSet<>();
         final String[] rawContactsProjection = {ContactsContract.RawContacts._ID};
         final String rawContactsSelection = ContactsContract.RawContacts.ACCOUNT_TYPE + " = ? AND " + ContactsContract.RawContacts.ACCOUNT_NAME + " = ?";
@@ -148,8 +151,6 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
         }
         entry.setContactCount(allRawContactIds.size());
 
-
-        // 3. Query for details (Events and Group Memberships)
         final String[] dataProjection = {
                 ContactsContract.Data.RAW_CONTACT_ID,
                 ContactsContract.Data.MIMETYPE,
@@ -166,8 +167,8 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
                 ContactsContract.CommonDataKinds.GroupMembership.CONTENT_ITEM_TYPE
         };
 
-        Map<String, Set<String>> contactToGroupsMap = new HashMap<>(); // RawContactID -> Set<GroupID>
-        Map<String, Integer> contactDateCounts = new HashMap<>(); // RawContactID -> Number of dates
+        Map<String, Set<String>> contactToGroupsMap = new HashMap<>();
+        Map<String, Integer> contactDateCounts = new HashMap<>();
 
         try (Cursor dataCursor = resolver.query(ContactsContract.Data.CONTENT_URI, dataProjection, dataSelection, dataSelectionArgs, null)) {
             if (dataCursor == null) {
@@ -192,37 +193,32 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
         }
         entry.setDateCount(contactDateCounts.values().stream().mapToInt(Integer::intValue).sum());
 
+        Map<String, int[]> groupStats = new HashMap<>();
+        String noGroupKey = "-1";
 
-        // 4. Aggregate stats for groups
-        Map<String, int[]> groupStats = new HashMap<>(); // GroupID -> {contactCount, dateCount}
-        String noGroupKey = "-1"; // Special key for contacts in no group
-
-        for (String rawContactId : allRawContactIds) { // Iterate over ALL contacts
+        for (String rawContactId : allRawContactIds) {
             Set<String> groupIds = contactToGroupsMap.get(rawContactId);
             int dateCount = contactDateCounts.getOrDefault(rawContactId, 0);
 
             if (groupIds != null && !groupIds.isEmpty()) {
                 for (String groupId : groupIds) {
                     int[] stats = groupStats.computeIfAbsent(groupId, k -> new int[2]);
-                    stats[0]++; // Increment contact count for this group
-                    stats[1] += dateCount; // Add this contact's dates to the group's date count
+                    stats[0]++;
+                    stats[1] += dateCount;
                 }
             } else {
-                // This contact is not in any group
                 int[] stats = groupStats.computeIfAbsent(noGroupKey, k -> new int[2]);
                 stats[0]++;
                 stats[1] += dateCount;
             }
         }
 
-        // 5. Build the final list for the entry
         List<GroupListEntry> groupEntries = new ArrayList<>();
         for (Map.Entry<String, int[]> statsEntry : groupStats.entrySet()) {
             String groupId = statsEntry.getKey();
             String groupTitle = groupTitleMap.get(groupId);
 
             if (groupId.equals(noGroupKey)) {
-                // Only add the "No Group" entry if it actually contains contacts
                 if (statsEntry.getValue()[0] > 0) {
                     groupTitle = getContext().getString(R.string.account_list_no_group);
                 }
@@ -230,7 +226,11 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
 
             if (groupTitle != null) {
                 int[] counts = statsEntry.getValue();
-                groupEntries.add(new GroupListEntry(groupTitle, counts[0], counts[1]));
+                GroupListEntry groupEntry = new GroupListEntry(groupTitle, counts[0], counts[1]);
+                if (blacklistedGroups != null && blacklistedGroups.contains(groupTitle)) {
+                    groupEntry.setSelected(false);
+                }
+                groupEntries.add(groupEntry);
             }
         }
         groupEntries.sort(Comparator.comparing(GroupListEntry::getTitle));

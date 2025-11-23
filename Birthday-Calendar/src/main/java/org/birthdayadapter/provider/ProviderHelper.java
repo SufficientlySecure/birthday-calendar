@@ -20,40 +20,59 @@
 
 package org.birthdayadapter.provider;
 
-import java.util.HashSet;
-import java.util.Iterator;
-
 import android.accounts.Account;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+
 public class ProviderHelper {
 
-    public static void setAccountBlacklist(Context context, HashSet<Account> blacklist) {
+    public static void setAccountBlacklist(Context context, HashMap<Account, HashSet<String>> blacklist) {
         // clear table
         context.getContentResolver().delete(BirthdayAdapterContract.AccountBlacklist.CONTENT_URI, null, null);
 
-        ContentValues[] values = new ContentValues[blacklist.size()];
+        ArrayList<ContentValues> valuesList = new ArrayList<>();
 
-        // build values array based on HashSet
-        Iterator<Account> itr = blacklist.iterator();
-        int i = 0;
-        while (itr.hasNext()) {
-            Account acc = itr.next();
-            values[i] = new ContentValues();
-            values[i].put(BirthdayAdapterContract.AccountBlacklist.ACCOUNT_NAME, acc.name);
-            values[i].put(BirthdayAdapterContract.AccountBlacklist.ACCOUNT_TYPE, acc.type);
+        for (Map.Entry<Account, HashSet<String>> entry : blacklist.entrySet()) {
+            Account acc = entry.getKey();
+            HashSet<String> groups = entry.getValue();
 
-            i++;
+            boolean accountIsBlacklisted = groups.contains(null);
+            if (accountIsBlacklisted) {
+                // account is blacklisted without specific groups
+                ContentValues values = new ContentValues();
+                values.put(BirthdayAdapterContract.AccountBlacklist.ACCOUNT_NAME, acc.name);
+                values.put(BirthdayAdapterContract.AccountBlacklist.ACCOUNT_TYPE, acc.type);
+                values.putNull(BirthdayAdapterContract.AccountBlacklist.ACCOUNT_GROUP);
+                valuesList.add(values);
+            }
+
+            // Always save blacklisted groups, even if the whole account is blacklisted
+            for (String group : groups) {
+                if (group != null) {
+                    ContentValues values = new ContentValues();
+                    values.put(BirthdayAdapterContract.AccountBlacklist.ACCOUNT_NAME, acc.name);
+                    values.put(BirthdayAdapterContract.AccountBlacklist.ACCOUNT_TYPE, acc.type);
+                    values.put(BirthdayAdapterContract.AccountBlacklist.ACCOUNT_GROUP, group);
+                    valuesList.add(values);
+                }
+            }
         }
+
+        ContentValues[] values = new ContentValues[valuesList.size()];
+        valuesList.toArray(values);
 
         // insert as bulk operation
         context.getContentResolver().bulkInsert(BirthdayAdapterContract.AccountBlacklist.CONTENT_URI, values);
     }
 
-    public static HashSet<Account> getAccountBlacklist(Context context) {
-        HashSet<Account> hashSet = new HashSet<Account>();
+    public static HashMap<Account, HashSet<String>> getAccountBlacklist(Context context) {
+        HashMap<Account, HashSet<String>> hashMap = new HashMap<>();
         Cursor cursor = getAccountBlacklistCursor(context, null, null);
 
         try {
@@ -61,15 +80,27 @@ public class ProviderHelper {
                 Account acc = new Account(
                         cursor.getString(cursor.getColumnIndexOrThrow(BirthdayAdapterContract.AccountBlacklist.ACCOUNT_NAME)),
                         cursor.getString(cursor.getColumnIndexOrThrow(BirthdayAdapterContract.AccountBlacklist.ACCOUNT_TYPE)));
+                String group = cursor.getString(cursor.getColumnIndexOrThrow(BirthdayAdapterContract.AccountBlacklist.ACCOUNT_GROUP));
 
-                hashSet.add(acc);
+                HashSet<String> groups = hashMap.get(acc);
+                if (groups == null) {
+                    groups = new HashSet<>();
+                    hashMap.put(acc, groups);
+                }
+
+                if (group != null) {
+                    groups.add(group);
+                } else {
+                    // if group is null, the whole account is blacklisted
+                    groups.add(null);
+                }
             }
         } finally {
             if (cursor != null && !cursor.isClosed())
                 cursor.close();
         }
 
-        return hashSet;
+        return hashMap;
     }
 
     private static Cursor getAccountBlacklistCursor(Context context, String selection, String[] selectionArgs) {
@@ -77,7 +108,8 @@ public class ProviderHelper {
                 BirthdayAdapterContract.AccountBlacklist.CONTENT_URI,
                 new String[]{BirthdayAdapterContract.AccountBlacklist._ID,
                         BirthdayAdapterContract.AccountBlacklist.ACCOUNT_NAME,
-                        BirthdayAdapterContract.AccountBlacklist.ACCOUNT_TYPE},
+                        BirthdayAdapterContract.AccountBlacklist.ACCOUNT_TYPE,
+                        BirthdayAdapterContract.AccountBlacklist.ACCOUNT_GROUP},
                 selection,
                 selectionArgs,
                 BirthdayAdapterContract.AccountBlacklist.DEFAULT_SORT);

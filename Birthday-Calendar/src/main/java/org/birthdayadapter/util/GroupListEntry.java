@@ -4,6 +4,7 @@ public class GroupListEntry {
     private final String title;
     private final int contactCount;
     private final int dateCount;
+    private boolean selected = true;
 
     public GroupListEntry(String title, int contactCount, int dateCount) {
         this.title = title;
@@ -21,5 +22,13 @@ public class GroupListEntry {
 
     public int getDateCount() {
         return dateCount;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

@@ -45,7 +45,10 @@ import org.birthdayadapter.util.AccountHelper;
 import org.birthdayadapter.util.AccountListAdapter;
 import org.birthdayadapter.util.AccountListEntry;
 import org.birthdayadapter.util.AccountListLoader;
+import org.birthdayadapter.util.Constants;
+import org.birthdayadapter.util.Log;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -58,7 +61,7 @@ public class AccountListFragment extends Fragment implements
     BaseActivity mActivity;
     ListView mListView;
     TextView mEmptyView;
-    private HashSet<Account> initialBlacklist;
+    private HashMap<Account, HashSet<String>> initialBlacklist;
 
     @Nullable
     @Override
@@ -129,10 +132,11 @@ public class AccountListFragment extends Fragment implements
             return;
         }
 
-        HashSet<Account> newBlacklist = mAdapter.getAccountBlacklist();
+        HashMap<Account, HashSet<String>> newBlacklist = mAdapter.getAccountBlacklist();
 
         // Only save and sync if the blacklist has actually changed
         if (newBlacklist != null && !newBlacklist.equals(initialBlacklist)) {
+            Log.d(Constants.TAG, "Blacklist has changed, saving new blacklist: " + newBlacklist.toString());
             ProviderHelper.setAccountBlacklist(getActivity(), newBlacklist);
 
             AccountHelper accountHelper = new AccountHelper(mActivity);

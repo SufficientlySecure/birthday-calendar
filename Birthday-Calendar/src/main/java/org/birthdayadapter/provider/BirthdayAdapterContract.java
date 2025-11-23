@@ -30,6 +30,7 @@ public class BirthdayAdapterContract {
     interface AccountBlacklistColumns {
         String ACCOUNT_NAME = "account_name";
         String ACCOUNT_TYPE = "account_type";
+        String ACCOUNT_GROUP = "account_group";
     }
 
     public static final String CONTENT_AUTHORITY = BuildConfig.APPLICATION_ID;
