@@ -47,10 +47,19 @@ import java.util.List;
 
 public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
     private final LayoutInflater mInflater;
+    private OnBlacklistChangedListener mBlacklistChangedListener;
+
+    public interface OnBlacklistChangedListener {
+        void onBlacklistChanged();
+    }
 
     public AccountListAdapter(Context context) {
         super(context, -1);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    public void setOnBlacklistChangedListener(OnBlacklistChangedListener listener) {
+        this.mBlacklistChangedListener = listener;
     }
 
     public void setData(List<AccountListEntry> data) {
@@ -155,6 +164,9 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
                 // It does NOT change the individual group selections.
                 entry.setSelected(!entry.isSelected());
                 notifyDataSetChanged();
+                if (mBlacklistChangedListener != null) {
+                    mBlacklistChangedListener.onBlacklistChanged();
+                }
             });
 
             // --- Group Dialog Logic ---
@@ -196,6 +208,9 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
                             .setTitle(entry.getLabel())
                             .setView(dialogView)
                             .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                                if (mBlacklistChangedListener != null) {
+                                    mBlacklistChangedListener.onBlacklistChanged();
+                                }
                                 // When the dialog closes, just notify the adapter to redraw the main list item.
                                 // The getView() method will then re-evaluate the checkbox state.
                                 notifyDataSetChanged();

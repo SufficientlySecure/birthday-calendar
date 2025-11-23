@@ -27,7 +27,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,15 +52,15 @@ import java.util.HashSet;
 import java.util.List;
 
 public class AccountListFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<List<AccountListEntry>> {
+        LoaderManager.LoaderCallbacks<List<AccountListEntry>>, AccountListAdapter.OnBlacklistChangedListener {
 
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
 
-    AccountListAdapter mAdapter;
-    BaseActivity mActivity;
-    ListView mListView;
-    TextView mEmptyView;
-    private HashMap<Account, HashSet<String>> initialBlacklist;
+    private AccountListAdapter mAdapter;
+    private BaseActivity mActivity;
+    private ListView mListView;
+    private TextView mEmptyView;
+    private boolean blacklistChanged = false;
 
     @Nullable
     @Override
@@ -80,19 +79,9 @@ public class AccountListFragment extends Fragment implements
         if (mActivity == null) return;
 
         mAdapter = new AccountListAdapter(mActivity);
+        mAdapter.setOnBlacklistChangedListener(this);
         mListView.setAdapter(mAdapter);
         mListView.setEmptyView(mEmptyView); // Link the empty view to the list
-
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                AccountListEntry entry = mAdapter.getItem(position);
-                if (entry != null) {
-                    entry.setSelected(!entry.isSelected());
-                    mAdapter.notifyDataSetChanged();
-                }
-            }
-        });
     }
 
     @Override
@@ -110,8 +99,29 @@ public class AccountListFragment extends Fragment implements
     @Override
     public void onPause() {
         super.onPause();
-        // Save the blacklist when the user leaves the screen, but only if it has changed
-        applyBlacklistIfNeeded();
+        if (blacklistChanged) {
+            Log.d(Constants.TAG, "Blacklist has changed, triggering manual sync.");
+            AccountHelper accountHelper = new AccountHelper(mActivity);
+            if (accountHelper.isAccountActivated()) {
+                accountHelper.manualSync();
+            }
+            blacklistChanged = false; // Reset the flag
+        }
+    }
+
+    @Override
+    public void onBlacklistChanged() {
+        saveBlacklist();
+        blacklistChanged = true;
+    }
+
+    private void saveBlacklist() {
+        if (mAdapter == null || mActivity == null) {
+            return;
+        }
+        HashMap<Account, HashSet<String>> newBlacklist = mAdapter.getAccountBlacklist();
+        Log.d(Constants.TAG, "Blacklist change detected, saving new blacklist");
+        ProviderHelper.setAccountBlacklist(getActivity(), newBlacklist);
     }
 
     @Override
@@ -127,25 +137,6 @@ public class AccountListFragment extends Fragment implements
         }
     }
 
-    private void applyBlacklistIfNeeded() {
-        if (mAdapter == null || mActivity == null) {
-            return;
-        }
-
-        HashMap<Account, HashSet<String>> newBlacklist = mAdapter.getAccountBlacklist();
-
-        // Only save and sync if the blacklist has actually changed
-        if (newBlacklist != null && !newBlacklist.equals(initialBlacklist)) {
-            Log.d(Constants.TAG, "Blacklist has changed, saving new blacklist: " + newBlacklist.toString());
-            ProviderHelper.setAccountBlacklist(getActivity(), newBlacklist);
-
-            AccountHelper accountHelper = new AccountHelper(mActivity);
-            if (accountHelper.isAccountActivated()) {
-                accountHelper.manualSync();
-            }
-        }
-    }
-
     @NonNull
     @Override
     public Loader<List<AccountListEntry>> onCreateLoader(int id, @Nullable Bundle args) {
@@ -155,10 +146,8 @@ public class AccountListFragment extends Fragment implements
     @Override
     public void onLoadFinished(@NonNull Loader<List<AccountListEntry>> loader, List<AccountListEntry> data) {
         mAdapter.setData(data);
-        // Store the initial state of the blacklist after data is loaded
-        if (mAdapter != null) {
-            initialBlacklist = mAdapter.getAccountBlacklist();
-        }
+        // Reset change tracking when new data is loaded
+        blacklistChanged = false;
 
         if (data == null || data.isEmpty()) {
             mListView.setVisibility(View.GONE);
