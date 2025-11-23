@@ -49,6 +49,7 @@
     <string name="pref_contacts_summary">Bearbeite die Geburtstage Deiner Kontakte in Deiner Kontakte-App.</string>
     <string name="pref_contacts_open">Öffne Deine Kontakte-App</string>
     <string name="pref_calendar">3. Geburtstage im Kalender.</string>
+    <string name="pref_calendar_summary">Aktiviere den Geburtstagskalender in den Konten Deiner Kalender-App.</string>
     <string name="pref_calendar_open">Öffne Deine Kalender-App</string>
     <string name="pref_color">Farbe</string>
     <string name="pref_force_sync">Jetzt synchronisieren!</string>
@@ -85,10 +86,10 @@
     <string name="pref_title_custom_without_age">Benutzerdefiniert</string>
     <string name="pref_title_custom_with_age">Benutzerdefiniert mit Alter</string>
 
-    <string name="pref_title_summary_without_age">Verwende {NAME} als Platzhalter für den Namen des Kontaktes. Eine leere Eingabe verhindert die Erstellung dieser Events.</string>
-    <string name="pref_title_summary_with_age">Verwende {NAME} als Platzhalter für den Namen des Kontaktes und {AGE} für das Alter. Eine leere Eingabe verhindert die Erstellung dieser Events.</string>
-    <string name="pref_title_summary_custom_without_age">Verwende {NAME} als Platzhalter für den Namen des Kontaktes und {LABEL} für die ausgelesene Bezeichnung des Datums. Eine leere Eingabe verhindert die Erstellung dieser Events.</string>
-    <string name="pref_title_summary_custom_with_age">Verwende {NAME} als Platzhalter für den Namen des Kontaktes, {LABEL} für die ausgelesene Bezeichnung des Datums und {AGE} für das Alter. Eine leere Eingabe verhindert die Erstellung dieser Events.</string>
+    <string name="pref_title_summary_without_age">Verwende {NAME} oder {FIRSTNAME} als Platzhalter für den Namen des Kontaktes. Eine leere Eingabe verhindert die Erstellung dieser Events.</string>
+    <string name="pref_title_summary_with_age">Verwende {NAME} oder {FIRSTNAME} als Platzhalter für den Namen des Kontaktes und {AGE} für das Alter. Eine leere Eingabe verhindert die Erstellung dieser Events.</string>
+    <string name="pref_title_summary_custom_without_age">Verwende {NAME} oder {FIRSTNAME} als Platzhalter für den Namen des Kontaktes und {LABEL} für die ausgelesene Bezeichnung des Datums. Eine leere Eingabe verhindert die Erstellung dieser Events.</string>
+    <string name="pref_title_summary_custom_with_age">Verwende {NAME} oder {FIRSTNAME} als Platzhalter für den Namen des Kontaktes, {LABEL} für die ausgelesene Bezeichnung des Datums und {AGE} für das Alter. Eine leere Eingabe verhindert die Erstellung dieser Events.</string>
     <string name="pref_advanced_category">Erweiterte Einstellungen</string>
     <string name="pref_prefer_dd_slash_mm">dd/MM/yyyy Format bevorzugen</string>
     <string name="pref_prefer_dd_slash_mm_summary">Bevorzuge dd/MM/yyyy gegenüber MM/dd/yyyy beim Parsen von Datumsformaten</string>
@@ -114,6 +115,16 @@
     <!-- Accounts -->
     <string name="account_list_description">Nur die Geburtstage aus den gewählten Konten werden in Deinem Kalender angezeigt.</string>
     <string name="account_list_empty">Keine Konten vorhanden</string>
+    <string name="account_list_counters_format">%1$s, %2$s</string>
+    <plurals name="contacts_count">
+        <item quantity="one">%d Kontakt</item>
+        <item quantity="other">%d Kontakte</item>
+    </plurals>
+    <plurals name="dates_count">
+        <item quantity="one">%d Datum</item>
+        <item quantity="other">%d Daten</item>
+    </plurals>
+
     <!--Free Version -->
     <string name="pref_buy">Vollversion kaufen</string>
     <string name="pref_buy_full">Google Play öffnen um Vollversion zu kaufen…</string>
