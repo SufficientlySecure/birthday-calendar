@@ -23,6 +23,7 @@ package org.birthdayadapter.util;
 import android.accounts.Account;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
@@ -49,6 +50,7 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
     private final LayoutInflater mInflater;
     private OnBlacklistChangedListener mBlacklistChangedListener;
     private boolean mGroupFilteringEnabled;
+    private ColorStateList mDefaultTintList;
 
     public interface OnBlacklistChangedListener {
         void onBlacklistChanged();
@@ -125,6 +127,10 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
         ImageView infoButton = view.findViewById(R.id.account_list_info_button);
         MaterialCheckBox cBox = view.findViewById(R.id.account_list_cbox);
 
+        if (mDefaultTintList == null) {
+            mDefaultTintList = cBox.getButtonTintList();
+        }
+
         if (entry != null) {
             titleView.setText(entry.getLabel());
             subtitleView.setText(entry.getAccount().name);
@@ -162,6 +168,15 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
                     cBox.setCheckedState(MaterialCheckBox.STATE_CHECKED);
                 }
             }
+
+            // --- Tinting logic for indeterminate state ---
+            if (cBox.getCheckedState() == MaterialCheckBox.STATE_INDETERMINATE) {
+                cBox.setButtonTintList(ColorStateList.valueOf(Color.GRAY));
+            } else {
+                // Reset to default tint
+                cBox.setButtonTintList(mDefaultTintList);
+            }
+
 
             // --- Click Listener Logic ---
             view.setOnClickListener(v -> {
