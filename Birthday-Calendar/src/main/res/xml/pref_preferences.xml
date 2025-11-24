@@ -2,6 +2,7 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <androidx.preference.PreferenceCategory android:title="@string/pref_general">
+
         <androidx.preference.Preference
             android:key="@string/pref_color_key"
             android:persistent="true"
@@ -27,7 +28,7 @@
             android:defaultValue="false"
             android:key="@string/pref_reminder_enable_key1"
             android:persistent="true"
-            android.summary="@string/pref_reminder_enable_summary"
+            android:summary="@string/pref_reminder_enable_summary"
             android:title="@string/pref_reminder_enable1" />
 
         <org.birthdayadapter.ui.ReminderPreferenceCompat
@@ -107,7 +108,7 @@
             android:dialogMessage="@string/pref_title_summary_with_age"
             android:dialogTitle="@string/pref_title_other_with_age"
             android:key="@string/pref_title_other_with_age_key"
-            android.persistent="true"
+            android:persistent="true"
             android:title="@string/pref_title_other_with_age" />
         <androidx.preference.EditTextPreference
             android:defaultValue="@string/event_title_custom_without_age"
@@ -138,6 +139,12 @@
             android:persistent="true"
             android:summary="@string/pref_advanced_summary"
             android:title="@string/pref_advanced" />
+        <androidx.preference.CheckBoxPreference
+            android:key="@string/pref_group_filtering_key"
+            android:dependency="@string/pref_advanced_key"
+            android:title="@string/pref_group_filtering_title"
+            android:summary="@string/pref_group_filtering_summary"
+            android:defaultValue="@bool/pref_group_filtering_def" />
         <androidx.preference.CheckBoxPreference
             android:defaultValue="@string/pref_prefer_dd_slash_mm_def"
             android:dependency="@string/pref_advanced_key"

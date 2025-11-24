@@ -2,7 +2,7 @@
  * Copyright (C) 2012-2013 Dominik Schürmann <dominik@dominikschuermann.de>
  *
  * This file is part of Birthday Adapter.
- *
+ * 
  * Birthday Adapter is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -48,6 +48,7 @@ import java.util.List;
 public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
     private final LayoutInflater mInflater;
     private OnBlacklistChangedListener mBlacklistChangedListener;
+    private boolean mGroupFilteringEnabled;
 
     public interface OnBlacklistChangedListener {
         void onBlacklistChanged();
@@ -60,6 +61,10 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
 
     public void setOnBlacklistChangedListener(OnBlacklistChangedListener listener) {
         this.mBlacklistChangedListener = listener;
+    }
+
+    public void setGroupFilteringEnabled(boolean enabled) {
+        this.mGroupFilteringEnabled = enabled;
     }
 
     public void setData(List<AccountListEntry> data) {
@@ -170,7 +175,7 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
             });
 
             // --- Group Dialog Logic ---
-            if (entry.getGroups().isEmpty()) {
+            if (!mGroupFilteringEnabled || entry.getGroups().isEmpty()) {
                 infoButton.setVisibility(View.GONE);
                 infoButton.setOnClickListener(null);
             } else {

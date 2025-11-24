@@ -22,6 +22,8 @@ package org.birthdayadapter.ui;
 
 import android.Manifest;
 import android.accounts.Account;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -52,7 +54,7 @@ import java.util.HashSet;
 import java.util.List;
 
 public class AccountListFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<List<AccountListEntry>>, AccountListAdapter.OnBlacklistChangedListener {
+        LoaderManager.LoaderCallbacks<List<AccountListEntry>>, AccountListAdapter.OnBlacklistChangedListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
 
@@ -60,7 +62,6 @@ public class AccountListFragment extends Fragment implements
     private BaseActivity mActivity;
     private ListView mListView;
     private TextView mEmptyView;
-    private boolean blacklistChanged = false;
 
     @Nullable
     @Override
@@ -87,6 +88,11 @@ public class AccountListFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
+        requireContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE).registerOnSharedPreferenceChangeListener(this);
+
+        // Always update the adapter's state when the fragment resumes
+        updateGroupFilteringState();
+
         // Check for permissions and load accounts if granted
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
             LoaderManager.getInstance(this).restartLoader(0, null, this);
@@ -99,20 +105,40 @@ public class AccountListFragment extends Fragment implements
     @Override
     public void onPause() {
         super.onPause();
-        if (blacklistChanged) {
-            Log.d(Constants.TAG, "Blacklist has changed, triggering manual sync.");
-            AccountHelper accountHelper = new AccountHelper(mActivity);
-            if (accountHelper.isAccountActivated()) {
-                accountHelper.manualSync();
-            }
-            blacklistChanged = false; // Reset the flag
+        requireContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE).unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key != null && key.equals(getString(R.string.pref_group_filtering_key))) {
+            // The preference has changed, so update the adapter's state and reload the data
+            updateGroupFilteringState();
+            requireActivity().runOnUiThread(() -> {
+                LoaderManager.getInstance(this).restartLoader(0, null, this);
+            });
         }
     }
 
     @Override
     public void onBlacklistChanged() {
         saveBlacklist();
-        blacklistChanged = true;
+        
+        Log.d(Constants.TAG, "Blacklist has changed, triggering manual sync.");
+        AccountHelper accountHelper = new AccountHelper(mActivity);
+        if (accountHelper.isAccountActivated()) {
+            accountHelper.manualSync();
+        }
+    }
+
+    private void updateGroupFilteringState() {
+        if (mAdapter != null && getContext() != null) {
+            SharedPreferences sharedPreferences = requireContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
+            boolean groupFilteringEnabled = sharedPreferences.getBoolean(
+                    getString(R.string.pref_group_filtering_key),
+                    getResources().getBoolean(R.bool.pref_group_filtering_def)
+            );
+            mAdapter.setGroupFilteringEnabled(groupFilteringEnabled);
+        }
     }
 
     private void saveBlacklist() {
@@ -140,14 +166,17 @@ public class AccountListFragment extends Fragment implements
     @NonNull
     @Override
     public Loader<List<AccountListEntry>> onCreateLoader(int id, @Nullable Bundle args) {
-        return new AccountListLoader(requireActivity());
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
+        boolean groupFilteringEnabled = sharedPreferences.getBoolean(
+                getString(R.string.pref_group_filtering_key),
+                getResources().getBoolean(R.bool.pref_group_filtering_def)
+        );
+        return new AccountListLoader(requireActivity(), groupFilteringEnabled);
     }
 
     @Override
     public void onLoadFinished(@NonNull Loader<List<AccountListEntry>> loader, List<AccountListEntry> data) {
         mAdapter.setData(data);
-        // Reset change tracking when new data is loaded
-        blacklistChanged = false;
 
         if (data == null || data.isEmpty()) {
             mListView.setVisibility(View.GONE);

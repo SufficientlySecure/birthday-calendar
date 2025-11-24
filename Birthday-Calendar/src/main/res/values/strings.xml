@@ -115,6 +115,8 @@
     <string name="pref_account_settings">Configure Birthday Adapter</string>
 
     <!-- Accounts -->
+    <string name="pref_group_filtering_title">Group Filtering</string>
+    <string name="pref_group_filtering_summary">Allow filtering your accounts by contact groups.</string>
     <string name="account_list_description">Only birthdays from selected accounts will be displayed in your calendar.</string>
     <string name="account_list_empty">No accounts</string>
     <string name="account_list_counters_format">%1$s, %2$s</string>

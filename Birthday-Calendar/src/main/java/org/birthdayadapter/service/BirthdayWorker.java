@@ -21,6 +21,7 @@ import android.text.format.DateUtils;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
@@ -424,6 +425,9 @@ public class BirthdayWorker extends Worker {
             throw new OperationCanceledException();
         }
 
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
+        boolean groupFilteringEnabled = sharedPreferences.getBoolean(context.getString(R.string.pref_group_filtering_key), context.getResources().getBoolean(R.bool.pref_group_filtering_def));
+
         Map<String, List<String>> contactGroupMembership = getRawContactGroupTitles(context, contentResolver);
         HashMap<Account, HashSet<String>> blacklist = ProviderHelper.getAccountBlacklist(context);
         HashSet<String> addedEventsIdentifiers = new HashSet<>();
@@ -481,7 +485,7 @@ public class BirthdayWorker extends Worker {
                 String accName = dataCursor.getString(accNameColumn);
 
                 boolean isBlacklisted = false;
-                if (!TextUtils.isEmpty(accType) && !TextUtils.isEmpty(accName)) {
+                if (groupFilteringEnabled && !TextUtils.isEmpty(accType) && !TextUtils.isEmpty(accName)) {
                     Account account = new Account(accName, accType);
                     HashSet<String> blacklistedGroups = blacklist.get(account);
 

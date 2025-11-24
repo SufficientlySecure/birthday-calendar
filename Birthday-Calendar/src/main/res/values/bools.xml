@@ -1,3 +1,4 @@
 <resources>
     <bool name="pref_reminder_enable_def">true</bool>
+    <bool name="pref_group_filtering_def">false</bool>
 </resources>

@@ -28,6 +28,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+
 import androidx.loader.content.AsyncTaskLoader;
 
 import org.birthdayadapter.R;
@@ -48,9 +49,11 @@ import java.util.Set;
 public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
 
     private List<AccountListEntry> mAccounts;
+    private final boolean mGroupFilteringEnabled;
 
-    public AccountListLoader(Context context) {
+    public AccountListLoader(Context context, boolean groupFilteringEnabled) {
         super(context);
+        mGroupFilteringEnabled = groupFilteringEnabled;
     }
 
     /**
@@ -117,21 +120,23 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
         ContentResolver resolver = getContext().getContentResolver();
 
         Map<String, String> groupTitleMap = new HashMap<>();
-        final String[] groupProjection = {ContactsContract.Groups._ID, ContactsContract.Groups.TITLE};
-        final String groupSelection = ContactsContract.Groups.ACCOUNT_TYPE + " = ? AND " +
-                ContactsContract.Groups.ACCOUNT_NAME + " = ? AND " +
-                ContactsContract.Groups.DELETED + " = 0";
-        final String[] groupSelectionArgs = {account.type, account.name};
+        if (mGroupFilteringEnabled) {
+            final String[] groupProjection = {ContactsContract.Groups._ID, ContactsContract.Groups.TITLE};
+            final String groupSelection = ContactsContract.Groups.ACCOUNT_TYPE + " = ? AND " +
+                    ContactsContract.Groups.ACCOUNT_NAME + " = ? AND " +
+                    ContactsContract.Groups.DELETED + " = 0";
+            final String[] groupSelectionArgs = {account.type, account.name};
 
-        try (Cursor groupCursor = resolver.query(ContactsContract.Groups.CONTENT_URI, groupProjection, groupSelection, groupSelectionArgs, null)) {
-            if (groupCursor != null) {
-                int idColumn = groupCursor.getColumnIndex(ContactsContract.Groups._ID);
-                int titleColumn = groupCursor.getColumnIndex(ContactsContract.Groups.TITLE);
-                while (groupCursor.moveToNext()) {
-                    String id = groupCursor.getString(idColumn);
-                    String title = groupCursor.getString(titleColumn);
-                    if (!TextUtils.isEmpty(title) && !title.startsWith("System Group:")) {
-                        groupTitleMap.put(id, title);
+            try (Cursor groupCursor = resolver.query(ContactsContract.Groups.CONTENT_URI, groupProjection, groupSelection, groupSelectionArgs, null)) {
+                if (groupCursor != null) {
+                    int idColumn = groupCursor.getColumnIndex(ContactsContract.Groups._ID);
+                    int titleColumn = groupCursor.getColumnIndex(ContactsContract.Groups.TITLE);
+                    while (groupCursor.moveToNext()) {
+                        String id = groupCursor.getString(idColumn);
+                        String title = groupCursor.getString(titleColumn);
+                        if (!TextUtils.isEmpty(title) && !title.startsWith("System Group:")) {
+                            groupTitleMap.put(id, title);
+                        }
                     }
                 }
             }
@@ -193,49 +198,51 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
         }
         entry.setDateCount(contactDateCounts.values().stream().mapToInt(Integer::intValue).sum());
 
-        Map<String, int[]> groupStats = new HashMap<>();
-        String noGroupKey = "-1";
+        if (mGroupFilteringEnabled) {
+            Map<String, int[]> groupStats = new HashMap<>();
+            String noGroupKey = "-1";
 
-        for (String rawContactId : allRawContactIds) {
-            Set<String> groupIds = contactToGroupsMap.get(rawContactId);
-            int dateCount = contactDateCounts.getOrDefault(rawContactId, 0);
+            for (String rawContactId : allRawContactIds) {
+                Set<String> groupIds = contactToGroupsMap.get(rawContactId);
+                int dateCount = contactDateCounts.getOrDefault(rawContactId, 0);
 
-            if (groupIds != null && !groupIds.isEmpty()) {
-                for (String groupId : groupIds) {
-                    int[] stats = groupStats.computeIfAbsent(groupId, k -> new int[2]);
+                if (groupIds != null && !groupIds.isEmpty()) {
+                    for (String groupId : groupIds) {
+                        int[] stats = groupStats.computeIfAbsent(groupId, k -> new int[2]);
+                        stats[0]++;
+                        stats[1] += dateCount;
+                    }
+                } else {
+                    int[] stats = groupStats.computeIfAbsent(noGroupKey, k -> new int[2]);
                     stats[0]++;
                     stats[1] += dateCount;
                 }
-            } else {
-                int[] stats = groupStats.computeIfAbsent(noGroupKey, k -> new int[2]);
-                stats[0]++;
-                stats[1] += dateCount;
             }
-        }
 
-        List<GroupListEntry> groupEntries = new ArrayList<>();
-        for (Map.Entry<String, int[]> statsEntry : groupStats.entrySet()) {
-            String groupId = statsEntry.getKey();
-            String groupTitle = groupTitleMap.get(groupId);
+            List<GroupListEntry> groupEntries = new ArrayList<>();
+            for (Map.Entry<String, int[]> statsEntry : groupStats.entrySet()) {
+                String groupId = statsEntry.getKey();
+                String groupTitle = groupTitleMap.get(groupId);
 
-            if (groupId.equals(noGroupKey)) {
-                if (statsEntry.getValue()[0] > 0) {
-                    groupTitle = getContext().getString(R.string.account_list_no_group);
+                if (groupId.equals(noGroupKey)) {
+                    if (statsEntry.getValue()[0] > 0) {
+                        groupTitle = getContext().getString(R.string.account_list_no_group);
+                    }
+                }
+
+                if (groupTitle != null) {
+                    int[] counts = statsEntry.getValue();
+                    GroupListEntry groupEntry = new GroupListEntry(groupTitle, counts[0], counts[1]);
+                    if (blacklistedGroups != null && blacklistedGroups.contains(groupTitle)) {
+                        groupEntry.setSelected(false);
+                    }
+                    groupEntries.add(groupEntry);
                 }
             }
+            groupEntries.sort(Comparator.comparing(GroupListEntry::getTitle));
 
-            if (groupTitle != null) {
-                int[] counts = statsEntry.getValue();
-                GroupListEntry groupEntry = new GroupListEntry(groupTitle, counts[0], counts[1]);
-                if (blacklistedGroups != null && blacklistedGroups.contains(groupTitle)) {
-                    groupEntry.setSelected(false);
-                }
-                groupEntries.add(groupEntry);
-            }
+            entry.setGroups(groupEntries);
         }
-        groupEntries.sort(Comparator.comparing(GroupListEntry::getTitle));
-
-        entry.setGroups(groupEntries);
     }
 
 

@@ -8,6 +8,7 @@
     <string name="pref_contacts_key" translatable="false">contacts</string>
     <string name="pref_calendar_key" translatable="false">calendar</string>
     <string name="pref_color_key" translatable="false">color</string>
+    <string name="pref_group_filtering_key" translatable="false">groupFiltering</string>
 
     <string name="pref_force_sync_key" translatable="false">forceSync</string>
     <string name="pref_reminder_enable_key" translatable="false">reminderEnable</string>
