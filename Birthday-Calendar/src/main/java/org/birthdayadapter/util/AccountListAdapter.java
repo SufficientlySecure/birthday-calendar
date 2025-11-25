@@ -93,7 +93,7 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
                     }
                 }
 
-                if (!entry.isSelected()) {
+                if (entry.isNotSelected()) {
                     // Account is fully blacklisted. Add a null marker to signify this.
                     blacklistedGroups.add(null);
                     blacklist.put(entry.getAccount(), blacklistedGroups);
@@ -145,7 +145,7 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
             countersView.setText(countersSummary);
 
             // --- Checkbox State Logic ---
-            if (!entry.isSelected()) {
+            if (entry.isNotSelected()) {
                 // 1. Account is globally disabled -> UNCHECKED
                 cBox.setCheckedState(MaterialCheckBox.STATE_UNCHECKED);
             } else {
@@ -182,7 +182,7 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
             view.setOnClickListener(v -> {
                 // This click only toggles the account's master selected state.
                 // It does NOT change the individual group selections.
-                entry.setSelected(!entry.isSelected());
+                entry.setSelected(entry.isNotSelected());
                 notifyDataSetChanged();
                 if (mBlacklistChangedListener != null) {
                     mBlacklistChangedListener.onBlacklistChanged();

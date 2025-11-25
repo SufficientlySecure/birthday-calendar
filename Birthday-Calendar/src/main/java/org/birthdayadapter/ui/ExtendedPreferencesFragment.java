@@ -57,6 +57,7 @@ import org.birthdayadapter.util.PreferencesHelper;
 import org.birthdayadapter.util.SyncStatusManager;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
@@ -204,7 +205,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     }
 
     private void saveJubileeYears(String jubileeYears) {
-        SharedPreferences.Editor editor = getPreferenceManager().getSharedPreferences().edit();
+        SharedPreferences.Editor editor = Objects.requireNonNull(getPreferenceManager().getSharedPreferences()).edit();
         editor.putString(getString(R.string.pref_jubilee_years_key), jubileeYears);
         editor.apply();
         updateJubileeYearsSummary();
@@ -323,7 +324,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     }
 
     private void saveColor(int color) {
-        SharedPreferences.Editor editor = getPreferenceManager().getSharedPreferences().edit();
+        SharedPreferences.Editor editor = Objects.requireNonNull(getPreferenceManager().getSharedPreferences()).edit();
         editor.putInt(getString(R.string.pref_color_key), color);
         editor.apply();
         updateColorPreferenceIcon();
@@ -351,7 +352,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         mSyncStatusPrefs.registerOnSharedPreferenceChangeListener(mSyncStatusListener);
         // Set up a listener whenever a key changes
         if (mActivity != null && mActivity.mySharedPreferenceChangeListener != null) {
-            getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(
+            Objects.requireNonNull(getPreferenceScreen().getSharedPreferences()).registerOnSharedPreferenceChangeListener(
                     mActivity.mySharedPreferenceChangeListener);
         }
 
@@ -376,7 +377,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
 
         // Unregister the listener whenever a key changes
         if (mActivity != null && mActivity.mySharedPreferenceChangeListener != null) {
-            getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(
+            Objects.requireNonNull(getPreferenceScreen().getSharedPreferences()).unregisterOnSharedPreferenceChangeListener(
                     mActivity.mySharedPreferenceChangeListener);
         }
     }

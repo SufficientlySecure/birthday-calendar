@@ -31,9 +31,7 @@ import android.graphics.drawable.Drawable;
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class AccountListEntry {
     private String label;
@@ -85,16 +83,12 @@ public class AccountListEntry {
         return icon;
     }
 
-    public boolean isSelected() {
-        return selected;
+    public boolean isNotSelected() {
+        return !selected;
     }
 
     public void setSelected(boolean selected) {
         this.selected = selected;
-    }
-
-    public boolean isIndeterminate() {
-        return indeterminate;
     }
 
     public void setIndeterminate(boolean indeterminate) {

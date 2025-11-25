@@ -33,6 +33,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -52,16 +54,32 @@ import org.birthdayadapter.util.Log;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 public class AccountListFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<List<AccountListEntry>>, AccountListAdapter.OnBlacklistChangedListener, SharedPreferences.OnSharedPreferenceChangeListener {
-
-    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
 
     private AccountListAdapter mAdapter;
     private BaseActivity mActivity;
     private ListView mListView;
     private TextView mEmptyView;
+    private ActivityResultLauncher<String> requestPermissionLauncher;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestPermissionLauncher =
+                registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                    if (isGranted) {
+                        // Permission is granted. Continue the action or workflow in your app.
+                        LoaderManager.getInstance(this).restartLoader(0, null, this);
+                    } else {
+                        // Explain to the user that the feature is unavailable because the
+                        // features requires a permission that the user has denied.
+                        Toast.makeText(getContext(), R.string.permission_read_contacts_denied, Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
 
     @Nullable
     @Override
@@ -98,7 +116,7 @@ public class AccountListFragment extends Fragment implements
             LoaderManager.getInstance(this).restartLoader(0, null, this);
         } else {
             // Request permission if not granted
-            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
+            requestPermissionLauncher.launch(Manifest.permission.READ_CONTACTS);
         }
     }
 
@@ -113,9 +131,7 @@ public class AccountListFragment extends Fragment implements
         if (key != null && key.equals(getString(R.string.pref_group_filtering_key))) {
             // The preference has changed, so update the adapter's state and reload the data
             updateGroupFilteringState();
-            requireActivity().runOnUiThread(() -> {
-                LoaderManager.getInstance(this).restartLoader(0, null, this);
-            });
+            requireActivity().runOnUiThread(() -> LoaderManager.getInstance(this).restartLoader(0, null, this));
         }
     }
 
@@ -147,20 +163,7 @@ public class AccountListFragment extends Fragment implements
         }
         HashMap<Account, HashSet<String>> newBlacklist = mAdapter.getAccountBlacklist();
         Log.d(Constants.TAG, "Blacklist change detected, saving new blacklist");
-        ProviderHelper.setAccountBlacklist(getActivity(), newBlacklist);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission was granted, now we can load the accounts
-                LoaderManager.getInstance(this).restartLoader(0, null, this);
-            } else {
-                // Permission denied, show a message to the user
-                Toast.makeText(getContext(), "Permission to read contacts denied. Accounts cannot be loaded.", Toast.LENGTH_SHORT).show();
-            }
-        }
+        ProviderHelper.setAccountBlacklist(requireActivity(), newBlacklist);
     }
 
     @NonNull

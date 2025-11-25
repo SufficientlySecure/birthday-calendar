@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
+ * Copyright (C) 2025 Matthias Heinisch <matthias@matthiasheinisch.de>
  *
  * This file is part of Birthday Adapter.
  *
@@ -20,7 +21,6 @@
 
 package org.birthdayadapter.ui;
 
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -42,6 +42,8 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.MySharedPreferenceChangeListener;
 import org.birthdayadapter.util.SyncStatusManager;
+
+import java.util.Objects;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -72,7 +74,7 @@ public class BaseActivity extends AppCompatActivity {
 
         TabLayout tabLayout = findViewById(R.id.tabs);
         new TabLayoutMediator(tabLayout, viewPager,
-                (tab, position) -> tab.setText(((ViewPagerAdapter) viewPager.getAdapter()).getPageTitle(position))
+                (tab, position) -> tab.setText(((ViewPagerAdapter) Objects.requireNonNull(viewPager.getAdapter())).getPageTitle(position))
         ).attach();
 
         mySharedPreferenceChangeListener = new MySharedPreferenceChangeListener(getApplicationContext());
@@ -139,16 +141,6 @@ public class BaseActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             return mFragmentTitles[position];
         }
-    }
-
-    public boolean isPackageInstalled(String targetPackage) {
-        PackageManager pm = getPackageManager();
-        try {
-            pm.getPackageInfo(targetPackage, PackageManager.GET_META_DATA);
-        } catch (PackageManager.NameNotFoundException e) {
-            return false;
-        }
-        return true;
     }
 
 }

@@ -134,7 +134,7 @@ public class PreferencesHelper {
         }
     }
 
-    public static boolean getPreferddSlashMM(Context context) {
+    public static boolean getPreferDDSlashMM(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
                 Context.MODE_PRIVATE);
         return prefs.getBoolean(context.getString(R.string.pref_prefer_dd_slash_mm_key),

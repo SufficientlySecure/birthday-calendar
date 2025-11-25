@@ -364,7 +364,7 @@ public class BirthdayWorker extends Worker {
         return existingUids;
     }
 
-    private Map<String, List<String>> getRawContactGroupTitles(Context context, ContentResolver contentResolver) {
+    private Map<String, List<String>> getRawContactGroupTitles(ContentResolver contentResolver) {
         Map<String, String> groupIdToTitleMap = new HashMap<>();
         final String[] groupProjection = {ContactsContract.Groups._ID, ContactsContract.Groups.TITLE};
         final String groupSelection = ContactsContract.Groups.DELETED + " = 0";
@@ -428,7 +428,7 @@ public class BirthdayWorker extends Worker {
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
         boolean groupFilteringEnabled = sharedPreferences.getBoolean(context.getString(R.string.pref_group_filtering_key), context.getResources().getBoolean(R.bool.pref_group_filtering_def));
 
-        Map<String, List<String>> contactGroupMembership = getRawContactGroupTitles(context, contentResolver);
+        Map<String, List<String>> contactGroupMembership = getRawContactGroupTitles(contentResolver);
         HashMap<Account, HashSet<String>> blacklist = ProviderHelper.getAccountBlacklist(context);
         HashSet<String> addedEventsIdentifiers = new HashSet<>();
 
@@ -696,7 +696,7 @@ public class BirthdayWorker extends Worker {
         }
 
         String[] formatsToTry;
-        if (PreferencesHelper.getPreferddSlashMM(context)) {
+        if (PreferencesHelper.getPreferDDSlashMM(context)) {
             formatsToTry = new String[]{"yyyy-MM-dd", "--MM-dd", "yyyyMMdd", "dd.MM.yyyy", "yyyy.MM.dd", "dd/MM/yyyy", "dd/MM"};
         } else {
             formatsToTry = new String[]{"yyyy-MM-dd", "--MM-dd", "yyyyMMdd", "MM/dd/yyyy", "MM/dd"};

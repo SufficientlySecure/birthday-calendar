@@ -38,6 +38,7 @@ import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
 
 import java.io.InputStream;
+import java.util.Objects;
 
 public class AboutFragment extends Fragment {
 
@@ -46,7 +47,7 @@ public class AboutFragment extends Fragment {
         View view = inflater.inflate(R.layout.about_fragment, container, false);
 
         TextView versionText = view.findViewById(R.id.about_version);
-        versionText.setText(getString(R.string.about_version) + " " + getVersion());
+        versionText.setText(String.format("%s %s", getString(R.string.about_version), getVersion()));
 
         TextView aboutTextView = view.findViewById(R.id.about_text);
         
@@ -71,17 +72,13 @@ public class AboutFragment extends Fragment {
      * @return The current version.
      */
     private String getVersion() {
-        String result = "";
+        String result;
         try {
-            PackageManager manager = getActivity().getPackageManager();
-            PackageInfo info = manager.getPackageInfo(getActivity().getPackageName(), 0);
+            PackageManager manager = requireActivity().getPackageManager();
+            PackageInfo info = manager.getPackageInfo(requireActivity().getPackageName(), 0);
 
             String commitHash = org.birthdayadapter.BuildConfig.GIT_COMMIT_HASH;
-            if (commitHash != null && !commitHash.isEmpty()) {
-                result = String.format("%s (%s build %s)", info.versionName, info.versionCode, commitHash);
-            } else {
-                result = String.format("%s (%s)", info.versionName, info.versionCode);
-            }
+            result = String.format("%s (%s)", info.versionName, commitHash);
         } catch (PackageManager.NameNotFoundException e) {
             Log.w(Constants.TAG, "Unable to get application version", e);
             result = "Unable to get application version.";

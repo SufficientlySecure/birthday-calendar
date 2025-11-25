@@ -25,7 +25,8 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginEnd="8dp" />
+        android:layout_marginEnd="8dp"
+        android:contentDescription="@string/account_list_icon_description" />
 
     <LinearLayout
         android:layout_width="0dp"

@@ -10,18 +10,18 @@ dependencies {
 }
 
 android {
-    compileSdk 36
+    compileSdkVersion 36
 
     defaultConfig {
         minSdkVersion 28
-        targetSdkVersion 35
+        targetSdkVersion 36
         versionCode = 33
         versionName = "3.3"
 
         def gitCommitHashProvider = providers.exec {
             commandLine 'git', 'rev-parse', '--short', 'HEAD'
         }.standardOutput.asText.map { it.trim() }
-        buildConfigField "String", "GIT_COMMIT_HASH", gitCommitHashProvider.map{ "\"$it\"" }.get()
+        buildConfigField "String", "GIT_COMMIT_HASH", gitCommitHashProvider.map{ commit -> "\"${commit}\"" }.get()
     }
 
     compileOptions {
