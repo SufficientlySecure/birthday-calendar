@@ -21,19 +21,41 @@
 
 package org.birthdayadapter.ui;
 
-import android.accounts.AccountAuthenticatorActivity;
+import android.accounts.AccountAuthenticatorResponse;
+import android.accounts.AccountManager;
 import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.birthdayadapter.util.AccountHelper;
 
 /**
  * This activity is transparent, i.e., it has no layout
  */
-public class AddAccountActivity extends AccountAuthenticatorActivity {
+public class AddAccountActivity extends AppCompatActivity {
+
+    private AccountAuthenticatorResponse mAccountAuthenticatorResponse = null;
+    private Bundle mResultBundle = null;
+
+    /**
+     * Set the result that is to be sent as the result of the request that caused this
+     * Activity to be launched. If result is null or this method is never called then
+     * the request will be canceled.
+     * @param result this is returned as the result of the AbstractAccountAuthenticator request
+     */
+    public final void setAccountAuthenticatorResult(Bundle result) {
+        mResultBundle = result;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mAccountAuthenticatorResponse =
+                getIntent().getParcelableExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE);
+
+        if (mAccountAuthenticatorResponse != null) {
+            mAccountAuthenticatorResponse.onRequestContinued();
+        }
 
         AccountHelper accHelper = new AccountHelper(this);
         Bundle result = accHelper.addAccountAndSync();
@@ -42,6 +64,24 @@ public class AddAccountActivity extends AccountAuthenticatorActivity {
         }
 
         finish();
+    }
+
+    /**
+     * Sends the result or a Constants.ERROR_CODE_CANCELED error if a result isn't present.
+     */
+    @Override
+    public void finish() {
+        if (mAccountAuthenticatorResponse != null) {
+            // send the result bundle back if set, otherwise send an error.
+            if (mResultBundle != null) {
+                mAccountAuthenticatorResponse.onResult(mResultBundle);
+            } else {
+                mAccountAuthenticatorResponse.onError(AccountManager.ERROR_CODE_CANCELED,
+                        "canceled");
+            }
+            mAccountAuthenticatorResponse = null;
+        }
+        super.finish();
     }
 
 }

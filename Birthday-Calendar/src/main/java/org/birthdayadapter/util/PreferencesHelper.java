@@ -63,7 +63,7 @@ public class PreferencesHelper {
         int[] minutes = new int[3];
         for (int i = 0; i < 3; i++) {
             String keyEnabled = context.getString(R.string.pref_reminder_enable_key) + i;
-            boolean enabled = prefs.getBoolean(keyEnabled, false);
+            boolean enabled = prefs.getBoolean(keyEnabled, i == 0 && context.getResources().getBoolean(R.bool.pref_reminder_enable_def));
 
             if (enabled) {
                 String key = context.getString(R.string.pref_reminder_time_key) + i;
@@ -134,7 +134,7 @@ public class PreferencesHelper {
         }
     }
 
-    public static boolean getPreferddSlashMM(Context context) {
+    public static boolean getPreferDDSlashMM(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
                 Context.MODE_PRIVATE);
         return prefs.getBoolean(context.getString(R.string.pref_prefer_dd_slash_mm_key),

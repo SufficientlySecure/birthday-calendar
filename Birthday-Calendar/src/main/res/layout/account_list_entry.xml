@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
-    android:maxLines="1"
+    android:layout_height="wrap_content"
+    android:minHeight="?android:attr/listPreferredItemHeight"
     android:orientation="horizontal"
     android:paddingLeft="3dip"
-    android:paddingRight="?android:attr/scrollbarSize">
+    android:paddingRight="?android:attr/scrollbarSize"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
 
-    <CheckBox
+    <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/account_list_cbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,15 +25,15 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_gravity="center_vertical"
-        android:paddingRight="2dp" />
+        android:layout_marginEnd="8dp"
+        android:contentDescription="@string/account_list_icon_description" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:orientation="vertical"
-        android:paddingBottom="2dp"
-        android:paddingTop="2dp">
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/account_list_text"
@@ -42,9 +45,26 @@
         <TextView
             android:id="@+id/account_list_subtext"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/account_list_counters"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:singleLine="true" />
+            android:textColor="?android:attr/textColorSecondary" />
+
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/account_list_info_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:contentDescription="@string/account_list_group_button_description"
+        android:focusable="true"
+        android:padding="8dp"
+        app:srcCompat="@drawable/ic_group_24dp" />
 
 </LinearLayout>

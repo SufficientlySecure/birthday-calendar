@@ -18,8 +18,6 @@ import java.util.ArrayList;
 
 public class CalendarHelper {
 
-    private static String CALENDAR_COLUMN_NAME = "birthday_adapter";
-
     /**
      * Gets calendar id, when no calendar is present, create one!
      */
@@ -41,7 +39,7 @@ public class CalendarHelper {
         // getBirthdayAdapterUri for Android < 4)
         try (Cursor cursor = contentResolver.query(calenderUri, new String[]{BaseColumns._ID},
                 CalendarContract.Calendars.ACCOUNT_NAME + " = ? AND " + CalendarContract.Calendars.ACCOUNT_TYPE + " = ?",
-                new String[]{Constants.ACCOUNT_NAME, context.getString(R.string.account_type)}, null)) {
+                new String[]{Constants.getAccountName(context), context.getString(R.string.account_type)}, null)) {
             if (cursor != null && cursor.moveToNext()) {
                 return cursor.getLong(0);
             } else {
@@ -49,8 +47,9 @@ public class CalendarHelper {
 
                 ContentProviderOperation.Builder builder = ContentProviderOperation
                         .newInsert(calenderUri);
-                builder.withValue(CalendarContract.Calendars.ACCOUNT_NAME, Constants.ACCOUNT_NAME);
+                builder.withValue(CalendarContract.Calendars.ACCOUNT_NAME, Constants.getAccountName(context));
                 builder.withValue(CalendarContract.Calendars.ACCOUNT_TYPE, context.getString(R.string.account_type));
+                String CALENDAR_COLUMN_NAME = "birthday_adapter";
                 builder.withValue(CalendarContract.Calendars.NAME, CALENDAR_COLUMN_NAME);
                 builder.withValue(CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
                         context.getString(R.string.calendar_display_name));
@@ -60,13 +59,14 @@ public class CalendarHelper {
                 } else {
                     builder.withValue(CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL, CalendarContract.Calendars.CAL_ACCESS_READ);
                 }
-                builder.withValue(CalendarContract.Calendars.OWNER_ACCOUNT, Constants.ACCOUNT_NAME);
+                builder.withValue(CalendarContract.Calendars.OWNER_ACCOUNT, Constants.getAccountName(context));
                 builder.withValue(CalendarContract.Calendars.SYNC_EVENTS, 1);
                 builder.withValue(CalendarContract.Calendars.VISIBLE, 1);
                 operationList.add(builder.build());
                 try {
                     android.content.ContentProviderResult[] results = contentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
                     if (results.length > 0) {
+                        assert results[0].uri != null;
                         return android.content.ContentUris.parseId(results[0].uri);
                     } else {
                         return -1;
@@ -132,7 +132,7 @@ public class CalendarHelper {
      */
     public static Uri getBirthdayAdapterUri(Context context, Uri uri) {
         return uri.buildUpon().appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, Constants.ACCOUNT_NAME)
+                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, Constants.getAccountName(context))
                 .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, context.getString(R.string.account_type)).build();
     }
 

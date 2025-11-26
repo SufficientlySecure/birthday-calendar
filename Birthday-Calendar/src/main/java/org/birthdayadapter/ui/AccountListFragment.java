@@ -22,16 +22,19 @@ package org.birthdayadapter.ui;
 
 import android.Manifest;
 import android.accounts.Account;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -45,20 +48,38 @@ import org.birthdayadapter.util.AccountHelper;
 import org.birthdayadapter.util.AccountListAdapter;
 import org.birthdayadapter.util.AccountListEntry;
 import org.birthdayadapter.util.AccountListLoader;
+import org.birthdayadapter.util.Constants;
+import org.birthdayadapter.util.Log;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 public class AccountListFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<List<AccountListEntry>> {
+        LoaderManager.LoaderCallbacks<List<AccountListEntry>>, AccountListAdapter.OnBlacklistChangedListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
+    private AccountListAdapter mAdapter;
+    private BaseActivity mActivity;
+    private ListView mListView;
+    private TextView mEmptyView;
+    private ActivityResultLauncher<String> requestPermissionLauncher;
 
-    AccountListAdapter mAdapter;
-    BaseActivity mActivity;
-    ListView mListView;
-    TextView mEmptyView;
-    private HashSet<Account> initialBlacklist;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestPermissionLauncher =
+                registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                    if (isGranted) {
+                        // Permission is granted. Continue the action or workflow in your app.
+                        LoaderManager.getInstance(this).restartLoader(0, null, this);
+                    } else {
+                        // Explain to the user that the feature is unavailable because the
+                        // features requires a permission that the user has denied.
+                        Toast.makeText(getContext(), R.string.permission_read_contacts_denied, Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
 
     @Nullable
     @Override
@@ -77,84 +98,88 @@ public class AccountListFragment extends Fragment implements
         if (mActivity == null) return;
 
         mAdapter = new AccountListAdapter(mActivity);
+        mAdapter.setOnBlacklistChangedListener(this);
         mListView.setAdapter(mAdapter);
         mListView.setEmptyView(mEmptyView); // Link the empty view to the list
-
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                AccountListEntry entry = mAdapter.getItem(position);
-                if (entry != null) {
-                    entry.setSelected(!entry.isSelected());
-                    mAdapter.notifyDataSetChanged();
-                }
-            }
-        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        requireContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE).registerOnSharedPreferenceChangeListener(this);
+
+        // Always update the adapter's state when the fragment resumes
+        updateGroupFilteringState();
+
         // Check for permissions and load accounts if granted
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
             LoaderManager.getInstance(this).restartLoader(0, null, this);
         } else {
             // Request permission if not granted
-            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
+            requestPermissionLauncher.launch(Manifest.permission.READ_CONTACTS);
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        // Save the blacklist when the user leaves the screen, but only if it has changed
-        applyBlacklistIfNeeded();
+        requireContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE).unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission was granted, now we can load the accounts
-                LoaderManager.getInstance(this).restartLoader(0, null, this);
-            } else {
-                // Permission denied, show a message to the user
-                Toast.makeText(getContext(), "Permission to read contacts denied. Accounts cannot be loaded.", Toast.LENGTH_SHORT).show();
-            }
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key != null && key.equals(getString(R.string.pref_group_filtering_key))) {
+            // The preference has changed, so update the adapter's state and reload the data
+            updateGroupFilteringState();
+            requireActivity().runOnUiThread(() -> LoaderManager.getInstance(this).restartLoader(0, null, this));
         }
     }
 
-    private void applyBlacklistIfNeeded() {
+    @Override
+    public void onBlacklistChanged() {
+        saveBlacklist();
+        
+        Log.d(Constants.TAG, "Blacklist has changed, triggering manual sync.");
+        AccountHelper accountHelper = new AccountHelper(mActivity);
+        if (accountHelper.isAccountActivated()) {
+            accountHelper.manualSync();
+        }
+    }
+
+    private void updateGroupFilteringState() {
+        if (mAdapter != null && getContext() != null) {
+            SharedPreferences sharedPreferences = requireContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
+            boolean groupFilteringEnabled = sharedPreferences.getBoolean(
+                    getString(R.string.pref_group_filtering_key),
+                    getResources().getBoolean(R.bool.pref_group_filtering_def)
+            );
+            mAdapter.setGroupFilteringEnabled(groupFilteringEnabled);
+        }
+    }
+
+    private void saveBlacklist() {
         if (mAdapter == null || mActivity == null) {
             return;
         }
-
-        HashSet<Account> newBlacklist = mAdapter.getAccountBlacklist();
-
-        // Only save and sync if the blacklist has actually changed
-        if (newBlacklist != null && !newBlacklist.equals(initialBlacklist)) {
-            ProviderHelper.setAccountBlacklist(getActivity(), newBlacklist);
-
-            AccountHelper accountHelper = new AccountHelper(mActivity);
-            if (accountHelper.isAccountActivated()) {
-                accountHelper.manualSync();
-            }
-        }
+        HashMap<Account, HashSet<String>> newBlacklist = mAdapter.getAccountBlacklist();
+        Log.d(Constants.TAG, "Blacklist change detected, saving new blacklist");
+        ProviderHelper.setAccountBlacklist(requireActivity(), newBlacklist);
     }
 
     @NonNull
     @Override
     public Loader<List<AccountListEntry>> onCreateLoader(int id, @Nullable Bundle args) {
-        return new AccountListLoader(requireActivity());
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
+        boolean groupFilteringEnabled = sharedPreferences.getBoolean(
+                getString(R.string.pref_group_filtering_key),
+                getResources().getBoolean(R.bool.pref_group_filtering_def)
+        );
+        return new AccountListLoader(requireActivity(), groupFilteringEnabled);
     }
 
     @Override
     public void onLoadFinished(@NonNull Loader<List<AccountListEntry>> loader, List<AccountListEntry> data) {
         mAdapter.setData(data);
-        // Store the initial state of the blacklist after data is loaded
-        if (mAdapter != null) {
-            initialBlacklist = mAdapter.getAccountBlacklist();
-        }
 
         if (data == null || data.isEmpty()) {
             mListView.setVisibility(View.GONE);

@@ -26,6 +26,7 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import androidx.preference.PreferenceManager;
 
 import androidx.core.app.ActivityCompat;
 import androidx.work.Data;
@@ -43,7 +44,7 @@ import org.birthdayadapter.service.BirthdayWorker;
 import java.util.concurrent.TimeUnit;
 
 public class AccountHelper {
-    private Context mContext;
+    private final Context mContext;
 
     public AccountHelper(Context context) {
         mContext = context;
@@ -61,8 +62,10 @@ public class AccountHelper {
         if (!isAccountActivated()) {
             Log.d(Constants.TAG, "Account does not exist. Adding account...");
 
+            setDefaultValues();
+
             AccountManager am = AccountManager.get(mContext);
-            final Account account = new Account(Constants.ACCOUNT_NAME, mContext.getString(R.string.account_type));
+            final Account account = new Account(Constants.getAccountName(mContext), mContext.getString(R.string.account_type));
 
             if (am.addAccountExplicitly(account, null, null)) {
                 result = new Bundle();
@@ -82,6 +85,10 @@ public class AccountHelper {
         return result;
     }
 
+    private void setDefaultValues() {
+        PreferenceManager.setDefaultValues(mContext, Constants.PREFS_NAME, Context.MODE_PRIVATE, R.xml.pref_preferences, false);
+    }
+
     /**
      * Remove account from Android system and deletes the associated calendar.
      */
@@ -93,7 +100,7 @@ public class AccountHelper {
 
         // Then, remove the account
         AccountManager am = AccountManager.get(mContext);
-        final Account account = new Account(Constants.ACCOUNT_NAME, mContext.getString(R.string.account_type));
+        final Account account = new Account(Constants.getAccountName(mContext), mContext.getString(R.string.account_type));
 
         am.removeAccount(account, null, future -> {
             try {
@@ -169,7 +176,7 @@ public class AccountHelper {
         }
         Account[] availableAccounts = am.getAccountsByType(mContext.getString(R.string.account_type));
         for (Account currentAccount : availableAccounts) {
-            if (currentAccount.name.equals(Constants.ACCOUNT_NAME)) {
+            if (currentAccount.name.equals(Constants.getAccountName(mContext))) {
                 return true;
             }
         }

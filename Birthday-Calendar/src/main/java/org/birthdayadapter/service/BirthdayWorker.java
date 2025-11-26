@@ -21,6 +21,7 @@ import android.text.format.DateUtils;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
@@ -40,8 +41,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 public class BirthdayWorker extends Worker {
@@ -125,7 +129,7 @@ public class BirthdayWorker extends Worker {
 
         calendarUri = calendarUri.buildUpon()
                 .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, Constants.ACCOUNT_NAME)
+                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, Constants.getAccountName(context))
                 .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, context.getString(R.string.account_type))
                 .build();
 
@@ -172,6 +176,7 @@ public class BirthdayWorker extends Worker {
             int newEventsCount = 0;
 
             ArrayList<ContentProviderOperation> operationList = new ArrayList<>();
+            Map<String, String> firstNameCache = new HashMap<>();
 
             try (Cursor cursor = getContactsEvents(context, contentResolver)) {
                 if (cursor == null) {
@@ -246,7 +251,7 @@ public class BirthdayWorker extends Worker {
                             boolean includeAge = hasYear && age >= 0;
 
                             String title = generateTitle(context, eventType, cursor,
-                                    eventCustomLabelColumn, includeAge, displayName, age);
+                                    eventCustomLabelColumn, includeAge, displayName, age, eventLookupKey, firstNameCache);
 
                             if (title != null && !title.trim().isEmpty()) {
                                 newEventsCount++;
@@ -260,7 +265,7 @@ public class BirthdayWorker extends Worker {
                                 cal.set(Calendar.MILLISECOND, 0);
                                 long dtstart = cal.getTimeInMillis();
 
-                                Log.d(Constants.TAG, "Adding event: " + title);
+                                Log.v(Constants.TAG, "Adding event: " + title);
                                 operationList.add(insertEvent(context, calendarId, dtstart, title, eventLookupKey, eventUid, hasReminders));
 
                                 if (hasReminders) {
@@ -299,7 +304,7 @@ public class BirthdayWorker extends Worker {
                 }
             }
 
-            if (operationList.size() > 0) {
+            if (!operationList.isEmpty()) {
                 try {
                     contentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
                 } catch (Exception e) {
@@ -359,6 +364,57 @@ public class BirthdayWorker extends Worker {
         return existingUids;
     }
 
+    private Map<String, List<String>> getRawContactGroupTitles(ContentResolver contentResolver) {
+        Map<String, String> groupIdToTitleMap = new HashMap<>();
+        final String[] groupProjection = {ContactsContract.Groups._ID, ContactsContract.Groups.TITLE};
+        final String groupSelection = ContactsContract.Groups.DELETED + " = 0";
+
+        // Query all groups to create a mapping from group ID to group title
+        try (Cursor groupCursor = contentResolver.query(ContactsContract.Groups.CONTENT_URI,
+                groupProjection, groupSelection, null, null)) {
+            if (groupCursor != null) {
+                int idColumn = groupCursor.getColumnIndex(ContactsContract.Groups._ID);
+                int titleColumn = groupCursor.getColumnIndex(ContactsContract.Groups.TITLE);
+                while (groupCursor.moveToNext()) {
+                    String id = groupCursor.getString(idColumn);
+                    String title = groupCursor.getString(titleColumn);
+                    // We are not interested in system groups
+                    if (!TextUtils.isEmpty(title) && !title.startsWith("System Group:")) {
+                        groupIdToTitleMap.put(id, title);
+                    }
+                }
+            }
+        }
+
+        Map<String, List<String>> rawContactToGroupTitlesMap = new HashMap<>();
+        final String[] membershipProjection = {
+                ContactsContract.Data.RAW_CONTACT_ID,
+                ContactsContract.CommonDataKinds.GroupMembership.GROUP_ROW_ID
+        };
+        final String membershipSelection = ContactsContract.Data.MIMETYPE + " = ?";
+        final String[] membershipSelectionArgs = {ContactsContract.CommonDataKinds.GroupMembership.CONTENT_ITEM_TYPE};
+
+        // Query all group memberships to link contacts to groups
+        try (Cursor membershipCursor = contentResolver.query(ContactsContract.Data.CONTENT_URI,
+                membershipProjection, membershipSelection, membershipSelectionArgs, null)) {
+            if (membershipCursor != null) {
+                int rawContactIdColumn = membershipCursor.getColumnIndex(ContactsContract.Data.RAW_CONTACT_ID);
+                int groupIdColumn = membershipCursor.getColumnIndex(ContactsContract.CommonDataKinds.GroupMembership.GROUP_ROW_ID);
+                while (membershipCursor.moveToNext()) {
+                    String rawContactId = membershipCursor.getString(rawContactIdColumn);
+                    String groupId = membershipCursor.getString(groupIdColumn);
+                    String groupTitle = groupIdToTitleMap.get(groupId);
+                    if (groupTitle != null) {
+                        rawContactToGroupTitlesMap
+                                .computeIfAbsent(rawContactId, k -> new ArrayList<>())
+                                .add(groupTitle);
+                    }
+                }
+            }
+        }
+        return rawContactToGroupTitlesMap;
+    }
+
     private Cursor getContactsEvents(Context context, ContentResolver contentResolver) throws OperationCanceledException {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             Log.e(Constants.TAG, "Missing READ_CONTACTS permission!");
@@ -369,7 +425,11 @@ public class BirthdayWorker extends Worker {
             throw new OperationCanceledException();
         }
 
-        HashSet<Account> blacklist = ProviderHelper.getAccountBlacklist(context);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
+        boolean groupFilteringEnabled = sharedPreferences.getBoolean(context.getString(R.string.pref_group_filtering_key), context.getResources().getBoolean(R.bool.pref_group_filtering_def));
+
+        Map<String, List<String>> contactGroupMembership = getRawContactGroupTitles(contentResolver);
+        HashMap<Account, HashSet<String>> blacklist = ProviderHelper.getAccountBlacklist(context);
         HashSet<String> addedEventsIdentifiers = new HashSet<>();
 
         // Define the columns we want to fetch in a single query
@@ -381,7 +441,8 @@ public class BirthdayWorker extends Worker {
                 ContactsContract.CommonDataKinds.Event.TYPE,
                 ContactsContract.CommonDataKinds.Event.LABEL,
                 ContactsContract.RawContacts.ACCOUNT_TYPE,
-                ContactsContract.RawContacts.ACCOUNT_NAME
+                ContactsContract.RawContacts.ACCOUNT_NAME,
+                ContactsContract.Data.RAW_CONTACT_ID
         };
 
         // The query is performed on the Data table, filtering for the Event mimetype
@@ -406,6 +467,7 @@ public class BirthdayWorker extends Worker {
 
             int accTypeColumn = dataCursor.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_TYPE);
             int accNameColumn = dataCursor.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_NAME);
+            int rawContactIdColumn = dataCursor.getColumnIndex(ContactsContract.Data.RAW_CONTACT_ID);
             int lookupKeyColumn = dataCursor.getColumnIndex(ContactsContract.Data.LOOKUP_KEY);
             int typeColumn = dataCursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE);
             int labelColumn = dataCursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL);
@@ -423,9 +485,34 @@ public class BirthdayWorker extends Worker {
                 String accName = dataCursor.getString(accNameColumn);
 
                 boolean isBlacklisted = false;
-                if (!TextUtils.isEmpty(accType) && !TextUtils.isEmpty(accName)) {
-                    if (blacklist.contains(new Account(accName, accType))) {
-                        isBlacklisted = true;
+                if (groupFilteringEnabled && !TextUtils.isEmpty(accType) && !TextUtils.isEmpty(accName)) {
+                    Account account = new Account(accName, accType);
+                    HashSet<String> blacklistedGroups = blacklist.get(account);
+
+                    if (blacklistedGroups != null) {
+                        if (blacklistedGroups.contains(null)) {
+                            // Account is fully blacklisted
+                            isBlacklisted = true;
+                        } else if (!blacklistedGroups.isEmpty()) {
+                            // Account is partially blacklisted, check groups
+                            String rawContactId = dataCursor.getString(rawContactIdColumn);
+                            List<String> contactGroups = contactGroupMembership.get(rawContactId);
+
+                            if (contactGroups != null && !contactGroups.isEmpty()) {
+                                // A contact is only blacklisted if ALL of its groups are blacklisted
+                                boolean allGroupsBlacklisted = true;
+                                for (String groupTitle : contactGroups) {
+                                    if (!blacklistedGroups.contains(groupTitle)) {
+                                        allGroupsBlacklisted = false;
+                                        break;
+                                    }
+                                }
+                                if (allGroupsBlacklisted) {
+                                    isBlacklisted = true;
+                                }
+                            }
+                            // if contact has no groups, it's not blacklisted by a group filter
+                        }
                     }
                 }
 
@@ -454,7 +541,7 @@ public class BirthdayWorker extends Worker {
     }
 
     private String generateTitle(Context context, int eventType, Cursor cursor,
-                                 int eventCustomLabelColumn, boolean includeAge, String displayName, int age) {
+                                 int eventCustomLabelColumn, boolean includeAge, String displayName, int age, String lookupKey, Map<String, String> firstNameCache) {
         if (displayName == null) {
             return null;
         }
@@ -476,23 +563,68 @@ public class BirthdayWorker extends Worker {
             title = addJubileeIcon(context, title, age);
         }
 
-        // Replace user-friendly placeholders with String.format specifiers
-        if (eventCustomLabel != null) {
-            title = title.replace("{NAME}", "%1$s");
-            title = title.replace("{LABEL}", "%2$s");
-            if (includeAge) {
-                title = title.replace("{AGE}", "%3$d");
-                return String.format(title, displayName, eventCustomLabel, age);
-            }
-            return String.format(title, displayName, eventCustomLabel);
-        } else {
-            title = title.replace("{NAME}", "%1$s");
-            if (includeAge) {
-                title = title.replace("{AGE}", "%2$d");
-                return String.format(title, displayName, age);
-            }
-            return String.format(title, displayName);
+        // Replace placeholders
+        if (title.contains("{FIRSTNAME}")) {
+            String firstName = getFirstName(context, lookupKey, displayName, firstNameCache);
+            title = title.replace("{FIRSTNAME}", firstName);
         }
+        title = title.replace("{NAME}", displayName);
+        if (includeAge) {
+            title = title.replace("{AGE}", String.valueOf(age));
+        }
+        if (eventCustomLabel != null) {
+            title = title.replace("{LABEL}", eventCustomLabel);
+        }
+
+        return title;
+    }
+
+    private String getFirstName(Context context, String lookupKey, String displayName, Map<String, String> firstNameCache) {
+        String firstName = firstNameCache.get(lookupKey);
+        if (firstName == null && lookupKey != null) {
+            firstName = getFirstNameFromLookupKey(context, lookupKey);
+            // Fallback to splitting the display name if structured name is not available
+            if (TextUtils.isEmpty(firstName)) {
+                firstName = displayName.split("\\s+")[0];
+            }
+            firstNameCache.put(lookupKey, firstName);
+        } else if (firstName == null) {
+            // Fallback for when lookupKey is null for some reason
+            firstName = displayName.split("\\s+")[0];
+        }
+
+        // Final fallback to ensure firstname is not empty if display name is not
+        if (TextUtils.isEmpty(firstName) && !TextUtils.isEmpty(displayName)) {
+            firstName = displayName;
+        }
+        return firstName;
+    }
+
+    private String getFirstNameFromLookupKey(Context context, String lookupKey) {
+        if (lookupKey == null) {
+            return null;
+        }
+        Uri lookupUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
+        Uri dataUri = Uri.withAppendedPath(lookupUri, ContactsContract.Contacts.Data.CONTENT_DIRECTORY);
+
+        String[] projection = {ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME};
+        String selection = ContactsContract.Data.MIMETYPE + " = ?";
+        String[] selectionArgs = {ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE};
+
+        try (Cursor cursor = context.getContentResolver().query(dataUri, projection, selection, selectionArgs, null)) {
+            if (cursor != null && cursor.moveToFirst()) {
+                int givenNameColumnIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME);
+                if (givenNameColumnIndex != -1) {
+                    String givenName = cursor.getString(givenNameColumnIndex);
+                    if (!TextUtils.isEmpty(givenName)) {
+                        return givenName;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.e(Constants.TAG, "Error querying for given name using lookup key: " + lookupKey, e);
+        }
+        return null;
     }
 
     private String addJubileeIcon(Context context, String title, int age) {
@@ -564,7 +696,7 @@ public class BirthdayWorker extends Worker {
         }
 
         String[] formatsToTry;
-        if (PreferencesHelper.getPreferddSlashMM(context)) {
+        if (PreferencesHelper.getPreferDDSlashMM(context)) {
             formatsToTry = new String[]{"yyyy-MM-dd", "--MM-dd", "yyyyMMdd", "dd.MM.yyyy", "yyyy.MM.dd", "dd/MM/yyyy", "dd/MM"};
         } else {
             formatsToTry = new String[]{"yyyy-MM-dd", "--MM-dd", "yyyyMMdd", "MM/dd/yyyy", "MM/dd"};

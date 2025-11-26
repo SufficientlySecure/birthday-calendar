@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
+ * Copyright (C) 2025 Matthias Heinisch <matthias@matthiasheinisch.de>
  *
  * This file is part of Birthday Adapter.
  *
@@ -20,7 +21,6 @@
 
 package org.birthdayadapter.ui;
 
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -28,6 +28,9 @@ import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
@@ -40,6 +43,8 @@ import org.birthdayadapter.R;
 import org.birthdayadapter.util.MySharedPreferenceChangeListener;
 import org.birthdayadapter.util.SyncStatusManager;
 
+import java.util.Objects;
+
 public class BaseActivity extends AppCompatActivity {
 
     public MySharedPreferenceChangeListener mySharedPreferenceChangeListener;
@@ -49,10 +54,18 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+
         setContentView(R.layout.base_activity);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        ViewCompat.setOnApplyWindowInsetsListener(toolbar, (v, insets) -> {
+            int statusBarHeight = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top;
+            v.setPadding(v.getPaddingLeft(), statusBarHeight, v.getPaddingRight(), v.getPaddingBottom());
+            return insets;
+        });
 
         mProgressBar = findViewById(R.id.progress_spinner);
 
@@ -61,7 +74,7 @@ public class BaseActivity extends AppCompatActivity {
 
         TabLayout tabLayout = findViewById(R.id.tabs);
         new TabLayoutMediator(tabLayout, viewPager,
-                (tab, position) -> tab.setText(((ViewPagerAdapter) viewPager.getAdapter()).getPageTitle(position))
+                (tab, position) -> tab.setText(((ViewPagerAdapter) Objects.requireNonNull(viewPager.getAdapter())).getPageTitle(position))
         ).attach();
 
         mySharedPreferenceChangeListener = new MySharedPreferenceChangeListener(getApplicationContext());
@@ -128,16 +141,6 @@ public class BaseActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             return mFragmentTitles[position];
         }
-    }
-
-    public boolean isPackageInstalled(String targetPackage) {
-        PackageManager pm = getPackageManager();
-        try {
-            pm.getPackageInfo(targetPackage, PackageManager.GET_META_DATA);
-        } catch (PackageManager.NameNotFoundException e) {
-            return false;
-        }
-        return true;
     }
 
 }

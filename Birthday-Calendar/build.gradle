@@ -4,24 +4,24 @@ apply plugin: 'kotlin-android'
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'com.google.android.material:material:1.13.0'
-    implementation 'androidx.preference:preference:1.2.1'
+    implementation 'androidx.preference:preference-ktx:1.2.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "androidx.work:work-runtime-ktx:2.11.0"
 }
 
 android {
-    compileSdk = 35
+    compileSdkVersion 36
 
     defaultConfig {
-        minSdkVersion = 28
-        targetSdkVersion = 34
+        minSdkVersion 28
+        targetSdkVersion 36
         versionCode = 33
         versionName = "3.3"
 
         def gitCommitHashProvider = providers.exec {
             commandLine 'git', 'rev-parse', '--short', 'HEAD'
         }.standardOutput.asText.map { it.trim() }
-        buildConfigField "String", "GIT_COMMIT_HASH", gitCommitHashProvider.map{ "\"$it\"" }.get()
+        buildConfigField "String", "GIT_COMMIT_HASH", gitCommitHashProvider.map{ commit -> "\"${commit}\"" }.get()
     }
 
     compileOptions {

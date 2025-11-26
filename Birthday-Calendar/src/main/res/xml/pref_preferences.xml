@@ -2,6 +2,7 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <androidx.preference.PreferenceCategory android:title="@string/pref_general">
+
         <androidx.preference.Preference
             android:key="@string/pref_color_key"
             android:persistent="true"
@@ -9,7 +10,7 @@
     </androidx.preference.PreferenceCategory>
     <androidx.preference.PreferenceCategory android:title="@string/pref_reminders">
         <androidx.preference.CheckBoxPreference
-            android:defaultValue="@string/pref_reminder_enable_def0"
+            android:defaultValue="@bool/pref_reminder_enable_def"
             android:key="@string/pref_reminder_enable_key0"
             android:persistent="true"
             android:summary="@string/pref_reminder_enable_summary"
@@ -24,7 +25,7 @@
             android:title="@string/pref_reminder_time0" />
 
         <androidx.preference.CheckBoxPreference
-            android:defaultValue="@string/pref_reminder_enable_def1"
+            android:defaultValue="false"
             android:key="@string/pref_reminder_enable_key1"
             android:persistent="true"
             android:summary="@string/pref_reminder_enable_summary"
@@ -39,7 +40,7 @@
             android:title="@string/pref_reminder_time1" />
 
         <androidx.preference.CheckBoxPreference
-            android:defaultValue="@string/pref_reminder_enable_def2"
+            android:defaultValue="false"
             android:key="@string/pref_reminder_enable_key2"
             android:persistent="true"
             android:summary="@string/pref_reminder_enable_summary"
@@ -138,6 +139,12 @@
             android:persistent="true"
             android:summary="@string/pref_advanced_summary"
             android:title="@string/pref_advanced" />
+        <androidx.preference.CheckBoxPreference
+            android:key="@string/pref_group_filtering_key"
+            android:dependency="@string/pref_advanced_key"
+            android:title="@string/pref_group_filtering_title"
+            android:summary="@string/pref_group_filtering_summary"
+            android:defaultValue="@bool/pref_group_filtering_def" />
         <androidx.preference.CheckBoxPreference
             android:defaultValue="@string/pref_prefer_dd_slash_mm_def"
             android:dependency="@string/pref_advanced_key"

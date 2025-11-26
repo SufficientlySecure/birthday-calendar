@@ -21,8 +21,6 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements
 
     private AccountHelper mAccountHelper;
 
-    private Preference mForceSyncPref;
-
     /**
      * Called when the activity is first created.
      */
@@ -46,7 +44,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements
             openContactsPref.setOnPreferenceClickListener(this);
         }
 
-        mForceSyncPref = findPreference(getString(R.string.pref_force_sync_key));
+        Preference mForceSyncPref = findPreference(getString(R.string.pref_force_sync_key));
         if (mForceSyncPref != null) {
             mForceSyncPref.setOnPreferenceClickListener(this);
         }

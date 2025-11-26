@@ -3,4 +3,5 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
+    android:contentDescription="@string/item_color_content_description"
     android:background="@drawable/color_picker_item_background" />

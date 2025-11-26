@@ -8,6 +8,7 @@
     <string name="pref_contacts_key" translatable="false">contacts</string>
     <string name="pref_calendar_key" translatable="false">calendar</string>
     <string name="pref_color_key" translatable="false">color</string>
+    <string name="pref_group_filtering_key" translatable="false">groupFiltering</string>
 
     <string name="pref_force_sync_key" translatable="false">forceSync</string>
     <string name="pref_reminder_enable_key" translatable="false">reminderEnable</string>
@@ -47,6 +48,6 @@
     <string name="pref_buy_full_key" translatable="false">buyFull</string>
 
     <string name="pref_jubilee_years_key" translatable="false">jubileeYears</string>
-    <string name="pref_jubilee_years_def" translatable="false">18,20,30,40,50,60,70,75,80,90,100</string>
+    <string name="pref_jubilee_years_def" translatable="false">18, 20, 30, 40, 50, 60, 70, 75, 80, 90, 100</string>
 
 </resources>

@@ -28,23 +28,32 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.drawable.Drawable;
 
+import androidx.annotation.NonNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class AccountListEntry {
     private String label;
     private Drawable icon;
     private boolean selected;
-    private Account account;
+    private boolean indeterminate;
+    private final Account account;
+    private int contactCount;
+    private int dateCount;
+    private List<GroupListEntry> groups = new ArrayList<>();
 
     public AccountListEntry(Context context, Account account, AuthenticatorDescription description,
                             boolean selected) {
         this.account = account;
         this.selected = selected;
-        init(context, account, description);
+        init(context, description);
     }
 
     /**
      * Load label and icon for this entry
      */
-    public void init(Context context, Account account, AuthenticatorDescription description) {
+    public void init(Context context, AuthenticatorDescription description) {
         PackageManager pm = context.getPackageManager();
         label = description.packageName;
         try {
@@ -74,14 +83,43 @@ public class AccountListEntry {
         return icon;
     }
 
-    public boolean isSelected() {
-        return selected;
+    public boolean isNotSelected() {
+        return !selected;
     }
 
     public void setSelected(boolean selected) {
         this.selected = selected;
     }
 
+    public void setIndeterminate(boolean indeterminate) {
+        this.indeterminate = indeterminate;
+    }
+
+    public int getContactCount() {
+        return contactCount;
+    }
+
+    public void setContactCount(int contactCount) {
+        this.contactCount = contactCount;
+    }
+
+    public int getDateCount() {
+        return dateCount;
+    }
+
+    public void setDateCount(int dateCount) {
+        this.dateCount = dateCount;
+    }
+
+    public List<GroupListEntry> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<GroupListEntry> groups) {
+        this.groups = groups;
+    }
+
+    @NonNull
     @Override
     public String toString() {
         return "name: " + account.name + ", type: " + account.type;

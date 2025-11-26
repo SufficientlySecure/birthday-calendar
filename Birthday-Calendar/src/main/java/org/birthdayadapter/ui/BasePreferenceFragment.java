@@ -21,18 +21,19 @@
 package org.birthdayadapter.ui;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.ContactsContract;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -46,15 +47,52 @@ import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.PreferencesHelper;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Calendar;
+import java.util.List;
 
 public class BasePreferenceFragment extends PreferenceFragmentCompat {
     private AccountHelper mAccountHelper;
 
     private SwitchPreferenceCompat mEnabled;
 
-    public static final int MY_PERMISSIONS_REQUEST = 42;
+    private ActivityResultLauncher<String[]> requestPermissionLauncher;
+
+    private static final String[] REQUIRED_PERMISSIONS = new String[]{
+            Manifest.permission.GET_ACCOUNTS,
+            Manifest.permission.READ_CONTACTS,
+            Manifest.permission.WRITE_CONTACTS,
+            Manifest.permission.READ_CALENDAR,
+            Manifest.permission.WRITE_CALENDAR
+    };
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), permissions -> {
+            boolean allGranted = true;
+            for (Boolean isGranted : permissions.values()) {
+                if (!isGranted) {
+                    allGranted = false;
+                    break;
+                }
+            }
+
+            if (allGranted) {
+                // All permissions granted, now add the account
+                mAccountHelper.addAccountAndSync();
+            } else {
+                // At least one permission denied, disable the feature
+                if (mEnabled != null) {
+                    mEnabled.setChecked(false);
+                }
+                Context context = getContext();
+                if (context != null) {
+                    Toast.makeText(context, R.string.permission_denied, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
@@ -75,26 +113,25 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
 
         mEnabled = findPreference(getString(R.string.pref_enabled_key));
         if (mEnabled != null) {
-            mEnabled.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    if (newValue instanceof Boolean) {
-                        if ((Boolean) newValue) {
-                            // This will trigger the permission check if needed
-                            addAccountAndSync();
-                        } else {
-                            mAccountHelper.removeAccount();
-                        }
+            mEnabled.setOnPreferenceChangeListener((preference, newValue) -> {
+                if (newValue instanceof Boolean) {
+                    if ((Boolean) newValue) {
+                        // This will trigger the permission check if needed
+                        checkAndRequestPermissions();
+                    } else {
+                        mAccountHelper.removeAccount();
                     }
-                    return true;
                 }
+                // We return false because the permission launcher is asynchronous.
+                // The switch state will be updated in the launcher's callback.
+                return true;
             });
         }
 
         // On first run, set the switch to true and trigger the sync/permission flow
         if (PreferencesHelper.getFirstRun(mActivity)) {
             PreferencesHelper.setFirstRun(mActivity, false);
-            // We directly call addAccountAndSync which contains the permission check.
+            // We directly call checkAndRequestPermissions which contains the permission check.
             // We also manually set the switch to checked state.
             if (mEnabled != null) {
                 mEnabled.setChecked(true);
@@ -103,91 +140,43 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
 
         Preference openContacts = findPreference(getString(R.string.pref_contacts_key));
         if (openContacts != null) {
-            openContacts.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, ContactsContract.Contacts.CONTENT_URI);
-                    startActivity(intent);
-                    return true;
-                }
+            openContacts.setOnPreferenceClickListener(preference -> {
+                Intent intent = new Intent(Intent.ACTION_VIEW, ContactsContract.Contacts.CONTENT_URI);
+                startActivity(intent);
+                return true;
             });
         }
 
         Preference openCalendar = findPreference(getString(R.string.pref_calendar_key));
         if (openCalendar != null) {
-            openCalendar.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @SuppressLint("NewApi")
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
-                    builder.appendPath("time");
-                    ContentUris.appendId(builder, Calendar.getInstance().getTimeInMillis());
-                    Intent intent = new Intent(Intent.ACTION_VIEW).setData(builder.build());
-                    startActivity(intent);
-                    return true;
-                }
+            openCalendar.setOnPreferenceClickListener(preference -> {
+                Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
+                builder.appendPath("time");
+                ContentUris.appendId(builder, Calendar.getInstance().getTimeInMillis());
+                Intent intent = new Intent(Intent.ACTION_VIEW).setData(builder.build());
+                startActivity(intent);
+                return true;
             });
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == MY_PERMISSIONS_REQUEST) {
-            boolean allGranted = true;
-            if (grantResults.length > 0) {
-                for (int res : grantResults) {
-                    if (res != PackageManager.PERMISSION_GRANTED) {
-                        allGranted = false;
-                        break;
-                    }
-                }
-            } else {
-                allGranted = false;
-            }
-
-            if (allGranted) {
-                // permission was granted, now we can really add the account
-                mAccountHelper.addAccountAndSync();
-            } else {
-                // permission denied, disable the feature
-                if (mEnabled != null) {
-                    mEnabled.setChecked(false);
-                }
-            }
-        }
-    }
-
-    private void addAccountAndSync() {
-        if (hasPermissions()) {
-            mAccountHelper.addAccountAndSync();
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    private boolean hasPermissions() {
-        if (getActivity() == null) return false;
+    private void checkAndRequestPermissions() {
+        Context context = getContext();
+        if (context == null) return;
 
         List<String> permissionsToRequest = new ArrayList<>();
-        String[] requiredPermissions = new String[]{
-                Manifest.permission.GET_ACCOUNTS,
-                Manifest.permission.READ_CONTACTS,
-                Manifest.permission.WRITE_CONTACTS,
-                Manifest.permission.READ_CALENDAR,
-                Manifest.permission.WRITE_CALENDAR
-        };
-
-        for (String permission : requiredPermissions) {
-            if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+        for (String permission : REQUIRED_PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
                 permissionsToRequest.add(permission);
             }
         }
 
-        if (!permissionsToRequest.isEmpty()) {
-            requestPermissions(permissionsToRequest.toArray(new String[0]), MY_PERMISSIONS_REQUEST);
-            return false;
+        if (permissionsToRequest.isEmpty()) {
+            // All permissions are already granted
+            mAccountHelper.addAccountAndSync();
         } else {
-            return true;
+            // Request the missing permissions
+            requestPermissionLauncher.launch(permissionsToRequest.toArray(new String[0]));
         }
     }
 

@@ -43,7 +43,6 @@ import android.provider.ContactsContract.QuickContact;
  * 
  * Label of button can not be set!
  */
-@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class ShowContactActivity extends Activity {
 
     @Override

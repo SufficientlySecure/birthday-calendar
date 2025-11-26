@@ -51,7 +51,7 @@
     <string name="pref_contacts_summary">Edit your friends\' birthdays in your contacts app.</string>
     <string name="pref_contacts_open">Open contacts app</string>
     <string name="pref_calendar">3. Birthdays inside calendar</string>
-    <string name="pref_calendar_summary">Birthdays are now shown as events in your calendar app.</string>
+    <string name="pref_calendar_summary">Activate the birthday calendar in the accounts of your favorite calendar app.</string>
     <string name="pref_calendar_open">Open calendar app</string>
     <string name="pref_color">Color</string>
     <string name="pref_force_sync">Synchronize now!</string>
@@ -88,14 +88,10 @@
     <string name="pref_title_custom_without_age">Custom</string>
     <string name="pref_title_custom_with_age">Custom with age</string>
 
-    <string name="pref_title_summary_without_age">Insert {NAME} for the contact\'s name. Leave empty to skip creation of these event.</string>
-    <string name="pref_title_summary_with_age">Insert {NAME} for the contact\'s name and {AGE} for the age. Leave empty to skip creation of these event.</string>
-    <string name="pref_title_summary_custom_without_age">Insert {NAME} for the contact\'s name and {LABEL} for the custom
-        label of this event. Leave empty to skip creation of these event.
-    </string>
-    <string name="pref_title_summary_custom_with_age">Insert {NAME} for the contact\'s name, {LABEL} for the custom label of
-        this event, and {AGE} for the age. Leave empty to skip creation of these event.
-    </string>
+    <string name="pref_title_summary_without_age">Insert {NAME} or {FIRSTNAME} for the contact\'s name. Leave empty to skip creation of these events.</string>
+    <string name="pref_title_summary_with_age">Insert {NAME} or {FIRSTNAME} for the contact\'s name, and {AGE} for the age. Leave empty to skip creation of these events.</string>
+    <string name="pref_title_summary_custom_without_age">Insert {NAME} or {FIRSTNAME} for the contact\'s name, and {LABEL} for the custom label of this event. Leave empty to skip creation of these events.</string>
+    <string name="pref_title_summary_custom_with_age">Insert {NAME} or {FIRSTNAME} for the contact\'s name, {LABEL} for the custom label of this event, and {AGE} for the age. Leave empty to skip creation of these events.</string>
     <string name="pref_advanced_category">Advanced Settings</string>
     <string name="pref_prefer_dd_slash_mm">Prefer dd/MM/yyyy format</string>
     <string name="pref_prefer_dd_slash_mm_summary">Prefer dd/MM/yyyy to MM/dd/yyyy when parsing date formats</string>
@@ -113,14 +109,31 @@
     <!-- Color Picker -->
     <string name="hex_color_title">Enter hex color</string>
     <string name="hex_color_hint">#RRGGBB</string>
+    <string name="item_color_content_description">Color indicator of the calendar</string>
 
     <!-- Adapter Screen -->
     <string name="pref_account_header">Settings</string>
     <string name="pref_account_settings">Configure Birthday Adapter</string>
 
     <!-- Accounts -->
+    <string name="permission_denied">Required permissions were denied. Adapter cannot be activated.</string>
+    <string name="permission_read_contacts_denied">Permission to read contacts denied. Accounts cannot be loaded.</string>
+    <string name="pref_group_filtering_title">Group Filtering</string>
+    <string name="pref_group_filtering_summary">Allow filtering your accounts by contact groups.</string>
     <string name="account_list_description">Only birthdays from selected accounts will be displayed in your calendar.</string>
     <string name="account_list_empty">No accounts</string>
+    <string name="account_list_counters_format">%1$s, %2$s</string>
+    <string name="account_list_icon_description">Account icon</string>
+    <string name="account_list_group_button_description">Show group details</string>
+    <string name="account_list_no_group">No Group</string>
+    <plurals name="contacts_count">
+        <item quantity="one">%d contact</item>
+        <item quantity="other">%d contacts</item>
+    </plurals>
+    <plurals name="dates_count">
+        <item quantity="one">%d date</item>
+        <item quantity="other">%d dates</item>
+    </plurals>
 
     <!--Free Version -->
     <string name="pref_buy">Buy full version!</string>
