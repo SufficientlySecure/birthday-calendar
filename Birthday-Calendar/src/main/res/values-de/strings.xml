@@ -107,15 +107,23 @@
     <!-- Color Picker -->
     <string name="hex_color_title">Gebe den Hex-Farbwert ein</string>
     <string name="hex_color_hint">#RRGGBB</string>
+    <string name="item_color_content_description">Farbanzeige des Kalenders</string>
 
     <!-- Adapter Screen -->
     <string name="pref_account_header">Einstellungen</string>
     <string name="pref_account_settings">Birthday Adapter konfigurieren</string>
 
     <!-- Accounts -->
+    <string name="permission_denied">Fehlende Berechtigungen, Adapter kann nicht aktiviert werden.</string>
+    <string name="permission_read_contacts_denied">Berechtigung für Kontakte verwehrt. Konten können nicht ausgelesen werden.</string>
+    <string name="pref_group_filtering_title">Kontaktgruppen-Filter</string>
+    <string name="pref_group_filtering_summary">Filtermöglichkeiten nach Gruppen der Kontakte.</string>
     <string name="account_list_description">Nur die Geburtstage aus den gewählten Konten werden in Deinem Kalender angezeigt.</string>
     <string name="account_list_empty">Keine Konten vorhanden</string>
     <string name="account_list_counters_format">%1$s, %2$s</string>
+    <string name="account_list_icon_description">Konto-Icon</string>
+    <string name="account_list_group_button_description">Zeige Gruppen-Details</string>
+    <string name="account_list_no_group">keine Gruppen</string>
     <plurals name="contacts_count">
         <item quantity="one">%d Kontakt</item>
         <item quantity="other">%d Kontakte</item>
