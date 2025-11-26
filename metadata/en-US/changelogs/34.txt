@@ -1,0 +1,8 @@
+3.4
+* Add option to	filter contacts	by groups
+* Show number of contacts and dates in account view
+* Allow placeholders for firstnames in custom reminders
+* Update Android version, update theme to Material3
+- Add event reminders already on init
+- Track blacklist changes immediately
+- Show toast if permissions are missing, fix warnings and deprecations
