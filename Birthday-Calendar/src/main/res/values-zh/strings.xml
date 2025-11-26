@@ -40,9 +40,6 @@
     <string name="pref_reminder_enable1">启用提醒 2</string>
     <string name="pref_reminder_enable2">启用提醒 3</string>
     <string name="pref_reminder_enable_summary">启用这组提醒</string>
-    <string name="pref_reminder_time0">提醒 1</string>
-    <string name="pref_reminder_time1">提醒 2</string>
-    <string name="pref_reminder_time2">提醒 3</string>
     <string name="pref_reminder_time_summary">设置提醒时间</string>
 
     <string-array name="pref_reminder_time_drop_down">
@@ -76,7 +73,6 @@
     <string name="pref_account_settings">配置 Birthday Adapter</string>
 
     <string name="account_list_empty">没有账户</string>
-
     <!--Free Version -->
     <string name="pref_buy">购买完整版！</string>
     <string name="pref_buy_full">打开 Google Play 购买完整版</string>

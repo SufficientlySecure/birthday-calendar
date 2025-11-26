@@ -40,9 +40,6 @@
     <string name="pref_reminder_enable1">Включва Напомняне 2</string>
     <string name="pref_reminder_enable2">Включва Напомняне 3</string>
     <string name="pref_reminder_enable_summary">Включва това Напомняне</string>
-    <string name="pref_reminder_time0">Напомняне 1</string>
-    <string name="pref_reminder_time1">Напомняне 2</string>
-    <string name="pref_reminder_time2">Напомняне 3</string>
     <string name="pref_reminder_time_summary">Настройка часа на това Напомняне</string>
 
     <string-array name="pref_reminder_time_drop_down">
@@ -76,7 +73,6 @@
     <string name="pref_account_settings">Конфигуриране на Адаптер Рожден ден</string>
 
     <string name="account_list_empty">Няма профили</string>
-
     <!--Free Version -->
     <string name="pref_buy">Купи пълната версия!</string>
     <string name="pref_buy_full">Отвори Google Play, за да купиш пълната версия…</string>

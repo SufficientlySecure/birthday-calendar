@@ -61,10 +61,11 @@
     <string name="pref_reminder_enable1">Enable Reminder 2</string>
     <string name="pref_reminder_enable2">Enable Reminder 3</string>
     <string name="pref_reminder_enable_summary">Enable this Reminder</string>
-    <string name="pref_reminder_time0">Reminder 1</string>
-    <string name="pref_reminder_time1">Reminder 2</string>
-    <string name="pref_reminder_time2">Reminder 3</string>
+    <string name="pref_reminder_time0">Set Reminder 1</string>
+    <string name="pref_reminder_time1">Set Reminder 2</string>
+    <string name="pref_reminder_time2">Set Reminder 3</string>
     <string name="pref_reminder_time_summary">Set the time of this Reminder</string>
+    <string name="pref_reminder_summary">%1$s at %2$s</string>
 
     <string-array name="pref_reminder_time_drop_down">
         <item>At the day of event</item>

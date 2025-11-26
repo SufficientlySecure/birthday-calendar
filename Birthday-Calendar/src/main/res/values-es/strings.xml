@@ -40,9 +40,6 @@
     <string name="pref_reminder_enable1">Activar recordatorio 2</string>
     <string name="pref_reminder_enable2">Activar recordatorio 3</string>
     <string name="pref_reminder_enable_summary">Activar este recordatorio</string>
-    <string name="pref_reminder_time0">Recordatorio 1</string>
-    <string name="pref_reminder_time1">Recordatorio 2</string>
-    <string name="pref_reminder_time2">Recordatorio 3</string>
     <string name="pref_reminder_time_summary">Ajustar la hora de este recordatorio</string>
 
     <string-array name="pref_reminder_time_drop_down">
@@ -76,7 +73,6 @@
     <string name="pref_account_settings">Configurar Birthday Adapter</string>
 
     <string name="account_list_empty">No hay cuentas</string>
-
     <!--Free Version -->
     <string name="pref_buy">¡Comprar la versión completa!</string>
     <string name="pref_buy_full">Ir a Google Play para comprar la versión completa...</string>

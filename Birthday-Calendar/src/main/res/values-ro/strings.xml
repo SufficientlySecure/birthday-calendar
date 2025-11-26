@@ -40,9 +40,6 @@
     <string name="pref_reminder_enable1">Activare Memento 2</string>
     <string name="pref_reminder_enable2">Activare Memento 3</string>
     <string name="pref_reminder_enable_summary">Activează acest Memento</string>
-    <string name="pref_reminder_time0">Memento 1</string>
-    <string name="pref_reminder_time1">Memento 2</string>
-    <string name="pref_reminder_time2">Memento 3</string>
     <string name="pref_reminder_time_summary">Stabileşte ora acestui Memento</string>
 
     <string-array name="pref_reminder_time_drop_down">
@@ -66,6 +63,7 @@
     <string name="pref_title_other_with_age">Alt eveniment, cu vârsta</string>
     <string name="pref_title_custom_without_age">Personalizat</string>
     <string name="pref_title_custom_with_age">Personalizat, cu vârsta</string>
+
     <string name="pref_advanced_category">Configurări Avansate</string>
     <string name="pref_prefer_dd_slash_mm">Prefer formatul dd/MM/yyyy</string>
     <string name="pref_prefer_dd_slash_mm_summary">Prefer dd/MM/yyyy în MM/dd/yyyy la analizarea formatelor de dată</string>
@@ -75,7 +73,6 @@
     <string name="pref_account_settings">Configurări Birthday Adapter</string>
 
     <string name="account_list_empty">Nici-un cont</string>
-
     <!--Free Version -->
     <string name="pref_buy">Cumpără versiunea completă!</string>
     <string name="pref_buy_full">Pentru a cumpăra versiunea completă, deschide Google Play...</string>

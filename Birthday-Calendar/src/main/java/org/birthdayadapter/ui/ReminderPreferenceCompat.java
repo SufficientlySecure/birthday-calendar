@@ -36,6 +36,8 @@ import android.widget.TimePicker;
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.Log;
 
+import java.util.Calendar;
+
 public class ReminderPreferenceCompat extends Preference {
 
     private int lastMinutes = 0;
@@ -57,6 +59,32 @@ public class ReminderPreferenceCompat extends Preference {
         });
     }
 
+    public static String getSummary(Context context, int minutes) {
+        // reminder on the day after midnight are negative, so we add one day for the calculation
+        int day = (minutes + ONE_DAY_MINUTES) / ONE_DAY_MINUTES;
+        if (minutes % ONE_DAY_MINUTES == 0) day--;
+        int daySelection = 0;
+        for (int i = 0; i < DAY_BASE_VALUES.length; i++) {
+            if (day == DAY_BASE_VALUES[i]) {
+                daySelection = i;
+                break;
+            }
+        }
+        String dayString = context.getResources().getStringArray(R.array.pref_reminder_time_drop_down)[daySelection];
+
+        // reminders are negative minutes from the event, let's calculate the time from that
+        int timeFromMinutes = Math.abs(minutes - (day * ONE_DAY_MINUTES));
+        int hour = timeFromMinutes / 60;
+        int minute = timeFromMinutes % 60;
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, minute);
+        String timeString = DateFormat.getTimeFormat(context).format(cal.getTime());
+
+        return context.getString(R.string.pref_reminder_summary, dayString, timeString);
+    }
+
     @Override
     protected Object onGetDefaultValue(TypedArray a, int index) {
         return a.getInteger(index, 0);
@@ -65,6 +93,7 @@ public class ReminderPreferenceCompat extends Preference {
     @Override
     protected void onSetInitialValue(Object defaultValue) {
         lastMinutes = getPersistedInt(defaultValue != null ? (Integer) defaultValue : 0);
+        setSummary(getSummary(getContext(), lastMinutes));
     }
 
     private void click() {
@@ -128,6 +157,7 @@ public class ReminderPreferenceCompat extends Preference {
             Log.d("BirthdayAdapter", "Persisting reminder minutes: " + minutes);
             persistInt(minutes);
             lastMinutes = minutes;
+            setSummary(getSummary(getContext(), minutes));
         }
     }
 }

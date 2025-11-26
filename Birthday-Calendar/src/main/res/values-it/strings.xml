@@ -40,9 +40,6 @@
     <string name="pref_reminder_enable1">Abilita promemoria 2</string>
     <string name="pref_reminder_enable2">Abilita promemoria 3</string>
     <string name="pref_reminder_enable_summary">Abilita questo promemoria</string>
-    <string name="pref_reminder_time0">Promemoria 1</string>
-    <string name="pref_reminder_time1">Promemoria 2</string>
-    <string name="pref_reminder_time2">Promemoria 3</string>
     <string name="pref_reminder_time_summary">Imposta l\'ora di questo promemoria</string>
 
     <string-array name="pref_reminder_time_drop_down">
@@ -76,7 +73,6 @@
     <string name="pref_account_settings">Configura adattatore compleanni</string>
 
     <string name="account_list_empty">Nessun account</string>
-
     <!--Free Version -->
     <string name="pref_buy">Compra la versione completa!</string>
     <string name="pref_buy_full">Apri Google Play per comprare la versione completa...</string>
