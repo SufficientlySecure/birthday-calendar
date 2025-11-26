@@ -40,9 +40,6 @@
     <string name="pref_reminder_enable1">Bật nhắc nhở 2</string>
     <string name="pref_reminder_enable2">Bật nhắc nhở 3</string>
     <string name="pref_reminder_enable_summary">Bật nhắc nhở này</string>
-    <string name="pref_reminder_time0">Nhắc nhở 1</string>
-    <string name="pref_reminder_time1">Nhắc nhở 2</string>
-    <string name="pref_reminder_time2">Nhắc nhở 3</string>
     <string name="pref_reminder_time_summary">Đặt thời gian cho nhắc nhở này</string>
 
     <string-array name="pref_reminder_time_drop_down">
@@ -76,7 +73,6 @@
     <string name="pref_account_settings">Cấu hình Birthday Adapter</string>
 
     <string name="account_list_empty">Không có tài khoản nào</string>
-
     <!--Free Version -->
     <string name="pref_buy">Hãy mua phiên bản đầy đủ!</string>
     <string name="pref_buy_full">Mở Google Play để mua phiên bản đầy đủ...</string>

@@ -40,9 +40,6 @@
     <string name="pref_reminder_enable1">Hatırlatma 2 Etkinleştir</string>
     <string name="pref_reminder_enable2">Hatırlatma 3 Etkinleştir</string>
     <string name="pref_reminder_enable_summary">Bu Hatırlatmayı etkinleştir</string>
-    <string name="pref_reminder_time0">Hatırlatma 1</string>
-    <string name="pref_reminder_time1">Hatırlatma 2</string>
-    <string name="pref_reminder_time2">Hatırlatma 3</string>
     <string name="pref_reminder_time_summary">Hatırlatma zamanı ayarla</string>
 
     <string-array name="pref_reminder_time_drop_down">
@@ -76,7 +73,6 @@
     <string name="pref_account_settings">Birthday Adapter Yapılandır</string>
 
     <string name="account_list_empty">Hesap yok</string>
-
     <!--Free Version -->
     <string name="pref_buy">Tam sürümünü satın al!</string>
     <string name="pref_buy_full">Tam sürümünü satın almak için Google Play\'i aç...</string>

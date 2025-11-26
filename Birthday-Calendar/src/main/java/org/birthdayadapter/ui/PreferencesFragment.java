@@ -10,6 +10,7 @@ import org.birthdayadapter.util.AccountHelper;
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.Constants;
 
+import androidx.annotation.NonNull;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
@@ -86,7 +87,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements
     }
 
     @Override
-    public boolean onPreferenceClick(Preference preference) {
+    public boolean onPreferenceClick(@NonNull Preference preference) {
         if (getActivity() == null) return false;
 
         if (preference.getKey().equals(getString(R.string.pref_contacts_key))) {

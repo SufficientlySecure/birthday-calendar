@@ -39,9 +39,6 @@
     <string name="pref_reminder_enable1">Aktivoi muistutus 2</string>
     <string name="pref_reminder_enable2">Aktivoi muistutus 3</string>
     <string name="pref_reminder_enable_summary">Aktivoi tämä muistutus</string>
-    <string name="pref_reminder_time0">Muistutus 1</string>
-    <string name="pref_reminder_time1">Muistutus 2</string>
-    <string name="pref_reminder_time2">Muistutus 3</string>
     <string name="pref_reminder_time_summary">Aseta tämän muistutuksen ajankohta</string>
 
     <string name="pref_title_birthday_without_age">Syntymäpäivä</string>

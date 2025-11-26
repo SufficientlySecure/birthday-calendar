@@ -40,9 +40,6 @@
     <string name="pref_reminder_enable1">Aktivera påminnelse 2</string>
     <string name="pref_reminder_enable2">Aktivera påminnelse 3</string>
     <string name="pref_reminder_enable_summary">Aktivera denna påminnelse</string>
-    <string name="pref_reminder_time0">Påminnelse 1</string>
-    <string name="pref_reminder_time1">Påminnelse 2</string>
-    <string name="pref_reminder_time2">Påminnelse 3</string>
     <string name="pref_reminder_time_summary">Ange tid för denna påminnelse</string>
 
     <string-array name="pref_reminder_time_drop_down">
@@ -66,6 +63,7 @@
     <string name="pref_title_other_with_age">Andra händelser med ålder</string>
     <string name="pref_title_custom_without_age">Anpassad</string>
     <string name="pref_title_custom_with_age">Anpassad med ålder</string>
+
     <string name="pref_advanced_category">Avancerad Inställningar</string>
     <string name="pref_prefer_dd_slash_mm">Föredra dd/MM/yyyy format</string>
     <string name="pref_prefer_dd_slash_mm_summary">Föredra dd/MM/yyyy än MM/dd/yyyy vid tolkning av datumformat</string>
@@ -75,7 +73,6 @@
     <string name="pref_account_settings">Konfigurera Födelsedags Adapter</string>
 
     <string name="account_list_empty">Inga konton</string>
-
     <!--Free Version -->
     <string name="pref_buy">Köp fullversion!</string>
     <string name="pref_buy_full">Öppna Google Play för att köpa fullversion...</string>

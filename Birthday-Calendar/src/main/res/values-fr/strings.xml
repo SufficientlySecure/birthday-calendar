@@ -40,9 +40,6 @@
     <string name="pref_reminder_enable1">Activer le rappel 2</string>
     <string name="pref_reminder_enable2">Activer le rappel 3</string>
     <string name="pref_reminder_enable_summary">Activer ce rappel</string>
-    <string name="pref_reminder_time0">Rappel 1</string>
-    <string name="pref_reminder_time1">Rappel 2</string>
-    <string name="pref_reminder_time2">Rappel 3</string>
     <string name="pref_reminder_time_summary">Choisir l\'heure de ce rappel</string>
 
     <string-array name="pref_reminder_time_drop_down">
@@ -76,7 +73,6 @@
     <string name="pref_account_settings">Configurer l\'Adaptateur d\'anniversaires</string>
 
     <string name="account_list_empty">Aucun compte</string>
-
     <!--Free Version -->
     <string name="pref_buy">Acheter la version complète !</string>
     <string name="pref_buy_full">Ouvrir Google Play pour acheter la version complète…</string>

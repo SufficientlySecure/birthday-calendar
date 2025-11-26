@@ -40,9 +40,6 @@
     <string name="pref_reminder_enable1">Emlékeztető 2 engedélyezése</string>
     <string name="pref_reminder_enable2">Emlékeztető 3 engedélyezése</string>
     <string name="pref_reminder_enable_summary">Ez az Emlékeztető engedélyezése</string>
-    <string name="pref_reminder_time0">Emlékeztető 1</string>
-    <string name="pref_reminder_time1">Emlékeztető 2</string>
-    <string name="pref_reminder_time2">Emlékeztető 3</string>
     <string name="pref_reminder_time_summary">Ez az Emlékeztető idejének beállítása</string>
 
     <string-array name="pref_reminder_time_drop_down">
@@ -76,7 +73,6 @@
     <string name="pref_account_settings">Birthday Adapter konfigurálása</string>
 
     <string name="account_list_empty">Nincs fiók</string>
-
     <!--Free Version -->
     <string name="pref_buy">Teljes verzió megvásárlása!</string>
     <string name="pref_buy_full">Google Play megnyitása a teljes verzió megvásárlásához...</string>

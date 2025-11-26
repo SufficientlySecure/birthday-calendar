@@ -40,9 +40,6 @@
     <string name="pref_reminder_enable1">Herinnering 2 inschakelen</string>
     <string name="pref_reminder_enable2">Herinnering 3 inschakelen</string>
     <string name="pref_reminder_enable_summary">Deze herinnering inschakelen</string>
-    <string name="pref_reminder_time0">Herinnering 1</string>
-    <string name="pref_reminder_time1">Herinnering 2</string>
-    <string name="pref_reminder_time2">Herinnering 3</string>
     <string name="pref_reminder_time_summary">Stel de tijd in van de herinnering</string>
 
     <string-array name="pref_reminder_time_drop_down">
@@ -76,7 +73,6 @@
     <string name="pref_account_settings">Birthday Adapter instellen</string>
 
     <string name="account_list_empty">Geen accounts</string>
-
     <!--Free Version -->
     <string name="pref_buy">Koop de volledige versie!</string>
     <string name="pref_buy_full">Open de Google Play Store om de volledige versie te kopen...</string>

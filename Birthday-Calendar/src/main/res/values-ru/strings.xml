@@ -40,9 +40,6 @@
     <string name="pref_reminder_enable1">Включить напоминание 2</string>
     <string name="pref_reminder_enable2">Включить напоминание 3</string>
     <string name="pref_reminder_enable_summary">Включить это напоминание</string>
-    <string name="pref_reminder_time0">Напоминание 1</string>
-    <string name="pref_reminder_time1">Напоминание 2</string>
-    <string name="pref_reminder_time2">Напоминание 3</string>
     <string name="pref_reminder_time_summary">Задать время для этого напоминания</string>
 
     <string-array name="pref_reminder_time_drop_down">
@@ -76,7 +73,6 @@
     <string name="pref_account_settings">Настройки Birthday Adapter</string>
 
     <string name="account_list_empty">Нет учётных записей</string>
-
     <!--Free Version -->
     <string name="pref_buy">Купить полную версию!</string>
     <string name="pref_buy_full">Открыть Google Play для покупки полной версии…</string>
