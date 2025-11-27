@@ -320,7 +320,7 @@ public class BirthdayWorker extends Worker {
             }
 
             int checkedEventsCount = totalEventsBeforeSync - deletedEventsCount;
-            Log.i(Constants.TAG, "Sync summary: " + checkedEventsCount + " events checked, "
+            Log.i(Constants.TAG, "Sync summary: " + checkedEventsCount + " events confirmed, "
                     + newEventsCount + " new events added, " + deletedEventsCount + " old events removed.");
 
 
@@ -414,7 +414,7 @@ public class BirthdayWorker extends Worker {
             throw new OperationCanceledException();
         }
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         boolean groupFilteringEnabled = sharedPreferences.getBoolean(context.getString(R.string.pref_group_filtering_key), context.getResources().getBoolean(R.bool.pref_group_filtering_def));
 
         Map<String, List<String>> contactGroupMembership = getRawContactGroupTitles(contentResolver);

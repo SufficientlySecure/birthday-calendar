@@ -22,7 +22,6 @@ package org.birthdayadapter.ui;
 
 import android.Manifest;
 import android.accounts.Account;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -41,6 +40,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
+import androidx.preference.PreferenceManager;
 
 import org.birthdayadapter.R;
 import org.birthdayadapter.provider.ProviderHelper;
@@ -54,7 +54,6 @@ import org.birthdayadapter.util.Log;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 
 public class AccountListFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<List<AccountListEntry>>, AccountListAdapter.OnBlacklistChangedListener, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -106,7 +105,9 @@ public class AccountListFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
-        requireContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE).registerOnSharedPreferenceChangeListener(this);
+        // Use the default shared preferences file to be consistent with the PreferenceFragments.
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
+        prefs.registerOnSharedPreferenceChangeListener(this);
 
         // Always update the adapter's state when the fragment resumes
         updateGroupFilteringState();
@@ -123,7 +124,8 @@ public class AccountListFragment extends Fragment implements
     @Override
     public void onPause() {
         super.onPause();
-        requireContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE).unregisterOnSharedPreferenceChangeListener(this);
+        // Use the default shared preferences file to be consistent with the PreferenceFragments.
+        PreferenceManager.getDefaultSharedPreferences(requireContext()).unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -138,7 +140,7 @@ public class AccountListFragment extends Fragment implements
     @Override
     public void onBlacklistChanged() {
         saveBlacklist();
-        
+
         Log.d(Constants.TAG, "Blacklist has changed, triggering manual sync.");
         AccountHelper accountHelper = new AccountHelper(mActivity);
         if (accountHelper.isAccountActivated()) {
@@ -148,7 +150,8 @@ public class AccountListFragment extends Fragment implements
 
     private void updateGroupFilteringState() {
         if (mAdapter != null && getContext() != null) {
-            SharedPreferences sharedPreferences = requireContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
+            // Use the default shared preferences file to be consistent with the PreferenceFragments.
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
             boolean groupFilteringEnabled = sharedPreferences.getBoolean(
                     getString(R.string.pref_group_filtering_key),
                     getResources().getBoolean(R.bool.pref_group_filtering_def)
@@ -169,7 +172,8 @@ public class AccountListFragment extends Fragment implements
     @NonNull
     @Override
     public Loader<List<AccountListEntry>> onCreateLoader(int id, @Nullable Bundle args) {
-        SharedPreferences sharedPreferences = requireContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
+        // Use the default shared preferences file to be consistent with the PreferenceFragments.
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         boolean groupFilteringEnabled = sharedPreferences.getBoolean(
                 getString(R.string.pref_group_filtering_key),
                 getResources().getBoolean(R.bool.pref_group_filtering_def)

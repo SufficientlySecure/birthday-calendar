@@ -24,6 +24,7 @@ import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import androidx.preference.PreferenceManager;
@@ -41,6 +42,8 @@ import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
 import org.birthdayadapter.service.BirthdayWorker;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class AccountHelper {
@@ -62,8 +65,6 @@ public class AccountHelper {
         if (!isAccountActivated()) {
             Log.d(Constants.TAG, "Account does not exist. Adding account...");
 
-            setDefaultValues();
-
             AccountManager am = AccountManager.get(mContext);
             final Account account = new Account(Constants.getAccountName(mContext), mContext.getString(R.string.account_type));
 
@@ -83,10 +84,6 @@ public class AccountHelper {
         manualSync();
 
         return result;
-    }
-
-    private void setDefaultValues() {
-        PreferenceManager.setDefaultValues(mContext, Constants.PREFS_NAME, Context.MODE_PRIVATE, R.xml.pref_preferences, false);
     }
 
     /**
@@ -121,6 +118,7 @@ public class AccountHelper {
      * Force a manual sync now using WorkManager and reschedule the periodic sync for the full version.
      */
     public void manualSync() {
+        Log.d(Constants.TAG, "Manual sync triggered.");
         // (Re)schedule a periodic sync upon a manual sync
         if (BuildConfig.FULL_VERSION) {
             Log.d(Constants.TAG, "Enqueuing periodic sync with UPDATE policy.");
@@ -133,11 +131,11 @@ public class AccountHelper {
     }
 
     /**
-     * Enqueues a worker to update all reminders on existing events.
+     * Enqueues a worker to perform a full resync, which involves deleting the calendar and all events.
      */
-    public void updateReminders() {
-        Log.d(Constants.TAG, "Reminder settings changed, enqueuing worker with ACTION_REMINDERS_CHANGED.");
-        syncWithAction("reminder_update", BirthdayWorker.ACTION_REMINDERS_CHANGED);
+    public void triggerFullResync() {
+        Log.d(Constants.TAG, "Full resync triggered, enqueuing worker with ACTION_REMINDERS_CHANGED.");
+        syncWithAction("full_resync", BirthdayWorker.ACTION_REMINDERS_CHANGED);
     }
 
     /**
@@ -160,7 +158,7 @@ public class AccountHelper {
 
         WorkManager.getInstance(mContext).enqueueUniqueWork(
                 uniqueWorkName,
-                ExistingWorkPolicy.APPEND_OR_REPLACE,
+                ExistingWorkPolicy.REPLACE,
                 workRequest);
     }
 

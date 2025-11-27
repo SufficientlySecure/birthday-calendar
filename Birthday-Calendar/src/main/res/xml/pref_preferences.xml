@@ -8,28 +8,9 @@
             android:persistent="true"
             android:title="@string/pref_color" />
     </androidx.preference.PreferenceCategory>
-    <androidx.preference.PreferenceCategory android:title="@string/pref_reminders">
-        <org.birthdayadapter.ui.ReminderPreferenceCompat
-            android:defaultValue="@integer/pref_reminder_time_def"
-            android:key="@string/pref_reminder_time_key0"
-            android:persistent="true"
-            android:summary="@string/pref_reminder_time_summary"
-            android:title="@string/pref_reminder_time0" />
-
-        <org.birthdayadapter.ui.ReminderPreferenceCompat
-            android:defaultValue="-1"
-            android:key="@string/pref_reminder_time_key1"
-            android:persistent="true"
-            android:summary="@string/pref_reminder_time_summary"
-            android:title="@string/pref_reminder_time1" />
-
-        <org.birthdayadapter.ui.ReminderPreferenceCompat
-            android:defaultValue="-1"
-            android:key="@string/pref_reminder_time_key2"
-            android:persistent="true"
-            android:summary="@string/pref_reminder_time_summary"
-            android:title="@string/pref_reminder_time2" />
-    </androidx.preference.PreferenceCategory>
+    <androidx.preference.PreferenceCategory
+        android:key="pref_reminders_category"
+        android:title="@string/pref_reminders" />
     <androidx.preference.PreferenceCategory android:title="@string/pref_title">
         <androidx.preference.CheckBoxPreference
             android:defaultValue="@string/pref_title_enable_def"

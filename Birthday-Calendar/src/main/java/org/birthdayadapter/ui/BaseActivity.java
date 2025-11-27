@@ -21,6 +21,7 @@
 
 package org.birthdayadapter.ui;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -33,6 +34,7 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.preference.PreferenceManager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -43,7 +45,9 @@ import org.birthdayadapter.R;
 import org.birthdayadapter.util.MySharedPreferenceChangeListener;
 import org.birthdayadapter.util.SyncStatusManager;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -53,6 +57,8 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setDefaultReminder();
 
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
@@ -90,11 +96,25 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(mySharedPreferenceChangeListener);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mySharedPreferenceChangeListener);
+    }
+
+    private void setDefaultReminder() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        // Only set default reminder if it has never been set before
+        if (prefs.getStringSet(getString(R.string.pref_reminders_key), null) == null) {
+            SharedPreferences.Editor editor = prefs.edit();
+            Set<String> reminderSet = new HashSet<>();
+            reminderSet.add(String.valueOf(getResources().getInteger(R.integer.pref_reminder_time_def)));
+            editor.putStringSet(getString(R.string.pref_reminders_key), reminderSet);
+            editor.apply();
+        }
     }
 
     private void setupViewPager(ViewPager2 viewPager) {
