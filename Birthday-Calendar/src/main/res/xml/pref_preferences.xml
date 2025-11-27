@@ -9,46 +9,22 @@
             android:title="@string/pref_color" />
     </androidx.preference.PreferenceCategory>
     <androidx.preference.PreferenceCategory android:title="@string/pref_reminders">
-        <androidx.preference.CheckBoxPreference
-            android:defaultValue="@bool/pref_reminder_enable_def"
-            android:key="@string/pref_reminder_enable_key0"
-            android:persistent="true"
-            android:summary="@string/pref_reminder_enable_summary"
-            android:title="@string/pref_reminder_enable0" />
-
         <org.birthdayadapter.ui.ReminderPreferenceCompat
             android:defaultValue="@integer/pref_reminder_time_def"
-            android:dependency="@string/pref_reminder_enable_key0"
             android:key="@string/pref_reminder_time_key0"
             android:persistent="true"
             android:summary="@string/pref_reminder_time_summary"
             android:title="@string/pref_reminder_time0" />
 
-        <androidx.preference.CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/pref_reminder_enable_key1"
-            android:persistent="true"
-            android:summary="@string/pref_reminder_enable_summary"
-            android:title="@string/pref_reminder_enable1" />
-
         <org.birthdayadapter.ui.ReminderPreferenceCompat
-            android:defaultValue="@integer/pref_reminder_time_def"
-            android:dependency="@string/pref_reminder_enable_key1"
+            android:defaultValue="-1"
             android:key="@string/pref_reminder_time_key1"
             android:persistent="true"
             android:summary="@string/pref_reminder_time_summary"
             android:title="@string/pref_reminder_time1" />
 
-        <androidx.preference.CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/pref_reminder_enable_key2"
-            android:persistent="true"
-            android:summary="@string/pref_reminder_enable_summary"
-            android:title="@string/pref_reminder_enable2" />
-
         <org.birthdayadapter.ui.ReminderPreferenceCompat
-            android:defaultValue="@integer/pref_reminder_time_def"
-            android:dependency="@string/pref_reminder_enable_key2"
+            android:defaultValue="-1"
             android:key="@string/pref_reminder_time_key2"
             android:persistent="true"
             android:summary="@string/pref_reminder_time_summary"
