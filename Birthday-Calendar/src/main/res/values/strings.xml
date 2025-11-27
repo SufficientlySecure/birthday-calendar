@@ -57,15 +57,12 @@
     <string name="pref_force_sync">Synchronize now!</string>
     <string name="pref_force_sync_summary">Usually you don\'t need to do this, because Birthday Adapter synchronizes automatically once a day.</string>
     <string name="pref_reminders">Reminders</string>
-    <string name="pref_reminder_enable0">Enable Reminder 1</string>
-    <string name="pref_reminder_enable1">Enable Reminder 2</string>
-    <string name="pref_reminder_enable2">Enable Reminder 3</string>
-    <string name="pref_reminder_enable_summary">Enable this Reminder</string>
-    <string name="pref_reminder_time0">Set Reminder 1</string>
-    <string name="pref_reminder_time1">Set Reminder 2</string>
-    <string name="pref_reminder_time2">Set Reminder 3</string>
+    <string name="add_reminder">Add reminder</string>
+    <string name="pref_reminder_time">Reminder</string>
     <string name="pref_reminder_time_summary">Set the time of this Reminder</string>
     <string name="pref_reminder_summary">%1$s at %2$s</string>
+    <string name="no_reminder_set">No reminder set</string>
+    <string name="remove">Remove</string>
 
     <string-array name="pref_reminder_time_drop_down">
         <item>At the day of event</item>

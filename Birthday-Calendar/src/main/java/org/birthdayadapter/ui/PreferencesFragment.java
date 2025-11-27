@@ -1,10 +1,7 @@
 package org.birthdayadapter.ui;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 
 import org.birthdayadapter.util.AccountHelper;
 import org.birthdayadapter.R;
@@ -12,15 +9,19 @@ import org.birthdayadapter.util.Constants;
 
 import androidx.annotation.NonNull;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 
 import org.birthdayadapter.util.PreferencesHelper;
 import org.jetbrains.annotations.Nullable;
 
-public class PreferencesFragment extends PreferenceFragmentCompat implements
-        SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
+import java.util.HashSet;
+import java.util.Set;
+
+public class PreferencesFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceClickListener {
 
     private AccountHelper mAccountHelper;
+    private PreferenceCategory remindersCategory;
 
     /**
      * Called when the activity is first created.
@@ -36,13 +37,12 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements
 
     @Override
     public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
-        getPreferenceManager().setSharedPreferencesName(Constants.PREFS_NAME);
+        // Use the default shared preferences to avoid conflicts and ensure consistency.
         addPreferencesFromResource(R.xml.pref_preferences);
 
-        // open contact app
-        Preference openContactsPref = findPreference(getString(R.string.pref_contacts_key));
-        if (openContactsPref != null) {
-            openContactsPref.setOnPreferenceClickListener(this);
+        remindersCategory = findPreference("pref_reminders_category");
+        if (remindersCategory != null) {
+            populateReminders();
         }
 
         Preference mForceSyncPref = findPreference(getString(R.string.pref_force_sync_key));
@@ -56,47 +56,73 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    private void populateReminders() {
+        if (getContext() == null) return;
 
-        // register listener
-        SharedPreferences sharedPreferences = getPreferenceScreen().getSharedPreferences();
-        if (sharedPreferences != null) {
-            sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        remindersCategory.removeAll();
+
+        int[] reminderMinutes = PreferencesHelper.getAllReminderMinutes(getContext());
+        for (int i = 0; i < reminderMinutes.length; i++) {
+            addReminderPreference(reminderMinutes[i], i, false);
+        }
+
+        Preference addReminderPref = new Preference(getContext());
+        addReminderPref.setTitle(R.string.add_reminder);
+        addReminderPref.setIcon(R.drawable.ic_add);
+        addReminderPref.setOnPreferenceClickListener(preference -> {
+            addReminderPreference(getResources().getInteger(R.integer.pref_reminder_time_def), reminderMinutes.length, true);
+            return true;
+        });
+        remindersCategory.addPreference(addReminderPref);
+    }
+
+    private void addReminderPreference(int minutes, int index, boolean isNew) {
+        if (getContext() == null) return;
+
+        ReminderPreferenceCompat reminderPref = new ReminderPreferenceCompat(getContext(), null);
+        reminderPref.setKey("pref_reminder_time_" + index);
+        reminderPref.setTitle(getString(R.string.pref_reminder_time) + " " + (index + 1));
+        reminderPref.setPersistent(false); // We are handling persistence manually
+        reminderPref.setValue(minutes);
+        reminderPref.setOnPreferenceChangeListener((preference, newValue) -> {
+            saveReminders();
+            return true;
+        });
+        reminderPref.setOnRemoveListener(preference -> {
+            remindersCategory.removePreference(preference);
+            saveReminders();
+        });
+
+        remindersCategory.addPreference(reminderPref);
+
+        if (isNew) {
+            reminderPref.performClick(true);
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
+    private void saveReminders() {
+        if (getContext() == null) return;
 
-        // unregister listener
-        SharedPreferences sharedPreferences = getPreferenceScreen().getSharedPreferences();
-        if (sharedPreferences != null) {
-            sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
-        }
-    }
+        SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+        if (prefs == null) return;
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (mAccountHelper != null &&
-                (key.startsWith("pref_reminder") || key.startsWith("pref_title"))) {
-            mAccountHelper.updateReminders();
+        Set<String> reminderSet = new HashSet<>();
+        for (int i = 0; i < remindersCategory.getPreferenceCount(); i++) {
+            Preference pref = remindersCategory.getPreference(i);
+            if (pref instanceof ReminderPreferenceCompat) {
+                reminderSet.add(String.valueOf(((ReminderPreferenceCompat) pref).getValue()));
+            }
         }
+
+        prefs.edit().putStringSet(getString(R.string.pref_reminders_key), reminderSet).apply();
+        populateReminders(); // Repopulate to reflect changes
     }
 
     @Override
     public boolean onPreferenceClick(@NonNull Preference preference) {
         if (getActivity() == null) return false;
 
-        if (preference.getKey().equals(getString(R.string.pref_contacts_key))) {
-            // open contacts here
-            Intent intent = new Intent(Intent.ACTION_VIEW, ContactsContract.Contacts.CONTENT_URI);
-            startActivity(intent);
-
-            return true;
-        } else if (preference.getKey().equals(getString(R.string.pref_force_sync_key))) {
+        if (preference.getKey().equals(getString(R.string.pref_force_sync_key))) {
             if (mAccountHelper != null) {
                 mAccountHelper.manualSync();
             }
