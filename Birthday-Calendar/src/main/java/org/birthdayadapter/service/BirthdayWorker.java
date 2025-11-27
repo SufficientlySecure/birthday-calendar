@@ -186,13 +186,7 @@ public class BirthdayWorker extends Worker {
 
                 int[] reminderMinutes = PreferencesHelper.getAllReminderMinutes(context);
                 Log.d(Constants.TAG, "Reminder minutes: " + Arrays.toString(reminderMinutes));
-                boolean hasReminders = false;
-                for (int minute : reminderMinutes) {
-                    if (minute != Constants.DISABLED_REMINDER) {
-                        hasReminders = true;
-                        break;
-                    }
-                }
+                boolean hasReminders = reminderMinutes.length > 0;
 
                 int eventDateColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
                 int displayNameColumn = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
@@ -269,21 +263,16 @@ public class BirthdayWorker extends Worker {
                                 operationList.add(insertEvent(context, calendarId, dtstart, title, eventLookupKey, eventUid, hasReminders));
 
                                 if (hasReminders) {
-                                    int noOfReminderOperations = 0;
                                     for (int minute : reminderMinutes) {
-                                        if (minute != Constants.DISABLED_REMINDER) {
-                                            ContentProviderOperation.Builder builder = ContentProviderOperation
-                                                    .newInsert(CalendarHelper.getBirthdayAdapterUri(context, CalendarContract.Reminders.CONTENT_URI));
+                                        ContentProviderOperation.Builder builder = ContentProviderOperation
+                                                .newInsert(CalendarHelper.getBirthdayAdapterUri(context, CalendarContract.Reminders.CONTENT_URI));
 
-                                            builder.withValueBackReference(CalendarContract.Reminders.EVENT_ID, backRef);
-                                            builder.withValue(CalendarContract.Reminders.MINUTES, minute);
-                                            builder.withValue(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
-                                            operationList.add(builder.build());
-
-                                            noOfReminderOperations += 1;
-                                        }
+                                        builder.withValueBackReference(CalendarContract.Reminders.EVENT_ID, backRef);
+                                        builder.withValue(CalendarContract.Reminders.MINUTES, minute);
+                                        builder.withValue(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+                                        operationList.add(builder.build());
                                     }
-                                    backRef += 1 + noOfReminderOperations;
+                                    backRef += 1 + reminderMinutes.length;
                                 } else {
                                     backRef += 1;
                                 }

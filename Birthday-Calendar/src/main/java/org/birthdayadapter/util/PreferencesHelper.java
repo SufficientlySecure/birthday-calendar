@@ -28,6 +28,8 @@ import androidx.core.content.ContextCompat;
 
 import org.birthdayadapter.R;
 
+import java.util.ArrayList;
+
 public class PreferencesHelper {
     public static boolean getFirstRun(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
@@ -60,18 +62,21 @@ public class PreferencesHelper {
                 Context.MODE_PRIVATE);
 
         // get all reminders
-        int[] minutes = new int[3];
+        ArrayList<Integer> minutesList = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             String keyEnabled = context.getString(R.string.pref_reminder_enable_key) + i;
             boolean enabled = prefs.getBoolean(keyEnabled, i == 0 && context.getResources().getBoolean(R.bool.pref_reminder_enable_def));
 
             if (enabled) {
                 String key = context.getString(R.string.pref_reminder_time_key) + i;
-                minutes[i] = prefs.getInt(key,
-                        context.getResources().getInteger(R.integer.pref_reminder_time_def));
-            } else {
-                minutes[i] = Constants.DISABLED_REMINDER;
+                minutesList.add(prefs.getInt(key,
+                        context.getResources().getInteger(R.integer.pref_reminder_time_def)));
             }
+        }
+
+        int[] minutes = new int[minutesList.size()];
+        for (int i = 0; i < minutesList.size(); i++) {
+            minutes[i] = minutesList.get(i);
         }
 
         return minutes;
