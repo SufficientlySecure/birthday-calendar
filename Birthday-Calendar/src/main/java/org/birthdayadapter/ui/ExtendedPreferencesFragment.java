@@ -43,7 +43,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.WorkInfo;
@@ -55,7 +54,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.AccountHelper;
 import org.birthdayadapter.util.Constants;
-import org.birthdayadapter.util.Log;
 import org.birthdayadapter.util.PreferencesHelper;
 import org.birthdayadapter.util.SyncStatusManager;
 
@@ -66,7 +64,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
-public class ExtendedPreferencesFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
 
     BaseActivity mActivity;
     private AccountHelper mAccountHelper;
@@ -119,7 +117,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat implem
         if (forceSyncPref != null) {
             forceSyncPref.setOnPreferenceClickListener(preference -> {
                 SyncStatusManager.getInstance().setSyncing(true);
-                mAccountHelper.manualSync();
+                mAccountHelper.differentialSync();
                 updateSyncStatus();
                 return true;
             });
@@ -143,7 +141,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat implem
             });
         }
 
-        WorkManager.getInstance(mActivity).getWorkInfosForUniqueWorkLiveData("birthday_sync")
+        WorkManager.getInstance(mActivity).getWorkInfosForUniqueWorkLiveData("periodic_sync")
                 .observe(getViewLifecycleOwner(), workInfos -> {
                     if (workInfos != null && !workInfos.isEmpty()) {
                         mBirthdaySyncWorkInfo = workInfos.get(0);
@@ -214,36 +212,6 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat implem
 
         prefs.edit().putStringSet(getString(R.string.pref_reminders_key), reminderSet).apply();
         populateReminders(); // Repopulate to reflect changes
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key == null || getContext() == null) {
-            return; // Safeguard
-        }
-
-        Log.d(Constants.TAG, "Preference changed in ExtendedPreferencesFragment: " + key);
-
-        // Keys that are for UI only or have their own specific listeners
-        String forceSyncKey = getString(R.string.pref_force_sync_key);
-        String colorKey = getString(R.string.pref_color_key);
-        String advancedKey = getString(R.string.pref_advanced_key);
-
-        if (key.equals(forceSyncKey) || key.equals(colorKey) || key.equals(advancedKey)) {
-            return;
-        }
-
-        // Reminder or title changes trigger a full resync
-        String remindersKey = getString(R.string.pref_reminders_key);
-        if (key.equals(remindersKey) || key.startsWith("pref_title_")) {
-            Log.d(Constants.TAG, "Triggering full resync for reminder or title change: " + key);
-            new AccountHelper(requireContext()).triggerFullResync();
-            return;
-        }
-
-        // For all other changes, trigger a normal manual sync
-        Log.d(Constants.TAG, "Triggering manual sync for key: " + key);
-        new AccountHelper(requireContext()).manualSync();
     }
 
     private void updateJubileeYearsSummary() {
@@ -453,10 +421,6 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat implem
         super.onResume();
         updateJubileeYearsSummary();
         mSyncStatusPrefs.registerOnSharedPreferenceChangeListener(mSyncStatusListener);
-        
-        // Use the default shared preferences to ensure consistency across the app.
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
-        prefs.registerOnSharedPreferenceChangeListener(this);
 
         mSyncUpdateRunnable = new Runnable() {
             @Override
@@ -476,9 +440,5 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat implem
         mSyncStatusPrefs.unregisterOnSharedPreferenceChangeListener(mSyncStatusListener);
         // Stop the periodic UI updates
         mSyncUpdateHandler.removeCallbacks(mSyncUpdateRunnable);
-
-        // Use the default shared preferences to ensure consistency across the app.
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
-        prefs.unregisterOnSharedPreferenceChangeListener(this);
     }
 }
