@@ -58,6 +58,9 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Set default values from XML before any UI is created
+        PreferenceManager.setDefaultValues(this, R.xml.pref_preferences, false);
+
         setDefaultReminder();
 
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
