@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import org.birthdayadapter.util.AccountHelper;
 import org.birthdayadapter.R;
-import org.birthdayadapter.util.Constants;
 
 import androidx.annotation.NonNull;
 import androidx.preference.Preference;
@@ -124,7 +123,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Pre
 
         if (preference.getKey().equals(getString(R.string.pref_force_sync_key))) {
             if (mAccountHelper != null) {
-                mAccountHelper.manualSync();
+                mAccountHelper.differentialSync();
             }
             return true;
         } else if (preference.getKey().equals(getString(R.string.pref_color_key))) {

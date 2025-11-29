@@ -10,12 +10,33 @@ import androidx.work.WorkManager;
 import org.birthdayadapter.R;
 import org.birthdayadapter.service.BirthdayWorker;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 public class MySharedPreferenceChangeListener implements SharedPreferences.OnSharedPreferenceChangeListener {
     private final Context mContext;
+    private final Set<String> mFullResyncKeys;
 
     public MySharedPreferenceChangeListener(Context context) {
         super();
         mContext = context.getApplicationContext();
+
+        // Initialize the set of preference keys that trigger a full resync
+        mFullResyncKeys = new HashSet<>(Arrays.asList(
+                mContext.getString(R.string.pref_title_enable_key),
+                mContext.getString(R.string.pref_title_birthday_without_age_key),
+                mContext.getString(R.string.pref_title_birthday_with_age_key),
+                mContext.getString(R.string.pref_title_anniversary_without_age_key),
+                mContext.getString(R.string.pref_title_anniversary_with_age_key),
+                mContext.getString(R.string.pref_title_other_without_age_key),
+                mContext.getString(R.string.pref_title_other_with_age_key),
+                mContext.getString(R.string.pref_title_custom_without_age_key),
+                mContext.getString(R.string.pref_title_custom_with_age_key),
+                mContext.getString(R.string.pref_jubilee_years_key),
+                // mContext.getString(R.string.pref_group_filtering_key),
+                mContext.getString(R.string.pref_reminders_key)
+        ));
     }
 
     @Override
@@ -29,7 +50,7 @@ public class MySharedPreferenceChangeListener implements SharedPreferences.OnSha
         // Special case: Color change is a lightweight action
         String colorKey = mContext.getString(R.string.pref_color_key);
         if (key.equals(colorKey)) {
-            startWork();
+            enqueueColorChangeWork();
             return;
         }
 
@@ -41,23 +62,22 @@ public class MySharedPreferenceChangeListener implements SharedPreferences.OnSha
             return;
         }
 
-        // Reminder or title changes trigger a full resync
-        String remindersKey = mContext.getString(R.string.pref_reminders_key);
-        if (key.equals(remindersKey) || key.startsWith("pref_title_")) {
-            Log.d(Constants.TAG, "Triggering full resync for reminder or title change: " + key);
+        // Keys that trigger a full resync
+        if (mFullResyncKeys.contains(key)) {
+            Log.d(Constants.TAG, "Triggering full resync for key: " + key);
             new AccountHelper(mContext).triggerFullResync();
             return;
         }
 
         // For all other changes, trigger a normal manual sync
-        Log.d(Constants.TAG, "Triggering manual sync for key: " + key);
-        new AccountHelper(mContext).manualSync();
+        Log.d(Constants.TAG, "Triggering differential sync for key: " + key);
+        new AccountHelper(mContext).differentialSync();
     }
 
     /**
-     * Start a worker to perform an action
+     * Enqueues a worker to handle the color change preference.
      */
-    private void startWork() {
+    private void enqueueColorChangeWork() {
         if (mContext == null) return;
 
         Data inputData = new Data.Builder()

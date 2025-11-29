@@ -144,7 +144,7 @@ public class AccountListFragment extends Fragment implements
         Log.d(Constants.TAG, "Blacklist has changed, triggering manual sync.");
         AccountHelper accountHelper = new AccountHelper(mActivity);
         if (accountHelper.isAccountActivated()) {
-            accountHelper.manualSync();
+            accountHelper.differentialSync();
         }
     }
 
