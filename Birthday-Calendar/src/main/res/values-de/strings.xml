@@ -44,26 +44,23 @@
     <string name="pref_general">Allgemein</string>
     <string name="pref_enable">1. Aktiviere Birthday Adapter</string>
     <string name="pref_enable_summary">Dies erstellt den Systemkalender mit den Daten Deiner Kontakte.</string>
-    <string name="pref_enable_switch">Birthday Calendar</string>
+    <string name="pref_enable_switch">Birthday Adapter</string>
     <string name="pref_contacts">2. Geburtstage Deiner Kontakte</string>
     <string name="pref_contacts_summary">Bearbeite die Geburtstage Deiner Kontakte in Deiner Kontakte-App.</string>
     <string name="pref_contacts_open">Öffne Deine Kontakte-App</string>
     <string name="pref_calendar">3. Geburtstage im Kalender.</string>
-    <string name="pref_calendar_summary">Aktiviere den Geburtstagskalender in den Konten Deiner Kalender-App.</string>
+    <string name="pref_calendar_summary">Aktiviere den Birthday Adapter in den Konten Deiner Kalender-App.</string>
     <string name="pref_calendar_open">Öffne Deine Kalender-App</string>
     <string name="pref_color">Farbe</string>
     <string name="pref_force_sync">Jetzt synchronisieren!</string>
     <string name="pref_force_sync_summary">Im Normalfall brauchst du keine manuelle Synchronisation, da der Birthday Adapter die Daten automatisch täglich aktualisiert.</string>
     <string name="pref_reminders">Erinnerungen</string>
-    <string name="pref_reminder_enable0">Erinnerung 1 aktivieren</string>
-    <string name="pref_reminder_enable1">Erinnerung 2 aktivieren</string>
-    <string name="pref_reminder_enable2">Erinnerung 3 aktivieren</string>
-    <string name="pref_reminder_enable_summary">Diese Erinnerung aktivieren</string>
-    <string name="pref_reminder_time0">Erinnerung 1 ändern</string>
-    <string name="pref_reminder_time1">Erinnerung 2 ändern</string>
-    <string name="pref_reminder_time2">Erinnerung 3 ändern</string>
+    <string name="add_reminder">Benachrichtigung hinzufügen</string>
+    <string name="pref_reminder_time">Benachrichtigung</string>
     <string name="pref_reminder_time_summary">Tag und Uhrzeit dieser Erinnerung einstellen</string>
     <string name="pref_reminder_summary">%1$s um %2$s</string>
+    <string name="no_reminder_set">Keine Benachrichtigungen</string>
+    <string name="remove">Entfernen</string>
 
     <string-array name="pref_reminder_time_drop_down">
         <item>Am Ereignistag</item>

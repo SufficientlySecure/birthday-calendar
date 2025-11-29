@@ -36,12 +36,7 @@
     <string name="pref_color">Kleur</string>
     <string name="pref_force_sync">Nu synchroniseren!</string>
     <string name="pref_reminders">Herinneringen</string>
-    <string name="pref_reminder_enable0">Herinnering 1 inschakelen</string>
-    <string name="pref_reminder_enable1">Herinnering 2 inschakelen</string>
-    <string name="pref_reminder_enable2">Herinnering 3 inschakelen</string>
-    <string name="pref_reminder_enable_summary">Deze herinnering inschakelen</string>
     <string name="pref_reminder_time_summary">Stel de tijd in van de herinnering</string>
-
     <string-array name="pref_reminder_time_drop_down">
         <item>Op de dag van de gebeurtenis</item>
         <item>1 dag van tevoren</item>

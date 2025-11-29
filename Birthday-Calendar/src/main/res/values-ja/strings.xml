@@ -36,12 +36,7 @@
     <string name="pref_color">色</string>
     <string name="pref_force_sync">今すぐ同期!</string>
     <string name="pref_reminders">リマインダー</string>
-    <string name="pref_reminder_enable0">リマインダー 1 を有効にする</string>
-    <string name="pref_reminder_enable1">リマインダー 2 を有効にする</string>
-    <string name="pref_reminder_enable2">リマインダー 3 を有効にする</string>
-    <string name="pref_reminder_enable_summary">このリマインダーを有効にする</string>
     <string name="pref_reminder_time_summary">このリマインダーの時間をセット</string>
-
     <string-array name="pref_reminder_time_drop_down">
         <item>イベント当日</item>
         <item>1 日前</item>

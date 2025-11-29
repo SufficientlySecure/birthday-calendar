@@ -36,12 +36,7 @@
     <string name="pref_color">Цвет</string>
     <string name="pref_force_sync">Синхронизировать сейчас!</string>
     <string name="pref_reminders">Напоминания</string>
-    <string name="pref_reminder_enable0">Включить напоминание 1</string>
-    <string name="pref_reminder_enable1">Включить напоминание 2</string>
-    <string name="pref_reminder_enable2">Включить напоминание 3</string>
-    <string name="pref_reminder_enable_summary">Включить это напоминание</string>
     <string name="pref_reminder_time_summary">Задать время для этого напоминания</string>
-
     <string-array name="pref_reminder_time_drop_down">
         <item>В день события</item>
         <item>За день</item>

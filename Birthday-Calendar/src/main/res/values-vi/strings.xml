@@ -36,12 +36,7 @@
     <string name="pref_color">Màu sắc</string>
     <string name="pref_force_sync">Đồng bộ ngay!</string>
     <string name="pref_reminders">Nhắc nhở</string>
-    <string name="pref_reminder_enable0">Bật nhắc nhở 1</string>
-    <string name="pref_reminder_enable1">Bật nhắc nhở 2</string>
-    <string name="pref_reminder_enable2">Bật nhắc nhở 3</string>
-    <string name="pref_reminder_enable_summary">Bật nhắc nhở này</string>
     <string name="pref_reminder_time_summary">Đặt thời gian cho nhắc nhở này</string>
-
     <string-array name="pref_reminder_time_drop_down">
         <item>Vào ngày xảy ra sự kiện</item>
         <item>Trước 1 ngày</item>
