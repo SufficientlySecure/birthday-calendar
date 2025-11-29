@@ -36,12 +36,7 @@
     <string name="pref_color">Couleur</string>
     <string name="pref_force_sync">Synchroniser maintenant !</string>
     <string name="pref_reminders">Rappels</string>
-    <string name="pref_reminder_enable0">Activer le rappel 1</string>
-    <string name="pref_reminder_enable1">Activer le rappel 2</string>
-    <string name="pref_reminder_enable2">Activer le rappel 3</string>
-    <string name="pref_reminder_enable_summary">Activer ce rappel</string>
     <string name="pref_reminder_time_summary">Choisir l\'heure de ce rappel</string>
-
     <string-array name="pref_reminder_time_drop_down">
         <item>le jour de l’évènement</item>
         <item>1 jour avant</item>

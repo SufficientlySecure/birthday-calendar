@@ -37,7 +37,6 @@ public class AccountListEntry {
     private String label;
     private Drawable icon;
     private boolean selected;
-    private boolean indeterminate;
     private final Account account;
     private int contactCount;
     private int dateCount;
@@ -92,7 +91,6 @@ public class AccountListEntry {
     }
 
     public void setIndeterminate(boolean indeterminate) {
-        this.indeterminate = indeterminate;
     }
 
     public int getContactCount() {

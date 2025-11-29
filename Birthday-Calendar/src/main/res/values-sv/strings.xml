@@ -36,12 +36,7 @@
     <string name="pref_color">Färg</string>
     <string name="pref_force_sync">Synkronisera nu !</string>
     <string name="pref_reminders">Påminnelser</string>
-    <string name="pref_reminder_enable0">Aktivera påminnelse 1</string>
-    <string name="pref_reminder_enable1">Aktivera påminnelse 2</string>
-    <string name="pref_reminder_enable2">Aktivera påminnelse 3</string>
-    <string name="pref_reminder_enable_summary">Aktivera denna påminnelse</string>
     <string name="pref_reminder_time_summary">Ange tid för denna påminnelse</string>
-
     <string-array name="pref_reminder_time_drop_down">
         <item>Vid dagens händelse</item>
         <item>1 dag innan</item>

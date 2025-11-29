@@ -36,12 +36,7 @@
     <string name="pref_color">日历颜色</string>
     <string name="pref_force_sync">立即同步</string>
     <string name="pref_reminders">提醒</string>
-    <string name="pref_reminder_enable0">启用提醒 1</string>
-    <string name="pref_reminder_enable1">启用提醒 2</string>
-    <string name="pref_reminder_enable2">启用提醒 3</string>
-    <string name="pref_reminder_enable_summary">启用这组提醒</string>
     <string name="pref_reminder_time_summary">设置提醒时间</string>
-
     <string-array name="pref_reminder_time_drop_down">
         <item>当天</item>
         <item>1 天前</item>

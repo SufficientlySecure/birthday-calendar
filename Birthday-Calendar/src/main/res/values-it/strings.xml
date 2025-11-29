@@ -36,12 +36,7 @@
     <string name="pref_color">Colore</string>
     <string name="pref_force_sync">Sincronizza adesso!</string>
     <string name="pref_reminders">Promemoria</string>
-    <string name="pref_reminder_enable0">Abilita promemoria 1</string>
-    <string name="pref_reminder_enable1">Abilita promemoria 2</string>
-    <string name="pref_reminder_enable2">Abilita promemoria 3</string>
-    <string name="pref_reminder_enable_summary">Abilita questo promemoria</string>
     <string name="pref_reminder_time_summary">Imposta l\'ora di questo promemoria</string>
-
     <string-array name="pref_reminder_time_drop_down">
         <item>Il giorno dell\'evento</item>
         <item>Un giorno prima</item>

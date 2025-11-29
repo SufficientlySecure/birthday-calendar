@@ -35,12 +35,7 @@
     <string name="pref_color">Väri</string>
     <string name="pref_force_sync">Synkronoi nyt!</string>
     <string name="pref_reminders">Muistutukset</string>
-    <string name="pref_reminder_enable0">Aktivoi muistutus 1</string>
-    <string name="pref_reminder_enable1">Aktivoi muistutus 2</string>
-    <string name="pref_reminder_enable2">Aktivoi muistutus 3</string>
-    <string name="pref_reminder_enable_summary">Aktivoi tämä muistutus</string>
     <string name="pref_reminder_time_summary">Aseta tämän muistutuksen ajankohta</string>
-
     <string name="pref_title_birthday_without_age">Syntymäpäivä</string>
     <string name="pref_title_birthday_with_age">Syntymäpäivä ja ikä</string>
     <string name="pref_title_anniversary_without_age">Vuosipäivä</string>
