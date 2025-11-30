@@ -474,16 +474,16 @@ public class BirthdayWorker extends Worker {
                 String accName = dataCursor.getString(accNameColumn);
 
                 boolean isBlacklisted = false;
-                if (groupFilteringEnabled && !TextUtils.isEmpty(accType) && !TextUtils.isEmpty(accName)) {
+                if (!TextUtils.isEmpty(accType) && !TextUtils.isEmpty(accName)) {
                     Account account = new Account(accName, accType);
                     HashSet<String> blacklistedGroups = blacklist.get(account);
 
                     if (blacklistedGroups != null) {
+                        // Check for full account blacklist first (applies always)
                         if (blacklistedGroups.contains(null)) {
-                            // Account is fully blacklisted
                             isBlacklisted = true;
-                        } else if (!blacklistedGroups.isEmpty()) {
-                            // Account is partially blacklisted, check groups
+                        } else if (groupFilteringEnabled && !blacklistedGroups.isEmpty()) {
+                            // If not fully blacklisted, check group-based blacklist (only if feature is enabled)
                             String rawContactId = dataCursor.getString(rawContactIdColumn);
                             List<String> contactGroups = contactGroupMembership.get(rawContactId);
 
@@ -504,6 +504,7 @@ public class BirthdayWorker extends Worker {
                         }
                     }
                 }
+
 
                 if (!isBlacklisted) {
                     String lookupKey = dataCursor.getString(lookupKeyColumn);
