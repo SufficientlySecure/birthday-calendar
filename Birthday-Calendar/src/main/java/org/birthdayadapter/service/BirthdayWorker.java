@@ -501,7 +501,7 @@ public class BirthdayWorker extends Worker {
                                 }
                             } else {
                                 // Contact has no group, check if "No Group" is blacklisted
-                                if (blacklistedGroups.contains(context.getString(R.string.account_list_no_group))) {
+                                if (blacklistedGroups.contains(Constants.GROUP_TITLE_NO_GROUP)) {
                                     isBlacklisted = true;
                                 }
                             }
