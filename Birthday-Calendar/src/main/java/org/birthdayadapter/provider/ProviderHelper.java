@@ -73,7 +73,7 @@ public class ProviderHelper {
 
     public static HashMap<Account, HashSet<String>> getAccountBlacklist(Context context) {
         HashMap<Account, HashSet<String>> hashMap = new HashMap<>();
-        Cursor cursor = getAccountBlacklistCursor(context, null, null);
+        Cursor cursor = getAccountBlacklistCursor(context);
 
         try {
             while (cursor != null && cursor.moveToNext()) {
@@ -82,18 +82,9 @@ public class ProviderHelper {
                         cursor.getString(cursor.getColumnIndexOrThrow(BirthdayAdapterContract.AccountBlacklist.ACCOUNT_TYPE)));
                 String group = cursor.getString(cursor.getColumnIndexOrThrow(BirthdayAdapterContract.AccountBlacklist.ACCOUNT_GROUP));
 
-                HashSet<String> groups = hashMap.get(acc);
-                if (groups == null) {
-                    groups = new HashSet<>();
-                    hashMap.put(acc, groups);
-                }
+                HashSet<String> groups = hashMap.computeIfAbsent(acc, k -> new HashSet<>());
 
-                if (group != null) {
-                    groups.add(group);
-                } else {
-                    // if group is null, the whole account is blacklisted
-                    groups.add(null);
-                }
+                groups.add(group);
             }
         } finally {
             if (cursor != null && !cursor.isClosed())
@@ -103,15 +94,15 @@ public class ProviderHelper {
         return hashMap;
     }
 
-    private static Cursor getAccountBlacklistCursor(Context context, String selection, String[] selectionArgs) {
+    private static Cursor getAccountBlacklistCursor(Context context) {
         return context.getContentResolver().query(
                 BirthdayAdapterContract.AccountBlacklist.CONTENT_URI,
                 new String[]{BirthdayAdapterContract.AccountBlacklist._ID,
                         BirthdayAdapterContract.AccountBlacklist.ACCOUNT_NAME,
                         BirthdayAdapterContract.AccountBlacklist.ACCOUNT_TYPE,
                         BirthdayAdapterContract.AccountBlacklist.ACCOUNT_GROUP},
-                selection,
-                selectionArgs,
+                null,
+                null,
                 BirthdayAdapterContract.AccountBlacklist.DEFAULT_SORT);
     }
 
