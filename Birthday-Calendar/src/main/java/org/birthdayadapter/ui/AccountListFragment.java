@@ -22,6 +22,8 @@ package org.birthdayadapter.ui;
 
 import android.Manifest;
 import android.accounts.Account;
+import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -59,7 +61,6 @@ public class AccountListFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<List<AccountListEntry>>, AccountListAdapter.OnBlacklistChangedListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private AccountListAdapter mAdapter;
-    private BaseActivity mActivity;
     private ListView mListView;
     private TextView mEmptyView;
     private ActivityResultLauncher<String> requestPermissionLauncher;
@@ -71,11 +72,15 @@ public class AccountListFragment extends Fragment implements
                 registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                     if (isGranted) {
                         // Permission is granted. Continue the action or workflow in your app.
-                        LoaderManager.getInstance(this).restartLoader(0, null, this);
+                        if (isAdded()) {
+                            LoaderManager.getInstance(this).restartLoader(0, null, this);
+                        }
                     } else {
                         // Explain to the user that the feature is unavailable because the
                         // features requires a permission that the user has denied.
-                        Toast.makeText(getContext(), R.string.permission_read_contacts_denied, Toast.LENGTH_LONG).show();
+                        if (getContext() != null) {
+                            Toast.makeText(getContext(), R.string.permission_read_contacts_denied, Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
     }
@@ -93,10 +98,10 @@ public class AccountListFragment extends Fragment implements
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mActivity = (BaseActivity) getActivity();
-        if (mActivity == null) return;
+        Activity activity = getActivity();
+        if (activity == null) return;
 
-        mAdapter = new AccountListAdapter(mActivity);
+        mAdapter = new AccountListAdapter(activity);
         mAdapter.setOnBlacklistChangedListener(this);
         mListView.setAdapter(mAdapter);
         mListView.setEmptyView(mEmptyView); // Link the empty view to the list
@@ -105,8 +110,11 @@ public class AccountListFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
+        Context context = getContext();
+        if (context == null) return;
+
         // Use the default shared preferences file to be consistent with the PreferenceFragments.
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         prefs.registerOnSharedPreferenceChangeListener(this);
 
         // Always update the adapter's state when the fragment resumes
@@ -115,10 +123,12 @@ public class AccountListFragment extends Fragment implements
         // To prevent the permission dialog from becoming unresponsive on first launch,
         // we post the permission check to the view's message queue. This ensures that the
         // request is made only after the UI has been fully drawn and is interactive.
-        if (getView() != null) {
-            getView().post(() -> {
-                if (isAdded() && getContext() != null) {
-                    if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+        View view = getView();
+        if (view != null) {
+            view.post(() -> {
+                Context postContext = getContext();
+                if (isAdded() && postContext != null) {
+                    if (ContextCompat.checkSelfPermission(postContext, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
                         LoaderManager.getInstance(this).restartLoader(0, null, this);
                     } else {
                         // Request permission if not granted
@@ -133,15 +143,26 @@ public class AccountListFragment extends Fragment implements
     public void onPause() {
         super.onPause();
         // Use the default shared preferences file to be consistent with the PreferenceFragments.
-        PreferenceManager.getDefaultSharedPreferences(requireContext()).unregisterOnSharedPreferenceChangeListener(this);
+        Context context = getContext();
+        if (context != null) {
+            PreferenceManager.getDefaultSharedPreferences(context).unregisterOnSharedPreferenceChangeListener(this);
+        }
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key != null && key.equals(getString(R.string.pref_group_filtering_key))) {
+        if (isAdded() && key != null && key.equals(getString(R.string.pref_group_filtering_key))) {
             // The preference has changed, so update the adapter's state and reload the data
             updateGroupFilteringState();
-            requireActivity().runOnUiThread(() -> LoaderManager.getInstance(this).restartLoader(0, null, this));
+            Activity activity = getActivity();
+            if (activity != null) {
+                activity.runOnUiThread(() -> {
+                    // Make sure fragment is still attached
+                    if (isAdded()) {
+                        LoaderManager.getInstance(this).restartLoader(0, null, this);
+                    }
+                });
+            }
         }
     }
 
@@ -149,17 +170,21 @@ public class AccountListFragment extends Fragment implements
     public void onBlacklistChanged() {
         saveBlacklist();
 
+        Activity activity = getActivity();
+        if (activity == null) return;
+
         Log.d(Constants.TAG, "Blacklist has changed, triggering manual sync.");
-        AccountHelper accountHelper = new AccountHelper(mActivity);
+        AccountHelper accountHelper = new AccountHelper(activity);
         if (accountHelper.isAccountActivated()) {
             accountHelper.differentialSync();
         }
     }
 
     private void updateGroupFilteringState() {
-        if (mAdapter != null && getContext() != null) {
+        Context context = getContext();
+        if (mAdapter != null && context != null && isAdded()) {
             // Use the default shared preferences file to be consistent with the PreferenceFragments.
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
             boolean groupFilteringEnabled = sharedPreferences.getBoolean(
                     getString(R.string.pref_group_filtering_key),
                     getResources().getBoolean(R.bool.pref_group_filtering_def)
@@ -169,28 +194,38 @@ public class AccountListFragment extends Fragment implements
     }
 
     private void saveBlacklist() {
-        if (mAdapter == null || mActivity == null) {
+        Activity activity = getActivity();
+        if (mAdapter == null || activity == null) {
             return;
         }
         HashMap<Account, HashSet<String>> newBlacklist = mAdapter.getAccountBlacklist();
         Log.d(Constants.TAG, "Blacklist change detected, saving new blacklist");
-        ProviderHelper.setAccountBlacklist(requireActivity(), newBlacklist);
+        ProviderHelper.setAccountBlacklist(activity, newBlacklist);
     }
 
     @NonNull
     @Override
     public Loader<List<AccountListEntry>> onCreateLoader(int id, @Nullable Bundle args) {
+        Activity activity = getActivity();
+        Context context = getContext();
+        if (activity == null || context == null) {
+            // Return an empty loader if the activity or context is not available
+            return new AccountListLoader(context, false);
+        }
         // Use the default shared preferences file to be consistent with the PreferenceFragments.
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         boolean groupFilteringEnabled = sharedPreferences.getBoolean(
                 getString(R.string.pref_group_filtering_key),
                 getResources().getBoolean(R.bool.pref_group_filtering_def)
         );
-        return new AccountListLoader(requireActivity(), groupFilteringEnabled);
+        return new AccountListLoader(activity, groupFilteringEnabled);
     }
 
     @Override
     public void onLoadFinished(@NonNull Loader<List<AccountListEntry>> loader, List<AccountListEntry> data) {
+        if (!isAdded()) {
+            return; // Fragment is not attached, do not update UI
+        }
         mAdapter.setData(data);
 
         if (data == null || data.isEmpty()) {
@@ -204,6 +239,8 @@ public class AccountListFragment extends Fragment implements
 
     @Override
     public void onLoaderReset(@NonNull Loader<List<AccountListEntry>> loader) {
-        mAdapter.setData(null);
+        if (isAdded()) {
+            mAdapter.setData(null);
+        }
     }
 }
