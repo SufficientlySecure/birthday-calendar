@@ -1,27 +1,8 @@
-/*
- * Copyright (C) 2012-2013 Dominik Schürmann <dominik@dominikschuermann.de>
- *
- * This file is part of Birthday Adapter.
- * 
- * Birthday Adapter is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Birthday Adapter is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
-
 package org.birthdayadapter.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
@@ -29,50 +10,75 @@ import androidx.work.WorkManager;
 import org.birthdayadapter.R;
 import org.birthdayadapter.service.BirthdayWorker;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 public class MySharedPreferenceChangeListener implements SharedPreferences.OnSharedPreferenceChangeListener {
-    private final Context context;
+    private final Context mContext;
+    private final Set<String> mFullResyncKeys;
 
     public MySharedPreferenceChangeListener(Context context) {
         super();
-        this.context = context;
+        mContext = context.getApplicationContext();
+
+        // Initialize the set of preference keys that trigger a full resync
+        mFullResyncKeys = new HashSet<>(Arrays.asList(
+                mContext.getString(R.string.pref_title_enable_key),
+                mContext.getString(R.string.pref_title_birthday_without_age_key),
+                mContext.getString(R.string.pref_title_birthday_with_age_key),
+                mContext.getString(R.string.pref_title_anniversary_without_age_key),
+                mContext.getString(R.string.pref_title_anniversary_with_age_key),
+                mContext.getString(R.string.pref_title_other_without_age_key),
+                mContext.getString(R.string.pref_title_other_with_age_key),
+                mContext.getString(R.string.pref_title_custom_without_age_key),
+                mContext.getString(R.string.pref_title_custom_with_age_key),
+                mContext.getString(R.string.pref_jubilee_years_key),
+                // mContext.getString(R.string.pref_group_filtering_key),
+                mContext.getString(R.string.pref_reminders_key)
+        ));
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key == null || context == null) {
+        if (key == null || mContext == null) {
             return; // Safeguard
         }
 
-        Log.d("BirthdayAdapter", "Preference changed: " + key);
+        Log.d(Constants.TAG, "Preference changed: " + key);
 
-        // --- Special case: Color change is a lightweight action ---
-        String colorKey = context.getString(R.string.pref_color_key);
+        // Special case: Color change is a lightweight action
+        String colorKey = mContext.getString(R.string.pref_color_key);
         if (key.equals(colorKey)) {
-            startWork();
+            enqueueColorChangeWork();
             return;
         }
 
-        // --- Keys for UI elements or one-off actions that should NOT trigger a sync ---
-        String advancedKey = context.getString(R.string.pref_advanced_key);
-        String contactsKey = context.getString(R.string.pref_contacts_key);
-        String forceSyncKey = context.getString(R.string.pref_force_sync_key);
+        // Keys that should not trigger a sync or are handled elsewhere
+        String forceSyncKey = mContext.getString(R.string.pref_force_sync_key);
+        String advancedKey = mContext.getString(R.string.pref_advanced_key);
 
-        if (key.equals(advancedKey) || key.equals(contactsKey) || key.equals(forceSyncKey)) {
-            // These are UI toggles or have their own click listeners, so we do nothing here.
+        if (key.equals(forceSyncKey) || key.equals(advancedKey)) {
             return;
         }
 
-        // --- Catch-all for any other preference change ---
-        // Assume it affects event data (reminders, titles, date formats, etc.) and trigger the full resync.
-        Log.d("BirthdayAdapter", "Triggering full calendar resync for key: " + key);
-        new AccountHelper(context).updateReminders();
+        // Keys that trigger a full resync
+        if (mFullResyncKeys.contains(key)) {
+            Log.d(Constants.TAG, "Triggering full resync for key: " + key);
+            new AccountHelper(mContext).triggerFullResync();
+            return;
+        }
+
+        // For all other changes, trigger a normal manual sync
+        Log.d(Constants.TAG, "Triggering differential sync for key: " + key);
+        new AccountHelper(mContext).differentialSync();
     }
 
     /**
-     * Start a worker to perform an action
+     * Enqueues a worker to handle the color change preference.
      */
-    private void startWork() {
-        if (context == null) return;
+    private void enqueueColorChangeWork() {
+        if (mContext == null) return;
 
         Data inputData = new Data.Builder()
                 .putString(BirthdayWorker.ACTION, BirthdayWorker.ACTION_CHANGE_COLOR)
@@ -82,7 +88,6 @@ public class MySharedPreferenceChangeListener implements SharedPreferences.OnSha
                 .setInputData(inputData)
                 .build();
 
-        WorkManager.getInstance(context).enqueue(workRequest);
+        WorkManager.getInstance(mContext).enqueue(workRequest);
     }
-
 }

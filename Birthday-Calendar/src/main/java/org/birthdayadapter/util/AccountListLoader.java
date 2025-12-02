@@ -200,7 +200,6 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
 
         if (mGroupFilteringEnabled) {
             Map<String, int[]> groupStats = new HashMap<>();
-            String noGroupKey = "-1";
 
             for (String rawContactId : allRawContactIds) {
                 Set<String> groupIds = contactToGroupsMap.get(rawContactId);
@@ -213,7 +212,7 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
                         stats[1] += dateCount;
                     }
                 } else {
-                    int[] stats = groupStats.computeIfAbsent(noGroupKey, k -> new int[2]);
+                    int[] stats = groupStats.computeIfAbsent(Constants.GROUP_TITLE_NO_GROUP, k -> new int[2]);
                     stats[0]++;
                     stats[1] += dateCount;
                 }
@@ -223,17 +222,19 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
             for (Map.Entry<String, int[]> statsEntry : groupStats.entrySet()) {
                 String groupId = statsEntry.getKey();
                 String groupTitle = groupTitleMap.get(groupId);
+                String groupKey = groupId;
 
-                if (groupId.equals(noGroupKey)) {
+                if (groupId.equals(Constants.GROUP_TITLE_NO_GROUP)) {
                     if (statsEntry.getValue()[0] > 0) {
                         groupTitle = getContext().getString(R.string.account_list_no_group);
+                        groupKey = groupTitle;
                     }
                 }
 
                 if (groupTitle != null) {
                     int[] counts = statsEntry.getValue();
                     GroupListEntry groupEntry = new GroupListEntry(groupTitle, counts[0], counts[1]);
-                    if (blacklistedGroups != null && blacklistedGroups.contains(groupTitle)) {
+                    if (blacklistedGroups != null && blacklistedGroups.contains(groupKey)) {
                         groupEntry.setSelected(false);
                     }
                     groupEntries.add(groupEntry);

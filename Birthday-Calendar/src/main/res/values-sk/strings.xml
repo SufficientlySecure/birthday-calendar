@@ -36,15 +36,7 @@
     <string name="pref_color">Farba</string>
     <string name="pref_force_sync">Synchronizovať teraz!</string>
     <string name="pref_reminders">Pripomienky</string>
-    <string name="pref_reminder_enable0">Zapnúť pripomienku 1</string>
-    <string name="pref_reminder_enable1">Zapnúť pripomienku 2</string>
-    <string name="pref_reminder_enable2">Zapnúť pripomienku 3</string>
-    <string name="pref_reminder_enable_summary">Zapnúť túto pripomienku</string>
-    <string name="pref_reminder_time0">Pripomienka 1</string>
-    <string name="pref_reminder_time1">Pripomienka 2</string>
-    <string name="pref_reminder_time2">Pripomienka 3</string>
     <string name="pref_reminder_time_summary">Nastaviť čas tejto pripomienky</string>
-
     <string-array name="pref_reminder_time_drop_down">
         <item>V deň udalosti</item>
         <item>1 deň pred</item>
@@ -66,6 +58,7 @@
     <string name="pref_title_other_with_age">Iná udalosť s vekom</string>
     <string name="pref_title_custom_without_age">Vlastné</string>
     <string name="pref_title_custom_with_age">Vlastné s vekom</string>
+
     <string name="pref_advanced_category">Rozšírené nastavenia</string>
     <string name="pref_prefer_dd_slash_mm">Navrhnúť dd/MM/rrrr formát</string>
     <string name="pref_prefer_dd_slash_mm_summary">Navrhnúť dd/MM/rrrr na MM/dd/rrrr pri parsovaní formátov dátumu</string>
@@ -75,7 +68,6 @@
     <string name="pref_account_settings">Konfigurovať Birthday Adapter</string>
 
     <string name="account_list_empty">Žiadne účty</string>
-
     <!--Free Version -->
     <string name="pref_buy">Kúpiť plnú verziu!</string>
     <string name="pref_buy_full">Otvoriť Google Play pre zakúpenie plnej verzie...</string>

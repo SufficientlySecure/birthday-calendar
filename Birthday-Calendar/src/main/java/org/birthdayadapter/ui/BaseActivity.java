@@ -21,6 +21,7 @@
 
 package org.birthdayadapter.ui;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -28,11 +29,13 @@ import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.preference.PreferenceManager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -43,7 +46,9 @@ import org.birthdayadapter.R;
 import org.birthdayadapter.util.MySharedPreferenceChangeListener;
 import org.birthdayadapter.util.SyncStatusManager;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -54,22 +59,37 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Set default values from XML before any UI is created
+        PreferenceManager.setDefaultValues(this, R.xml.pref_preferences, false);
+
+        setDefaultReminder();
+
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
         setContentView(R.layout.base_activity);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ViewCompat.setOnApplyWindowInsetsListener(toolbar, (v, insets) -> {
-            int statusBarHeight = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top;
-            v.setPadding(v.getPaddingLeft(), statusBarHeight, v.getPaddingRight(), v.getPaddingBottom());
-            return insets;
+        final ViewPager2 viewPager = findViewById(R.id.viewpager);
+        View mainContent = findViewById(R.id.main_content);
+
+        // Apply insets to handle edge-to-edge display
+        ViewCompat.setOnApplyWindowInsetsListener(mainContent, (v, windowInsets) -> {
+            Insets systemBars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+
+            // Apply the top inset as padding to the toolbar
+            toolbar.setPadding(toolbar.getPaddingLeft(), systemBars.top, toolbar.getPaddingRight(), toolbar.getPaddingBottom());
+
+            // Apply the bottom inset as padding to the ViewPager
+            viewPager.setPadding(viewPager.getPaddingLeft(), viewPager.getPaddingTop(), viewPager.getPaddingRight(), systemBars.bottom);
+
+            // Return the original insets to allow children to handle them
+            return windowInsets;
         });
 
         mProgressBar = findViewById(R.id.progress_spinner);
 
-        ViewPager2 viewPager = findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
         TabLayout tabLayout = findViewById(R.id.tabs);
@@ -90,16 +110,31 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(mySharedPreferenceChangeListener);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mySharedPreferenceChangeListener);
+    }
+
+    private void setDefaultReminder() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        // Only set default reminder if it has never been set before
+        if (prefs.getStringSet(getString(R.string.pref_reminders_key), null) == null) {
+            SharedPreferences.Editor editor = prefs.edit();
+            Set<String> reminderSet = new HashSet<>();
+            reminderSet.add(String.valueOf(getResources().getInteger(R.integer.pref_reminder_time_def)));
+            editor.putStringSet(getString(R.string.pref_reminders_key), reminderSet);
+            editor.apply();
+        }
     }
 
     private void setupViewPager(ViewPager2 viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(this);
         viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(2);
     }
 
     class ViewPagerAdapter extends FragmentStateAdapter {

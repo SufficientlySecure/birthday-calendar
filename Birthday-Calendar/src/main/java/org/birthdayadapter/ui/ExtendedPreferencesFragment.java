@@ -41,6 +41,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -57,7 +58,9 @@ import org.birthdayadapter.util.PreferencesHelper;
 import org.birthdayadapter.util.SyncStatusManager;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
@@ -68,6 +71,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     private Preference colorPref;
     private Preference forceSyncPref;
     private Preference mJubileeYearsPref;
+    private PreferenceCategory remindersCategory;
     private SharedPreferences mSyncStatusPrefs;
     private WorkInfo mBirthdaySyncWorkInfo;
 
@@ -88,7 +92,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
-        getPreferenceManager().setSharedPreferencesName(Constants.PREFS_NAME);
+        // Use the default shared preferences to ensure consistency across the app.
         addPreferencesFromResource(R.xml.pref_preferences);
     }
 
@@ -104,11 +108,16 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         mAccountHelper = new AccountHelper(mActivity);
         mSyncStatusPrefs = mActivity.getSharedPreferences("sync_status_prefs", Context.MODE_PRIVATE);
 
+        remindersCategory = findPreference("pref_reminders_category");
+        if (remindersCategory != null) {
+            populateReminders();
+        }
+
         forceSyncPref = findPreference(getString(R.string.pref_force_sync_key));
         if (forceSyncPref != null) {
             forceSyncPref.setOnPreferenceClickListener(preference -> {
                 SyncStatusManager.getInstance().setSyncing(true);
-                mAccountHelper.manualSync();
+                mAccountHelper.differentialSync();
                 updateSyncStatus();
                 return true;
             });
@@ -132,7 +141,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
             });
         }
 
-        WorkManager.getInstance(mActivity).getWorkInfosForUniqueWorkLiveData("birthday_sync")
+        WorkManager.getInstance(mActivity).getWorkInfosForUniqueWorkLiveData("periodic_sync")
                 .observe(getViewLifecycleOwner(), workInfos -> {
                     if (workInfos != null && !workInfos.isEmpty()) {
                         mBirthdaySyncWorkInfo = workInfos.get(0);
@@ -141,6 +150,68 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                     }
                     updateSyncStatus();
                 });
+    }
+
+    private void populateReminders() {
+        if (getContext() == null) return;
+
+        remindersCategory.removeAll();
+
+        int[] reminderMinutes = PreferencesHelper.getAllReminderMinutes(getContext());
+        for (int i = 0; i < reminderMinutes.length; i++) {
+            addReminderPreference(reminderMinutes[i], i, false);
+        }
+
+        Preference addReminderPref = new Preference(getContext());
+        addReminderPref.setTitle(R.string.add_reminder);
+        addReminderPref.setIcon(R.drawable.ic_add);
+        addReminderPref.setOnPreferenceClickListener(preference -> {
+            addReminderPreference(getResources().getInteger(R.integer.pref_reminder_time_def), reminderMinutes.length, true);
+            return true;
+        });
+        remindersCategory.addPreference(addReminderPref);
+    }
+
+    private void addReminderPreference(int minutes, int index, boolean isNew) {
+        if (getContext() == null) return;
+
+        ReminderPreferenceCompat reminderPref = new ReminderPreferenceCompat(getContext(), null);
+        reminderPref.setKey("pref_reminder_time_" + index);
+        reminderPref.setTitle(getString(R.string.pref_reminder_time) + " " + (index + 1));
+        reminderPref.setPersistent(false); // We are handling persistence manually
+        reminderPref.setValue(minutes);
+        reminderPref.setOnPreferenceChangeListener((preference, newValue) -> {
+            saveReminders();
+            return true;
+        });
+        reminderPref.setOnRemoveListener(preference -> {
+            remindersCategory.removePreference(preference);
+            saveReminders();
+        });
+
+        remindersCategory.addPreference(reminderPref);
+
+        if (isNew) {
+            reminderPref.performClick(true);
+        }
+    }
+
+    private void saveReminders() {
+        if (getContext() == null) return;
+
+        SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+        if (prefs == null) return;
+
+        Set<String> reminderSet = new HashSet<>();
+        for (int i = 0; i < remindersCategory.getPreferenceCount(); i++) {
+            Preference pref = remindersCategory.getPreference(i);
+            if (pref instanceof ReminderPreferenceCompat) {
+                reminderSet.add(String.valueOf(((ReminderPreferenceCompat) pref).getValue()));
+            }
+        }
+
+        prefs.edit().putStringSet(getString(R.string.pref_reminders_key), reminderSet).apply();
+        populateReminders(); // Repopulate to reflect changes
     }
 
     private void updateJubileeYearsSummary() {
@@ -350,11 +421,6 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         super.onResume();
         updateJubileeYearsSummary();
         mSyncStatusPrefs.registerOnSharedPreferenceChangeListener(mSyncStatusListener);
-        // Set up a listener whenever a key changes
-        if (mActivity != null && mActivity.mySharedPreferenceChangeListener != null) {
-            Objects.requireNonNull(getPreferenceScreen().getSharedPreferences()).registerOnSharedPreferenceChangeListener(
-                    mActivity.mySharedPreferenceChangeListener);
-        }
 
         mSyncUpdateRunnable = new Runnable() {
             @Override
@@ -374,11 +440,5 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         mSyncStatusPrefs.unregisterOnSharedPreferenceChangeListener(mSyncStatusListener);
         // Stop the periodic UI updates
         mSyncUpdateHandler.removeCallbacks(mSyncUpdateRunnable);
-
-        // Unregister the listener whenever a key changes
-        if (mActivity != null && mActivity.mySharedPreferenceChangeListener != null) {
-            Objects.requireNonNull(getPreferenceScreen().getSharedPreferences()).unregisterOnSharedPreferenceChangeListener(
-                    mActivity.mySharedPreferenceChangeListener);
-        }
     }
 }

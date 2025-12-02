@@ -36,15 +36,7 @@
     <string name="pref_color">Cor</string>
     <string name="pref_force_sync">Sincronizar agora!</string>
     <string name="pref_reminders">Lembretes</string>
-    <string name="pref_reminder_enable0">Ativar Lembrete 1</string>
-    <string name="pref_reminder_enable1">Ativar Lembrete 2</string>
-    <string name="pref_reminder_enable2">Ativar Lembrete 3</string>
-    <string name="pref_reminder_enable_summary">Ativar este lembrete</string>
-    <string name="pref_reminder_time0">Lembrete 1</string>
-    <string name="pref_reminder_time1">Lembrete 2</string>
-    <string name="pref_reminder_time2">Lembrete 3</string>
     <string name="pref_reminder_time_summary">Definir a data/hora deste lembrete</string>
-
     <string-array name="pref_reminder_time_drop_down">
         <item>No dia do evento</item>
         <item>1 dia antes</item>
@@ -76,7 +68,6 @@
     <string name="pref_account_settings">Configurar o Birthday Adapter</string>
 
     <string name="account_list_empty">Nenhuma conta</string>
-
     <!--Free Version -->
     <string name="pref_buy">Compre a versão completa!</string>
     <string name="pref_buy_full">Abrir o Google Play para comprar a versão completa...</string>

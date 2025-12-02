@@ -20,8 +20,6 @@
 
 package org.birthdayadapter.provider;
 
-import java.util.Arrays;
-
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
@@ -33,6 +31,9 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
@@ -65,15 +66,18 @@ public class BirthdayAdapterProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         final Context context = getContext();
-        mBirthdayAdapterDatabase = new BirthdayAdapterDatabase(context);
-        return true;
+        if (context != null) {
+            mBirthdayAdapterDatabase = new BirthdayAdapterDatabase(context);
+            return true;
+        }
+        return false;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String getType(Uri uri) {
+    public String getType(@NonNull Uri uri) {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case ACCOUNT_BLACKLIST:
@@ -88,30 +92,32 @@ public class BirthdayAdapterProvider extends ContentProvider {
     /**
      * {@inheritDoc}
      */
+    @Nullable
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
-        Log.d(Constants.TAG, "insert(uri=" + uri + ", values=" + values.toString() + ")");
+    public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
+        Log.d(Constants.TAG, "insert(uri=" + uri + ", values=" + values + ")");
 
         final SQLiteDatabase db = mBirthdayAdapterDatabase.getWritableDatabase();
 
         Uri rowUri = null;
-        long rowId = -1;
+        long rowId;
         try {
             final int match = sUriMatcher.match(uri);
-            switch (match) {
-                case ACCOUNT_BLACKLIST:
-                    rowId = db.insertOrThrow(BirthdayAdapterDatabase.Tables.ACCOUNT_BLACKLIST, null, values);
-                    rowUri = BirthdayAdapterContract.AccountBlacklist.buildUri(Long.toString(rowId));
-                    break;
-                default:
-                    throw new UnsupportedOperationException("Unknown uri: " + uri);
+            if (match == ACCOUNT_BLACKLIST) {
+                rowId = db.insertOrThrow(BirthdayAdapterDatabase.Tables.ACCOUNT_BLACKLIST, null, values);
+                rowUri = BirthdayAdapterContract.AccountBlacklist.buildUri(Long.toString(rowId));
+            } else {
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
             }
         } catch (SQLiteConstraintException e) {
             Log.e(Constants.TAG, "Constraint exception on insert! Entry already existing?");
         }
 
         // notify of changes in db
-        getContext().getContentResolver().notifyChange(uri, null);
+        final Context context = getContext();
+        if (context != null) {
+            context.getContentResolver().notifyChange(uri, null);
+        }
 
         return rowUri;
     }
@@ -119,26 +125,30 @@ public class BirthdayAdapterProvider extends ContentProvider {
     /**
      * {@inheritDoc}
      */
+    @Nullable
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
-                        String sortOrder) {
+    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs,
+                        @Nullable String sortOrder) {
 
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         SQLiteDatabase db = mBirthdayAdapterDatabase.getReadableDatabase();
 
         final int match = sUriMatcher.match(uri);
-        switch (match) {
-            case ACCOUNT_BLACKLIST:
-                qb.setTables(BirthdayAdapterDatabase.Tables.ACCOUNT_BLACKLIST);
-                break;
-            default:
-                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        if (match == ACCOUNT_BLACKLIST) {
+            qb.setTables(BirthdayAdapterDatabase.Tables.ACCOUNT_BLACKLIST);
+        } else {
+            throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
         Cursor cursor = qb.query(db, projection, selection, selectionArgs, null, null, sortOrder);
 
         // notify through cursor
-        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        if (cursor != null) {
+            final Context context = getContext();
+            if (context != null) {
+                cursor.setNotificationUri(context.getContentResolver(), uri);
+            }
+        }
         return cursor;
     }
 
@@ -146,7 +156,7 @@ public class BirthdayAdapterProvider extends ContentProvider {
      * {@inheritDoc}
      */
     @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
         Log.e(Constants.TAG, "Not supported");
 
         return -1;
@@ -156,7 +166,7 @@ public class BirthdayAdapterProvider extends ContentProvider {
      * {@inheritDoc}
      */
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         Log.v(Constants.TAG, "delete(uri=" + uri + ")");
 
         final SQLiteDatabase db = mBirthdayAdapterDatabase.getWritableDatabase();
@@ -176,7 +186,10 @@ public class BirthdayAdapterProvider extends ContentProvider {
         }
 
         // notify of changes in db
-        getContext().getContentResolver().notifyChange(uri, null);
+        final Context context = getContext();
+        if (context != null) {
+            context.getContentResolver().notifyChange(uri, null);
+        }
 
         return count;
     }
@@ -185,11 +198,11 @@ public class BirthdayAdapterProvider extends ContentProvider {
      * Build default selection statement. If no extra selection is specified only build where clause
      * with rowId
      *
-     * @param uri
-     * @param selection
-     * @return
+     * @param uri The uri to build the selection from.
+     * @param selection An optional selection.
+     * @return The selection string.
      */
-    private String buildDefaultSelection(Uri uri, String selection) {
+    private String buildDefaultSelection(@NonNull Uri uri, @Nullable String selection) {
         String rowId = uri.getPathSegments().get(1);
         String where = "";
         if (!TextUtils.isEmpty(selection)) {

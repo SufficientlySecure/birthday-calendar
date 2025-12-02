@@ -40,7 +40,7 @@ public class HelpFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.help_fragment, container, false);
 
-        TextView text = (TextView) view.findViewById(R.id.help_text);
+        TextView text = view.findViewById(R.id.help_text);
         text.setMovementMethod(LinkMovementMethod.getInstance());
 
         // load html into textview

@@ -186,13 +186,7 @@ public class BirthdayWorker extends Worker {
 
                 int[] reminderMinutes = PreferencesHelper.getAllReminderMinutes(context);
                 Log.d(Constants.TAG, "Reminder minutes: " + Arrays.toString(reminderMinutes));
-                boolean hasReminders = false;
-                for (int minute : reminderMinutes) {
-                    if (minute != Constants.DISABLED_REMINDER) {
-                        hasReminders = true;
-                        break;
-                    }
-                }
+                boolean hasReminders = reminderMinutes.length > 0;
 
                 int eventDateColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
                 int displayNameColumn = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
@@ -269,21 +263,16 @@ public class BirthdayWorker extends Worker {
                                 operationList.add(insertEvent(context, calendarId, dtstart, title, eventLookupKey, eventUid, hasReminders));
 
                                 if (hasReminders) {
-                                    int noOfReminderOperations = 0;
                                     for (int minute : reminderMinutes) {
-                                        if (minute != Constants.DISABLED_REMINDER) {
-                                            ContentProviderOperation.Builder builder = ContentProviderOperation
-                                                    .newInsert(CalendarHelper.getBirthdayAdapterUri(context, CalendarContract.Reminders.CONTENT_URI));
+                                        ContentProviderOperation.Builder builder = ContentProviderOperation
+                                                .newInsert(CalendarHelper.getBirthdayAdapterUri(context, CalendarContract.Reminders.CONTENT_URI));
 
-                                            builder.withValueBackReference(CalendarContract.Reminders.EVENT_ID, backRef);
-                                            builder.withValue(CalendarContract.Reminders.MINUTES, minute);
-                                            builder.withValue(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
-                                            operationList.add(builder.build());
-
-                                            noOfReminderOperations += 1;
-                                        }
+                                        builder.withValueBackReference(CalendarContract.Reminders.EVENT_ID, backRef);
+                                        builder.withValue(CalendarContract.Reminders.MINUTES, minute);
+                                        builder.withValue(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+                                        operationList.add(builder.build());
                                     }
-                                    backRef += 1 + noOfReminderOperations;
+                                    backRef += 1 + reminderMinutes.length;
                                 } else {
                                     backRef += 1;
                                 }
@@ -331,7 +320,7 @@ public class BirthdayWorker extends Worker {
             }
 
             int checkedEventsCount = totalEventsBeforeSync - deletedEventsCount;
-            Log.i(Constants.TAG, "Sync summary: " + checkedEventsCount + " events checked, "
+            Log.i(Constants.TAG, "Sync summary: " + checkedEventsCount + " events confirmed, "
                     + newEventsCount + " new events added, " + deletedEventsCount + " old events removed.");
 
 
@@ -425,7 +414,7 @@ public class BirthdayWorker extends Worker {
             throw new OperationCanceledException();
         }
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         boolean groupFilteringEnabled = sharedPreferences.getBoolean(context.getString(R.string.pref_group_filtering_key), context.getResources().getBoolean(R.bool.pref_group_filtering_def));
 
         Map<String, List<String>> contactGroupMembership = getRawContactGroupTitles(contentResolver);
@@ -485,16 +474,16 @@ public class BirthdayWorker extends Worker {
                 String accName = dataCursor.getString(accNameColumn);
 
                 boolean isBlacklisted = false;
-                if (groupFilteringEnabled && !TextUtils.isEmpty(accType) && !TextUtils.isEmpty(accName)) {
+                if (!TextUtils.isEmpty(accType) && !TextUtils.isEmpty(accName)) {
                     Account account = new Account(accName, accType);
                     HashSet<String> blacklistedGroups = blacklist.get(account);
 
                     if (blacklistedGroups != null) {
+                        // Check for full account blacklist first (applies always)
                         if (blacklistedGroups.contains(null)) {
-                            // Account is fully blacklisted
                             isBlacklisted = true;
-                        } else if (!blacklistedGroups.isEmpty()) {
-                            // Account is partially blacklisted, check groups
+                        } else if (groupFilteringEnabled && !blacklistedGroups.isEmpty()) {
+                            // If not fully blacklisted, check group-based blacklist (only if feature is enabled)
                             String rawContactId = dataCursor.getString(rawContactIdColumn);
                             List<String> contactGroups = contactGroupMembership.get(rawContactId);
 
@@ -510,11 +499,16 @@ public class BirthdayWorker extends Worker {
                                 if (allGroupsBlacklisted) {
                                     isBlacklisted = true;
                                 }
+                            } else {
+                                // Contact has no group, check if "No Group" is blacklisted
+                                if (blacklistedGroups.contains(Constants.GROUP_TITLE_NO_GROUP)) {
+                                    isBlacklisted = true;
+                                }
                             }
-                            // if contact has no groups, it's not blacklisted by a group filter
                         }
                     }
                 }
+
 
                 if (!isBlacklisted) {
                     String lookupKey = dataCursor.getString(lookupKeyColumn);

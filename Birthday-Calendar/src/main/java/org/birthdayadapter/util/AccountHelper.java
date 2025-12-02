@@ -26,7 +26,6 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import androidx.preference.PreferenceManager;
 
 import androidx.core.app.ActivityCompat;
 import androidx.work.Data;
@@ -62,8 +61,6 @@ public class AccountHelper {
         if (!isAccountActivated()) {
             Log.d(Constants.TAG, "Account does not exist. Adding account...");
 
-            setDefaultValues();
-
             AccountManager am = AccountManager.get(mContext);
             final Account account = new Account(Constants.getAccountName(mContext), mContext.getString(R.string.account_type));
 
@@ -80,13 +77,9 @@ public class AccountHelper {
         }
 
         // Trigger a sync
-        manualSync();
+        differentialSync();
 
         return result;
-    }
-
-    private void setDefaultValues() {
-        PreferenceManager.setDefaultValues(mContext, Constants.PREFS_NAME, Context.MODE_PRIVATE, R.xml.pref_preferences, false);
     }
 
     /**
@@ -107,7 +100,7 @@ public class AccountHelper {
                 if (future.getResult().getBoolean(AccountManager.KEY_BOOLEAN_RESULT)) {
                     Log.i(Constants.TAG, "Account removed successfully.");
                     // Cancel any pending syncs
-                    WorkManager.getInstance(mContext).cancelUniqueWork("birthday_sync");
+                    WorkManager.getInstance(mContext).cancelUniqueWork("periodic_sync");
                 } else {
                     Log.e(Constants.TAG, "Failed to remove account.");
                 }
@@ -120,24 +113,25 @@ public class AccountHelper {
     /**
      * Force a manual sync now using WorkManager and reschedule the periodic sync for the full version.
      */
-    public void manualSync() {
+    public void differentialSync() {
+        Log.i(Constants.TAG, "Differential sync triggered.");
         // (Re)schedule a periodic sync upon a manual sync
         if (BuildConfig.FULL_VERSION) {
             Log.d(Constants.TAG, "Enqueuing periodic sync with UPDATE policy.");
             PeriodicWorkRequest periodicSyncRequest = new PeriodicWorkRequest.Builder(BirthdayWorker.class, Constants.SYNC_INTERVAL_DAYS, TimeUnit.DAYS).build();
-            WorkManager.getInstance(mContext).enqueueUniquePeriodicWork("birthday_sync", ExistingPeriodicWorkPolicy.UPDATE, periodicSyncRequest);
+            WorkManager.getInstance(mContext).enqueueUniquePeriodicWork("periodic_sync", ExistingPeriodicWorkPolicy.UPDATE, periodicSyncRequest);
         }
 
         // Trigger the immediate sync
-        syncWithAction("manual_sync", BirthdayWorker.ACTION_SYNC);
+        syncWithAction("differential_sync", BirthdayWorker.ACTION_SYNC);
     }
 
     /**
-     * Enqueues a worker to update all reminders on existing events.
+     * Enqueues a worker to perform a full resync, which involves deleting the calendar and all events.
      */
-    public void updateReminders() {
-        Log.d(Constants.TAG, "Reminder settings changed, enqueuing worker with ACTION_REMINDERS_CHANGED.");
-        syncWithAction("reminder_update", BirthdayWorker.ACTION_REMINDERS_CHANGED);
+    public void triggerFullResync() {
+        Log.i(Constants.TAG, "Full resync triggered.");
+        syncWithAction("full_resync", BirthdayWorker.ACTION_REMINDERS_CHANGED);
     }
 
     /**
@@ -160,7 +154,7 @@ public class AccountHelper {
 
         WorkManager.getInstance(mContext).enqueueUniqueWork(
                 uniqueWorkName,
-                ExistingWorkPolicy.APPEND_OR_REPLACE,
+                ExistingWorkPolicy.REPLACE,
                 workRequest);
     }
 

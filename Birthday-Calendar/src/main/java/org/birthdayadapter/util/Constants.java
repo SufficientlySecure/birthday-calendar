@@ -25,7 +25,7 @@ import android.content.Context;
 import org.birthdayadapter.R;
 
 public class Constants {
-    public static final String TAG = "Birthday Calendar";
+    public static final String TAG = "Birthday Adapter";
 
     public static String getAccountName(Context context) {
         return context.getString(R.string.app_name);
@@ -33,7 +33,7 @@ public class Constants {
 
     public static final String PREFS_NAME = "preferences";
 
-    public static final int DISABLED_REMINDER = -99999;
-
     public static final int SYNC_INTERVAL_DAYS = 5;
+
+    public static final String GROUP_TITLE_NO_GROUP = "NO_GROUP";
 }

@@ -36,15 +36,7 @@
     <string name="pref_color">Margoa</string>
     <string name="pref_force_sync">Aldiberetu orain!</string>
     <string name="pref_reminders">Gogoratzaileak</string>
-    <string name="pref_reminder_enable0">Gaitu 1 Gogoratzailea</string>
-    <string name="pref_reminder_enable1">Gaitu 2 Gogoratzailea</string>
-    <string name="pref_reminder_enable2">Gaitu 3 Gogoratzailea</string>
-    <string name="pref_reminder_enable_summary">Gaitu Gogoratzailea hau</string>
-    <string name="pref_reminder_time0">1 Gogoratzailea</string>
-    <string name="pref_reminder_time1">2 Gogoratzailea</string>
-    <string name="pref_reminder_time2">3 Gogoratzailea</string>
     <string name="pref_reminder_time_summary">Ezarri Gogoratzaile honen ordua</string>
-
     <string-array name="pref_reminder_time_drop_down">
         <item>Gertaeraren egunean</item>
         <item>1 egun lehenago</item>
@@ -76,7 +68,6 @@
     <string name="pref_account_settings">Itxuratu Birthday Egokitzailea</string>
 
     <string name="account_list_empty">Ez dago konturik</string>
-
     <!--Free Version -->
     <string name="pref_buy">Erosi bertsio osoa!</string>
     <string name="pref_buy_full">Ireki Google Play bertsio osoa erosteko...</string>

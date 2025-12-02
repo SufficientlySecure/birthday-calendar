@@ -10,14 +10,45 @@ Birthday Adapter provides birthdays, anniversaries, and other events from your c
 
 For more information visit https://www.sufficientlysecure.org/android/
 
+## Screenshots
+
+<table style="border: none;">
+  <tr>
+    <th>
+        <a href="metadata/en-US/images/phoneScreenshots/01.png" target="_blank">
+        <img src='metadata/en-US/images/phoneScreenshots/01.png' width='200px' alt='brings your contacts events to your calendar app' /> </a>
+    </th>
+    <th>
+        <a href="metadata/en-US/images/phoneScreenshots/02.png" target="_blank">
+        <img src='metadata/en-US/images/phoneScreenshots/02.png' width='200px' alt='supports all events of your contacts' /> </a>
+    </th>
+    <th>
+        <a href="metadata/en-US/images/phoneScreenshots/03.png" target="_blank">
+        <img src='metadata/en-US/images/phoneScreenshots/03.png' width='200px' alt='filters events by account and contact group' /> </a>
+    </th>
+  </tr>
+  <tr>
+    <th>
+        <a href="metadata/en-US/images/phoneScreenshots/04.png" target="_blank">
+        <img src='metadata/en-US/images/phoneScreenshots/04.png' width='200px' alt='add reminders, as many as needed' /> </a>
+    </th>
+    <th>
+        <a href="metadata/en-US/images/phoneScreenshots/05.png" target="_blank">
+        <img src='metadata/en-US/images/phoneScreenshots/05.png' width='200px' alt='customize your event labels' /> </a>
+    </th>
+    <th>
+        <a href="metadata/en-US/images/phoneScreenshots/06.png" target="_blank">
+        <img src='metadata/en-US/images/phoneScreenshots/06.png' width='200px' alt='dark mode supported' /> </a>
+    </th>
+  </tr>
+</table>
+
 ## Build with Gradle
 
 1. Have Android SDK "tools", "platform-tools", and "build-tools" directories in your PATH (http://developer.android.com/sdk/index.html)
 2. Open the Android SDK Manager (shell command: ``android``). Expand the Extras directory and install "Android Support Repository"
 3. Export ANDROID_HOME pointing to your Android SDK
 4. Execute ``./gradlew build``
-
-### More build information
 
 Different productFlavors are build with gradle:
 - ``full``

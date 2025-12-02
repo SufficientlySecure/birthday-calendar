@@ -20,6 +20,7 @@
 
 package org.birthdayadapter.ui;
 
+import android.app.Activity;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -38,7 +39,6 @@ import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
 
 import java.io.InputStream;
-import java.util.Objects;
 
 public class AboutFragment extends Fragment {
 
@@ -72,16 +72,20 @@ public class AboutFragment extends Fragment {
      * @return The current version.
      */
     private String getVersion() {
-        String result;
+        String result = "Unable to get application version.";
+        Activity activity = getActivity();
+        if (activity == null) {
+            return result;
+        }
+
         try {
-            PackageManager manager = requireActivity().getPackageManager();
-            PackageInfo info = manager.getPackageInfo(requireActivity().getPackageName(), 0);
+            PackageManager manager = activity.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(activity.getPackageName(), 0);
 
             String commitHash = org.birthdayadapter.BuildConfig.GIT_COMMIT_HASH;
             result = String.format("%s (%s)", info.versionName, commitHash);
         } catch (PackageManager.NameNotFoundException e) {
             Log.w(Constants.TAG, "Unable to get application version", e);
-            result = "Unable to get application version.";
         }
 
         return result;

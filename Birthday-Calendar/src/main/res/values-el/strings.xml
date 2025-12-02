@@ -36,15 +36,7 @@
     <string name="pref_color">Χρώμα</string>
     <string name="pref_force_sync">Συγχρονισμός τώρα!</string>
     <string name="pref_reminders">Υπενθυμίσεις</string>
-    <string name="pref_reminder_enable0">Ενεργοποίηση υπενθύμισης 1</string>
-    <string name="pref_reminder_enable1">Ενεργοποίηση υπενθύμισης 2</string>
-    <string name="pref_reminder_enable2">Ενεργοποίηση υπενθύμισης 3</string>
-    <string name="pref_reminder_enable_summary">Ενεργοποιήση αυτής της υπενθύμισης</string>
-    <string name="pref_reminder_time0">Υπενθύμιση 1</string>
-    <string name="pref_reminder_time1">Υπενθύμιση 2</string>
-    <string name="pref_reminder_time2">Υπενθύμιση 3</string>
     <string name="pref_reminder_time_summary">Ρύθμιση ώρας της υπενθύμισης</string>
-
     <string name="pref_title">Προσαρμοσμένες ετικέτες</string>
     <string name="pref_title_enable">Ενεργοποίηση προσαρμοσμένων ετικετών</string>
     <string name="pref_title_birthday_without_age">Γενέθλια</string>
@@ -65,7 +57,6 @@
     <string name="pref_account_settings">Διαμόρφωση του Birthday Adapter</string>
 
     <string name="account_list_empty">Δεν υπάρχουν λογαριασμοί</string>
-
     <!--Free Version -->
     <string name="pref_buy">Αγοράστε την πλήρη έκδοση!</string>
     <string name="pref_buy_full">Ανοίξτε το Google Play για να αγοράσετε την πλήρη έκδοση...</string>

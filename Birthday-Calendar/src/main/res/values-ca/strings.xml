@@ -36,15 +36,7 @@
     <string name="pref_color">Color</string>
     <string name="pref_force_sync">Sincronitza ara!</string>
     <string name="pref_reminders">Recordatoris</string>
-    <string name="pref_reminder_enable0">Activa el recordatori 1</string>
-    <string name="pref_reminder_enable1">Activa el recordatori 2</string>
-    <string name="pref_reminder_enable2">Activa el recordatori 3</string>
-    <string name="pref_reminder_enable_summary">Activa aquest recordatori</string>
-    <string name="pref_reminder_time0">Recordatori 1</string>
-    <string name="pref_reminder_time1">Recordatori 2</string>
-    <string name="pref_reminder_time2">Recordatori 3</string>
     <string name="pref_reminder_time_summary">Estableix l\'hora d\'aquest recordatori</string>
-
     <string-array name="pref_reminder_time_drop_down">
         <item>El dia de l\'esdeveniment</item>
         <item>1 dia abans</item>
@@ -66,6 +58,7 @@
     <string name="pref_title_other_with_age">Un altre esdeveniment amb indicació del temps</string>
     <string name="pref_title_custom_without_age">Personalitzat</string>
     <string name="pref_title_custom_with_age">Personalitzat amb indicació del temps</string>
+
     <string name="pref_advanced_category">Configuració avançada</string>
     <string name="pref_prefer_dd_slash_mm">Prefereix el format dd/MM/aaaa</string>
     <string name="pref_prefer_dd_slash_mm_summary">Prefereix dd/MM/aaaa a MM/dd/aaaa quan s\'analitzen les dates</string>
@@ -75,7 +68,6 @@
     <string name="pref_account_settings">Configura Birthday Adapter</string>
 
     <string name="account_list_empty">No hi ha cap compte</string>
-
     <!--Free Version -->
     <string name="pref_buy">Compreu la versió completa!</string>
     <string name="pref_buy_full">Obri Google Play per a comprar la versió completa...</string>

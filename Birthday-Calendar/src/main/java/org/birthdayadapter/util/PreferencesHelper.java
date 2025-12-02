@@ -2,7 +2,7 @@
  * Copyright (C) 2012-2013 Dominik Schürmann <dominik@dominikschuermann.de>
  *
  * This file is part of Birthday Adapter.
- * 
+ *
  * Birthday Adapter is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -25,28 +25,30 @@ import android.content.SharedPreferences;
 import android.provider.ContactsContract;
 
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 import org.birthdayadapter.R;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 public class PreferencesHelper {
     public static boolean getFirstRun(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
-                Context.MODE_PRIVATE);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getBoolean(context.getString(R.string.pref_first_run_key),
                 Boolean.parseBoolean(context.getString(R.string.pref_first_run_def)));
     }
 
     public static void setFirstRun(Context context, boolean value) {
-        SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
-                Context.MODE_PRIVATE);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(context.getString(R.string.pref_first_run_key), value);
         editor.apply();
     }
 
     public static int getColor(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
-                Context.MODE_PRIVATE);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         return prefs.getInt(context.getString(R.string.pref_color_key), 
                 ContextCompat.getColor(context, R.color.pref_color_def));
@@ -56,30 +58,44 @@ public class PreferencesHelper {
      * Get all reminder minutes from preferences as int array
      */
     public static int[] getAllReminderMinutes(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
-                Context.MODE_PRIVATE);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-        // get all reminders
-        int[] minutes = new int[3];
-        for (int i = 0; i < 3; i++) {
-            String keyEnabled = context.getString(R.string.pref_reminder_enable_key) + i;
-            boolean enabled = prefs.getBoolean(keyEnabled, i == 0 && context.getResources().getBoolean(R.bool.pref_reminder_enable_def));
-
-            if (enabled) {
-                String key = context.getString(R.string.pref_reminder_time_key) + i;
-                minutes[i] = prefs.getInt(key,
-                        context.getResources().getInteger(R.integer.pref_reminder_time_def));
-            } else {
-                minutes[i] = Constants.DISABLED_REMINDER;
-            }
+        Set<String> reminderSet = prefs.getStringSet(context.getString(R.string.pref_reminders_key), new HashSet<>());
+        Integer[] minutes = new Integer[reminderSet.size()];
+        int i = 0;
+        for (String minuteStr : reminderSet) {
+            minutes[i++] = Integer.parseInt(minuteStr);
         }
 
-        return minutes;
+        final int ONE_DAY_MINUTES = 24 * 60;
+        Arrays.sort(minutes, (m1, m2) -> {
+            // Day extraction logic from ReminderPreferenceCompat
+            int d1 = (m1 + ONE_DAY_MINUTES) / ONE_DAY_MINUTES;
+            if (m1 % ONE_DAY_MINUTES == 0) d1--;
+            int d2 = (m2 + ONE_DAY_MINUTES) / ONE_DAY_MINUTES;
+            if (m2 % ONE_DAY_MINUTES == 0) d2--;
+
+            if (d1 != d2) {
+                // sort by day ascending
+                return Integer.compare(d1, d2);
+            }
+
+            // Time of day extraction logic from ReminderPreferenceCompat
+            int time1 = Math.abs(m1 - (d1 * ONE_DAY_MINUTES));
+            int time2 = Math.abs(m2 - (d2 * ONE_DAY_MINUTES));
+            // sort by time of day ascending
+            return Integer.compare(time1, time2);
+        });
+        
+        int[] result = new int[minutes.length];
+        for (i = 0; i < minutes.length; i++) {
+            result[i] = minutes[i];
+        }
+        return result;
     }
 
     public static String getLabel(Context context, int eventType, boolean includeAge) {
-        SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
-                Context.MODE_PRIVATE);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         boolean prefLabelsEnabled = prefs.getBoolean(
                 context.getString(R.string.pref_title_enable_key), false);
@@ -135,15 +151,13 @@ public class PreferencesHelper {
     }
 
     public static boolean getPreferDDSlashMM(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
-                Context.MODE_PRIVATE);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getBoolean(context.getString(R.string.pref_prefer_dd_slash_mm_key),
                 Boolean.parseBoolean(context.getString(R.string.pref_prefer_dd_slash_mm_def)));
     }
 
     public static String getJubileeYears(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME,
-                Context.MODE_PRIVATE);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getString(context.getString(R.string.pref_jubilee_years_key),
                 context.getString(R.string.pref_jubilee_years_def));
     }

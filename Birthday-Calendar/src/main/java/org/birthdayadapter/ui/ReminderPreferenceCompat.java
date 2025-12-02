@@ -22,7 +22,6 @@ package org.birthdayadapter.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.TypedArray;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.Preference;
 import android.text.format.DateFormat;
@@ -34,13 +33,19 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 
 import org.birthdayadapter.R;
-import org.birthdayadapter.util.Log;
+
+import java.util.Calendar;
 
 public class ReminderPreferenceCompat extends Preference {
 
     private int lastMinutes = 0;
     private TimePicker picker = null;
     private Spinner spinner = null;
+    private OnRemoveListener mOnRemoveListener;
+
+    public interface OnRemoveListener {
+        void onRemove(Preference preference);
+    }
 
     private static final int ONE_DAY_MINUTES = 24 * 60;
     private static final int[] DAY_BASE_VALUES = {0, 1, 2, 3, 5, 7, 10, 14};
@@ -52,22 +57,51 @@ public class ReminderPreferenceCompat extends Preference {
 
     private void init() {
         setOnPreferenceClickListener(preference -> {
-            click();
+            performClick(false);
             return true;
         });
     }
 
-    @Override
-    protected Object onGetDefaultValue(TypedArray a, int index) {
-        return a.getInteger(index, 0);
+    public void setOnRemoveListener(OnRemoveListener listener) {
+        mOnRemoveListener = listener;
     }
 
-    @Override
-    protected void onSetInitialValue(Object defaultValue) {
-        lastMinutes = getPersistedInt(defaultValue != null ? (Integer) defaultValue : 0);
+    public int getValue() {
+        return lastMinutes;
     }
 
-    private void click() {
+    public void setValue(int minutes) {
+        this.lastMinutes = minutes;
+        setSummary(getSummary(getContext(), lastMinutes));
+    }
+
+    public static String getSummary(Context context, int minutes) {
+        // reminder on the day after midnight are negative, so we add one day for the calculation
+        int day = (minutes + ONE_DAY_MINUTES) / ONE_DAY_MINUTES;
+        if (minutes % ONE_DAY_MINUTES == 0) day--;
+        int daySelection = 0;
+        for (int i = 0; i < DAY_BASE_VALUES.length; i++) {
+            if (day == DAY_BASE_VALUES[i]) {
+                daySelection = i;
+                break;
+            }
+        }
+        String dayString = context.getResources().getStringArray(R.array.pref_reminder_time_drop_down)[daySelection];
+
+        // reminders are negative minutes from the event, let's calculate the time from that
+        int timeFromMinutes = Math.abs(minutes - (day * ONE_DAY_MINUTES));
+        int hour = timeFromMinutes / 60;
+        int minute = timeFromMinutes % 60;
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, minute);
+        String timeString = DateFormat.getTimeFormat(context).format(cal.getTime());
+
+        return context.getString(R.string.pref_reminder_summary, dayString, timeString);
+    }
+
+    public void performClick(boolean isNew) {
         AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -88,7 +122,20 @@ public class ReminderPreferenceCompat extends Preference {
         }
 
         alert.setPositiveButton(android.R.string.ok, (dialogInterface, i) -> save());
-        alert.setNegativeButton(android.R.string.cancel, null);
+        alert.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+            if (isNew) {
+                if (mOnRemoveListener != null) {
+                    mOnRemoveListener.onRemove(this);
+                }
+            }
+        });
+        if (!isNew) {
+            alert.setNeutralButton(R.string.remove, (dialog, which) -> {
+                if (mOnRemoveListener != null) {
+                    mOnRemoveListener.onRemove(this);
+                }
+            });
+        }
 
         bind();
 
@@ -124,10 +171,16 @@ public class ReminderPreferenceCompat extends Preference {
         int selectedDayValue = DAY_BASE_VALUES[spinner.getSelectedItemPosition()];
         int minutes = (selectedDayValue * ONE_DAY_MINUTES) - (hour * 60) - minute;
 
+        int oldMinutes = lastMinutes;
+        lastMinutes = minutes;
+
         if (callChangeListener(minutes)) {
-            Log.d("BirthdayAdapter", "Persisting reminder minutes: " + minutes);
-            persistInt(minutes);
-            lastMinutes = minutes;
+            if (isPersistent()) {
+                persistInt(minutes);
+            }
+            setSummary(getSummary(getContext(), minutes));
+        } else {
+            lastMinutes = oldMinutes;
         }
     }
 }
