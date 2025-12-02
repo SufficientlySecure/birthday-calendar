@@ -1,3 +1,11 @@
+3.5
+* Allow for unlimited reminders
+* Show set reminder times in preferenes
+* Allow filtering contacts without groups
+- Pre-Load neighboring tabs for fluent user experience
+- Make sure the app layout adapts if Androids button navigation is used
+- Prevent permission dialog from becoming unresponsive, fix warnings
+
 3.4
 * Add option to filter contacts by groups
 * Show number of contacts and dates in account view
