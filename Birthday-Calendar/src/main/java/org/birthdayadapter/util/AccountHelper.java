@@ -131,7 +131,7 @@ public class AccountHelper {
      */
     public void triggerFullResync() {
         Log.i(Constants.TAG, "Full resync triggered.");
-        syncWithAction("full_resync", BirthdayWorker.ACTION_REMINDERS_CHANGED);
+        syncWithAction("full_resync", BirthdayWorker.ACTION_FORCE_RESYNC);
     }
 
     /**
