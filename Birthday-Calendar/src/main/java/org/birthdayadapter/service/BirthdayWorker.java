@@ -536,7 +536,7 @@ public class BirthdayWorker extends Worker {
 
     private String generateTitle(Context context, int eventType, Cursor cursor,
                                  int eventCustomLabelColumn, boolean includeAge, String displayName, int age, String lookupKey, Map<String, String> firstNameCache) {
-        if (displayName == null) {
+        if (TextUtils.isEmpty(displayName)) {
             return null;
         }
 
@@ -606,12 +606,14 @@ public class BirthdayWorker extends Worker {
         String[] selectionArgs = {ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE};
 
         try (Cursor cursor = context.getContentResolver().query(dataUri, projection, selection, selectionArgs, null)) {
-            if (cursor != null && cursor.moveToFirst()) {
-                int givenNameColumnIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME);
-                if (givenNameColumnIndex != -1) {
-                    String givenName = cursor.getString(givenNameColumnIndex);
-                    if (!TextUtils.isEmpty(givenName)) {
-                        return givenName;
+            if (cursor != null) {
+                while (cursor.moveToNext()) {
+                    int givenNameColumnIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME);
+                    if (givenNameColumnIndex != -1) {
+                        String givenName = cursor.getString(givenNameColumnIndex);
+                        if (!TextUtils.isEmpty(givenName)) {
+                            return givenName;
+                        }
                     }
                 }
             }
