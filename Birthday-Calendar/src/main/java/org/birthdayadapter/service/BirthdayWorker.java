@@ -53,7 +53,7 @@ public class BirthdayWorker extends Worker {
     public static final String ACTION = "action";
     public static final String ACTION_CHANGE_COLOR = "CHANGE_COLOR";
     public static final String ACTION_SYNC = "SYNC";
-    public static final String ACTION_REMINDERS_CHANGED = "REMINDERS_CHANGED";
+    public static final String ACTION_FORCE_RESYNC = "FORCE_RESYNC";
 
     private static final Object sSyncLock = new Object();
 
@@ -74,7 +74,7 @@ public class BirthdayWorker extends Worker {
         }
 
         // For user-initiated syncs, show the spinner
-        if (ACTION_SYNC.equals(action) || ACTION_REMINDERS_CHANGED.equals(action)) {
+        if (ACTION_SYNC.equals(action) || ACTION_FORCE_RESYNC.equals(action)) {
             SyncStatusManager.getInstance().setSyncing(true);
         }
 
@@ -88,8 +88,8 @@ public class BirthdayWorker extends Worker {
                 case ACTION_CHANGE_COLOR:
                     updateCalendarColor(getApplicationContext());
                     break;
-                case ACTION_REMINDERS_CHANGED:
-                    Log.d(Constants.TAG, "Reminders changed, forcing a full resync...");
+                case ACTION_FORCE_RESYNC:
+                    Log.d(Constants.TAG, "Forcing a full resync...");
                     CalendarHelper.deleteCalendar(getApplicationContext());
                     performSync(getApplicationContext());
                     break;
