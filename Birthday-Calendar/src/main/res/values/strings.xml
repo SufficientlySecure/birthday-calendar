@@ -87,10 +87,10 @@
     <string name="pref_title_custom_without_age">Custom</string>
     <string name="pref_title_custom_with_age">Custom with age</string>
 
-    <string name="pref_title_summary_without_age">Insert {NAME} or {FIRSTNAME} for the contact\'s name. Leave empty to skip creation of these events.</string>
-    <string name="pref_title_summary_with_age">Insert {NAME} or {FIRSTNAME} for the contact\'s name, and {AGE} for the age. Leave empty to skip creation of these events.</string>
-    <string name="pref_title_summary_custom_without_age">Insert {NAME} or {FIRSTNAME} for the contact\'s name, and {LABEL} for the custom label of this event. Leave empty to skip creation of these events.</string>
-    <string name="pref_title_summary_custom_with_age">Insert {NAME} or {FIRSTNAME} for the contact\'s name, {LABEL} for the custom label of this event, and {AGE} for the age. Leave empty to skip creation of these events.</string>
+    <string name="pref_title_summary_without_age">Insert {NAME} or {FIRSTNAME} for the contact\'s name.</string>
+    <string name="pref_title_summary_with_age">Insert {NAME} or {FIRSTNAME} for the contact\'s name, and {AGE} for the age.</string>
+    <string name="pref_title_summary_custom_without_age">Insert {NAME} or {FIRSTNAME} for the contact\'s name, and {LABEL} for the custom label of this event.</string>
+    <string name="pref_title_summary_custom_with_age">Insert {NAME} or {FIRSTNAME} for the contact\'s name, {LABEL} for the custom label of this event, and {AGE} for the age.</string>
     <string name="pref_advanced_category">Advanced Settings</string>
     <string name="pref_prefer_dd_slash_mm">Prefer dd/MM/yyyy format</string>
     <string name="pref_prefer_dd_slash_mm_summary">Prefer dd/MM/yyyy to MM/dd/yyyy when parsing date formats</string>
