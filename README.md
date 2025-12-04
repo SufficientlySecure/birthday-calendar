@@ -8,8 +8,6 @@ Birthday Adapter is the first implementation to really display all contact birth
 
 Birthday Adapter provides birthdays, anniversaries, and other events from your contacts as a real calendar, which is displayed in your standard Android calendar application. To my knowledge, this is the first implementation that implements birthdays as a real calendar integrated in the Android calendar. All other apps only displays their own lists but have no real integration! 
 
-For more information visit https://www.sufficientlysecure.org/android/
-
 ## Screenshots
 
 <table style="border: none;">
@@ -24,21 +22,29 @@ For more information visit https://www.sufficientlysecure.org/android/
     </th>
     <th>
         <a href="metadata/en-US/images/phoneScreenshots/03.png" target="_blank">
-        <img src='metadata/en-US/images/phoneScreenshots/03.png' width='200px' alt='filters events by account and contact group' /> </a>
+        <img src='metadata/en-US/images/phoneScreenshots/03.png' width='200px' alt='compatible with all calendar apps' /> </a>
+    </th>
+    <th>
+        <a href="metadata/en-US/images/phoneScreenshots/04.png" target="_blank">
+        <img src='metadata/en-US/images/phoneScreenshots/04.png' width='200px' alt='filters events by account and contact group' /> </a>
     </th>
   </tr>
   <tr>
     <th>
-        <a href="metadata/en-US/images/phoneScreenshots/04.png" target="_blank">
-        <img src='metadata/en-US/images/phoneScreenshots/04.png' width='200px' alt='add reminders, as many as needed' /> </a>
-    </th>
-    <th>
         <a href="metadata/en-US/images/phoneScreenshots/05.png" target="_blank">
-        <img src='metadata/en-US/images/phoneScreenshots/05.png' width='200px' alt='customize your event labels' /> </a>
+        <img src='metadata/en-US/images/phoneScreenshots/05.png' width='200px' alt='add reminders, as many as needed' /> </a>
     </th>
     <th>
         <a href="metadata/en-US/images/phoneScreenshots/06.png" target="_blank">
-        <img src='metadata/en-US/images/phoneScreenshots/06.png' width='200px' alt='dark mode supported' /> </a>
+        <img src='metadata/en-US/images/phoneScreenshots/06.png' width='200px' alt='customize your event labels' /> </a>
+    </th>
+    <th>
+        <a href="metadata/en-US/images/phoneScreenshots/07.png" target="_blank">
+        <img src='metadata/en-US/images/phoneScreenshots/07.png' width='200px' alt='quickly spot special birthdays' /> </a>
+    </th>
+    <th>
+        <a href="metadata/en-US/images/phoneScreenshots/08.png" target="_blank">
+        <img src='metadata/en-US/images/phoneScreenshots/08.png' width='200px' alt='dark mode supported' /> </a>
     </th>
   </tr>
 </table>
