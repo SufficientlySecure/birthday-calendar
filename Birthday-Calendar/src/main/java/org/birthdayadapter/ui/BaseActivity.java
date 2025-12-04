@@ -22,6 +22,8 @@
 package org.birthdayadapter.ui;
 
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -47,6 +49,7 @@ import org.birthdayadapter.util.MySharedPreferenceChangeListener;
 import org.birthdayadapter.util.SyncStatusManager;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
@@ -58,6 +61,9 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // overwrite locale to EN, for testing and screenshots only
+        // setLocale();
 
         // Set default values from XML before any UI is created
         PreferenceManager.setDefaultValues(this, R.xml.pref_preferences, false);
@@ -105,6 +111,15 @@ public class BaseActivity extends AppCompatActivity {
                 mProgressBar.setVisibility(isSyncing ? View.VISIBLE : View.GONE);
             }
         });
+    }
+
+    private void setLocale() {
+        Locale locale = new Locale("en");
+        Locale.setDefault(locale);
+        Resources resources = getResources();
+        Configuration config = resources.getConfiguration();
+        config.setLocale(locale);
+        resources.updateConfiguration(config, resources.getDisplayMetrics());
     }
 
     @Override

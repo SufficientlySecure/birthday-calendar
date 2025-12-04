@@ -94,6 +94,17 @@ public class PreferencesHelper {
         return result;
     }
 
+    public static Set<String> getReminderEventTypes(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        Set<String> defaultValues = new HashSet<>(Arrays.asList(
+                String.valueOf(ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY),
+                String.valueOf(ContactsContract.CommonDataKinds.Event.TYPE_ANNIVERSARY),
+                String.valueOf(ContactsContract.CommonDataKinds.Event.TYPE_OTHER),
+                String.valueOf(ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM)
+        ));
+        return prefs.getStringSet("pref_reminder_event_types", defaultValues);
+    }
+
     public static String getLabel(Context context, int eventType, boolean includeAge) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
