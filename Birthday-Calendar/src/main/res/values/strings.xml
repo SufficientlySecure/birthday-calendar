@@ -63,6 +63,7 @@
     <string name="pref_reminder_summary">%1$s at %2$s</string>
     <string name="no_reminder_set">No reminder set</string>
     <string name="remove">Remove</string>
+    <string name="no_events_selected">None</string>
 
     <string-array name="pref_reminder_time_drop_down">
         <item>At the day of event</item>

@@ -10,7 +10,14 @@
     </androidx.preference.PreferenceCategory>
     <androidx.preference.PreferenceCategory
         android:key="pref_reminders_category"
-        android:title="@string/pref_reminders" />
+        android:title="@string/pref_reminders">
+        <MultiSelectListPreference
+            android:key="pref_reminder_event_types"
+            android:title="Events with reminders"
+            android:entries="@array/pref_reminder_event_types_entries"
+            android:entryValues="@array/pref_reminder_event_types_values"
+            android:defaultValue="@array/pref_reminder_event_types_default_values" />
+    </androidx.preference.PreferenceCategory>
     <androidx.preference.PreferenceCategory android:title="@string/pref_title">
         <androidx.preference.CheckBoxPreference
             android:defaultValue="@string/pref_title_enable_def"

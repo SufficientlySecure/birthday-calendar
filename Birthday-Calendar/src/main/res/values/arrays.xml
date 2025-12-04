@@ -13,4 +13,25 @@
         <item>90</item>
         <item>100</item>
     </integer-array>
+
+    <string-array name="pref_reminder_event_types_entries">
+        <item>Birthdays</item>
+        <item>Anniversaries</item>
+        <item>Other events</item>
+        <item>Custom events</item>
+    </string-array>
+
+    <string-array name="pref_reminder_event_types_values">
+        <item>3</item> <!-- ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY -->
+        <item>1</item> <!-- ContactsContract.CommonDataKinds.Event.TYPE_ANNIVERSARY -->
+        <item>2</item> <!-- ContactsContract.CommonDataKinds.Event.TYPE_OTHER -->
+        <item>0</item> <!-- ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM -->
+    </string-array>
+
+    <string-array name="pref_reminder_event_types_default_values">
+        <item>3</item>
+        <item>1</item>
+        <item>2</item>
+        <item>0</item>
+    </string-array>
 </resources>

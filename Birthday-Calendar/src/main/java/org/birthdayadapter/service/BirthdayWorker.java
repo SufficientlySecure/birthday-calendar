@@ -46,6 +46,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 
 public class BirthdayWorker extends Worker {
@@ -185,6 +186,7 @@ public class BirthdayWorker extends Worker {
                 }
 
                 int[] reminderMinutes = PreferencesHelper.getAllReminderMinutes(context);
+                Set<String> reminderEventTypes = PreferencesHelper.getReminderEventTypes(context);
                 Log.d(Constants.TAG, "Reminder minutes: " + Arrays.toString(reminderMinutes));
                 boolean hasReminders = reminderMinutes.length > 0;
 
@@ -259,10 +261,12 @@ public class BirthdayWorker extends Worker {
                                 cal.set(Calendar.MILLISECOND, 0);
                                 long dtstart = cal.getTimeInMillis();
 
-                                Log.v(Constants.TAG, "Adding event: " + title);
-                                operationList.add(insertEvent(context, calendarId, dtstart, title, eventLookupKey, eventUid, hasReminders));
+                                boolean shouldAddReminder = hasReminders && reminderEventTypes.contains(String.valueOf(eventType));
 
-                                if (hasReminders) {
+                                Log.v(Constants.TAG, "Adding event: " + title);
+                                operationList.add(insertEvent(context, calendarId, dtstart, title, eventLookupKey, eventUid, shouldAddReminder));
+
+                                if (shouldAddReminder) {
                                     for (int minute : reminderMinutes) {
                                         ContentProviderOperation.Builder builder = ContentProviderOperation
                                                 .newInsert(CalendarHelper.getBirthdayAdapterUri(context, CalendarContract.Reminders.CONTENT_URI));

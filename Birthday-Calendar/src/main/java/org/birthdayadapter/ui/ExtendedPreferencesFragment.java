@@ -40,6 +40,7 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
@@ -57,8 +58,11 @@ import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.PreferencesHelper;
 import org.birthdayadapter.util.SyncStatusManager;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -110,6 +114,15 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
 
         remindersCategory = findPreference("pref_reminders_category");
         if (remindersCategory != null) {
+            MultiSelectListPreference reminderTypesPref = findPreference("pref_reminder_event_types");
+            if (reminderTypesPref != null) {
+                updateReminderEventTypesSummary(reminderTypesPref);
+                reminderTypesPref.setOnPreferenceChangeListener((preference, newValue) -> {
+                    mAccountHelper.triggerFullResync();
+                    updateReminderEventTypesSummary(reminderTypesPref, (Set<String>) newValue);
+                    return true;
+                });
+            }
             populateReminders();
         }
 
@@ -152,10 +165,55 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                 });
     }
 
+    private void updateReminderEventTypesSummary(MultiSelectListPreference preference) {
+        updateReminderEventTypesSummary(preference, preference.getValues());
+    }
+
+    private void updateReminderEventTypesSummary(MultiSelectListPreference preference, Set<String> values) {
+        if (preference == null) return;
+
+        if (values.isEmpty()) {
+            preference.setSummary(R.string.no_events_selected);
+            return;
+        }
+
+        List<String> selectedEntries = new ArrayList<>();
+        CharSequence[] entries = preference.getEntries();
+        CharSequence[] entryValues = preference.getEntryValues();
+
+        for (String value : values) {
+            int index = -1;
+            for (int i = 0; i < entryValues.length; i++) {
+                if (entryValues[i].equals(value)) {
+                    index = i;
+                    break;
+                }
+            }
+            if (index != -1) {
+                selectedEntries.add(entries[index].toString());
+            }
+        }
+
+        Collections.sort(selectedEntries);
+        preference.setSummary(TextUtils.join(", ", selectedEntries));
+    }
+
     private void populateReminders() {
         if (getContext() == null) return;
 
+        List<Preference> prefsToKeep = new ArrayList<>();
+        for (int i = 0; i < remindersCategory.getPreferenceCount(); i++) {
+            Preference pref = remindersCategory.getPreference(i);
+            if (pref instanceof MultiSelectListPreference) {
+                prefsToKeep.add(pref);
+            }
+        }
+
         remindersCategory.removeAll();
+
+        for (Preference pref : prefsToKeep) {
+            remindersCategory.addPreference(pref);
+        }
 
         int[] reminderMinutes = PreferencesHelper.getAllReminderMinutes(getContext());
         for (int i = 0; i < reminderMinutes.length; i++) {
