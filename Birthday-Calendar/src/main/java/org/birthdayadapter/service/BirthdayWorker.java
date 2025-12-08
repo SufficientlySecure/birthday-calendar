@@ -46,6 +46,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 
 public class BirthdayWorker extends Worker {
@@ -53,7 +54,7 @@ public class BirthdayWorker extends Worker {
     public static final String ACTION = "action";
     public static final String ACTION_CHANGE_COLOR = "CHANGE_COLOR";
     public static final String ACTION_SYNC = "SYNC";
-    public static final String ACTION_REMINDERS_CHANGED = "REMINDERS_CHANGED";
+    public static final String ACTION_FORCE_RESYNC = "FORCE_RESYNC";
 
     private static final Object sSyncLock = new Object();
 
@@ -74,7 +75,7 @@ public class BirthdayWorker extends Worker {
         }
 
         // For user-initiated syncs, show the spinner
-        if (ACTION_SYNC.equals(action) || ACTION_REMINDERS_CHANGED.equals(action)) {
+        if (ACTION_SYNC.equals(action) || ACTION_FORCE_RESYNC.equals(action)) {
             SyncStatusManager.getInstance().setSyncing(true);
         }
 
@@ -88,8 +89,8 @@ public class BirthdayWorker extends Worker {
                 case ACTION_CHANGE_COLOR:
                     updateCalendarColor(getApplicationContext());
                     break;
-                case ACTION_REMINDERS_CHANGED:
-                    Log.d(Constants.TAG, "Reminders changed, forcing a full resync...");
+                case ACTION_FORCE_RESYNC:
+                    Log.d(Constants.TAG, "Forcing a full resync...");
                     CalendarHelper.deleteCalendar(getApplicationContext());
                     performSync(getApplicationContext());
                     break;
@@ -185,6 +186,7 @@ public class BirthdayWorker extends Worker {
                 }
 
                 int[] reminderMinutes = PreferencesHelper.getAllReminderMinutes(context);
+                Set<String> reminderEventTypes = PreferencesHelper.getReminderEventTypes(context);
                 Log.d(Constants.TAG, "Reminder minutes: " + Arrays.toString(reminderMinutes));
                 boolean hasReminders = reminderMinutes.length > 0;
 
@@ -259,10 +261,12 @@ public class BirthdayWorker extends Worker {
                                 cal.set(Calendar.MILLISECOND, 0);
                                 long dtstart = cal.getTimeInMillis();
 
-                                Log.v(Constants.TAG, "Adding event: " + title);
-                                operationList.add(insertEvent(context, calendarId, dtstart, title, eventLookupKey, eventUid, hasReminders));
+                                boolean shouldAddReminder = hasReminders && reminderEventTypes.contains(String.valueOf(eventType));
 
-                                if (hasReminders) {
+                                Log.v(Constants.TAG, "Adding event: " + title);
+                                operationList.add(insertEvent(context, calendarId, dtstart, title, eventLookupKey, eventUid, shouldAddReminder));
+
+                                if (shouldAddReminder) {
                                     for (int minute : reminderMinutes) {
                                         ContentProviderOperation.Builder builder = ContentProviderOperation
                                                 .newInsert(CalendarHelper.getBirthdayAdapterUri(context, CalendarContract.Reminders.CONTENT_URI));
@@ -536,7 +540,7 @@ public class BirthdayWorker extends Worker {
 
     private String generateTitle(Context context, int eventType, Cursor cursor,
                                  int eventCustomLabelColumn, boolean includeAge, String displayName, int age, String lookupKey, Map<String, String> firstNameCache) {
-        if (displayName == null) {
+        if (TextUtils.isEmpty(displayName)) {
             return null;
         }
 
@@ -606,12 +610,14 @@ public class BirthdayWorker extends Worker {
         String[] selectionArgs = {ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE};
 
         try (Cursor cursor = context.getContentResolver().query(dataUri, projection, selection, selectionArgs, null)) {
-            if (cursor != null && cursor.moveToFirst()) {
-                int givenNameColumnIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME);
-                if (givenNameColumnIndex != -1) {
-                    String givenName = cursor.getString(givenNameColumnIndex);
-                    if (!TextUtils.isEmpty(givenName)) {
-                        return givenName;
+            if (cursor != null) {
+                while (cursor.moveToNext()) {
+                    int givenNameColumnIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME);
+                    if (givenNameColumnIndex != -1) {
+                        String givenName = cursor.getString(givenNameColumnIndex);
+                        if (!TextUtils.isEmpty(givenName)) {
+                            return givenName;
+                        }
                     }
                 }
             }

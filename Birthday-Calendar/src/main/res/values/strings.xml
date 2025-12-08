@@ -63,6 +63,7 @@
     <string name="pref_reminder_summary">%1$s at %2$s</string>
     <string name="no_reminder_set">No reminder set</string>
     <string name="remove">Remove</string>
+    <string name="no_events_selected">None</string>
 
     <string-array name="pref_reminder_time_drop_down">
         <item>At the day of event</item>
@@ -86,10 +87,10 @@
     <string name="pref_title_custom_without_age">Custom</string>
     <string name="pref_title_custom_with_age">Custom with age</string>
 
-    <string name="pref_title_summary_without_age">Insert {NAME} or {FIRSTNAME} for the contact\'s name. Leave empty to skip creation of these events.</string>
-    <string name="pref_title_summary_with_age">Insert {NAME} or {FIRSTNAME} for the contact\'s name, and {AGE} for the age. Leave empty to skip creation of these events.</string>
-    <string name="pref_title_summary_custom_without_age">Insert {NAME} or {FIRSTNAME} for the contact\'s name, and {LABEL} for the custom label of this event. Leave empty to skip creation of these events.</string>
-    <string name="pref_title_summary_custom_with_age">Insert {NAME} or {FIRSTNAME} for the contact\'s name, {LABEL} for the custom label of this event, and {AGE} for the age. Leave empty to skip creation of these events.</string>
+    <string name="pref_title_summary_without_age">Insert {NAME} or {FIRSTNAME} for the contact\'s name.</string>
+    <string name="pref_title_summary_with_age">Insert {NAME} or {FIRSTNAME} for the contact\'s name, and {AGE} for the age.</string>
+    <string name="pref_title_summary_custom_without_age">Insert {NAME} or {FIRSTNAME} for the contact\'s name, and {LABEL} for the custom label of this event.</string>
+    <string name="pref_title_summary_custom_with_age">Insert {NAME} or {FIRSTNAME} for the contact\'s name, {LABEL} for the custom label of this event, and {AGE} for the age.</string>
     <string name="pref_advanced_category">Advanced Settings</string>
     <string name="pref_prefer_dd_slash_mm">Prefer dd/MM/yyyy format</string>
     <string name="pref_prefer_dd_slash_mm_summary">Prefer dd/MM/yyyy to MM/dd/yyyy when parsing date formats</string>
@@ -136,6 +137,6 @@
     <!--Free Version -->
     <string name="pref_buy">Buy full version!</string>
     <string name="pref_buy_full">Open Google Play to buy full version…</string>
-    <string name="pref_buy_full_summary">Regular background syncs, custom reminders and custom event titles, highlighting jubilee birthdays</string>
+    <string name="pref_buy_full_summary">Regular background syncs, custom reminders and custom event titles, filter for contact groups, highlighting jubilee birthdays</string>
 
 </resources>
