@@ -1,3 +1,10 @@
+3.6
+* Select which event types have reminders
+* Iterate through all contact accounts to robustly find a contact's given name
+- Add known bugs section to help page, describe Fossify duplicates
+- Address API deprecations
+- Update READMEs, screenshots and translations
+
 3.5
 * Allow for unlimited reminders
 * Show set reminder times in preferenes
