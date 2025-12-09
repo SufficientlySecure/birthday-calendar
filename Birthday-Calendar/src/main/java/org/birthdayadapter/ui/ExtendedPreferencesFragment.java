@@ -40,6 +40,7 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentActivity;
 import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
@@ -104,8 +105,10 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mActivity = (BaseActivity) getActivity();
-        if (mActivity == null) {
+        FragmentActivity activity = getActivity();
+        if (activity instanceof BaseActivity) {
+            mActivity = (BaseActivity) activity;
+        } else {
             return;
         }
 
@@ -119,7 +122,10 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                 updateReminderEventTypesSummary(reminderTypesPref);
                 reminderTypesPref.setOnPreferenceChangeListener((preference, newValue) -> {
                     mAccountHelper.triggerFullResync();
-                    updateReminderEventTypesSummary(reminderTypesPref, (Set<String>) newValue);
+                    // This cast is safe because the preference is a MultiSelectListPreference
+                    @SuppressWarnings("unchecked")
+                    Set<String> values = (Set<String>) newValue;
+                    updateReminderEventTypesSummary(reminderTypesPref, values);
                     return true;
                 });
             }
