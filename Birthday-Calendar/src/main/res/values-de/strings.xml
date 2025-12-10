@@ -34,34 +34,35 @@
     <string name="about_version">Version:</string>
 
     <!-- Tabs -->
-    <string name="tab_main">Hauptmenu</string>
+    <string name="tab_main">Hauptmenü</string>
     <string name="tab_preferences">Einstellungen</string>
-    <string name="tab_accounts">Konten-Filter</string>
+    <string name="tab_accounts">Kontenfilter</string>
     <string name="tab_help">Hilfe</string>
     <string name="tab_about">Über</string>
 
     <!-- Preferences -->
     <string name="pref_general">Allgemein</string>
-    <string name="pref_enable">1. Aktiviere Birthday Adapter</string>
-    <string name="pref_enable_summary">Dies erstellt den Systemkalender mit den Daten Deiner Kontakte.</string>
+    <string name="pref_enable">1. Birthday Adapter aktivieren</string>
+    <string name="pref_enable_summary">Dies erstellt den Systemkalender mit den Daten deiner Kontakte.</string>
     <string name="pref_enable_switch">Birthday Adapter</string>
-    <string name="pref_contacts">2. Geburtstage Deiner Kontakte</string>
-    <string name="pref_contacts_summary">Bearbeite die Geburtstage Deiner Kontakte in Deiner Kontakte-App.</string>
-    <string name="pref_contacts_open">Öffne Deine Kontakte-App</string>
-    <string name="pref_calendar">3. Geburtstage im Kalender.</string>
-    <string name="pref_calendar_summary">Aktiviere den Birthday Adapter in den Konten Deiner Kalender-App.</string>
-    <string name="pref_calendar_open">Öffne Deine Kalender-App</string>
+    <string name="pref_contacts">2. Geburtstage zu Kontakten hinzufügen</string>
+    <string name="pref_contacts_summary">Bearbeite die Geburtstage deiner Kontakte in deiner Kontakte-App.</string>
+    <string name="pref_contacts_open">Kontakte-App öffnen</string>
+    <string name="pref_calendar">3. Geburtstage im Kalender</string>
+    <string name="pref_calendar_summary">Aktiviere den Birthday Adapter in den Konten deiner Kalender-App.</string>
+    <string name="pref_calendar_open">Kalender-App öffnen</string>
     <string name="pref_color">Farbe</string>
     <string name="pref_force_sync">Jetzt synchronisieren!</string>
     <string name="pref_force_sync_summary">Im Normalfall brauchst du keine manuelle Synchronisation, da der Birthday Adapter die Daten automatisch täglich aktualisiert.</string>
     <string name="pref_reminders">Erinnerungen</string>
-    <string name="add_reminder">Benachrichtigung hinzufügen</string>
-    <string name="pref_reminder_time">Benachrichtigung</string>
+    <string name="add_reminder">Erinnerung hinzufügen</string>
+    <string name="pref_reminder_time">Erinnerung</string>
     <string name="pref_reminder_time_summary">Tag und Uhrzeit dieser Erinnerung einstellen</string>
     <string name="pref_reminder_summary">%1$s um %2$s</string>
-    <string name="no_reminder_set">Keine Benachrichtigungen</string>
+    <string name="no_reminder_set">Keine Erinnerung festgelegt</string>
     <string name="remove">Entfernen</string>
     <string name="no_events_selected">Keine</string>
+
     <string-array name="pref_reminder_time_drop_down">
         <item>Am Ereignistag</item>
         <item>1 Tag vorher</item>
@@ -89,21 +90,28 @@
     <string name="pref_title_summary_custom_without_age">Verwende {NAME} oder {FIRSTNAME} als Platzhalter für den Namen des Kontaktes und {LABEL} für die ausgelesene Bezeichnung des Datums.</string>
     <string name="pref_title_summary_custom_with_age">Verwende {NAME} oder {FIRSTNAME} als Platzhalter für den Namen des Kontaktes, {LABEL} für die ausgelesene Bezeichnung des Datums und {AGE} für das Alter.</string>
     <string name="pref_advanced_category">Erweiterte Einstellungen</string>
-    <string name="pref_prefer_dd_slash_mm">dd/MM/yyyy Format bevorzugen</string>
-    <string name="pref_prefer_dd_slash_mm_summary">Bevorzuge dd/MM/yyyy gegenüber MM/dd/yyyy beim Parsen von Datumsformaten</string>
+    <string name="pref_prefer_dd_slash_mm">DD/MM/YYYY Format bevorzugen</string>
+    <string name="pref_prefer_dd_slash_mm_summary">Bevorzuge DD/MM/YYYY gegenüber MM/DD/YYYY beim Verarbeiten von Datumsformaten</string>
     <string name="pref_advanced">Erweiterte Einstellungen</string>
     <string name="pref_advanced_summary">Aktiviere die erweiterten Einstellungen</string>
     <string name="pref_jubilee_years_title">Jubiläen</string>
     <string name="pref_jubilee_years_summary">Kommagetrennte Liste von Altersangaben, die hervorgehoben werden sollen.</string>
     <string name="pref_jubilee_years_dialog_message">Gib die hervorzuhebenden Altersangaben mit Kommas getrennt ein.</string>
     <string name="pref_reminder_event_types_birthday">Geburtstage</string>
+    <string name="pref_reminder_event_types_anniversary">Jahrestage</string>
+    <string name="pref_reminder_event_types_other">Andere Ereignisse</string>
+    <string name="pref_reminder_event_types_custom">Benutzerdefinierte Ereignisse</string>
+    <string name="invalid_hex_code">Ungültiger Hexadezimalcode</string>
+    <string name="pref_events_with_reminders">Ereignisse mit Erinnerungen</string>
+    <string name="invalid_format">Ungültiges Format</string>
+
     <!-- Sync Status -->
     <string name="last_sync">Zuletzt synchronisiert: %s</string>
-    <string name="last_sync_never">Zuletzt synchronisiert: nie</string>
+    <string name="last_sync_never">Zuletzt synchronisiert: Nie</string>
     <string name="next_sync">Nächster automatisierter Abgleich: %s</string>
 
     <!-- Color Picker -->
-    <string name="hex_color_title">Gebe den Hex-Farbwert ein</string>
+    <string name="hex_color_title">Gib den Hex-Farbwert ein</string>
     <string name="hex_color_hint">#RRGGBB</string>
     <string name="item_color_content_description">Farbanzeige des Kalenders</string>
 
@@ -114,14 +122,14 @@
     <!-- Accounts -->
     <string name="permission_denied">Fehlende Berechtigungen, Adapter kann nicht aktiviert werden.</string>
     <string name="permission_read_contacts_denied">Berechtigung für Kontakte verwehrt. Konten können nicht ausgelesen werden.</string>
-    <string name="pref_group_filtering_title">Kontaktgruppen-Filter</string>
+    <string name="pref_group_filtering_title">Filterung nach Gruppen</string>
     <string name="pref_group_filtering_summary">Filtermöglichkeiten nach Gruppen der Kontakte.</string>
-    <string name="account_list_description">Nur die Geburtstage aus den gewählten Konten werden in Deinem Kalender angezeigt.</string>
+    <string name="account_list_description">Nur die Geburtstage aus den gewählten Konten werden in deinem Kalender angezeigt.</string>
     <string name="account_list_empty">Keine Konten vorhanden</string>
     <string name="account_list_counters_format">%1$s, %2$s</string>
-    <string name="account_list_icon_description">Konto-Icon</string>
-    <string name="account_list_group_button_description">Zeige Gruppen-Details</string>
-    <string name="account_list_no_group">keine Gruppen</string>
+    <string name="account_list_icon_description">Kontosymbol</string>
+    <string name="account_list_group_button_description">Zeige Gruppendetails</string>
+    <string name="account_list_no_group">Keine Gruppen</string>
     <plurals name="contacts_count">
         <item quantity="one">%d Kontakt</item>
         <item quantity="other">%d Kontakte</item>
@@ -133,7 +141,6 @@
 
     <!--Free Version -->
     <string name="pref_buy">Vollversion kaufen</string>
-    <string name="pref_buy_full">Google Play öffnen um Vollversion zu kaufen…</string>
+    <string name="pref_buy_full">Google Play öffnen, um Vollversion zu kaufen…</string>
     <string name="pref_buy_full_summary">Automatische Hintergrundsynchronisierung, benutzerdefinierte Erinnerungen und Beschriftungen der Kalendereinträge, Filter nach Kontaktgruppen, Hervorhebung von Jubiläen</string>
-
 </resources>
