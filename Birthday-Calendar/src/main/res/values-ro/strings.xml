@@ -63,6 +63,7 @@
     <string name="pref_prefer_dd_slash_mm">Prefer formatul dd/MM/yyyy</string>
     <string name="pref_prefer_dd_slash_mm_summary">Prefer dd/MM/yyyy în MM/dd/yyyy la analizarea formatelor de dată</string>
     <string name="pref_advanced">Configurări Avansate</string>
+    <string name="pref_reminder_event_types_birthday">Zile de naştere</string>
     <!-- Adapter Screen -->
     <string name="pref_account_header">Configurări</string>
     <string name="pref_account_settings">Configurări Birthday Adapter</string>

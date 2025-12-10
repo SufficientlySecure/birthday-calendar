@@ -63,6 +63,7 @@
     <string name="pref_prefer_dd_slash_mm">Hobetsi dd/MM/yyyy heuskarria</string>
     <string name="pref_prefer_dd_slash_mm_summary">Hobetsi MM/dd/yyyy -&gt; dd/MM/yyyy gain egun heuskarriak aztertzerakoan</string>
     <string name="pref_advanced">Ezarpen Aurreratuak</string>
+    <string name="pref_reminder_event_types_birthday">Urtebetetzea</string>
     <!-- Adapter Screen -->
     <string name="pref_account_header">Ezarpenak</string>
     <string name="pref_account_settings">Itxuratu Birthday Egokitzailea</string>

@@ -63,6 +63,7 @@
     <string name="pref_prefer_dd_slash_mm">优先使用 dd/MM/yyyy 格式</string>
     <string name="pref_prefer_dd_slash_mm_summary">解析日期时优先使用 dd/MM/yyyy 格式（默认为 MM/dd/yyyy）</string>
     <string name="pref_advanced">高级</string>
+    <string name="pref_reminder_event_types_birthday">生日</string>
     <!-- Adapter Screen -->
     <string name="pref_account_header">设置</string>
     <string name="pref_account_settings">配置 Birthday Adapter</string>

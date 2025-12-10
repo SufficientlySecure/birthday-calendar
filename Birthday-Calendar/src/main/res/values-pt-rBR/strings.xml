@@ -63,6 +63,7 @@
     <string name="pref_prefer_dd_slash_mm">Preferir o formato dd/MM/aaaa</string>
     <string name="pref_prefer_dd_slash_mm_summary">Preferir dd/MM/aaaa a MM/dd/aaaa ao processar os formatos de data</string>
     <string name="pref_advanced">Configurações avançadas</string>
+    <string name="pref_reminder_event_types_birthday">Aniversários</string>
     <!-- Adapter Screen -->
     <string name="pref_account_header">Configurações</string>
     <string name="pref_account_settings">Configurar o Birthday Adapter</string>

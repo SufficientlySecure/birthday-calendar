@@ -62,7 +62,6 @@
     <string name="no_reminder_set">Keine Benachrichtigungen</string>
     <string name="remove">Entfernen</string>
     <string name="no_events_selected">Keine</string>
-
     <string-array name="pref_reminder_time_drop_down">
         <item>Am Ereignistag</item>
         <item>1 Tag vorher</item>
@@ -97,7 +96,7 @@
     <string name="pref_jubilee_years_title">Jubiläen</string>
     <string name="pref_jubilee_years_summary">Kommagetrennte Liste von Altersangaben, die hervorgehoben werden sollen.</string>
     <string name="pref_jubilee_years_dialog_message">Gib die hervorzuhebenden Altersangaben mit Kommas getrennt ein.</string>
-
+    <string name="pref_reminder_event_types_birthday">Geburtstage</string>
     <!-- Sync Status -->
     <string name="last_sync">Zuletzt synchronisiert: %s</string>
     <string name="last_sync_never">Zuletzt synchronisiert: nie</string>
@@ -137,8 +136,4 @@
     <string name="pref_buy_full">Google Play öffnen um Vollversion zu kaufen…</string>
     <string name="pref_buy_full_summary">Automatische Hintergrundsynchronisierung, benutzerdefinierte Erinnerungen und Beschriftungen der Kalendereinträge, Filter nach Kontaktgruppen, Hervorhebung von Jubiläen</string>
 
-    <string name="pref_reminder_event_types_birthday">Geburtstage</string>
-    <string name="pref_reminder_event_types_anniversary">Jahrestage</string>
-    <string name="pref_reminder_event_types_other">Andere Ereignisse</string>
-    <string name="pref_reminder_event_types_custom">Benutzerdefinierte Ereignisse</string>
 </resources>

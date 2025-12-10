@@ -63,6 +63,7 @@
     <string name="pref_prefer_dd_slash_mm">Föredra dd/MM/yyyy format</string>
     <string name="pref_prefer_dd_slash_mm_summary">Föredra dd/MM/yyyy än MM/dd/yyyy vid tolkning av datumformat</string>
     <string name="pref_advanced">Avancerad Inställningar</string>
+    <string name="pref_reminder_event_types_birthday">Födelsedagar</string>
     <!-- Adapter Screen -->
     <string name="pref_account_header">Inställningar</string>
     <string name="pref_account_settings">Konfigurera Födelsedags Adapter</string>

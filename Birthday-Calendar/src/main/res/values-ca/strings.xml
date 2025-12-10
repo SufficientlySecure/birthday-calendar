@@ -63,6 +63,7 @@
     <string name="pref_prefer_dd_slash_mm">Prefereix el format dd/MM/aaaa</string>
     <string name="pref_prefer_dd_slash_mm_summary">Prefereix dd/MM/aaaa a MM/dd/aaaa quan s\'analitzen les dates</string>
     <string name="pref_advanced">Configuració avançada</string>
+    <string name="pref_reminder_event_types_birthday">Natalicis</string>
     <!-- Adapter Screen -->
     <string name="pref_account_header">Configuració</string>
     <string name="pref_account_settings">Configura Birthday Adapter</string>
