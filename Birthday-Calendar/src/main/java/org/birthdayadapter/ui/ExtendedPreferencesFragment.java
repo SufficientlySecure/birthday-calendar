@@ -176,7 +176,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     }
 
     private void updateReminderEventTypesSummary(MultiSelectListPreference preference, Set<String> values) {
-        if (preference == null) return;
+        if (preference == null || getContext() == null) return;
 
         if (values.isEmpty()) {
             preference.setSummary(R.string.no_events_selected);
@@ -187,20 +187,12 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         CharSequence[] entries = preference.getEntries();
         CharSequence[] entryValues = preference.getEntryValues();
 
-        for (String value : values) {
-            int index = -1;
-            for (int i = 0; i < entryValues.length; i++) {
-                if (entryValues[i].equals(value)) {
-                    index = i;
-                    break;
-                }
-            }
-            if (index != -1) {
-                selectedEntries.add(entries[index].toString());
+        for (int i = 0; i < entryValues.length; i++) {
+            if (values.contains(entryValues[i].toString())) {
+                selectedEntries.add(entries[i].toString());
             }
         }
 
-        Collections.sort(selectedEntries);
         preference.setSummary(TextUtils.join(", ", selectedEntries));
     }
 
@@ -328,7 +320,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                 } else {
                     positiveButton.setEnabled(false);
                     if (jubileeInputLayout != null) {
-                        jubileeInputLayout.setError("Invalid format");
+                        jubileeInputLayout.setError(getString(R.string.invalid_format));
                     }
                 }
             }
@@ -448,7 +440,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                     hexInputLayout.setError(null);
                 } catch (IllegalArgumentException e) {
                     positiveButton.setEnabled(false);
-                    hexInputLayout.setError("Invalid hex code");
+                    hexInputLayout.setError(getString(R.string.invalid_hex_code));
                 }
             }
 

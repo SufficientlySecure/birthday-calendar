@@ -137,4 +137,8 @@
     <string name="pref_buy_full">Google Play öffnen um Vollversion zu kaufen…</string>
     <string name="pref_buy_full_summary">Automatische Hintergrundsynchronisierung, benutzerdefinierte Erinnerungen und Beschriftungen der Kalendereinträge, Filter nach Kontaktgruppen, Hervorhebung von Jubiläen</string>
 
+    <string name="pref_reminder_event_types_birthday">Geburtstage</string>
+    <string name="pref_reminder_event_types_anniversary">Jahrestage</string>
+    <string name="pref_reminder_event_types_other">Andere Ereignisse</string>
+    <string name="pref_reminder_event_types_custom">Benutzerdefinierte Ereignisse</string>
 </resources>

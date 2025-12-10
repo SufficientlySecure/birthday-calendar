@@ -64,6 +64,9 @@
     <string name="no_reminder_set">No reminder set</string>
     <string name="remove">Remove</string>
     <string name="no_events_selected">None</string>
+    <string name="pref_events_with_reminders">Events with reminders</string>
+    <string name="invalid_format">Invalid format</string>
+    <string name="invalid_hex_code">Invalid hex code</string>
 
     <string-array name="pref_reminder_time_drop_down">
         <item>At the day of event</item>
@@ -99,6 +102,10 @@
     <string name="pref_jubilee_years_title">Jubilee Anniversaries</string>
     <string name="pref_jubilee_years_summary">Comma-separated list of anniversaries to highlight.</string>
     <string name="pref_jubilee_years_dialog_message">Enter a comma-separated list of jubilee anniversaries.</string>
+    <string name="pref_reminder_event_types_birthday">Birthdays</string>
+    <string name="pref_reminder_event_types_anniversary">Anniversaries</string>
+    <string name="pref_reminder_event_types_other">Other events</string>
+    <string name="pref_reminder_event_types_custom">Custom events</string>
 
     <!-- Sync Status -->
     <string name="last_sync">Last sync: %s</string>
