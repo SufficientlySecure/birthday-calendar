@@ -63,6 +63,9 @@
     <string name="pref_reminder_summary">%1$s at %2$s</string>
     <string name="no_reminder_set">No reminder set</string>
     <string name="remove">Remove</string>
+    <string name="delete_reminder_title">Delete reminder</string>
+    <string name="delete_reminder_message">Are you sure you want to delete this reminder?</string>
+    <string name="delete">Delete</string>
     <string name="no_events_selected">None</string>
     <string name="pref_events_with_reminders">Events with reminders</string>
     <string name="invalid_format">Invalid format</string>

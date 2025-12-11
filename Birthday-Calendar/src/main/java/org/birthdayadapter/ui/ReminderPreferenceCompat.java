@@ -24,6 +24,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceViewHolder;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -42,9 +43,14 @@ public class ReminderPreferenceCompat extends Preference {
     private TimePicker picker = null;
     private Spinner spinner = null;
     private OnRemoveListener mOnRemoveListener;
+    private OnCustomLongClickListener mOnCustomLongClickListener;
 
     public interface OnRemoveListener {
         void onRemove(Preference preference);
+    }
+
+    public interface OnCustomLongClickListener {
+        boolean onCustomLongClick(Preference preference);
     }
 
     private static final int ONE_DAY_MINUTES = 24 * 60;
@@ -60,6 +66,22 @@ public class ReminderPreferenceCompat extends Preference {
             performClick(false);
             return true;
         });
+    }
+
+    @Override
+    public void onBindViewHolder(PreferenceViewHolder holder) {
+        super.onBindViewHolder(holder);
+        holder.itemView.setLongClickable(true);
+        holder.itemView.setOnLongClickListener(v -> {
+            if (mOnCustomLongClickListener != null) {
+                return mOnCustomLongClickListener.onCustomLongClick(this);
+            }
+            return false;
+        });
+    }
+
+    public void setOnCustomLongClickListener(OnCustomLongClickListener listener) {
+        mOnCustomLongClickListener = listener;
     }
 
     public void setOnRemoveListener(OnRemoveListener listener) {

@@ -244,12 +244,28 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
             remindersCategory.removePreference(preference);
             saveReminders();
         });
+        reminderPref.setOnCustomLongClickListener(preference -> {
+            showDeleteReminderDialog(reminderPref);
+            return true;
+        });
 
         remindersCategory.addPreference(reminderPref);
 
         if (isNew) {
             reminderPref.performClick(true);
         }
+    }
+
+    private void showDeleteReminderDialog(Preference preference) {
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.delete_reminder_title)
+                .setMessage(R.string.delete_reminder_message)
+                .setPositiveButton(R.string.delete, (dialog, which) -> {
+                    remindersCategory.removePreference(preference);
+                    saveReminders();
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
     }
 
     private void saveReminders() {
@@ -456,6 +472,8 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         editor.apply();
         updateColorPreferenceIcon();
     }
+
+
 
     private void updateColorPreferenceIcon() {
         if (colorPref != null) {
