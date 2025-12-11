@@ -58,7 +58,6 @@ Birthday Adapter provides birthdays, anniversaries, and other events from your c
 
 Different productFlavors are build with gradle:
 - ``full``
-- ``full_google`` with workarounds for Google Play
 - ``free`` without settings
 
 ## Contribute
