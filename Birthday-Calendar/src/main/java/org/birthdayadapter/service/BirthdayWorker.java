@@ -25,6 +25,7 @@ import androidx.preference.PreferenceManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import org.birthdayadapter.R;
 import org.birthdayadapter.provider.ProviderHelper;
 import org.birthdayadapter.util.AccountHelper;
 import org.birthdayadapter.util.CalendarHelper;
@@ -557,7 +558,7 @@ public class BirthdayWorker extends Worker {
         String title = PreferencesHelper.getLabel(context, effectiveEventType, includeAge);
 
         // add jubilee icon
-        if (VersionHelper.isFullVersionUnlocked() && (includeAge)) {
+        if (VersionHelper.isFullVersionUnlocked(context) && (includeAge)) {
             title = addJubileeIcon(context, title, age);
         }
 
