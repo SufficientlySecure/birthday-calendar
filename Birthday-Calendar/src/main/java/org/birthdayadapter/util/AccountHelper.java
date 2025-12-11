@@ -36,7 +36,6 @@ import androidx.work.OutOfQuotaPolicy;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
-import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
 import org.birthdayadapter.service.BirthdayWorker;
 
@@ -116,7 +115,7 @@ public class AccountHelper {
     public void differentialSync() {
         Log.i(Constants.TAG, "Differential sync triggered.");
         // (Re)schedule a periodic sync upon a manual sync
-        if (BuildConfig.FULL_VERSION) {
+        if (VersionHelper.isFullVersionUnlocked()) {
             Log.d(Constants.TAG, "Enqueuing periodic sync with UPDATE policy.");
             PeriodicWorkRequest periodicSyncRequest = new PeriodicWorkRequest.Builder(BirthdayWorker.class, Constants.SYNC_INTERVAL_DAYS, TimeUnit.DAYS).build();
             WorkManager.getInstance(mContext).enqueueUniquePeriodicWork("periodic_sync", ExistingPeriodicWorkPolicy.UPDATE, periodicSyncRequest);

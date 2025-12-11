@@ -25,8 +25,6 @@ import androidx.preference.PreferenceManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import org.birthdayadapter.BuildConfig;
-import org.birthdayadapter.R;
 import org.birthdayadapter.provider.ProviderHelper;
 import org.birthdayadapter.util.AccountHelper;
 import org.birthdayadapter.util.CalendarHelper;
@@ -34,6 +32,7 @@ import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.Log;
 import org.birthdayadapter.util.PreferencesHelper;
 import org.birthdayadapter.util.SyncStatusManager;
+import org.birthdayadapter.util.VersionHelper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -80,7 +79,8 @@ public class BirthdayWorker extends Worker {
         }
 
         try {
-            if (!new AccountHelper(getApplicationContext()).isAccountActivated()) {
+            AccountHelper accountHelper = new AccountHelper(getApplicationContext());
+            if (!accountHelper.isAccountActivated()) {
                 Log.d(Constants.TAG, "Account not active, skipping work.");
                 return Result.success();
             }
@@ -557,7 +557,7 @@ public class BirthdayWorker extends Worker {
         String title = PreferencesHelper.getLabel(context, effectiveEventType, includeAge);
 
         // add jubilee icon
-        if ((BuildConfig.FULL_VERSION) && (includeAge)) {
+        if (VersionHelper.isFullVersionUnlocked() && (includeAge)) {
             title = addJubileeIcon(context, title, age);
         }
 
