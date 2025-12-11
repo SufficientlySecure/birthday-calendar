@@ -76,11 +76,11 @@ android {
         }
         create("free") {
             dimension = "version"
-            applicationId = "org.birthdayadapter.free"
+            applicationId = "org.birthdayadapter"
             buildConfigField("boolean", "FULL_VERSION", "false")
             buildConfigField("boolean", "GOOGLE_PLAY_VERSION", "true")
-            manifestPlaceholders = [authority: "org.birthdayadapter.free"]
-            resValue "string", "account_type", "org.birthdayadapter.free.auth"
+            manifestPlaceholders = [authority: "org.birthdayadapter"]
+            resValue "string", "account_type", "org.birthdayadapter.auth"
         }
     }
     namespace = 'org.birthdayadapter'

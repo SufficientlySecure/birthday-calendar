@@ -45,6 +45,7 @@ import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.WorkInfo;
@@ -57,11 +58,12 @@ import org.birthdayadapter.R;
 import org.birthdayadapter.util.AccountHelper;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.PreferencesHelper;
+import org.birthdayadapter.util.PurchaseHelper;
 import org.birthdayadapter.util.SyncStatusManager;
+import org.birthdayadapter.util.VersionHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -84,8 +86,15 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     private Runnable mSyncUpdateRunnable;
 
     private final SharedPreferences.OnSharedPreferenceChangeListener mSyncStatusListener = (sharedPreferences, key) -> {
-        if ("last_sync_timestamp".equals(key) && getActivity() != null) {
+        if (key != null && key.equals("last_sync_timestamp") && getActivity() != null) {
             getActivity().runOnUiThread(this::updateSyncStatus);
+        }
+    };
+
+    private final SharedPreferences.OnSharedPreferenceChangeListener mPurchaseListener = (sharedPreferences, key) -> {
+        if (key != null && key.equals(VersionHelper.PREF_FULL_VERSION_PURCHASED) && getActivity() != null) {
+            // Re-create the activity to apply changes, like removing the upgrade button
+            getActivity().recreate();
         }
     };
 
@@ -117,6 +126,9 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
 
         remindersCategory = findPreference("pref_reminders_category");
         if (remindersCategory != null) {
+            if (!VersionHelper.isFullVersionUnlocked(getContext())) {
+                remindersCategory.setVisible(false);
+            }
             MultiSelectListPreference reminderTypesPref = findPreference("pref_reminder_event_types");
             if (reminderTypesPref != null) {
                 updateReminderEventTypesSummary(reminderTypesPref);
@@ -169,6 +181,27 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                     }
                     updateSyncStatus();
                 });
+
+        setupUpgradeButton();
+    }
+
+    private void setupUpgradeButton() {
+        if (getContext() == null) return;
+
+        Preference buyFullPref = findPreference(getString(R.string.pref_buy_full_key));
+        if (buyFullPref != null) {
+            if (VersionHelper.isFullVersionUnlocked(getContext())) {
+                buyFullPref.setVisible(false);
+            } else {
+                buyFullPref.setVisible(true);
+                buyFullPref.setOnPreferenceClickListener(preference -> {
+                    if (getActivity() != null) {
+                        PurchaseHelper.launchBillingFlow(getActivity());
+                    }
+                    return true;
+                });
+            }
+        }
     }
 
     private void updateReminderEventTypesSummary(MultiSelectListPreference preference) {
@@ -197,7 +230,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     }
 
     private void populateReminders() {
-        if (getContext() == null) return;
+        if (getContext() == null || remindersCategory == null) return;
 
         List<Preference> prefsToKeep = new ArrayList<>();
         for (int i = 0; i < remindersCategory.getPreferenceCount(); i++) {
@@ -456,7 +489,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                     hexInputLayout.setError(null);
                 } catch (IllegalArgumentException e) {
                     positiveButton.setEnabled(false);
-                    hexInputLayout.setError(getString(R.string.invalid_hex_code));
+                    hexInputLayout.setError(getString(R.string.invalid_format));
                 }
             }
 
@@ -495,6 +528,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         super.onResume();
         updateJubileeYearsSummary();
         mSyncStatusPrefs.registerOnSharedPreferenceChangeListener(mSyncStatusListener);
+        PreferenceManager.getDefaultSharedPreferences(requireContext()).registerOnSharedPreferenceChangeListener(mPurchaseListener);
 
         mSyncUpdateRunnable = new Runnable() {
             @Override
@@ -512,6 +546,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     public void onPause() {
         super.onPause();
         mSyncStatusPrefs.unregisterOnSharedPreferenceChangeListener(mSyncStatusListener);
+        PreferenceManager.getDefaultSharedPreferences(requireContext()).unregisterOnSharedPreferenceChangeListener(mPurchaseListener);
         // Stop the periodic UI updates
         mSyncUpdateHandler.removeCallbacks(mSyncUpdateRunnable);
     }
