@@ -2,6 +2,9 @@ package org.birthdayadapter.service;
 
 import android.Manifest;
 import android.accounts.Account;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -12,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.OperationCanceledException;
 import android.provider.BaseColumns;
 import android.provider.CalendarContract;
@@ -20,8 +24,10 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
+import androidx.work.ForegroundInfo;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
@@ -57,6 +63,9 @@ public class BirthdayWorker extends Worker {
     public static final String ACTION_FORCE_RESYNC = "FORCE_RESYNC";
 
     private static final Object sSyncLock = new Object();
+
+    private static final int NOTIFICATION_ID = 3105;
+    private static final String NOTIFICATION_CHANNEL_ID = "birthday_sync_channel";
 
     private HashSet<Integer> jubileeYears;
 
@@ -107,6 +116,39 @@ public class BirthdayWorker extends Worker {
         } finally {
             // Always hide the spinner when the work is finished
             SyncStatusManager.getInstance().setSyncing(false);
+        }
+    }
+
+    @NonNull
+    @Override
+    public ForegroundInfo getForegroundInfo() {
+        Context context = getApplicationContext();
+        String notificationTitle = context.getString(R.string.notification_title);
+
+        createNotificationChannel(context);
+
+        Notification notification = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
+                .setContentTitle(notificationTitle)
+                .setTicker(notificationTitle)
+                .setSmallIcon(android.R.drawable.stat_notify_sync)
+                .setOngoing(true)
+                .build();
+
+        return new ForegroundInfo(NOTIFICATION_ID, notification);
+    }
+
+    private void createNotificationChannel(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    NOTIFICATION_CHANNEL_ID,
+                    context.getString(R.string.notification_channel_name),
+                    NotificationManager.IMPORTANCE_LOW
+            );
+            channel.setDescription(context.getString(R.string.notification_channel_description));
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
         }
     }
 
