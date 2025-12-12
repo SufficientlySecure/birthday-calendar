@@ -36,7 +36,6 @@ import org.birthdayadapter.provider.ProviderHelper;
 
 import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -85,10 +84,10 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
         ArrayList<AccountListEntry> entries = new ArrayList<>();
         HashMap<Account, HashSet<String>> accountGroupBlacklist = ProviderHelper.getAccountBlacklist(getContext());
 
-        // Use a Set to store all unique accounts from both sources
+        // Use a Set to store all unique accounts from ContactsContract
         Set<Account> allDiscoveredAccounts = new HashSet<>();
 
-        // 1. Get accounts from ContactsContract (guaranteed to have contacts)
+        // Get accounts from ContactsContract (guaranteed to have contacts)
         final String[] projection = {ContactsContract.RawContacts.ACCOUNT_TYPE, ContactsContract.RawContacts.ACCOUNT_NAME};
         try (Cursor cursor = getContext().getContentResolver().query(ContactsContract.RawContacts.CONTENT_URI, projection, null, null, null)) {
             if (cursor != null) {
@@ -104,11 +103,7 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
             }
         }
 
-        // 2. Get accounts from AccountManager (includes empty accounts that might be missed)
-        Account[] accountsFromManager = manager.getAccounts();
-        allDiscoveredAccounts.addAll(Arrays.asList(accountsFromManager));
-
-        // 3. Process the combined list of unique accounts
+        // Process the combined list of unique accounts
         for (Account account : allDiscoveredAccounts) {
             if (account.type.startsWith("org.birthdayadapter")) {
                 continue;
