@@ -130,7 +130,8 @@
     <string name="pref_group_filtering_title">Group Filtering</string>
     <string name="pref_group_filtering_summary">Allow filtering your accounts by contact groups.</string>
     <string name="account_list_description">Only birthdays from selected accounts will be displayed in your calendar.</string>
-    <string name="account_list_empty">No accounts</string>
+    <string name="account_list_loading">Loading accounts...</string>
+    <string name="account_list_empty">No accounts found</string>
     <string name="account_list_counters_format">%1$s, %2$s</string>
     <string name="account_list_icon_description">Account icon</string>
     <string name="account_list_group_button_description">Show group details</string>
