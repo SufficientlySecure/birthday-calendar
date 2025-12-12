@@ -36,6 +36,7 @@ import org.birthdayadapter.provider.ProviderHelper;
 
 import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -81,12 +82,34 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
     public List<AccountListEntry> loadInBackground() {
         AccountManager manager = AccountManager.get(getContext());
         AuthenticatorDescription[] descriptions = manager.getAuthenticatorTypes();
-        Account[] accounts = manager.getAccounts();
         ArrayList<AccountListEntry> entries = new ArrayList<>();
-
         HashMap<Account, HashSet<String>> accountGroupBlacklist = ProviderHelper.getAccountBlacklist(getContext());
 
-        for (Account account : accounts) {
+        // Use a Set to store all unique accounts from both sources
+        Set<Account> allDiscoveredAccounts = new HashSet<>();
+
+        // 1. Get accounts from ContactsContract (guaranteed to have contacts)
+        final String[] projection = {ContactsContract.RawContacts.ACCOUNT_TYPE, ContactsContract.RawContacts.ACCOUNT_NAME};
+        try (Cursor cursor = getContext().getContentResolver().query(ContactsContract.RawContacts.CONTENT_URI, projection, null, null, null)) {
+            if (cursor != null) {
+                int accountTypeCol = cursor.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_TYPE);
+                int accountNameCol = cursor.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_NAME);
+                while (cursor.moveToNext()) {
+                    String type = cursor.getString(accountTypeCol);
+                    String name = cursor.getString(accountNameCol);
+                    if (!TextUtils.isEmpty(type) && !TextUtils.isEmpty(name)) {
+                        allDiscoveredAccounts.add(new Account(name, type));
+                    }
+                }
+            }
+        }
+
+        // 2. Get accounts from AccountManager (includes empty accounts that might be missed)
+        Account[] accountsFromManager = manager.getAccounts();
+        allDiscoveredAccounts.addAll(Arrays.asList(accountsFromManager));
+
+        // 3. Process the combined list of unique accounts
+        for (Account account : allDiscoveredAccounts) {
             if (account.type.startsWith("org.birthdayadapter")) {
                 continue;
             }
