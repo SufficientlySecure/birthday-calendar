@@ -114,6 +114,9 @@
     <string name="last_sync">Last sync: %s</string>
     <string name="last_sync_never">Last sync: Never</string>
     <string name="next_sync">Next background sync: %s</string>
+    <string name="notification_channel_name">Birthday Sync</string>
+    <string name="notification_channel_description">Notifications for birthday synchronization</string>
+    <string name="notification_title">Synchronizing birthdays</string>
 
     <!-- Color Picker -->
     <string name="hex_color_title">Enter hex color</string>
