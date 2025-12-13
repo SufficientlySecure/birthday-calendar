@@ -109,6 +109,9 @@
     <string name="pref_reminder_event_types_anniversary">Anniversaries</string>
     <string name="pref_reminder_event_types_other">Other events</string>
     <string name="pref_reminder_event_types_custom">Custom events</string>
+    <string name="pref_disable_permission_monitoring_title">Disable permission monitoring</string>
+    <string name="pref_disable_permission_monitoring_summary">Prevent the app from losing its permissions when not used for a long time. This is useful if you only use the background sync.</string>
+
 
     <!-- Sync Status -->
     <string name="last_sync">Last sync: %s</string>
