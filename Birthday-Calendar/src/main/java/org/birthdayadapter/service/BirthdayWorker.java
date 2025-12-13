@@ -83,6 +83,10 @@ public class BirthdayWorker extends Worker {
             action = ACTION_SYNC;
         }
 
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+            setForegroundAsync(getForegroundInfo());
+        }
+
         // For user-initiated syncs, show the spinner
         if (ACTION_SYNC.equals(action) || ACTION_FORCE_RESYNC.equals(action)) {
             SyncStatusManager.getInstance().setSyncing(true);
@@ -138,17 +142,15 @@ public class BirthdayWorker extends Worker {
     }
 
     private void createNotificationChannel(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    NOTIFICATION_CHANNEL_ID,
-                    context.getString(R.string.notification_channel_name),
-                    NotificationManager.IMPORTANCE_LOW
-            );
-            channel.setDescription(context.getString(R.string.notification_channel_description));
-            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-            if (notificationManager != null) {
-                notificationManager.createNotificationChannel(channel);
-            }
+        NotificationChannel channel = new NotificationChannel(
+                NOTIFICATION_CHANNEL_ID,
+                context.getString(R.string.notification_channel_name),
+                NotificationManager.IMPORTANCE_LOW
+        );
+        channel.setDescription(context.getString(R.string.notification_channel_description));
+        NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+        if (notificationManager != null) {
+            notificationManager.createNotificationChannel(channel);
         }
     }
 
