@@ -21,14 +21,18 @@
 package org.birthdayadapter.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -170,6 +174,36 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                 showJubileeYearsInputDialog();
                 return true;
             });
+        }
+
+        Preference disablePermissionMonitoringPref = findPreference(getString(R.string.pref_disable_permission_monitoring_key));
+        if (disablePermissionMonitoringPref != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                disablePermissionMonitoringPref.setOnPreferenceClickListener(preference -> {
+                    if (!isAdded()) {
+                        return true;
+                    }
+                    Context context = requireContext();
+                    Intent intent;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        intent = new Intent(Intent.ACTION_AUTO_REVOKE_PERMISSIONS);
+                        intent.setData(Uri.parse("package:" + context.getPackageName()));
+                    } else {
+                        intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        intent.setData(Uri.parse("package:" + context.getPackageName()));
+                    }
+                    try {
+                        startActivity(intent);
+                    } catch (android.content.ActivityNotFoundException e) {
+                        Intent fallbackIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        fallbackIntent.setData(Uri.parse("package:" + context.getPackageName()));
+                        startActivity(fallbackIntent);
+                    }
+                    return true;
+                });
+            } else {
+                disablePermissionMonitoringPref.setVisible(false);
+            }
         }
 
         WorkManager.getInstance(mActivity).getWorkInfosForUniqueWorkLiveData("periodic_sync")
