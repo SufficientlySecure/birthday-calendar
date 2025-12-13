@@ -16,9 +16,7 @@
 
  You should have received a copy of the GNU General Public License
  along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
--->
-<resources>
-
+--><resources>
     <!-- Calendar -->
     <string name="calendar_display_name">Geburtstage</string>
     <string name="event_title_birthday_with_age">{NAME}: Geburtstag ({AGE})</string>
@@ -29,17 +27,14 @@
     <string name="event_title_other_without_age">{NAME}: Sonstiges</string>
     <string name="event_title_custom_with_age">{NAME}: {LABEL} ({AGE})</string>
     <string name="event_title_custom_without_age">{NAME}: {LABEL}</string>
-
     <!-- About -->
     <string name="about_version">Version:</string>
-
     <!-- Tabs -->
     <string name="tab_main">Hauptmenü</string>
     <string name="tab_preferences">Einstellungen</string>
     <string name="tab_accounts">Kontenfilter</string>
     <string name="tab_help">Hilfe</string>
     <string name="tab_about">Über</string>
-
     <!-- Preferences -->
     <string name="pref_general">Allgemein</string>
     <string name="pref_enable">1. Birthday Adapter aktivieren</string>
@@ -62,7 +57,6 @@
     <string name="no_reminder_set">Keine Erinnerung festgelegt</string>
     <string name="remove">Entfernen</string>
     <string name="no_events_selected">Keine</string>
-
     <string-array name="pref_reminder_time_drop_down">
         <item>Am Ereignistag</item>
         <item>1 Tag vorher</item>
@@ -73,7 +67,6 @@
         <item>10 Tage vorher</item>
         <item>14 Tage vorher</item>
     </string-array>
-
     <string name="pref_title">Benutzerdefinierte Bezeichnungen</string>
     <string name="pref_title_enable">Benutzerdefinierte Bezeichnungen aktivieren</string>
     <string name="pref_title_birthday_without_age">Geburtstag</string>
@@ -84,7 +77,6 @@
     <string name="pref_title_other_with_age">Anderes Ereignis mit Alter</string>
     <string name="pref_title_custom_without_age">Benutzerdefiniert</string>
     <string name="pref_title_custom_with_age">Benutzerdefiniert mit Alter</string>
-
     <string name="pref_title_summary_without_age">Verwende {NAME} oder {FIRSTNAME} als Platzhalter für den Namen des Kontaktes.</string>
     <string name="pref_title_summary_with_age">Verwende {NAME} oder {FIRSTNAME} als Platzhalter für den Namen des Kontaktes und {AGE} für das Alter.</string>
     <string name="pref_title_summary_custom_without_age">Verwende {NAME} oder {FIRSTNAME} als Platzhalter für den Namen des Kontaktes und {LABEL} für die ausgelesene Bezeichnung des Datums.</string>
@@ -104,21 +96,17 @@
     <string name="invalid_hex_code">Ungültiger Hexadezimalcode</string>
     <string name="pref_events_with_reminders">Ereignisse mit Erinnerungen</string>
     <string name="invalid_format">Ungültiges Format</string>
-
     <!-- Sync Status -->
     <string name="last_sync">Zuletzt synchronisiert: %s</string>
     <string name="last_sync_never">Zuletzt synchronisiert: Nie</string>
     <string name="next_sync">Nächster automatisierter Abgleich: %s</string>
-
     <!-- Color Picker -->
     <string name="hex_color_title">Gib den Hex-Farbwert ein</string>
     <string name="hex_color_hint">#RRGGBB</string>
     <string name="item_color_content_description">Farbanzeige des Kalenders</string>
-
     <!-- Adapter Screen -->
     <string name="pref_account_header">Einstellungen</string>
     <string name="pref_account_settings">Birthday Adapter konfigurieren</string>
-
     <!-- Accounts -->
     <string name="permission_denied">Fehlende Berechtigungen, Adapter kann nicht aktiviert werden.</string>
     <string name="permission_read_contacts_denied">Berechtigung für Kontakte verwehrt. Konten können nicht ausgelesen werden.</string>
@@ -138,9 +126,15 @@
         <item quantity="one">%d Datum</item>
         <item quantity="other">%d Daten</item>
     </plurals>
-
     <!--Free Version -->
     <string name="pref_buy">Vollversion kaufen</string>
     <string name="pref_buy_full">Google Play öffnen, um Vollversion zu kaufen…</string>
     <string name="pref_buy_full_summary">Automatische Hintergrundsynchronisierung, benutzerdefinierte Erinnerungen und Beschriftungen der Kalendereinträge, Filter nach Kontaktgruppen, Hervorhebung von Jubiläen</string>
+    <string name="delete_reminder_title">Erinnerung löschen</string>
+    <string name="delete_reminder_message">Bist du sicher, dass du diese Erinnerung löschen möchtest?</string>
+    <string name="delete">Löschen</string>
+    <string name="notification_channel_name">Geburtstags-Sync</string>
+    <string name="notification_channel_description">Benachrichtigungen zum Geburtstags-Synchronisationsvorgang</string>
+    <string name="notification_title">Synchronisiere Geburtstage</string>
+    <string name="account_list_loading">Lade Konten...</string>
 </resources>
