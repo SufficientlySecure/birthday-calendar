@@ -201,8 +201,6 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                     }
                     return true;
                 });
-            } else {
-                disablePermissionMonitoringPref.setVisible(false);
             }
         }
 
@@ -540,8 +538,6 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         updateColorPreferenceIcon();
     }
 
-
-
     private void updateColorPreferenceIcon() {
         if (colorPref != null) {
             int color = PreferencesHelper.getColor(mActivity);
@@ -563,6 +559,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         updateJubileeYearsSummary();
         mSyncStatusPrefs.registerOnSharedPreferenceChangeListener(mSyncStatusListener);
         PreferenceManager.getDefaultSharedPreferences(requireContext()).registerOnSharedPreferenceChangeListener(mPurchaseListener);
+        updatePermissionMonitoringPrefVisibility();
 
         mSyncUpdateRunnable = new Runnable() {
             @Override
@@ -583,5 +580,23 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         PreferenceManager.getDefaultSharedPreferences(requireContext()).unregisterOnSharedPreferenceChangeListener(mPurchaseListener);
         // Stop the periodic UI updates
         mSyncUpdateHandler.removeCallbacks(mSyncUpdateRunnable);
+    }
+
+    private void updatePermissionMonitoringPrefVisibility() {
+        Preference disablePermissionMonitoringPref = findPreference(getString(R.string.pref_disable_permission_monitoring_key));
+        if (disablePermissionMonitoringPref == null) {
+            return;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                boolean isWhitelisted = requireContext().getPackageManager().isAutoRevokeWhitelisted();
+                disablePermissionMonitoringPref.setVisible(!isWhitelisted);
+            } catch (Exception e) {
+                disablePermissionMonitoringPref.setVisible(false);
+            }
+        } else {
+            disablePermissionMonitoringPref.setVisible(false);
+        }
     }
 }
