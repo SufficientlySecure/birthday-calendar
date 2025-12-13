@@ -180,13 +180,6 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
             }
         }
 
-        // For Android 13 and above, add the notification permission
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                permissionsToRequest.add(Manifest.permission.POST_NOTIFICATIONS);
-            }
-        }
-
         if (permissionsToRequest.isEmpty()) {
             // All permissions are already granted
             mAccountHelper.addAccountAndSync();
