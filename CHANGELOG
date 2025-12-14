@@ -1,3 +1,16 @@
+3.7
+* Use Android foreground notification when required (until Android 12L) to allow for background syncs
+* List only accounts with contacts and that are actually used by Birthday Adapter
+* Long press to delete existing reminders
+* Add preference to ask user for disabling permission monitoring
+* Use weblate for translations
+- Update translations from weblate @nautilusx
+- Stop activity spinner reliably in case of errors
+- Use custom time picker for larger drop down menu of event date
+- Define dataExtractionRules for handling of cloud backups and device transfers
+- Prepare merge of free and full version, remove Android JellyBean workaround
+- Differentiate between accounts loading and no accounts present messages
+
 3.6
 * Select which event types have reminders
 * Iterate through all contact accounts to robustly find a contact's given name
