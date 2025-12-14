@@ -26,6 +26,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.ContactsContract;
@@ -70,26 +71,34 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
         super.onCreate(savedInstanceState);
 
         requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), permissions -> {
-            boolean allGranted = true;
-            for (Boolean isGranted : permissions.values()) {
-                if (!isGranted) {
-                    allGranted = false;
+            if (!isAdded()) {
+                // Fragment is not attached to an activity, do nothing.
+                return;
+            }
+
+            boolean essentialPermissionsGranted = true;
+            Context context = getContext();
+            if (context == null) {
+                // Fragment not attached, do nothing.
+                return;
+            }
+
+            for (String permission : REQUIRED_PERMISSIONS) {
+                if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    essentialPermissionsGranted = false;
                     break;
                 }
             }
 
-            if (allGranted) {
-                // All permissions granted, now add the account
+            if (essentialPermissionsGranted) {
+                // All essential permissions granted, now add the account
                 mAccountHelper.addAccountAndSync();
             } else {
-                // At least one permission denied, disable the feature
+                // At least one essential permission was denied, disable the feature
                 if (mEnabled != null) {
                     mEnabled.setChecked(false);
                 }
-                Context context = getContext();
-                if (context != null) {
-                    Toast.makeText(context, R.string.permission_denied, Toast.LENGTH_LONG).show();
-                }
+                Toast.makeText(context, R.string.permission_denied, Toast.LENGTH_LONG).show();
             }
         });
     }

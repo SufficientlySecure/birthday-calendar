@@ -46,6 +46,7 @@
     <string name="pref_prefer_dd_slash_mm">Käytä muotoa pp/KK/vvv</string>
     <string name="pref_prefer_dd_slash_mm_summary">Käytä muotoa pp/KK/vvvv muodon KK/pp/vvvv sijaan päiväyksiä käsiteltäessä.</string>
     <string name="pref_advanced">Lisäasetukset</string>
+    <string name="pref_reminder_event_types_birthday">Syntymäpäivät</string>
     <!-- Adapter Screen -->
     <string name="pref_account_header">Asetukset</string>
     <string name="pref_account_settings">Määritä Birthday Adapterin ominaisuudet</string>

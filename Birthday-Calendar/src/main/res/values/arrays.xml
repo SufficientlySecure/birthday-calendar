@@ -15,10 +15,10 @@
     </integer-array>
 
     <string-array name="pref_reminder_event_types_entries">
-        <item>Birthdays</item>
-        <item>Anniversaries</item>
-        <item>Other events</item>
-        <item>Custom events</item>
+        <item>@string/pref_reminder_event_types_birthday</item>
+        <item>@string/pref_reminder_event_types_anniversary</item>
+        <item>@string/pref_reminder_event_types_other</item>
+        <item>@string/pref_reminder_event_types_custom</item>
     </string-array>
 
     <string-array name="pref_reminder_event_types_values">

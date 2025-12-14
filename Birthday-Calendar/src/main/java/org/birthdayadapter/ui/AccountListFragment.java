@@ -105,6 +105,7 @@ public class AccountListFragment extends Fragment implements
         mAdapter.setOnBlacklistChangedListener(this);
         mListView.setAdapter(mAdapter);
         mListView.setEmptyView(mEmptyView); // Link the empty view to the list
+        mEmptyView.setText(R.string.account_list_loading);
     }
 
     @Override
@@ -231,6 +232,11 @@ public class AccountListFragment extends Fragment implements
         if (data == null || data.isEmpty()) {
             mListView.setVisibility(View.GONE);
             mEmptyView.setVisibility(View.VISIBLE);
+            if (getContext() != null && ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                mEmptyView.setText(R.string.permission_read_contacts_denied);
+            } else {
+                mEmptyView.setText(R.string.account_list_empty);
+            }
         } else {
             mListView.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.GONE);

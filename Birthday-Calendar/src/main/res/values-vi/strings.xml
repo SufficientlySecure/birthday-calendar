@@ -63,6 +63,7 @@
     <string name="pref_prefer_dd_slash_mm">Định dạng ưa thích dd/MM/yyyy</string>
     <string name="pref_prefer_dd_slash_mm_summary">Chọn dd/MM/yyyy thay vì MM/dd/yyyy khi phân tích định dạng ngày tháng</string>
     <string name="pref_advanced">Cài đặt nâng cao</string>
+    <string name="pref_reminder_event_types_birthday">Sinh nhật</string>
     <!-- Adapter Screen -->
     <string name="pref_account_header">Cài đặt</string>
     <string name="pref_account_settings">Cấu hình Birthday Adapter</string>

@@ -44,9 +44,12 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import org.birthdayadapter.BuildConfig;
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.MySharedPreferenceChangeListener;
+import org.birthdayadapter.util.PurchaseHelper;
 import org.birthdayadapter.util.SyncStatusManager;
+import org.birthdayadapter.util.VersionHelper;
 
 import java.util.HashSet;
 import java.util.Locale;
@@ -63,7 +66,12 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // overwrite locale to EN, for testing and screenshots only
-        // setLocale();
+        //    Locale locale = new Locale("en");
+        //    Locale.setDefault(locale);
+        //    Resources resources = getResources();
+        //    Configuration config = resources.getConfiguration();
+        //    config.setLocale(locale);
+        //    resources.updateConfiguration(config, resources.getDisplayMetrics());
 
         // Set default values from XML before any UI is created
         PreferenceManager.setDefaultValues(this, R.xml.pref_preferences, false);
@@ -76,6 +84,10 @@ public class BaseActivity extends AppCompatActivity {
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        if (!VersionHelper.isFullVersionUnlocked(this)) {
+            toolbar.setTitle(getString(R.string.app_name) + " (Free)");
+        }
 
         final ViewPager2 viewPager = findViewById(R.id.viewpager);
         View mainContent = findViewById(R.id.main_content);
@@ -111,15 +123,11 @@ public class BaseActivity extends AppCompatActivity {
                 mProgressBar.setVisibility(isSyncing ? View.VISIBLE : View.GONE);
             }
         });
-    }
 
-    private void setLocale() {
-        Locale locale = new Locale("en");
-        Locale.setDefault(locale);
-        Resources resources = getResources();
-        Configuration config = resources.getConfiguration();
-        config.setLocale(locale);
-        resources.updateConfiguration(config, resources.getDisplayMetrics());
+        // Check for existing purchases and restore them if necessary
+        if (!VersionHelper.isFullVersionUnlocked(this)) {
+            PurchaseHelper.verifyAndRestorePurchases(this);
+        }
     }
 
     @Override

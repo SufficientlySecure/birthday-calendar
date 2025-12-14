@@ -63,6 +63,7 @@
     <string name="pref_prefer_dd_slash_mm">Предпочитать формат dd/MM/yyyy</string>
     <string name="pref_prefer_dd_slash_mm_summary">Предпочитать формат dd/MM/yyyy вместо MM/dd/yyyy при разборе даты</string>
     <string name="pref_advanced">Расширенные настройки</string>
+    <string name="pref_reminder_event_types_birthday">Дни рождения</string>
     <!-- Adapter Screen -->
     <string name="pref_account_header">Настройки</string>
     <string name="pref_account_settings">Настройки Birthday Adapter</string>

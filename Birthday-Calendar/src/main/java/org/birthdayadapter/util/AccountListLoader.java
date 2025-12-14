@@ -81,12 +81,30 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
     public List<AccountListEntry> loadInBackground() {
         AccountManager manager = AccountManager.get(getContext());
         AuthenticatorDescription[] descriptions = manager.getAuthenticatorTypes();
-        Account[] accounts = manager.getAccounts();
         ArrayList<AccountListEntry> entries = new ArrayList<>();
-
         HashMap<Account, HashSet<String>> accountGroupBlacklist = ProviderHelper.getAccountBlacklist(getContext());
 
-        for (Account account : accounts) {
+        // Use a Set to store all unique accounts from ContactsContract
+        Set<Account> allDiscoveredAccounts = new HashSet<>();
+
+        // Get accounts from ContactsContract (guaranteed to have contacts)
+        final String[] projection = {ContactsContract.RawContacts.ACCOUNT_TYPE, ContactsContract.RawContacts.ACCOUNT_NAME};
+        try (Cursor cursor = getContext().getContentResolver().query(ContactsContract.RawContacts.CONTENT_URI, projection, null, null, null)) {
+            if (cursor != null) {
+                int accountTypeCol = cursor.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_TYPE);
+                int accountNameCol = cursor.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_NAME);
+                while (cursor.moveToNext()) {
+                    String type = cursor.getString(accountTypeCol);
+                    String name = cursor.getString(accountNameCol);
+                    if (!TextUtils.isEmpty(type) && !TextUtils.isEmpty(name)) {
+                        allDiscoveredAccounts.add(new Account(name, type));
+                    }
+                }
+            }
+        }
+
+        // Process the combined list of unique accounts
+        for (Account account : allDiscoveredAccounts) {
             if (account.type.startsWith("org.birthdayadapter")) {
                 continue;
             }
@@ -192,7 +210,7 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
                     String groupId = dataCursor.getString(groupIdCol);
                     contactToGroupsMap.computeIfAbsent(rawContactId, k -> new HashSet<>()).add(groupId);
                 } else if (ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE.equals(mimeType)) {
-                    contactDateCounts.put(rawContactId, contactDateCounts.getOrDefault(rawContactId, 0) + 1);
+                    contactDateCounts.merge(rawContactId, 1, Integer::sum);
                 }
             }
         }
@@ -203,7 +221,8 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
 
             for (String rawContactId : allRawContactIds) {
                 Set<String> groupIds = contactToGroupsMap.get(rawContactId);
-                int dateCount = contactDateCounts.getOrDefault(rawContactId, 0);
+                Integer dateCountInt = contactDateCounts.get(rawContactId);
+                int dateCount = (dateCountInt == null) ? 0 : dateCountInt;
 
                 if (groupIds != null && !groupIds.isEmpty()) {
                     for (String groupId : groupIds) {
@@ -222,19 +241,17 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
             for (Map.Entry<String, int[]> statsEntry : groupStats.entrySet()) {
                 String groupId = statsEntry.getKey();
                 String groupTitle = groupTitleMap.get(groupId);
-                String groupKey = groupId;
 
                 if (groupId.equals(Constants.GROUP_TITLE_NO_GROUP)) {
                     if (statsEntry.getValue()[0] > 0) {
                         groupTitle = getContext().getString(R.string.account_list_no_group);
-                        groupKey = groupTitle;
                     }
                 }
 
                 if (groupTitle != null) {
                     int[] counts = statsEntry.getValue();
                     GroupListEntry groupEntry = new GroupListEntry(groupTitle, counts[0], counts[1]);
-                    if (blacklistedGroups != null && blacklistedGroups.contains(groupKey)) {
+                    if (blacklistedGroups != null && blacklistedGroups.contains(groupTitle)) {
                         groupEntry.setSelected(false);
                     }
                     groupEntries.add(groupEntry);

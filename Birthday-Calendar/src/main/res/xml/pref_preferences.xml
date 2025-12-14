@@ -13,7 +13,7 @@
         android:title="@string/pref_reminders">
         <MultiSelectListPreference
             android:key="pref_reminder_event_types"
-            android:title="Events with reminders"
+            android:title="@string/pref_events_with_reminders"
             android:entries="@array/pref_reminder_event_types_entries"
             android:entryValues="@array/pref_reminder_event_types_values"
             android:defaultValue="@array/pref_reminder_event_types_default_values" />
@@ -116,6 +116,11 @@
             android:persistent="true"
             android:summary="@string/pref_prefer_dd_slash_mm_summary"
             android:title="@string/pref_prefer_dd_slash_mm" />
+        <androidx.preference.Preference
+            android:key="@string/pref_disable_permission_monitoring_key"
+            android:title="@string/pref_disable_permission_monitoring_title"
+            android:summary="@string/pref_disable_permission_monitoring_summary"
+            android:visible="false" />
         <androidx.preference.Preference
             android:key="@string/pref_force_sync_key"
             android:persistent="false"

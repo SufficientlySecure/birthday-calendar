@@ -52,6 +52,7 @@
     <string name="pref_prefer_dd_slash_mm">Προτιμήση dd/MM/yyyy τυπου</string>
     <string name="pref_prefer_dd_slash_mm_summary">Προτιμήση  dd/MM/yyyy σε MM/dd/yyyy κατά την ανάλυση μορφών ημερομηνίας</string>
     <string name="pref_advanced">Προηγμένες Ρυθμίσεις</string>
+    <string name="pref_reminder_event_types_birthday">Γενέθλια</string>
     <!-- Adapter Screen -->
     <string name="pref_account_header">Ρυθμίσεις</string>
     <string name="pref_account_settings">Διαμόρφωση του Birthday Adapter</string>

@@ -63,6 +63,7 @@
     <string name="pref_prefer_dd_slash_mm">nn/HH/ÉÉÉÉ formátum előnyben részesítése</string>
     <string name="pref_prefer_dd_slash_mm_summary">nn/HH/éééé előnyben részesítése HH/nn/éééé-hez képest a dátumformátum elemzésekor</string>
     <string name="pref_advanced">Haladó Beállítások</string>
+    <string name="pref_reminder_event_types_birthday">Születésnapok</string>
     <!-- Adapter Screen -->
     <string name="pref_account_header">Beállítások</string>
     <string name="pref_account_settings">Birthday Adapter konfigurálása</string>

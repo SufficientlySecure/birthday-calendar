@@ -21,14 +21,18 @@
 package org.birthdayadapter.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -40,10 +44,12 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentActivity;
 import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.WorkInfo;
@@ -56,11 +62,12 @@ import org.birthdayadapter.R;
 import org.birthdayadapter.util.AccountHelper;
 import org.birthdayadapter.util.Constants;
 import org.birthdayadapter.util.PreferencesHelper;
+import org.birthdayadapter.util.PurchaseHelper;
 import org.birthdayadapter.util.SyncStatusManager;
+import org.birthdayadapter.util.VersionHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -83,8 +90,15 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     private Runnable mSyncUpdateRunnable;
 
     private final SharedPreferences.OnSharedPreferenceChangeListener mSyncStatusListener = (sharedPreferences, key) -> {
-        if ("last_sync_timestamp".equals(key) && getActivity() != null) {
+        if (key != null && key.equals("last_sync_timestamp") && getActivity() != null) {
             getActivity().runOnUiThread(this::updateSyncStatus);
+        }
+    };
+
+    private final SharedPreferences.OnSharedPreferenceChangeListener mPurchaseListener = (sharedPreferences, key) -> {
+        if (key != null && key.equals(VersionHelper.PREF_FULL_VERSION_PURCHASED) && getActivity() != null) {
+            // Re-create the activity to apply changes, like removing the upgrade button
+            getActivity().recreate();
         }
     };
 
@@ -104,8 +118,10 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mActivity = (BaseActivity) getActivity();
-        if (mActivity == null) {
+        FragmentActivity activity = getActivity();
+        if (activity instanceof BaseActivity) {
+            mActivity = (BaseActivity) activity;
+        } else {
             return;
         }
 
@@ -114,12 +130,18 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
 
         remindersCategory = findPreference("pref_reminders_category");
         if (remindersCategory != null) {
+            if (!VersionHelper.isFullVersionUnlocked(getContext())) {
+                remindersCategory.setVisible(false);
+            }
             MultiSelectListPreference reminderTypesPref = findPreference("pref_reminder_event_types");
             if (reminderTypesPref != null) {
                 updateReminderEventTypesSummary(reminderTypesPref);
                 reminderTypesPref.setOnPreferenceChangeListener((preference, newValue) -> {
                     mAccountHelper.triggerFullResync();
-                    updateReminderEventTypesSummary(reminderTypesPref, (Set<String>) newValue);
+                    // This cast is safe because the preference is a MultiSelectListPreference
+                    @SuppressWarnings("unchecked")
+                    Set<String> values = (Set<String>) newValue;
+                    updateReminderEventTypesSummary(reminderTypesPref, values);
                     return true;
                 });
             }
@@ -154,6 +176,34 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
             });
         }
 
+        Preference disablePermissionMonitoringPref = findPreference(getString(R.string.pref_disable_permission_monitoring_key));
+        if (disablePermissionMonitoringPref != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                disablePermissionMonitoringPref.setOnPreferenceClickListener(preference -> {
+                    if (!isAdded()) {
+                        return true;
+                    }
+                    Context context = requireContext();
+                    Intent intent;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        intent = new Intent(Intent.ACTION_AUTO_REVOKE_PERMISSIONS);
+                        intent.setData(Uri.parse("package:" + context.getPackageName()));
+                    } else {
+                        intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        intent.setData(Uri.parse("package:" + context.getPackageName()));
+                    }
+                    try {
+                        startActivity(intent);
+                    } catch (android.content.ActivityNotFoundException e) {
+                        Intent fallbackIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        fallbackIntent.setData(Uri.parse("package:" + context.getPackageName()));
+                        startActivity(fallbackIntent);
+                    }
+                    return true;
+                });
+            }
+        }
+
         WorkManager.getInstance(mActivity).getWorkInfosForUniqueWorkLiveData("periodic_sync")
                 .observe(getViewLifecycleOwner(), workInfos -> {
                     if (workInfos != null && !workInfos.isEmpty()) {
@@ -163,6 +213,27 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                     }
                     updateSyncStatus();
                 });
+
+        setupUpgradeButton();
+    }
+
+    private void setupUpgradeButton() {
+        if (getContext() == null) return;
+
+        Preference buyFullPref = findPreference(getString(R.string.pref_buy_full_key));
+        if (buyFullPref != null) {
+            if (VersionHelper.isFullVersionUnlocked(getContext())) {
+                buyFullPref.setVisible(false);
+            } else {
+                buyFullPref.setVisible(true);
+                buyFullPref.setOnPreferenceClickListener(preference -> {
+                    if (getActivity() != null) {
+                        PurchaseHelper.launchBillingFlow(getActivity());
+                    }
+                    return true;
+                });
+            }
+        }
     }
 
     private void updateReminderEventTypesSummary(MultiSelectListPreference preference) {
@@ -170,7 +241,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     }
 
     private void updateReminderEventTypesSummary(MultiSelectListPreference preference, Set<String> values) {
-        if (preference == null) return;
+        if (preference == null || getContext() == null) return;
 
         if (values.isEmpty()) {
             preference.setSummary(R.string.no_events_selected);
@@ -181,25 +252,17 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         CharSequence[] entries = preference.getEntries();
         CharSequence[] entryValues = preference.getEntryValues();
 
-        for (String value : values) {
-            int index = -1;
-            for (int i = 0; i < entryValues.length; i++) {
-                if (entryValues[i].equals(value)) {
-                    index = i;
-                    break;
-                }
-            }
-            if (index != -1) {
-                selectedEntries.add(entries[index].toString());
+        for (int i = 0; i < entryValues.length; i++) {
+            if (values.contains(entryValues[i].toString())) {
+                selectedEntries.add(entries[i].toString());
             }
         }
 
-        Collections.sort(selectedEntries);
         preference.setSummary(TextUtils.join(", ", selectedEntries));
     }
 
     private void populateReminders() {
-        if (getContext() == null) return;
+        if (getContext() == null || remindersCategory == null) return;
 
         List<Preference> prefsToKeep = new ArrayList<>();
         for (int i = 0; i < remindersCategory.getPreferenceCount(); i++) {
@@ -246,12 +309,28 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
             remindersCategory.removePreference(preference);
             saveReminders();
         });
+        reminderPref.setOnCustomLongClickListener(preference -> {
+            showDeleteReminderDialog(reminderPref);
+            return true;
+        });
 
         remindersCategory.addPreference(reminderPref);
 
         if (isNew) {
             reminderPref.performClick(true);
         }
+    }
+
+    private void showDeleteReminderDialog(Preference preference) {
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.delete_reminder_title)
+                .setMessage(R.string.delete_reminder_message)
+                .setPositiveButton(R.string.delete, (dialog, which) -> {
+                    remindersCategory.removePreference(preference);
+                    saveReminders();
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
     }
 
     private void saveReminders() {
@@ -322,7 +401,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                 } else {
                     positiveButton.setEnabled(false);
                     if (jubileeInputLayout != null) {
-                        jubileeInputLayout.setError("Invalid format");
+                        jubileeInputLayout.setError(getString(R.string.invalid_format));
                     }
                 }
             }
@@ -442,7 +521,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                     hexInputLayout.setError(null);
                 } catch (IllegalArgumentException e) {
                     positiveButton.setEnabled(false);
-                    hexInputLayout.setError("Invalid hex code");
+                    hexInputLayout.setError(getString(R.string.invalid_format));
                 }
             }
 
@@ -479,6 +558,8 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         super.onResume();
         updateJubileeYearsSummary();
         mSyncStatusPrefs.registerOnSharedPreferenceChangeListener(mSyncStatusListener);
+        PreferenceManager.getDefaultSharedPreferences(requireContext()).registerOnSharedPreferenceChangeListener(mPurchaseListener);
+        updatePermissionMonitoringPrefVisibility();
 
         mSyncUpdateRunnable = new Runnable() {
             @Override
@@ -496,7 +577,26 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     public void onPause() {
         super.onPause();
         mSyncStatusPrefs.unregisterOnSharedPreferenceChangeListener(mSyncStatusListener);
+        PreferenceManager.getDefaultSharedPreferences(requireContext()).unregisterOnSharedPreferenceChangeListener(mPurchaseListener);
         // Stop the periodic UI updates
         mSyncUpdateHandler.removeCallbacks(mSyncUpdateRunnable);
+    }
+
+    private void updatePermissionMonitoringPrefVisibility() {
+        Preference disablePermissionMonitoringPref = findPreference(getString(R.string.pref_disable_permission_monitoring_key));
+        if (disablePermissionMonitoringPref == null) {
+            return;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                boolean isWhitelisted = requireContext().getPackageManager().isAutoRevokeWhitelisted();
+                disablePermissionMonitoringPref.setVisible(!isWhitelisted);
+            } catch (Exception e) {
+                disablePermissionMonitoringPref.setVisible(false);
+            }
+        } else {
+            disablePermissionMonitoringPref.setVisible(false);
+        }
     }
 }

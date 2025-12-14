@@ -63,6 +63,7 @@
     <string name="pref_prefer_dd_slash_mm">dd/MM/yyyy-opmaak de voorkeur geven</string>
     <string name="pref_prefer_dd_slash_mm_summary">dd/MM/yyyy i.p.v. MM/dd/yyyy de voorkeur geven als datumopmaak</string>
     <string name="pref_advanced">Geavanceerde instellingen</string>
+    <string name="pref_reminder_event_types_birthday">Verjaardagen</string>
     <!-- Adapter Screen -->
     <string name="pref_account_header">Instellingen</string>
     <string name="pref_account_settings">Birthday Adapter instellen</string>

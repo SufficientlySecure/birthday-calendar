@@ -22,8 +22,10 @@ package org.birthdayadapter.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceViewHolder;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -42,9 +44,14 @@ public class ReminderPreferenceCompat extends Preference {
     private TimePicker picker = null;
     private Spinner spinner = null;
     private OnRemoveListener mOnRemoveListener;
+    private OnCustomLongClickListener mOnCustomLongClickListener;
 
     public interface OnRemoveListener {
         void onRemove(Preference preference);
+    }
+
+    public interface OnCustomLongClickListener {
+        boolean onCustomLongClick(Preference preference);
     }
 
     private static final int ONE_DAY_MINUTES = 24 * 60;
@@ -60,6 +67,22 @@ public class ReminderPreferenceCompat extends Preference {
             performClick(false);
             return true;
         });
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull PreferenceViewHolder holder) {
+        super.onBindViewHolder(holder);
+        holder.itemView.setLongClickable(true);
+        holder.itemView.setOnLongClickListener(v -> {
+            if (mOnCustomLongClickListener != null) {
+                return mOnCustomLongClickListener.onCustomLongClick(this);
+            }
+            return false;
+        });
+    }
+
+    public void setOnCustomLongClickListener(OnCustomLongClickListener listener) {
+        mOnCustomLongClickListener = listener;
     }
 
     public void setOnRemoveListener(OnRemoveListener listener) {
@@ -113,8 +136,8 @@ public class ReminderPreferenceCompat extends Preference {
         picker = view.findViewById(R.id.pref_reminder_timepicker);
 
         ArrayAdapter<CharSequence> dataAdapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.pref_reminder_time_drop_down, android.R.layout.simple_spinner_item);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                R.array.pref_reminder_time_drop_down, R.layout.custom_spinner_item);
+        dataAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
 
         if (DateFormat.is24HourFormat(getContext())) {

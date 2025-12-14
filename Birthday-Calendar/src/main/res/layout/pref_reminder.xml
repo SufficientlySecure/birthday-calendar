@@ -15,6 +15,7 @@
     <TimePicker
         android:id="@+id/pref_reminder_timepicker"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:timePickerMode="clock" />
 
 </LinearLayout>

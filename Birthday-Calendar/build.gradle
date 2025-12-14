@@ -2,6 +2,9 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 dependencies {
+    implementation "androidx.core:core-ktx:1.17.0"
+    implementation "androidx.activity:activity-ktx:1.12.1"
+    implementation "androidx.fragment:fragment-ktx:1.8.9"
     implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'com.google.android.material:material:1.13.0'
     implementation 'androidx.preference:preference-ktx:1.2.1'
@@ -74,21 +77,13 @@ android {
             manifestPlaceholders = [authority: "org.birthdayadapter"]
             resValue "string", "account_type", "org.birthdayadapter.auth"
         }
-        create("full_google") {
+        create("free") {
             dimension = "version"
             applicationId = "org.birthdayadapter"
-            buildConfigField("boolean", "FULL_VERSION", "true")
+            buildConfigField("boolean", "FULL_VERSION", "false")
             buildConfigField("boolean", "GOOGLE_PLAY_VERSION", "true")
             manifestPlaceholders = [authority: "org.birthdayadapter"]
             resValue "string", "account_type", "org.birthdayadapter.auth"
-        }
-        create("free") {
-            dimension = "version"
-            applicationId = "org.birthdayadapter.free"
-            buildConfigField("boolean", "FULL_VERSION", "false")
-            buildConfigField("boolean", "GOOGLE_PLAY_VERSION", "true")
-            manifestPlaceholders = [authority: "org.birthdayadapter.free"]
-            resValue "string", "account_type", "org.birthdayadapter.free.auth"
         }
     }
     namespace = 'org.birthdayadapter'

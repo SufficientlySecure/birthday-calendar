@@ -43,6 +43,7 @@
     <string name="pref_prefer_dd_slash_mm">Eelista pp/aaaa formaati</string>
     <string name="pref_prefer_dd_slash_mm_summary">Eelista pp/aaaa kk/aaaa asemel </string>
     <string name="pref_advanced">Täpsemad seaded</string>
+    <string name="pref_reminder_event_types_birthday">Sünnipäevad</string>
     <!-- Adapter Screen -->
     <string name="pref_account_header">Seaded</string>
     <string name="pref_account_settings">Seadista sünnipäevade adapterit</string>

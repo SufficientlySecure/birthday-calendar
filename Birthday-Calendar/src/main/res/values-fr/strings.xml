@@ -63,6 +63,7 @@
     <string name="pref_prefer_dd_slash_mm">Préférer le format JJ/MM/aaaa</string>
     <string name="pref_prefer_dd_slash_mm_summary">Préférer JJ/MM/aaaa à MM/JJ/aaaaa pour les formats de dates</string>
     <string name="pref_advanced">Paramètres avancés</string>
+    <string name="pref_reminder_event_types_birthday">Anniversaires</string>
     <!-- Adapter Screen -->
     <string name="pref_account_header">Paramètres</string>
     <string name="pref_account_settings">Configurer l\'Adaptateur d\'anniversaires</string>

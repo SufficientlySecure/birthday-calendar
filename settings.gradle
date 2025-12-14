@@ -1,2 +1,1 @@
 include ':Birthday-Calendar'
-include ':Birthday-Calendar-Workaround'

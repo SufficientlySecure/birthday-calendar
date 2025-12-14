@@ -2,27 +2,33 @@
 This makes it easy to translate the values with transifex!
 And don't add newlines before or after p tags because of transifex -->
 <html>
-<head></head>
+<head>
+</head>
 <body>
 <h2>How does Birthday Adapter work?</h2>
 <p>Birthday Adapter creates its own calendar account on your Android device, which synchronizes all events, like birthdays, anniversaries and so on, from your contacts into a calendar. This calendar is displayed in your standard Android Calendar application.</p>
 
 <h2>I do not see any birthday events in my calendar!</h2>
-<p>Check that your calendar app shows the birthday adapter. For google calendar you need to go to settings &gt; manage accounts and activate the birthday adapter. In FossifyCalendar you find this setting at CalDAV &gt; manage synchronized calendars</p>
+<p>Check that your calendar app shows the birthday adapter. For google calendar you need to go to settings > manage accounts and activate the birthday adapter. In FossifyCalendar you find this setting at CalDAV > manage synchronized calendars</p>
 
-<h2>Voglio sincronizzare questi eventi in un calendario esistente!</h2>
+<h2>I want to synchronize the events into an existing calendar!</h2>
 <p>This is not the idea of this app. As you already have all birthdays in your contacts and synchronizing these into the cloud, it would be redundant to also synchronize a calendar with the same information. Instead use tools on your desktop pc to display the birthdays from your contacts in your calendar, like Birthday Adapter does. In Thunderbird this can be done with the <a href="https://addons.mozilla.org/en-us/thunderbird/addon/thunderbirthday/">Thunderbirthday Add-on</a>.</p>
 
-<h2>Gli eventi non sono mostrati nel widget del calendario di Android!</h2>
+<h2>How often are contact events synchronized into the calendar?</h2>
 <p>This is done once every 5 days and invoked by Android itself together with other synchronizations.</p>
 
-<h2>Con che frequenza gli eventi dei contatti sono sincronizzati nel calendario?</h2>
+<h2>The synchronization isn't working!</h2>
 <p>Please check that permissions of the app do not expire. Also make sure to allow background activity for the app and to set it to 'not optimized' or exclude it from battery optimization</p>
 
 <h2>Help translating</h2>
-<p>Please go to <a href="https://explore.transifex.com/mattitude/birthdayadapter/">explore.transifex.com/mattitude/birthdayadapter</a>.</p>
+<p>Please go to <a href="https://hosted.weblate.org/engage/birthday-adapter/">hosted.weblate.org/engage/birthday-adapter/</a>.</p>
 
 <h2>Report bugs</h2>
 <p>There is an issue tracker on <a href="https://github.com/SufficientlySecure/birthday-calendar/issues">github.com/SufficientlySecure/birthday-calendar</a>.</p>
+
+<h2>Known Issues</h2>
+<ul>
+<li>Fossify Calendar does not hide deleted calendar entries directly, so after changing reminders, custom labels or jubilees, there are duplicate entries visible in the calendar for a while. Find the respective ticket <a href="https://github.com/FossifyOrg/Calendar/issues/656#issuecomment-3564972527">here</a>.</li>
+</ul>
 </body>
 </html>
