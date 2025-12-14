@@ -135,8 +135,8 @@ public class ReminderPreferenceCompat extends Preference {
         picker = view.findViewById(R.id.pref_reminder_timepicker);
 
         ArrayAdapter<CharSequence> dataAdapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.pref_reminder_time_drop_down, android.R.layout.simple_spinner_item);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                R.array.pref_reminder_time_drop_down, R.layout.custom_spinner_item);
+        dataAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
 
         if (DateFormat.is24HourFormat(getContext())) {
