@@ -137,4 +137,6 @@
     <string name="notification_channel_description">Benachrichtigungen zum Geburtstags-Synchronisationsvorgang</string>
     <string name="notification_title">Synchronisiere Geburtstage</string>
     <string name="account_list_loading">Lade Konten...</string>
+    <string name="pref_disable_permission_monitoring_title">App-Berechtigungen bei Nichtnutzung</string>
+    <string name="pref_disable_permission_monitoring_summary">Behalte die App-Berechtigungen bei Nichtnutzung. Notwendig, wenn du nur die Hintergrund-Synchronisierung nutzt.</string>
 </resources>
