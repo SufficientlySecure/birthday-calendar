@@ -119,7 +119,8 @@
         <androidx.preference.Preference
             android:key="@string/pref_disable_permission_monitoring_key"
             android:title="@string/pref_disable_permission_monitoring_title"
-            android:summary="@string/pref_disable_permission_monitoring_summary" />
+            android:summary="@string/pref_disable_permission_monitoring_summary"
+            android:visible="false" />
         <androidx.preference.Preference
             android:key="@string/pref_force_sync_key"
             android:persistent="false"
