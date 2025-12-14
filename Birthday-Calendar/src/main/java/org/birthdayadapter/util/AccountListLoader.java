@@ -240,19 +240,17 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
             for (Map.Entry<String, int[]> statsEntry : groupStats.entrySet()) {
                 String groupId = statsEntry.getKey();
                 String groupTitle = groupTitleMap.get(groupId);
-                String groupKey = groupId;
 
                 if (groupId.equals(Constants.GROUP_TITLE_NO_GROUP)) {
                     if (statsEntry.getValue()[0] > 0) {
                         groupTitle = getContext().getString(R.string.account_list_no_group);
-                        groupKey = groupTitle;
                     }
                 }
 
                 if (groupTitle != null) {
                     int[] counts = statsEntry.getValue();
                     GroupListEntry groupEntry = new GroupListEntry(groupTitle, counts[0], counts[1]);
-                    if (blacklistedGroups != null && blacklistedGroups.contains(groupKey)) {
+                    if (blacklistedGroups != null && blacklistedGroups.contains(groupTitle)) {
                         groupEntry.setSelected(false);
                     }
                     groupEntries.add(groupEntry);
