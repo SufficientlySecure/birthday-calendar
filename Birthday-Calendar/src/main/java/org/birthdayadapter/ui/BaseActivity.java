@@ -66,7 +66,12 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // overwrite locale to EN, for testing and screenshots only
-        // setLocale();
+        //    Locale locale = new Locale("en");
+        //    Locale.setDefault(locale);
+        //    Resources resources = getResources();
+        //    Configuration config = resources.getConfiguration();
+        //    config.setLocale(locale);
+        //    resources.updateConfiguration(config, resources.getDisplayMetrics());
 
         // Set default values from XML before any UI is created
         PreferenceManager.setDefaultValues(this, R.xml.pref_preferences, false);
@@ -123,15 +128,6 @@ public class BaseActivity extends AppCompatActivity {
         if (!VersionHelper.isFullVersionUnlocked(this)) {
             PurchaseHelper.verifyAndRestorePurchases(this);
         }
-    }
-
-    private void setLocale() {
-        Locale locale = new Locale("en");
-        Locale.setDefault(locale);
-        Resources resources = getResources();
-        Configuration config = resources.getConfiguration();
-        config.setLocale(locale);
-        resources.updateConfiguration(config, resources.getDisplayMetrics());
     }
 
     @Override

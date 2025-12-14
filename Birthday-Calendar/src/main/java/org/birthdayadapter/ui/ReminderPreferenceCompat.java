@@ -22,6 +22,7 @@ package org.birthdayadapter.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
@@ -69,7 +70,7 @@ public class ReminderPreferenceCompat extends Preference {
     }
 
     @Override
-    public void onBindViewHolder(PreferenceViewHolder holder) {
+    public void onBindViewHolder(@NonNull PreferenceViewHolder holder) {
         super.onBindViewHolder(holder);
         holder.itemView.setLongClickable(true);
         holder.itemView.setOnLongClickListener(v -> {
