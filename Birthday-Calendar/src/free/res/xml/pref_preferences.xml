@@ -12,7 +12,6 @@
     <androidx.preference.PreferenceCategory android:title="@string/pref_buy">
         <androidx.preference.Preference
             android:key="@string/pref_buy_full_key"
-            android:persistent="false"
             android:summary="@string/pref_buy_full_summary"
             android:title="@string/pref_buy_full" />
     </androidx.preference.PreferenceCategory>
