@@ -3,15 +3,12 @@ package org.birthdayadapter.util;
 import android.app.Activity;
 import android.content.Context;
 
-import org.birthdayadapter.BuildConfig;
-
 public class PurchaseHelper {
-
     public static void launchBillingFlow(Activity activity) {
-        // This will be implemented in the 'free' flavor
+        // Not used in the full version
     }
 
     public static void verifyAndRestorePurchases(Context context) {
-        // This will be implemented in the 'free' flavor
+        // Not used in the full version
     }
 }
