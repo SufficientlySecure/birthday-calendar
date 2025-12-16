@@ -1,7 +1,11 @@
 package org.birthdayadapter.ui;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.format.DateUtils;
 
 import org.birthdayadapter.util.AccountHelper;
 import org.birthdayadapter.R;
@@ -21,6 +25,18 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Pre
 
     private AccountHelper mAccountHelper;
     private PreferenceCategory remindersCategory;
+    private Preference mForceSyncPref;
+    private SharedPreferences mSyncStatusPrefs;
+
+    private final Handler mSyncUpdateHandler = new Handler(Looper.getMainLooper());
+    private Runnable mSyncUpdateRunnable;
+
+    private final SharedPreferences.OnSharedPreferenceChangeListener mSyncStatusListener = (sharedPreferences, key) -> {
+        if (key != null && key.equals("last_sync_timestamp") && getActivity() != null) {
+            getActivity().runOnUiThread(this::updateSyncStatus);
+        }
+    };
+
 
     /**
      * Called when the activity is first created.
@@ -31,6 +47,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Pre
 
         if (getActivity() != null) {
             mAccountHelper = new AccountHelper(getActivity().getApplicationContext());
+            mSyncStatusPrefs = getActivity().getSharedPreferences("sync_status_prefs", Context.MODE_PRIVATE);
         }
     }
 
@@ -44,7 +61,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Pre
             populateReminders();
         }
 
-        Preference mForceSyncPref = findPreference(getString(R.string.pref_force_sync_key));
+        mForceSyncPref = findPreference(getString(R.string.pref_force_sync_key));
         if (mForceSyncPref != null) {
             mForceSyncPref.setOnPreferenceClickListener(this);
         }
@@ -54,6 +71,51 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Pre
             colorPref.setOnPreferenceClickListener(this);
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mSyncStatusPrefs != null) {
+            mSyncStatusPrefs.registerOnSharedPreferenceChangeListener(mSyncStatusListener);
+        }
+
+        mSyncUpdateRunnable = new Runnable() {
+            @Override
+            public void run() {
+                updateSyncStatus();
+                // Rerun every minute
+                mSyncUpdateHandler.postDelayed(this, DateUtils.MINUTE_IN_MILLIS);
+            }
+        };
+        // Immediately run and start the cycle
+        mSyncUpdateHandler.post(mSyncUpdateRunnable);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mSyncStatusPrefs != null) {
+            mSyncStatusPrefs.unregisterOnSharedPreferenceChangeListener(mSyncStatusListener);
+        }
+        // Stop the periodic UI updates
+        mSyncUpdateHandler.removeCallbacks(mSyncUpdateRunnable);
+    }
+
+    private void updateSyncStatus() {
+        if (mForceSyncPref == null || getActivity() == null || mSyncStatusPrefs == null) return;
+
+        long lastSync = mSyncStatusPrefs.getLong("last_sync_timestamp", 0);
+        String summary;
+
+        if (lastSync == 0) {
+            summary = getString(R.string.last_sync_never);
+        } else {
+            summary = getString(R.string.last_sync, DateUtils.getRelativeTimeSpanString(lastSync, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS));
+        }
+
+        mForceSyncPref.setSummary(summary);
+    }
+
 
     private void populateReminders() {
         if (getContext() == null) return;
@@ -124,6 +186,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Pre
         if (preference.getKey().equals(getString(R.string.pref_force_sync_key))) {
             if (mAccountHelper != null) {
                 mAccountHelper.differentialSync();
+                updateSyncStatus();
             }
             return true;
         } else if (preference.getKey().equals(getString(R.string.pref_color_key))) {
