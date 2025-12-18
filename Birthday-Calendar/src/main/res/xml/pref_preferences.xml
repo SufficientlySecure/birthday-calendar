@@ -115,11 +115,7 @@
             android:key="@string/pref_prefer_dd_slash_mm_key"
             android:persistent="true"
             android:summary="@string/pref_prefer_dd_slash_mm_summary"
-            android:title="@string/pref_prefer_dd_slash_mm" />
-        <androidx.preference.Preference
-            android:key="@string/pref_disable_permission_monitoring_key"
-            android:title="@string/pref_disable_permission_monitoring_title"
-            android:summary="@string/pref_disable_permission_monitoring_summary"
+            android:title="@string/pref_prefer_dd_slash_mm"
             android:visible="false" />
         <androidx.preference.Preference
             android:key="@string/pref_force_sync_key"

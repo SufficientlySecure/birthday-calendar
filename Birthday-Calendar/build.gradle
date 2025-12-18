@@ -44,10 +44,10 @@ android {
 
         signingConfigs {
             release {
-                storeFile = file(signingStoreLocation)
-                storePassword = signingStorePassword
-                keyAlias = signingKeyAlias
-                keyPassword = signingKeyPassword
+                storeFile file(signingStoreLocation)
+                storePassword signingStorePassword
+                keyAlias signingKeyAlias
+                keyPassword signingKeyPassword
             }
         }
 
@@ -56,26 +56,27 @@ android {
         buildTypes.release.signingConfig = null
     }
 
+
     flavorDimensions += "version"
     productFlavors {
         create("full") {
             dimension = "version"
-            applicationId = "org.birthdayadapter"
+            applicationId = "fr.heinisch.birthdayadapter"
             buildConfigField("boolean", "FULL_VERSION", "true")
             buildConfigField("boolean", "GOOGLE_PLAY_VERSION", "false")
-            manifestPlaceholders = [authority: "org.birthdayadapter"]
-            resValue "string", "account_type", "org.birthdayadapter.auth"
+            manifestPlaceholders = [authority: "fr.heinisch.birthdayadapter"]
+            resValue "string", "account_type", "fr.heinisch.birthdayadapter.auth"
         }
         create("free") {
             dimension = "version"
-            applicationId = "org.birthdayadapter"
+            applicationId = "fr.heinisch.birthdayadapter"
             buildConfigField("boolean", "FULL_VERSION", "false")
             buildConfigField("boolean", "GOOGLE_PLAY_VERSION", "true")
-            manifestPlaceholders = [authority: "org.birthdayadapter"]
-            resValue "string", "account_type", "org.birthdayadapter.auth"
+            manifestPlaceholders = [authority: "fr.heinisch.birthdayadapter"]
+            resValue "string", "account_type", "fr.heinisch.birthdayadapter.auth"
         }
     }
-    namespace = 'org.birthdayadapter'
+    namespace = 'fr.heinisch.birthdayadapter'
     lint {
         disable('MissingTranslation', 'ExtraTranslation')
     }
