@@ -128,7 +128,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         mAccountHelper = new AccountHelper(mActivity);
         mSyncStatusPrefs = mActivity.getSharedPreferences("sync_status_prefs", Context.MODE_PRIVATE);
 
-        remindersCategory = findPreference("pref_reminders_category");
+        remindersCategory = findPreference(getString(R.string.pref_reminders_category_key));
         if (remindersCategory != null) {
             if (!VersionHelper.isFullVersionUnlocked(getContext())) {
                 remindersCategory.setVisible(false);
@@ -214,24 +214,39 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                     updateSyncStatus();
                 });
 
+        if (getContext() != null && !VersionHelper.isFullVersionUnlocked(getContext())) {
+            PreferenceCategory titleCategory = findPreference(getString(R.string.pref_title_category_key));
+            if (titleCategory != null) {
+                titleCategory.setVisible(false);
+            }
+
+            Preference groupFilteringPref = findPreference(getString(R.string.pref_group_filtering_key));
+            if (groupFilteringPref != null) {
+                groupFilteringPref.setVisible(false);
+            }
+        }
+
         setupUpgradeButton();
     }
 
     private void setupUpgradeButton() {
         if (getContext() == null) return;
 
-        Preference buyFullPref = findPreference(getString(R.string.pref_buy_full_key));
-        if (buyFullPref != null) {
+        PreferenceCategory buyCategory = findPreference(getString(R.string.pref_buy_category_key));
+        if (buyCategory != null) {
             if (VersionHelper.isFullVersionUnlocked(getContext())) {
-                buyFullPref.setVisible(false);
+                buyCategory.setVisible(false);
             } else {
-                buyFullPref.setVisible(true);
-                buyFullPref.setOnPreferenceClickListener(preference -> {
-                    if (getActivity() != null) {
-                        PurchaseHelper.launchBillingFlow(getActivity());
-                    }
-                    return true;
-                });
+                buyCategory.setVisible(true);
+                Preference buyFullPref = findPreference(getString(R.string.pref_buy_full_key));
+                if (buyFullPref != null) {
+                    buyFullPref.setOnPreferenceClickListener(preference -> {
+                        if (getActivity() != null) {
+                            PurchaseHelper.launchBillingFlow(getActivity());
+                        }
+                        return true;
+                    });
+                }
             }
         }
     }
@@ -585,6 +600,11 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     private void updatePermissionMonitoringPrefVisibility() {
         Preference disablePermissionMonitoringPref = findPreference(getString(R.string.pref_disable_permission_monitoring_key));
         if (disablePermissionMonitoringPref == null) {
+            return;
+        }
+
+        if (getContext() == null || !VersionHelper.isFullVersionUnlocked(getContext())) {
+            disablePermissionMonitoringPref.setVisible(false);
             return;
         }
 

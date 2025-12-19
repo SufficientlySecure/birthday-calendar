@@ -15,6 +15,8 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 
+import fr.heinisch.birthdayadapter.util.VersionHelper;
+
 import fr.heinisch.birthdayadapter.util.PreferencesHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,7 +58,10 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Pre
         // Use the default shared preferences to avoid conflicts and ensure consistency.
         addPreferencesFromResource(R.xml.pref_preferences);
 
-        remindersCategory = findPreference("pref_reminders_category");
+        // Show/hide preferences based on build flavor
+        updatePreferenceVisibility();
+
+        remindersCategory = findPreference(getString(R.string.pref_reminders_category_key));
         if (remindersCategory != null) {
             populateReminders();
         }
@@ -71,6 +76,32 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Pre
             colorPref.setOnPreferenceClickListener(this);
         }
     }
+
+    private void updatePreferenceVisibility() {
+        if (getContext() == null) return;
+        boolean isFullVersion = VersionHelper.isFullVersionUnlocked(getContext());
+
+        PreferenceCategory buyCategory = findPreference(getString(R.string.pref_buy_category_key));
+        if (buyCategory != null) {
+            buyCategory.setVisible(!isFullVersion);
+        }
+
+        PreferenceCategory remindersCategory = findPreference(getString(R.string.pref_reminders_category_key));
+        if (remindersCategory != null) {
+            remindersCategory.setVisible(isFullVersion);
+        }
+
+        PreferenceCategory titleCategory = findPreference(getString(R.string.pref_title_category_key));
+        if (titleCategory != null) {
+            titleCategory.setVisible(isFullVersion);
+        }
+
+        PreferenceCategory advancedCategory = findPreference(getString(R.string.pref_advanced_category_key));
+        if (advancedCategory != null) {
+            advancedCategory.setVisible(isFullVersion);
+        }
+    }
+
 
     @Override
     public void onResume() {

@@ -2,14 +2,28 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <androidx.preference.PreferenceCategory android:title="@string/pref_general">
-
         <androidx.preference.Preference
             android:key="@string/pref_color_key"
             android:persistent="true"
             android:title="@string/pref_color" />
+        <androidx.preference.Preference
+            android:key="@string/pref_force_sync_key"
+            android:persistent="false"
+            android:summary="@string/pref_force_sync_summary"
+            android:title="@string/pref_force_sync" />
     </androidx.preference.PreferenceCategory>
+
     <androidx.preference.PreferenceCategory
-        android:key="pref_reminders_category"
+        android:key="@string/pref_buy_category_key"
+        android:title="@string/pref_buy">
+        <androidx.preference.Preference
+            android:key="@string/pref_buy_full_key"
+            android:summary="@string/pref_buy_full_summary"
+            android:title="@string/pref_buy_full" />
+    </androidx.preference.PreferenceCategory>
+
+    <androidx.preference.PreferenceCategory
+        android:key="@string/pref_reminders_category_key"
         android:title="@string/pref_reminders">
         <MultiSelectListPreference
             android:key="pref_reminder_event_types"
@@ -18,7 +32,10 @@
             android:entryValues="@array/pref_reminder_event_types_values"
             android:defaultValue="@array/pref_reminder_event_types_default_values" />
     </androidx.preference.PreferenceCategory>
-    <androidx.preference.PreferenceCategory android:title="@string/pref_title">
+
+    <androidx.preference.PreferenceCategory
+        android:key="@string/pref_title_category_key"
+        android:title="@string/pref_title">
         <androidx.preference.CheckBoxPreference
             android:defaultValue="@string/pref_title_enable_def"
             android:key="@string/pref_title_enable_key"
@@ -96,7 +113,10 @@
             android:summary="@string/pref_jubilee_years_summary"
             android:title="@string/pref_jubilee_years_title" />
     </androidx.preference.PreferenceCategory>
-    <androidx.preference.PreferenceCategory android:title="@string/pref_advanced_category">
+
+    <androidx.preference.PreferenceCategory
+        android:key="@string/pref_advanced_category_key"
+        android:title="@string/pref_advanced_category">
         <androidx.preference.CheckBoxPreference
             android:defaultValue="@string/pref_advanced_def"
             android:key="@string/pref_advanced_key"
@@ -117,12 +137,6 @@
             android:summary="@string/pref_prefer_dd_slash_mm_summary"
             android:title="@string/pref_prefer_dd_slash_mm"
             android:visible="false" />
-        <androidx.preference.Preference
-            android:key="@string/pref_force_sync_key"
-            android:persistent="false"
-            android:summary="@string/pref_force_sync_summary"
-            android:title="@string/pref_force_sync"
-            android:dependency="@string/pref_enabled_key" />
     </androidx.preference.PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

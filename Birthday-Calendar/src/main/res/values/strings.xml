@@ -20,6 +20,7 @@
 <resources>
 
     <string name="app_name" translatable="false">Birthday Adapter</string>
+    <string name="account_type" translatable="false">fr.heinisch.birthdayadapter.auth</string>
 
     <!-- Calendar -->
     <string name="calendar_display_name">Birthdays</string>
