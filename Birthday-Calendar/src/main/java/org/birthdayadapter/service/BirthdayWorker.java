@@ -78,20 +78,17 @@ public class BirthdayWorker extends Worker {
     @Override
     public Result doWork() {
         String action = getInputData().getString(ACTION);
-
-        // Default to sync for backward compatibility with periodic requests
         if (action == null) {
-            action = ACTION_SYNC;
+            action = ACTION_SYNC; // Default for backward compatibility
         }
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
             setForegroundAsync(getForegroundInfo());
         }
 
-        final boolean isSyncAction = ACTION_SYNC.equals(action) || ACTION_FORCE_RESYNC.equals(action);
+        final boolean shouldShowSpinner = ACTION_SYNC.equals(action) || ACTION_FORCE_RESYNC.equals(action) || ACTION_CHANGE_COLOR.equals(action);
 
-        // For user-initiated syncs, show the spinner
-        if (isSyncAction) {
+        if (shouldShowSpinner) {
             SyncStatusManager.getInstance().setSyncing(true);
         }
 
@@ -99,9 +96,6 @@ public class BirthdayWorker extends Worker {
             AccountHelper accountHelper = new AccountHelper(getApplicationContext());
             if (!accountHelper.isAccountActivated()) {
                 Log.d(Constants.TAG, "Account not active, skipping work.");
-                if (isSyncAction) {
-                    SyncStatusManager.getInstance().setSyncing(false);
-                }
                 return Result.success();
             }
 
@@ -122,13 +116,9 @@ public class BirthdayWorker extends Worker {
             return Result.success();
         } catch (Exception e) {
             Log.e(Constants.TAG, "Worker failed", e);
-            if (isSyncAction) {
-                SyncStatusManager.getInstance().setSyncing(false);
-            }
             return Result.failure();
         } finally {
-            if (ACTION_CHANGE_COLOR.equals(action)) {
-                // Only hide the spinner for non-sync actions in the finally block
+            if (shouldShowSpinner) {
                 SyncStatusManager.getInstance().setSyncing(false);
             }
         }
@@ -204,182 +194,176 @@ public class BirthdayWorker extends Worker {
         synchronized (sSyncLock) {
             Log.d(Constants.TAG, "Starting sync inside lock...");
 
-            try {
-                if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED ||
-                        ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-                    Log.e(Constants.TAG, "Sync failed: Missing calendar permissions.");
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+                Log.e(Constants.TAG, "Sync failed: Missing calendar permissions.");
+                return;
+            }
+
+            if (Thread.currentThread().isInterrupted()) {
+                throw new OperationCanceledException();
+            }
+
+            ContentResolver contentResolver = context.getContentResolver();
+
+            if (contentResolver == null) {
+                Log.e(Constants.TAG, "Unable to get content resolver!");
+                return;
+            }
+
+            long calendarId = CalendarHelper.getCalendar(context);
+            if (calendarId == -1) {
+                Log.e(Constants.TAG, "Unable to create or find calendar");
+                return;
+            }
+
+            // Get all existing event UIDs
+            ArrayList<String> existingEventUids = getExistingEventUids(context, contentResolver, calendarId);
+            final int totalEventsBeforeSync = existingEventUids.size();
+            int newEventsCount = 0;
+
+            ArrayList<ContentProviderOperation> operationList = new ArrayList<>();
+            Map<String, String> firstNameCache = new HashMap<>();
+
+            try (Cursor cursor = getContactsEvents(context, contentResolver)) {
+                if (cursor == null) {
+                    Log.e(Constants.TAG, "Unable to get events from contacts! Cursor is null!");
                     return;
                 }
 
-                if (Thread.currentThread().isInterrupted()) {
-                    throw new OperationCanceledException();
-                }
+                int[] reminderMinutes = PreferencesHelper.getAllReminderMinutes(context);
+                Set<String> reminderEventTypes = PreferencesHelper.getReminderEventTypes(context);
+                Log.d(Constants.TAG, "Reminder minutes: " + Arrays.toString(reminderMinutes));
+                boolean hasReminders = reminderMinutes.length > 0;
 
-                ContentResolver contentResolver = context.getContentResolver();
+                int eventDateColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
+                int displayNameColumn = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+                int eventTypeColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE);
+                int eventCustomLabelColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL);
+                int eventLookupKeyColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.LOOKUP_KEY);
 
-                if (contentResolver == null) {
-                    Log.e(Constants.TAG, "Unable to get content resolver!");
-                    return;
-                }
+                int backRef = 0;
 
-                long calendarId = CalendarHelper.getCalendar(context);
-                if (calendarId == -1) {
-                    Log.e(Constants.TAG, "Unable to create or find calendar");
-                    return;
-                }
-
-                // Get all existing event UIDs
-                ArrayList<String> existingEventUids = getExistingEventUids(context, contentResolver, calendarId);
-                final int totalEventsBeforeSync = existingEventUids.size();
-                int newEventsCount = 0;
-
-                ArrayList<ContentProviderOperation> operationList = new ArrayList<>();
-                Map<String, String> firstNameCache = new HashMap<>();
-
-                try (Cursor cursor = getContactsEvents(context, contentResolver)) {
-                    if (cursor == null) {
-                        Log.e(Constants.TAG, "Unable to get events from contacts! Cursor is null!");
-                        return;
+                while (cursor.moveToNext()) {
+                    if (Thread.currentThread().isInterrupted()) {
+                        throw new OperationCanceledException();
                     }
 
-                    int[] reminderMinutes = PreferencesHelper.getAllReminderMinutes(context);
-                    Set<String> reminderEventTypes = PreferencesHelper.getReminderEventTypes(context);
-                    Log.d(Constants.TAG, "Reminder minutes: " + Arrays.toString(reminderMinutes));
-                    boolean hasReminders = reminderMinutes.length > 0;
+                    String eventDateString = cursor.getString(eventDateColumn);
+                    String displayName = cursor.getString(displayNameColumn);
+                    int eventType = cursor.getInt(eventTypeColumn);
+                    String eventLookupKey = cursor.getString(eventLookupKeyColumn);
+                    String eventCustomLabel = cursor.getString(eventCustomLabelColumn);
 
-                    int eventDateColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
-                    int displayNameColumn = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
-                    int eventTypeColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE);
-                    int eventCustomLabelColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL);
-                    int eventLookupKeyColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.LOOKUP_KEY);
+                    Date eventDate = parseEventDateString(context, eventDateString, displayName);
 
-                    int backRef = 0;
+                    if (eventDate != null) {
+                        Calendar eventCal = Calendar.getInstance();
+                        eventCal.setTime(eventDate);
+                        int eventYear = eventCal.get(Calendar.YEAR);
 
-                    while (cursor.moveToNext()) {
-                        if (Thread.currentThread().isInterrupted()) {
-                            throw new OperationCanceledException();
-                        }
+                        boolean hasYear = eventYear >= 1800;
+                        int currYear = Calendar.getInstance().get(Calendar.YEAR);
 
-                        String eventDateString = cursor.getString(eventDateColumn);
-                        String displayName = cursor.getString(displayNameColumn);
-                        int eventType = cursor.getInt(eventTypeColumn);
-                        String eventLookupKey = cursor.getString(eventLookupKeyColumn);
-                        String eventCustomLabel = cursor.getString(eventCustomLabelColumn);
+                        int startYear = currYear - 3;
+                        int endYear = currYear + 5;
 
-                        Date eventDate = parseEventDateString(context, eventDateString, displayName);
+                        for (int iteratedYear = startYear; iteratedYear <= endYear; iteratedYear++) {
+                            if (Thread.currentThread().isInterrupted()) {
+                                throw new OperationCanceledException();
+                            }
 
-                        if (eventDate != null) {
-                            Calendar eventCal = Calendar.getInstance();
-                            eventCal.setTime(eventDate);
-                            int eventYear = eventCal.get(Calendar.YEAR);
+                            if (hasYear && iteratedYear < eventYear) {
+                                continue; // Don't create events for years before the birth year
+                            }
 
-                            boolean hasYear = eventYear >= 1800;
-                            int currYear = Calendar.getInstance().get(Calendar.YEAR);
+                            // Create a stable, unique ID for the event instance based on raw data
+                            String uidCore = eventLookupKey + ":" + eventDateString + ":" + eventType + ":" + displayName.hashCode();
+                            if (eventType == ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM && eventCustomLabel != null) {
+                                uidCore += ":" + eventCustomLabel;
+                            }
+                            String eventUid = uidCore + ":" + iteratedYear;
 
-                            int startYear = currYear - 3;
-                            int endYear = currYear + 5;
+                            // If the event already exists, remove it from the list of existing UIDs and continue
+                            if (existingEventUids.remove(eventUid)) {
+                                continue;
+                            }
 
-                            for (int iteratedYear = startYear; iteratedYear <= endYear; iteratedYear++) {
-                                if (Thread.currentThread().isInterrupted()) {
-                                    throw new OperationCanceledException();
-                                }
+                            int age = iteratedYear - eventYear;
+                            boolean includeAge = hasYear && age >= 0;
 
-                                if (hasYear && iteratedYear < eventYear) {
-                                    continue; // Don't create events for years before the birth year
-                                }
+                            String title = generateTitle(context, eventType, cursor,
+                                    eventCustomLabelColumn, includeAge, displayName, age, eventLookupKey, firstNameCache);
 
-                                // Create a stable, unique ID for the event instance based on raw data
-                                String uidCore = eventLookupKey + ":" + eventDateString + ":" + eventType + ":" + displayName.hashCode();
-                                if (eventType == ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM && eventCustomLabel != null) {
-                                    uidCore += ":" + eventCustomLabel;
-                                }
-                                String eventUid = uidCore + ":" + iteratedYear;
+                            if (title != null && !title.trim().isEmpty()) {
+                                newEventsCount++;
+                                // Calculate the exact start time for this specific instance of the event
+                                Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                                cal.setTime(eventDate);
+                                cal.set(Calendar.YEAR, iteratedYear);
+                                cal.set(Calendar.HOUR_OF_DAY, 0);
+                                cal.set(Calendar.MINUTE, 0);
+                                cal.set(Calendar.SECOND, 0);
+                                cal.set(Calendar.MILLISECOND, 0);
+                                long dtstart = cal.getTimeInMillis();
 
-                                // If the event already exists, remove it from the list of existing UIDs and continue
-                                if (existingEventUids.remove(eventUid)) {
-                                    continue;
-                                }
+                                boolean shouldAddReminder = hasReminders && reminderEventTypes.contains(String.valueOf(eventType));
 
-                                int age = iteratedYear - eventYear;
-                                boolean includeAge = hasYear && age >= 0;
+                                Log.v(Constants.TAG, "Adding event: " + title);
+                                operationList.add(insertEvent(context, calendarId, dtstart, title, eventLookupKey, eventUid, shouldAddReminder));
 
-                                String title = generateTitle(context, eventType, cursor,
-                                        eventCustomLabelColumn, includeAge, displayName, age, eventLookupKey, firstNameCache);
+                                if (shouldAddReminder) {
+                                    for (int minute : reminderMinutes) {
+                                        ContentProviderOperation.Builder builder = ContentProviderOperation
+                                                .newInsert(CalendarHelper.getBirthdayAdapterUri(context, CalendarContract.Reminders.CONTENT_URI));
 
-                                if (title != null && !title.trim().isEmpty()) {
-                                    newEventsCount++;
-                                    // Calculate the exact start time for this specific instance of the event
-                                    Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-                                    cal.setTime(eventDate);
-                                    cal.set(Calendar.YEAR, iteratedYear);
-                                    cal.set(Calendar.HOUR_OF_DAY, 0);
-                                    cal.set(Calendar.MINUTE, 0);
-                                    cal.set(Calendar.SECOND, 0);
-                                    cal.set(Calendar.MILLISECOND, 0);
-                                    long dtstart = cal.getTimeInMillis();
-
-                                    boolean shouldAddReminder = hasReminders && reminderEventTypes.contains(String.valueOf(eventType));
-
-                                    Log.v(Constants.TAG, "Adding event: " + title);
-                                    operationList.add(insertEvent(context, calendarId, dtstart, title, eventLookupKey, eventUid, shouldAddReminder));
-
-                                    if (shouldAddReminder) {
-                                        for (int minute : reminderMinutes) {
-                                            ContentProviderOperation.Builder builder = ContentProviderOperation
-                                                    .newInsert(CalendarHelper.getBirthdayAdapterUri(context, CalendarContract.Reminders.CONTENT_URI));
-
-                                            builder.withValueBackReference(CalendarContract.Reminders.EVENT_ID, backRef);
-                                            builder.withValue(CalendarContract.Reminders.MINUTES, minute);
-                                            builder.withValue(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
-                                            operationList.add(builder.build());
-                                        }
-                                        backRef += 1 + reminderMinutes.length;
-                                    } else {
-                                        backRef += 1;
+                                        builder.withValueBackReference(CalendarContract.Reminders.EVENT_ID, backRef);
+                                        builder.withValue(CalendarContract.Reminders.MINUTES, minute);
+                                        builder.withValue(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+                                        operationList.add(builder.build());
                                     }
+                                    backRef += 1 + reminderMinutes.length;
+                                } else {
+                                    backRef += 1;
                                 }
+                            }
 
-                                if (operationList.size() > 200) {
-                                    applyBatchOperations(contentResolver, operationList);
-                                    backRef = 0;
-                                    operationList.clear();
-                                }
+                            if (operationList.size() > 200) {
+                                applyBatchOperations(contentResolver, operationList);
+                                backRef = 0;
+                                operationList.clear();
                             }
                         }
                     }
                 }
-
-                if (!operationList.isEmpty()) {
-                    applyBatchOperations(contentResolver, operationList);
-                }
-
-                // Delete old events
-                int deletedEventsCount = 0;
-                if (!existingEventUids.isEmpty()) {
-                    deletedEventsCount = existingEventUids.size();
-                    Log.d(Constants.TAG, "Deleting " + deletedEventsCount + " old events.");
-                    ArrayList<ContentProviderOperation> deleteOperationList = new ArrayList<>();
-                    for (String uid : existingEventUids) {
-                        deleteOperationList.add(ContentProviderOperation.newDelete(CalendarHelper.getBirthdayAdapterUri(context, CalendarContract.Events.CONTENT_URI))
-                                .withSelection(CalendarContract.Events.UID_2445 + " = ?", new String[]{uid})
-                                .build());
-                    }
-                    applyBatchOperations(contentResolver, deleteOperationList);
-                }
-
-                int checkedEventsCount = totalEventsBeforeSync - deletedEventsCount;
-                Log.i(Constants.TAG, "Sync summary: " + checkedEventsCount + " events confirmed, "
-                        + newEventsCount + " new events added, " + deletedEventsCount + " old events removed.");
-
-
-                // Store the last sync timestamp in a separate file to avoid triggering listeners
-                SharedPreferences syncPrefs = context.getSharedPreferences("sync_status_prefs", Context.MODE_PRIVATE);
-                syncPrefs.edit().putLong("last_sync_timestamp", System.currentTimeMillis()).apply();
-
-            } finally {
-                // Always hide the spinner when the sync work is finished
-                SyncStatusManager.getInstance().setSyncing(false);
             }
+
+            if (!operationList.isEmpty()) {
+                applyBatchOperations(contentResolver, operationList);
+            }
+
+            // Delete old events
+            int deletedEventsCount = 0;
+            if (!existingEventUids.isEmpty()) {
+                deletedEventsCount = existingEventUids.size();
+                Log.d(Constants.TAG, "Deleting " + deletedEventsCount + " old events.");
+                ArrayList<ContentProviderOperation> deleteOperationList = new ArrayList<>();
+                for (String uid : existingEventUids) {
+                    deleteOperationList.add(ContentProviderOperation.newDelete(CalendarHelper.getBirthdayAdapterUri(context, CalendarContract.Events.CONTENT_URI))
+                            .withSelection(CalendarContract.Events.UID_2445 + " = ?", new String[]{uid})
+                            .build());
+                }
+                applyBatchOperations(contentResolver, deleteOperationList);
+            }
+
+            int checkedEventsCount = totalEventsBeforeSync - deletedEventsCount;
+            Log.i(Constants.TAG, "Sync summary: " + checkedEventsCount + " events confirmed, "
+                    + newEventsCount + " new events added, " + deletedEventsCount + " old events removed.");
+
+
+            // Store the last sync timestamp in a separate file to avoid triggering listeners
+            SharedPreferences syncPrefs = context.getSharedPreferences("sync_status_prefs", Context.MODE_PRIVATE);
+            syncPrefs.edit().putLong("last_sync_timestamp", System.currentTimeMillis()).apply();
         }
     }
 
