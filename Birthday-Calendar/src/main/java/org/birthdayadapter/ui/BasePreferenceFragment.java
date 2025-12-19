@@ -45,7 +45,6 @@ import androidx.preference.SwitchPreferenceCompat;
 import org.birthdayadapter.R;
 import org.birthdayadapter.util.AccountHelper;
 import org.birthdayadapter.util.Constants;
-import org.birthdayadapter.util.PreferencesHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -58,13 +57,17 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
 
     private ActivityResultLauncher<String[]> requestPermissionLauncher;
 
-    private static final String[] REQUIRED_PERMISSIONS = new String[]{
-            Manifest.permission.GET_ACCOUNTS,
-            Manifest.permission.READ_CONTACTS,
-            Manifest.permission.WRITE_CONTACTS,
-            Manifest.permission.READ_CALENDAR,
-            Manifest.permission.WRITE_CALENDAR
-    };
+    private static final String[] REQUIRED_PERMISSIONS;
+
+    static {
+        List<String> permissions = new ArrayList<>();
+        permissions.add(Manifest.permission.GET_ACCOUNTS);
+        permissions.add(Manifest.permission.READ_CONTACTS);
+        permissions.add(Manifest.permission.WRITE_CONTACTS);
+        permissions.add(Manifest.permission.READ_CALENDAR);
+        permissions.add(Manifest.permission.WRITE_CALENDAR);
+        REQUIRED_PERMISSIONS = permissions.toArray(new String[0]);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,6 +96,9 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
             if (essentialPermissionsGranted) {
                 // All essential permissions granted, now add the account
                 mAccountHelper.addAccountAndSync();
+                if (mEnabled != null) {
+                    mEnabled.setChecked(true);
+                }
             } else {
                 // At least one essential permission was denied, disable the feature
                 if (mEnabled != null) {
@@ -125,26 +131,17 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
             mEnabled.setOnPreferenceChangeListener((preference, newValue) -> {
                 if (newValue instanceof Boolean) {
                     if ((Boolean) newValue) {
-                        // This will trigger the permission check if needed
                         checkAndRequestPermissions();
+                        // Defer UI update until permissions are handled
+                        return false;
                     } else {
                         mAccountHelper.removeAccount();
+                        // Allow UI update immediately for deactivation
+                        return true;
                     }
                 }
-                // We return false because the permission launcher is asynchronous.
-                // The switch state will be updated in the launcher's callback.
                 return true;
             });
-        }
-
-        // On first run, set the switch to true and trigger the sync/permission flow
-        if (PreferencesHelper.getFirstRun(mActivity)) {
-            PreferencesHelper.setFirstRun(mActivity, false);
-            // We directly call checkAndRequestPermissions which contains the permission check.
-            // We also manually set the switch to checked state.
-            if (mEnabled != null) {
-                mEnabled.setChecked(true);
-            }
         }
 
         Preference openContacts = findPreference(getString(R.string.pref_contacts_key));
@@ -183,6 +180,9 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
         if (permissionsToRequest.isEmpty()) {
             // All permissions are already granted
             mAccountHelper.addAccountAndSync();
+            if (mEnabled != null) {
+                mEnabled.setChecked(true);
+            }
         } else {
             // Request the missing permissions
             requestPermissionLauncher.launch(permissionsToRequest.toArray(new String[0]));

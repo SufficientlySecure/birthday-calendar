@@ -121,22 +121,11 @@ public class AccountListFragment extends Fragment implements
         // Always update the adapter's state when the fragment resumes
         updateGroupFilteringState();
 
-        // To prevent the permission dialog from becoming unresponsive on first launch,
-        // we post the permission check to the view's message queue. This ensures that the
-        // request is made only after the UI has been fully drawn and is interactive.
-        View view = getView();
-        if (view != null) {
-            view.post(() -> {
-                Context postContext = getContext();
-                if (isAdded() && postContext != null) {
-                    if (ContextCompat.checkSelfPermission(postContext, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-                        LoaderManager.getInstance(this).restartLoader(0, null, this);
-                    } else {
-                        // Request permission if not granted
-                        requestPermissionLauncher.launch(Manifest.permission.READ_CONTACTS);
-                    }
-                }
-            });
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+            LoaderManager.getInstance(this).restartLoader(0, null, this);
+        } else {
+            // Request permission if not granted
+            requestPermissionLauncher.launch(Manifest.permission.READ_CONTACTS);
         }
     }
 
