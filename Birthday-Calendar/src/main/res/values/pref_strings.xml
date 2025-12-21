@@ -14,10 +14,6 @@
 
     <string name="pref_reminders_key" translatable="false">reminders</string>
 
-    <string name="pref_advanced_key" translatable="false">advanced</string>
-
-    <item name="pref_advanced_def" format="boolean" type="string">false</item>
-
     <string name="pref_prefer_dd_slash_mm_key" translatable="false">preferddSlashMM</string>
 
     <item name="pref_prefer_dd_slash_mm_def" format="boolean" type="string">false</item>

@@ -117,21 +117,18 @@
     <androidx.preference.PreferenceCategory
         android:key="@string/pref_advanced_category_key"
         android:title="@string/pref_advanced_category">
-        <androidx.preference.CheckBoxPreference
-            android:defaultValue="@string/pref_advanced_def"
-            android:key="@string/pref_advanced_key"
-            android:persistent="true"
-            android:summary="@string/pref_advanced_summary"
-            android:title="@string/pref_advanced" />
+        <androidx.preference.Preference
+            android:key="@string/pref_disable_permission_monitoring_key"
+            android:title="@string/pref_disable_permission_monitoring_title"
+            android:summary="@string/pref_disable_permission_monitoring_summary"
+            android:visible="false" />
         <androidx.preference.CheckBoxPreference
             android:key="@string/pref_group_filtering_key"
-            android:dependency="@string/pref_advanced_key"
             android:title="@string/pref_group_filtering_title"
             android:summary="@string/pref_group_filtering_summary"
             android:defaultValue="@bool/pref_group_filtering_def" />
         <androidx.preference.CheckBoxPreference
             android:defaultValue="@string/pref_prefer_dd_slash_mm_def"
-            android:dependency="@string/pref_advanced_key"
             android:key="@string/pref_prefer_dd_slash_mm_key"
             android:persistent="true"
             android:summary="@string/pref_prefer_dd_slash_mm_summary"

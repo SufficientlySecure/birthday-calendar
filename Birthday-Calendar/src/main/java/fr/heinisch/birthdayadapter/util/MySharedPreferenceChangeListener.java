@@ -56,9 +56,8 @@ public class MySharedPreferenceChangeListener implements SharedPreferences.OnSha
 
         // Keys that should not trigger a sync or are handled elsewhere
         String forceSyncKey = mContext.getString(R.string.pref_force_sync_key);
-        String advancedKey = mContext.getString(R.string.pref_advanced_key);
 
-        if (key.equals(forceSyncKey) || key.equals(advancedKey)) {
+        if (key.equals(forceSyncKey)) {
             return;
         }
 
