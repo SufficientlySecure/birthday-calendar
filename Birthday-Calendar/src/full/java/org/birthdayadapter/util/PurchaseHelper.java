@@ -1,4 +1,4 @@
-package org.birthdayadapter.util;
+package fr.heinisch.birthdayadapter.util;
 
 import android.app.Activity;
 import android.content.Context;

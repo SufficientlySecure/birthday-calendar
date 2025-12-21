@@ -105,7 +105,7 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
 
         // Process the combined list of unique accounts
         for (Account account : allDiscoveredAccounts) {
-            if (account.type.startsWith("org.birthdayadapter")) {
+            if (account.type.startsWith("fr.heinisch.birthdayadapter")) {
                 continue;
             }
 
