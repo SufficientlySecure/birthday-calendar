@@ -125,7 +125,8 @@
             android:key="@string/pref_force_sync_key"
             android:persistent="false"
             android:summary="@string/pref_force_sync_summary"
-            android:title="@string/pref_force_sync" />
+            android:title="@string/pref_force_sync"
+            android:dependency="@string/pref_enabled_key" />
     </androidx.preference.PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>
