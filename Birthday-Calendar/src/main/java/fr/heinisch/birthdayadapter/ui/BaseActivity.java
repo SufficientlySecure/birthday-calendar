@@ -82,11 +82,10 @@ public class BaseActivity extends AppCompatActivity {
         IPurchaseHelper mPurchaseHelper = PurchaseHelperFactory.create();
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         if (!VersionHelper.isFullVersionUnlocked(this)) {
             toolbar.setTitle(getString(R.string.app_name) + " (Free)");
         }
+        setSupportActionBar(toolbar);
 
         final ViewPager2 viewPager = findViewById(R.id.viewpager);
         View mainContent = findViewById(R.id.main_content);
