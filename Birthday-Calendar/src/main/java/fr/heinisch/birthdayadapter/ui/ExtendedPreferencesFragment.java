@@ -230,6 +230,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         }
 
         setupUpgradeButton();
+        updatePermissionMonitoringPrefVisibility();
     }
 
     private void setupUpgradeButton() {
