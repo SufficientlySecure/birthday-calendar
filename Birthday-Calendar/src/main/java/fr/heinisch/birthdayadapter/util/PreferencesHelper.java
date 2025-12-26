@@ -109,7 +109,7 @@ public class PreferencesHelper {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         boolean prefLabelsEnabled = prefs.getBoolean(
-                context.getString(R.string.pref_title_enable_key), false);
+                context.getString(R.string.pref_title_enable_key), context.getResources().getBoolean(R.bool.pref_title_enable_def));
 
         switch (eventType) {
             case ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM:
@@ -164,7 +164,7 @@ public class PreferencesHelper {
     public static boolean getPreferDDSlashMM(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getBoolean(context.getString(R.string.pref_prefer_dd_slash_mm_key),
-                Boolean.parseBoolean(context.getString(R.string.pref_prefer_dd_slash_mm_def)));
+                context.getResources().getBoolean(R.bool.pref_prefer_dd_slash_mm_def));
     }
 
     public static String getJubileeYears(Context context) {

@@ -16,11 +16,7 @@
 
     <string name="pref_prefer_dd_slash_mm_key" translatable="false">preferddSlashMM</string>
 
-    <item name="pref_prefer_dd_slash_mm_def" format="boolean" type="string">false</item>
-
     <string name="pref_title_enable_key" translatable="false">titlesEnable</string>
-
-    <item name="pref_title_enable_def" format="boolean" type="string">false</item>
 
     <string name="pref_title_birthday_without_age_key">birthday</string>
     <string name="pref_title_birthday_with_age_key">birthdayAge</string>
