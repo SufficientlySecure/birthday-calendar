@@ -20,6 +20,8 @@
 
 package fr.heinisch.birthdayadapter.util;
 
+import static fr.heinisch.birthdayadapter.util.VersionHelper.isFullVersionUnlocked;
+
 import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -36,10 +38,10 @@ import androidx.work.OutOfQuotaPolicy;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
+import java.util.concurrent.TimeUnit;
+
 import fr.heinisch.birthdayadapter.R;
 import fr.heinisch.birthdayadapter.service.BirthdayWorker;
-
-import java.util.concurrent.TimeUnit;
 
 public class AccountHelper {
     private final Context mContext;
@@ -115,7 +117,7 @@ public class AccountHelper {
     public void differentialSync() {
         Log.i(Constants.TAG, "Differential sync triggered.");
         // (Re)schedule a periodic sync upon a manual sync
-        if (VersionHelper.isFullVersionUnlocked(mContext)) {
+        if (isFullVersionUnlocked(mContext)) {
             Log.d(Constants.TAG, "Enqueuing periodic sync with UPDATE policy.");
             PeriodicWorkRequest periodicSyncRequest = new PeriodicWorkRequest.Builder(BirthdayWorker.class, Constants.SYNC_INTERVAL_DAYS, TimeUnit.DAYS).build();
             WorkManager.getInstance(mContext).enqueueUniquePeriodicWork("periodic_sync", ExistingPeriodicWorkPolicy.UPDATE, periodicSyncRequest);

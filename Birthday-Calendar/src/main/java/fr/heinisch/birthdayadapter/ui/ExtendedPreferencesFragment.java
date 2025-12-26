@@ -20,6 +20,8 @@
 
 package fr.heinisch.birthdayadapter.ui;
 
+import static fr.heinisch.birthdayadapter.util.VersionHelper.isFullVersionUnlocked;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -58,15 +60,6 @@ import androidx.work.WorkManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
 
-import fr.heinisch.birthdayadapter.R;
-import fr.heinisch.birthdayadapter.util.AccountHelper;
-import fr.heinisch.birthdayadapter.util.Constants;
-import fr.heinisch.birthdayadapter.util.IPurchaseHelper;
-import fr.heinisch.birthdayadapter.util.PreferencesHelper;
-import fr.heinisch.birthdayadapter.util.PurchaseHelperFactory;
-import fr.heinisch.birthdayadapter.util.SyncStatusManager;
-import fr.heinisch.birthdayadapter.util.VersionHelper;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -75,6 +68,15 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
+
+import fr.heinisch.birthdayadapter.R;
+import fr.heinisch.birthdayadapter.util.AccountHelper;
+import fr.heinisch.birthdayadapter.util.Constants;
+import fr.heinisch.birthdayadapter.util.IPurchaseHelper;
+import fr.heinisch.birthdayadapter.util.PreferencesHelper;
+import fr.heinisch.birthdayadapter.util.PurchaseHelperFactory;
+import fr.heinisch.birthdayadapter.util.SyncStatusManager;
+import fr.heinisch.birthdayadapter.util.VersionHelper;
 
 public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
 
@@ -114,8 +116,41 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle bundle, String s) {
         // Use the default shared preferences to ensure consistency across the app.
         addPreferencesFromResource(R.xml.pref_preferences);
+
+        if (getContext() != null && !isFullVersionUnlocked(getContext())) {
+            PreferenceCategory remindersCategory = findPreference(getString(R.string.pref_reminders_category_key));
+            if (remindersCategory != null) {
+                getPreferenceScreen().removePreference(remindersCategory);
+            }
+            PreferenceCategory titleCategory = findPreference(getString(R.string.pref_title_category_key));
+            if (titleCategory != null) {
+                getPreferenceScreen().removePreference(titleCategory);
+            }
+            PreferenceCategory advancedCategory = findPreference(getString(R.string.pref_advanced_category_key));
+            if (advancedCategory != null) {
+                getPreferenceScreen().removePreference(advancedCategory);
+            }
+            Preference buyFullPref = findPreference(getString(R.string.pref_buy_full_key));
+            if (buyFullPref != null) {
+                buyFullPref.setOnPreferenceClickListener(preference -> {
+                    if (getActivity() != null) {
+                        mPurchaseHelper.launchBillingFlow(getActivity());
+                    }
+                    return true;
+                });
+            }
+        }
+        else if (getContext() != null && isFullVersionUnlocked(getContext())) {
+            updateJubileeYearsSummary();
+
+            PreferenceCategory buyCategory = findPreference(getString(R.string.pref_buy_category_key));
+            if (buyCategory != null) {
+                getPreferenceScreen().removePreference(buyCategory);
+            }
+        }
     }
 
+    @NonNull
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -131,24 +166,60 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         mSyncStatusPrefs = mActivity.getSharedPreferences("sync_status_prefs", Context.MODE_PRIVATE);
         mPurchaseHelper = PurchaseHelperFactory.create();
 
-        remindersCategory = findPreference(getString(R.string.pref_reminders_category_key));
-        if (remindersCategory != null) {
-            if (!VersionHelper.isFullVersionUnlocked(getContext())) {
-                remindersCategory.setVisible(false);
+        if (getContext() != null && isFullVersionUnlocked(getContext())) {
+            remindersCategory = findPreference(getString(R.string.pref_reminders_category_key));
+            if (remindersCategory != null) {
+                MultiSelectListPreference reminderTypesPref = findPreference(getString(R.string.pref_reminder_event_types));
+                if (reminderTypesPref != null) {
+                    updateReminderEventTypesSummary(reminderTypesPref);
+                    reminderTypesPref.setOnPreferenceChangeListener((preference, newValue) -> {
+                        mAccountHelper.triggerFullResync();
+                        // This cast is safe because the preference is a MultiSelectListPreference
+                        @SuppressWarnings("unchecked")
+                        Set<String> values = (Set<String>) newValue;
+                        updateReminderEventTypesSummary(reminderTypesPref, values);
+                        return true;
+                    });
+                }
+                populateReminders();
             }
-            MultiSelectListPreference reminderTypesPref = findPreference("pref_reminder_event_types");
-            if (reminderTypesPref != null) {
-                updateReminderEventTypesSummary(reminderTypesPref);
-                reminderTypesPref.setOnPreferenceChangeListener((preference, newValue) -> {
-                    mAccountHelper.triggerFullResync();
-                    // This cast is safe because the preference is a MultiSelectListPreference
-                    @SuppressWarnings("unchecked")
-                    Set<String> values = (Set<String>) newValue;
-                    updateReminderEventTypesSummary(reminderTypesPref, values);
+
+            mJubileeYearsPref = findPreference(getString(R.string.pref_jubilee_years_key));
+            if (mJubileeYearsPref != null) {
+                updateJubileeYearsSummary();
+                mJubileeYearsPref.setOnPreferenceClickListener(preference -> {
+                    showJubileeYearsInputDialog();
                     return true;
                 });
             }
-            populateReminders();
+
+            Preference disablePermissionMonitoringPref = findPreference(getString(R.string.pref_disable_permission_monitoring_key));
+            if (disablePermissionMonitoringPref != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    disablePermissionMonitoringPref.setOnPreferenceClickListener(preference -> {
+                        if (!isAdded()) {
+                            return true;
+                        }
+                        Context context = requireContext();
+                        Intent intent;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            intent = new Intent(Intent.ACTION_AUTO_REVOKE_PERMISSIONS);
+                            intent.setData(Uri.parse("package:" + context.getPackageName()));
+                        } else {
+                            intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            intent.setData(Uri.parse("package:" + context.getPackageName()));
+                        }
+                        try {
+                            startActivity(intent);
+                        } catch (android.content.ActivityNotFoundException e) {
+                            Intent fallbackIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            fallbackIntent.setData(Uri.parse("package:" + context.getPackageName()));
+                            startActivity(fallbackIntent);
+                        }
+                        return true;
+                    });
+                }
+            }
         }
 
         forceSyncPref = findPreference(getString(R.string.pref_force_sync_key));
@@ -170,43 +241,6 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
             });
         }
 
-        mJubileeYearsPref = findPreference(getString(R.string.pref_jubilee_years_key));
-        if (mJubileeYearsPref != null) {
-            updateJubileeYearsSummary();
-            mJubileeYearsPref.setOnPreferenceClickListener(preference -> {
-                showJubileeYearsInputDialog();
-                return true;
-            });
-        }
-
-        Preference disablePermissionMonitoringPref = findPreference(getString(R.string.pref_disable_permission_monitoring_key));
-        if (disablePermissionMonitoringPref != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                disablePermissionMonitoringPref.setOnPreferenceClickListener(preference -> {
-                    if (!isAdded()) {
-                        return true;
-                    }
-                    Context context = requireContext();
-                    Intent intent;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        intent = new Intent(Intent.ACTION_AUTO_REVOKE_PERMISSIONS);
-                        intent.setData(Uri.parse("package:" + context.getPackageName()));
-                    } else {
-                        intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        intent.setData(Uri.parse("package:" + context.getPackageName()));
-                    }
-                    try {
-                        startActivity(intent);
-                    } catch (android.content.ActivityNotFoundException e) {
-                        Intent fallbackIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        fallbackIntent.setData(Uri.parse("package:" + context.getPackageName()));
-                        startActivity(fallbackIntent);
-                    }
-                    return true;
-                });
-            }
-        }
-
         WorkManager.getInstance(mActivity).getWorkInfosForUniqueWorkLiveData("periodic_sync")
                 .observe(getViewLifecycleOwner(), workInfos -> {
                     if (workInfos != null && !workInfos.isEmpty()) {
@@ -217,42 +251,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                     updateSyncStatus();
                 });
 
-        if (getContext() != null && !VersionHelper.isFullVersionUnlocked(getContext())) {
-            PreferenceCategory titleCategory = findPreference(getString(R.string.pref_title_category_key));
-            if (titleCategory != null) {
-                titleCategory.setVisible(false);
-            }
-
-            Preference groupFilteringPref = findPreference(getString(R.string.pref_group_filtering_key));
-            if (groupFilteringPref != null) {
-                groupFilteringPref.setVisible(false);
-            }
-        }
-
-        setupUpgradeButton();
         updatePermissionMonitoringPrefVisibility();
-    }
-
-    private void setupUpgradeButton() {
-        if (getContext() == null) return;
-
-        PreferenceCategory buyCategory = findPreference(getString(R.string.pref_buy_category_key));
-        if (buyCategory != null) {
-            if (VersionHelper.isFullVersionUnlocked(getContext())) {
-                buyCategory.setVisible(false);
-            } else {
-                buyCategory.setVisible(true);
-                Preference buyFullPref = findPreference(getString(R.string.pref_buy_full_key));
-                if (buyFullPref != null) {
-                    buyFullPref.setOnPreferenceClickListener(preference -> {
-                        if (getActivity() != null) {
-                            mPurchaseHelper.launchBillingFlow(getActivity());
-                        }
-                        return true;
-                    });
-                }
-            }
-        }
     }
 
     private void updateReminderEventTypesSummary(MultiSelectListPreference preference) {
@@ -575,7 +574,6 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     @Override
     public void onResume() {
         super.onResume();
-        updateJubileeYearsSummary();
         mSyncStatusPrefs.registerOnSharedPreferenceChangeListener(mSyncStatusListener);
         PreferenceManager.getDefaultSharedPreferences(requireContext()).registerOnSharedPreferenceChangeListener(mPurchaseListener);
         updatePermissionMonitoringPrefVisibility();
@@ -607,8 +605,8 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
             return;
         }
 
-        if (getContext() == null || !VersionHelper.isFullVersionUnlocked(getContext())) {
-            disablePermissionMonitoringPref.setVisible(false);
+        if (getContext() == null || !isFullVersionUnlocked(getContext())) {
+            // advanced settings are not visible in free version, no need to check
             return;
         }
 

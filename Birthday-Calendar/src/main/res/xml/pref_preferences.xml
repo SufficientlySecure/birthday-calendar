@@ -26,7 +26,7 @@
         android:key="@string/pref_reminders_category_key"
         android:title="@string/pref_reminders">
         <MultiSelectListPreference
-            android:key="pref_reminder_event_types"
+            android:key="@string/pref_reminder_event_types"
             android:title="@string/pref_events_with_reminders"
             android:entries="@array/pref_reminder_event_types_entries"
             android:entryValues="@array/pref_reminder_event_types_values"

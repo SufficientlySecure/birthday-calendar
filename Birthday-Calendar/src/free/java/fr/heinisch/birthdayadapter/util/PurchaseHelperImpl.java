@@ -36,9 +36,9 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
 
     @Override
     public void launchBillingFlow(Activity activity) {
-        Log.i(Constants.TAG, "launchBillingFlow called.");
+        Log.d(Constants.TAG, "launchBillingFlow called.");
         if (!BuildConfig.GOOGLE_PLAY_VERSION) {
-            Log.w(Constants.TAG, "Billing flow not launched: GOOGLE_PLAY_VERSION is false.");
+            Log.d(Constants.TAG, "Billing flow aborted: GOOGLE_PLAY_VERSION is false.");
             return;
         }
 
@@ -91,7 +91,7 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
                     if (br.getResponseCode() == BillingClient.BillingResponseCode.OK && productDetailsList != null && !productDetailsList.isEmpty()) {
                         for (ProductDetails productDetails : productDetailsList) {
                             if (productDetails.getProductId().equals(SKU_FULL_VERSION)) {
-                                Log.i(Constants.TAG, "Product '" + SKU_FULL_VERSION + "' found. Launching billing flow...");
+                                Log.d(Constants.TAG, "Product '" + SKU_FULL_VERSION + "' found. Launching billing flow...");
                                 BillingFlowParams.ProductDetailsParams productDetailsParams = BillingFlowParams.ProductDetailsParams.newBuilder()
                                         .setProductDetails(productDetails)
                                         .build();
@@ -123,7 +123,7 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
 
     @Override
     public void verifyAndRestorePurchases(Context context) {
-        Log.i(Constants.TAG, "verifyAndRestorePurchases: Starting verification.");
+        Log.d(Constants.TAG, "verifyAndRestorePurchases: Starting verification.");
         if (!BuildConfig.GOOGLE_PLAY_VERSION) {
             Log.w(Constants.TAG, "verifyAndRestorePurchases: Skipped, GOOGLE_PLAY_VERSION is false.");
             return;
@@ -139,7 +139,7 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
         billingClient.startConnection(new BillingClientStateListener() {
             @Override
             public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
-                Log.i(Constants.TAG, "verifyAndRestorePurchases: onBillingSetupFinished response: " + billingResult.getResponseCode());
+                Log.d(Constants.TAG, "verifyAndRestorePurchases: onBillingSetupFinished response: " + billingResult.getResponseCode());
                 if (billingResult.getResponseCode() != BillingClient.BillingResponseCode.OK) {
                     Log.e(Constants.TAG, "verifyAndRestorePurchases: Billing setup failed. Closing connection.");
                     billingClient.endConnection();
@@ -148,14 +148,14 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
 
                 QueryPurchasesParams params = QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build();
                 billingClient.queryPurchasesAsync(params, (br, purchases) -> {
-                    Log.i(Constants.TAG, "verifyAndRestorePurchases: queryPurchasesAsync response: " + br.getResponseCode());
+                    Log.d(Constants.TAG, "verifyAndRestorePurchases: queryPurchasesAsync response: " + br.getResponseCode());
                     if (br.getResponseCode() != BillingClient.BillingResponseCode.OK || purchases == null || purchases.isEmpty()) {
                         Log.i(Constants.TAG, "verifyAndRestorePurchases: No active purchases found or query failed.");
                         billingClient.endConnection();
                         return;
                     }
 
-                    Log.i(Constants.TAG, "verifyAndRestorePurchases: Found " + purchases.size() + " purchase(s). Processing...");
+                    Log.d(Constants.TAG, "verifyAndRestorePurchases: Found " + purchases.size() + " purchase(s). Processing...");
                     final AtomicInteger pendingOperations = new AtomicInteger(purchases.size());
                     Runnable onFinishedListener = () -> {
                         if (pendingOperations.decrementAndGet() == 0) {
@@ -186,7 +186,7 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
         Log.d(Constants.TAG, "handlePurchase: State is " + purchase.getPurchaseState());
         if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
             if (!purchase.isAcknowledged()) {
-                Log.i(Constants.TAG, "handlePurchase: Purchase is new. Acknowledging...");
+                Log.d(Constants.TAG, "handlePurchase: Purchase is new. Acknowledging...");
                 AcknowledgePurchaseParams acknowledgeParams = AcknowledgePurchaseParams.newBuilder()
                         .setPurchaseToken(purchase.getPurchaseToken())
                         .build();
@@ -217,9 +217,8 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
             return;
         }
         
-        Log.i(Constants.TAG, "unlockFullVersion: Setting full version to purchased and starting sync.");
+        Log.i(Constants.TAG, "unlockFullVersion: Setting full version to purchased.");
         VersionHelper.setFullVersionUnlocked(context, true);
-        new AccountHelper(context).differentialSync();
 
         if (context instanceof Activity) {
             Log.d(Constants.TAG, "unlockFullVersion: Recreating activity to apply changes.");

@@ -21,6 +21,8 @@
 
 package fr.heinisch.birthdayadapter.ui;
 
+import static fr.heinisch.birthdayadapter.util.VersionHelper.isFullVersionUnlocked;
+
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -42,16 +44,15 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
 import fr.heinisch.birthdayadapter.R;
 import fr.heinisch.birthdayadapter.util.IPurchaseHelper;
 import fr.heinisch.birthdayadapter.util.MySharedPreferenceChangeListener;
 import fr.heinisch.birthdayadapter.util.PurchaseHelperFactory;
 import fr.heinisch.birthdayadapter.util.SyncStatusManager;
-import fr.heinisch.birthdayadapter.util.VersionHelper;
-
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -82,7 +83,7 @@ public class BaseActivity extends AppCompatActivity {
         IPurchaseHelper mPurchaseHelper = PurchaseHelperFactory.create();
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
-        if (!VersionHelper.isFullVersionUnlocked(this)) {
+        if (!isFullVersionUnlocked(this)) {
             toolbar.setTitle(getString(R.string.app_name) + " (Free)");
         }
         setSupportActionBar(toolbar);
@@ -123,7 +124,7 @@ public class BaseActivity extends AppCompatActivity {
         });
 
         // Check for existing purchases and restore them if necessary
-        if (!VersionHelper.isFullVersionUnlocked(this)) {
+        if (!isFullVersionUnlocked(this)) {
             mPurchaseHelper.verifyAndRestorePurchases(this);
         }
     }

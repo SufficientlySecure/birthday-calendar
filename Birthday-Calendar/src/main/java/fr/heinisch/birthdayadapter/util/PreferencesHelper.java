@@ -109,7 +109,7 @@ public class PreferencesHelper {
                 String.valueOf(ContactsContract.CommonDataKinds.Event.TYPE_OTHER),
                 String.valueOf(ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM)
         ));
-        return prefs.getStringSet("pref_reminder_event_types", defaultValues);
+        return prefs.getStringSet(context.getString(R.string.pref_reminder_event_types), defaultValues);
     }
 
     public static String getLabel(Context context, int eventType, boolean includeAge) {

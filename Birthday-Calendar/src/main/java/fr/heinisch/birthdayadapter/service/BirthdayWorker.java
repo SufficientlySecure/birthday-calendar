@@ -1,5 +1,7 @@
 package fr.heinisch.birthdayadapter.service;
 
+import static fr.heinisch.birthdayadapter.util.VersionHelper.isFullVersionUnlocked;
+
 import android.Manifest;
 import android.accounts.Account;
 import android.app.Notification;
@@ -32,16 +34,6 @@ import androidx.work.ForegroundInfo;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import fr.heinisch.birthdayadapter.R;
-import fr.heinisch.birthdayadapter.provider.ProviderHelper;
-import fr.heinisch.birthdayadapter.util.AccountHelper;
-import fr.heinisch.birthdayadapter.util.CalendarHelper;
-import fr.heinisch.birthdayadapter.util.Constants;
-import fr.heinisch.birthdayadapter.util.Log;
-import fr.heinisch.birthdayadapter.util.PreferencesHelper;
-import fr.heinisch.birthdayadapter.util.SyncStatusManager;
-import fr.heinisch.birthdayadapter.util.VersionHelper;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,6 +47,15 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
+
+import fr.heinisch.birthdayadapter.R;
+import fr.heinisch.birthdayadapter.provider.ProviderHelper;
+import fr.heinisch.birthdayadapter.util.AccountHelper;
+import fr.heinisch.birthdayadapter.util.CalendarHelper;
+import fr.heinisch.birthdayadapter.util.Constants;
+import fr.heinisch.birthdayadapter.util.Log;
+import fr.heinisch.birthdayadapter.util.PreferencesHelper;
+import fr.heinisch.birthdayadapter.util.SyncStatusManager;
 
 public class BirthdayWorker extends Worker {
 
@@ -370,7 +371,7 @@ public class BirthdayWorker extends Worker {
     private void applyBatchOperations(ContentResolver contentResolver, ArrayList<ContentProviderOperation> operationList) {
         try {
             ContentProviderResult[] results = contentResolver.applyBatch(CalendarContract.AUTHORITY, operationList);
-            if (results == null || results.length == 0) {
+            if (results.length == 0) {
                 Log.w(Constants.TAG, "Batch operation returned no results.");
             }
         } catch (Exception e) {
@@ -601,7 +602,7 @@ public class BirthdayWorker extends Worker {
         String title = PreferencesHelper.getLabel(context, effectiveEventType, includeAge);
 
         // add jubilee icon
-        if (VersionHelper.isFullVersionUnlocked(context) && (includeAge)) {
+        if (isFullVersionUnlocked(context) && (includeAge)) {
             title = addJubileeIcon(context, title, age);
         }
 

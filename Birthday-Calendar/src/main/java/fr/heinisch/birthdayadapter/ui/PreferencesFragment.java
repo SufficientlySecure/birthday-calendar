@@ -1,5 +1,7 @@
 package fr.heinisch.birthdayadapter.ui;
 
+import static fr.heinisch.birthdayadapter.util.VersionHelper.isFullVersionUnlocked;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -7,21 +9,19 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.format.DateUtils;
 
-import fr.heinisch.birthdayadapter.util.AccountHelper;
-import fr.heinisch.birthdayadapter.R;
-
 import androidx.annotation.NonNull;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 
-import fr.heinisch.birthdayadapter.util.VersionHelper;
-
-import fr.heinisch.birthdayadapter.util.PreferencesHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import fr.heinisch.birthdayadapter.R;
+import fr.heinisch.birthdayadapter.util.AccountHelper;
+import fr.heinisch.birthdayadapter.util.PreferencesHelper;
 
 public class PreferencesFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceClickListener {
 
@@ -79,7 +79,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Pre
 
     private void updatePreferenceVisibility() {
         if (getContext() == null) return;
-        boolean isFullVersion = VersionHelper.isFullVersionUnlocked(getContext());
+        boolean isFullVersion = isFullVersionUnlocked(getContext());
 
         PreferenceCategory buyCategory = findPreference(getString(R.string.pref_buy_category_key));
         if (buyCategory != null) {
