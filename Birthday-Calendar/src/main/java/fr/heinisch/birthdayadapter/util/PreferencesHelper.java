@@ -60,7 +60,25 @@ public class PreferencesHelper {
     public static int[] getAllReminderMinutes(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-        Set<String> reminderSet = prefs.getStringSet(context.getString(R.string.pref_reminders_key), new HashSet<>());
+        if (!VersionHelper.isFullVersionUnlocked(context)) {
+            // Free version: always has one default reminder for notifications.
+            return new int[]{ context.getResources().getInteger(R.integer.pref_reminder_time_def) };
+        }
+
+        // Full version:
+        Set<String> reminderSet = prefs.getStringSet(context.getString(R.string.pref_reminders_key), null);
+
+        // If preferences for reminders have never been saved (e.g., new full user or just upgraded),
+        // provide the default reminder as a starting point.
+        if (reminderSet == null) {
+            return new int[]{ context.getResources().getInteger(R.integer.pref_reminder_time_def) };
+        }
+
+        // If preferences exist but are empty (user deleted all reminders), return empty.
+        if (reminderSet.isEmpty()) {
+            return new int[0];
+        }
+        
         Integer[] minutes = new Integer[reminderSet.size()];
         int i = 0;
         for (String minuteStr : reminderSet) {
