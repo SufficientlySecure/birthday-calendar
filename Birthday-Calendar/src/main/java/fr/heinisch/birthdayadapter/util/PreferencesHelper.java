@@ -20,6 +20,8 @@
 
 package fr.heinisch.birthdayadapter.util;
 
+import static fr.heinisch.birthdayadapter.util.VersionHelper.isFullVersionUnlocked;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.ContactsContract;
@@ -27,26 +29,13 @@ import android.provider.ContactsContract;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
-import fr.heinisch.birthdayadapter.R;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import fr.heinisch.birthdayadapter.R;
+
 public class PreferencesHelper {
-    public static boolean getFirstRun(Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getBoolean(context.getString(R.string.pref_first_run_key),
-                Boolean.parseBoolean(context.getString(R.string.pref_first_run_def)));
-    }
-
-    public static void setFirstRun(Context context, boolean value) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(context.getString(R.string.pref_first_run_key), value);
-        editor.apply();
-    }
-
     public static int getColor(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -60,7 +49,7 @@ public class PreferencesHelper {
     public static int[] getAllReminderMinutes(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-        if (!VersionHelper.isFullVersionUnlocked(context)) {
+        if (!isFullVersionUnlocked(context)) {
             // Free version: always has one default reminder for notifications.
             return new int[]{ context.getResources().getInteger(R.integer.pref_reminder_time_def) };
         }
