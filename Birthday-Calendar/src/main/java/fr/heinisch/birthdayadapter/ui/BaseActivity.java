@@ -43,8 +43,9 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import fr.heinisch.birthdayadapter.R;
+import fr.heinisch.birthdayadapter.util.IPurchaseHelper;
 import fr.heinisch.birthdayadapter.util.MySharedPreferenceChangeListener;
-import fr.heinisch.birthdayadapter.util.PurchaseHelper;
+import fr.heinisch.birthdayadapter.util.PurchaseHelperFactory;
 import fr.heinisch.birthdayadapter.util.SyncStatusManager;
 import fr.heinisch.birthdayadapter.util.VersionHelper;
 
@@ -77,6 +78,8 @@ public class BaseActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
         setContentView(R.layout.base_activity);
+
+        IPurchaseHelper mPurchaseHelper = PurchaseHelperFactory.create();
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -122,7 +125,7 @@ public class BaseActivity extends AppCompatActivity {
 
         // Check for existing purchases and restore them if necessary
         if (!VersionHelper.isFullVersionUnlocked(this)) {
-            PurchaseHelper.verifyAndRestorePurchases(this);
+            mPurchaseHelper.verifyAndRestorePurchases(this);
         }
     }
 

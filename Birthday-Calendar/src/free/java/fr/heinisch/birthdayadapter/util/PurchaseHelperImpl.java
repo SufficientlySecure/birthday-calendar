@@ -30,11 +30,12 @@ import fr.heinisch.birthdayadapter.util.Constants;
 import fr.heinisch.birthdayadapter.util.Log;
 import fr.heinisch.birthdayadapter.util.VersionHelper;
 
-public class PurchaseHelper {
+public class PurchaseHelperImpl implements IPurchaseHelper {
 
     private static final String SKU_FULL_VERSION = "full_version";
 
-    public static void launchBillingFlow(Activity activity) {
+    @Override
+    public void launchBillingFlow(Activity activity) {
         Log.i(Constants.TAG, "launchBillingFlow called.");
         if (!BuildConfig.GOOGLE_PLAY_VERSION) {
             Log.w(Constants.TAG, "Billing flow not launched: GOOGLE_PLAY_VERSION is false.");
@@ -120,7 +121,8 @@ public class PurchaseHelper {
         });
     }
 
-    public static void verifyAndRestorePurchases(Context context) {
+    @Override
+    public void verifyAndRestorePurchases(Context context) {
         Log.i(Constants.TAG, "verifyAndRestorePurchases: Starting verification.");
         if (!BuildConfig.GOOGLE_PLAY_VERSION) {
             Log.w(Constants.TAG, "verifyAndRestorePurchases: Skipped, GOOGLE_PLAY_VERSION is false.");
@@ -180,7 +182,7 @@ public class PurchaseHelper {
         });
     }
 
-    private static void handlePurchase(Context context, BillingClient billingClient, Purchase purchase, Runnable onFinishedListener) {
+    private void handlePurchase(Context context, BillingClient billingClient, Purchase purchase, Runnable onFinishedListener) {
         Log.d(Constants.TAG, "handlePurchase: State is " + purchase.getPurchaseState());
         if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
             if (!purchase.isAcknowledged()) {
@@ -209,7 +211,7 @@ public class PurchaseHelper {
         }
     }
 
-    private static void unlockFullVersion(Context context) {
+    private void unlockFullVersion(Context context) {
         if (VersionHelper.isFullVersionUnlocked(context)) {
             Log.d(Constants.TAG, "unlockFullVersion: Already unlocked, no action taken.");
             return;

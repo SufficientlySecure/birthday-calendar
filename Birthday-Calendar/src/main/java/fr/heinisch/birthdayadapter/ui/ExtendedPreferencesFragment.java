@@ -61,8 +61,9 @@ import com.google.android.material.textfield.TextInputLayout;
 import fr.heinisch.birthdayadapter.R;
 import fr.heinisch.birthdayadapter.util.AccountHelper;
 import fr.heinisch.birthdayadapter.util.Constants;
+import fr.heinisch.birthdayadapter.util.IPurchaseHelper;
 import fr.heinisch.birthdayadapter.util.PreferencesHelper;
-import fr.heinisch.birthdayadapter.util.PurchaseHelper;
+import fr.heinisch.birthdayadapter.util.PurchaseHelperFactory;
 import fr.heinisch.birthdayadapter.util.SyncStatusManager;
 import fr.heinisch.birthdayadapter.util.VersionHelper;
 
@@ -85,6 +86,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     private PreferenceCategory remindersCategory;
     private SharedPreferences mSyncStatusPrefs;
     private WorkInfo mBirthdaySyncWorkInfo;
+    private IPurchaseHelper mPurchaseHelper;
 
     private final Handler mSyncUpdateHandler = new Handler(Looper.getMainLooper());
     private Runnable mSyncUpdateRunnable;
@@ -127,6 +129,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
 
         mAccountHelper = new AccountHelper(mActivity);
         mSyncStatusPrefs = mActivity.getSharedPreferences("sync_status_prefs", Context.MODE_PRIVATE);
+        mPurchaseHelper = PurchaseHelperFactory.create();
 
         remindersCategory = findPreference(getString(R.string.pref_reminders_category_key));
         if (remindersCategory != null) {
@@ -242,7 +245,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                 if (buyFullPref != null) {
                     buyFullPref.setOnPreferenceClickListener(preference -> {
                         if (getActivity() != null) {
-                            PurchaseHelper.launchBillingFlow(getActivity());
+                            mPurchaseHelper.launchBillingFlow(getActivity());
                         }
                         return true;
                     });
