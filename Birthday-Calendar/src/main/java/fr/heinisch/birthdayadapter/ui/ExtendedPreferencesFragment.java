@@ -117,36 +117,32 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         // Use the default shared preferences to ensure consistency across the app.
         addPreferencesFromResource(R.xml.pref_preferences);
 
-        if (getContext() != null && !isFullVersionUnlocked(getContext())) {
-            PreferenceCategory remindersCategory = findPreference(getString(R.string.pref_reminders_category_key));
-            if (remindersCategory != null) {
-                getPreferenceScreen().removePreference(remindersCategory);
-            }
-            PreferenceCategory titleCategory = findPreference(getString(R.string.pref_title_category_key));
-            if (titleCategory != null) {
-                getPreferenceScreen().removePreference(titleCategory);
-            }
-            PreferenceCategory advancedCategory = findPreference(getString(R.string.pref_advanced_category_key));
-            if (advancedCategory != null) {
-                getPreferenceScreen().removePreference(advancedCategory);
-            }
-            Preference buyFullPref = findPreference(getString(R.string.pref_buy_full_key));
-            if (buyFullPref != null) {
-                buyFullPref.setOnPreferenceClickListener(preference -> {
-                    if (getActivity() != null) {
-                        mPurchaseHelper.launchBillingFlow(getActivity());
-                    }
-                    return true;
-                });
-            }
-        }
-        else if (getContext() != null && isFullVersionUnlocked(getContext())) {
-            updateJubileeYearsSummary();
+        boolean isFullVersion = isFullVersionUnlocked(getContext());
 
-            PreferenceCategory buyCategory = findPreference(getString(R.string.pref_buy_category_key));
-            if (buyCategory != null) {
-                getPreferenceScreen().removePreference(buyCategory);
-            }
+        PreferenceCategory remindersCategory = findPreference(getString(R.string.pref_reminders_category_key));
+        if (remindersCategory != null) {
+            remindersCategory.setVisible(isFullVersion);
+        }
+        PreferenceCategory titleCategory = findPreference(getString(R.string.pref_title_category_key));
+        if (titleCategory != null) {
+            titleCategory.setVisible(isFullVersion);
+        }
+        PreferenceCategory advancedCategory = findPreference(getString(R.string.pref_advanced_category_key));
+        if (advancedCategory != null) {
+            advancedCategory.setVisible(isFullVersion);
+        }
+        PreferenceCategory buyCategory = findPreference(getString(R.string.pref_buy_category_key));
+        if (buyCategory != null) {
+            buyCategory.setVisible(!isFullVersion);
+        }
+        Preference buyFullPref = findPreference(getString(R.string.pref_buy_full_key));
+        if (buyFullPref != null) {
+            buyFullPref.setOnPreferenceClickListener(preference -> {
+                if (getActivity() != null) {
+                    mPurchaseHelper.launchBillingFlow(getActivity());
+                }
+                return true;
+            });
         }
     }
 
@@ -186,7 +182,6 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
 
             mJubileeYearsPref = findPreference(getString(R.string.pref_jubilee_years_key));
             if (mJubileeYearsPref != null) {
-                updateJubileeYearsSummary();
                 mJubileeYearsPref.setOnPreferenceClickListener(preference -> {
                     showJubileeYearsInputDialog();
                     return true;

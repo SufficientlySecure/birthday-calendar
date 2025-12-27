@@ -102,7 +102,6 @@
     <string name="pref_prefer_dd_slash_mm">Prefer dd/MM/yyyy format</string>
     <string name="pref_prefer_dd_slash_mm_summary">Prefer dd/MM/yyyy to MM/dd/yyyy when parsing date formats</string>
     <string name="pref_jubilee_years_title">Jubilee Anniversaries</string>
-    <string name="pref_jubilee_years_summary">Comma-separated list of anniversaries to highlight.</string>
     <string name="pref_jubilee_years_dialog_message">Enter a comma-separated list of jubilee anniversaries.</string>
     <string name="pref_reminder_event_types_birthday">Birthdays</string>
     <string name="pref_reminder_event_types_anniversary">Anniversaries</string>

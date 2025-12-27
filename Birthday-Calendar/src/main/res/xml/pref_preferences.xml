@@ -110,7 +110,7 @@
         <Preference
             android:key="@string/pref_jubilee_years_key"
             android:persistent="true"
-            android:summary="@string/pref_jubilee_years_summary"
+            android:summary="@string/pref_jubilee_years_def"
             android:title="@string/pref_jubilee_years_title" />
     </androidx.preference.PreferenceCategory>
 
