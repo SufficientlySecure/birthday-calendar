@@ -26,8 +26,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.CalendarContract;
 import android.provider.ContactsContract;
 import android.view.View;
@@ -42,14 +43,15 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
-import fr.heinisch.birthdayadapter.R;
-import fr.heinisch.birthdayadapter.util.AccountHelper;
-import fr.heinisch.birthdayadapter.util.Constants;
-import fr.heinisch.birthdayadapter.util.PreferencesHelper;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import fr.heinisch.birthdayadapter.R;
+import fr.heinisch.birthdayadapter.util.AccountHelper;
+import fr.heinisch.birthdayadapter.util.Constants;
 
 public class BasePreferenceFragment extends PreferenceFragmentCompat {
     private AccountHelper mAccountHelper;
@@ -57,6 +59,9 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
     private SwitchPreferenceCompat mEnabled;
 
     private ActivityResultLauncher<String[]> requestPermissionLauncher;
+
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private final Handler handler = new Handler(Looper.getMainLooper());
 
     private static final String[] REQUIRED_PERMISSIONS = new String[]{
             Manifest.permission.GET_ACCOUNTS,
@@ -92,10 +97,14 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
 
             if (essentialPermissionsGranted) {
                 // All essential permissions granted, now add the account
-                mAccountHelper.addAccountAndSync();
-                if (mEnabled != null) {
-                    mEnabled.setChecked(true);
-                }
+                executorService.execute(() -> {
+                    mAccountHelper.addAccountAndSync();
+                    handler.post(() -> {
+                        if (isAdded() && mEnabled != null) {
+                            mEnabled.setChecked(true);
+                        }
+                    });
+                });
             } else {
                 // At least one essential permission was denied, disable the feature
                 if (mEnabled != null) {
@@ -132,7 +141,7 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
                         // Defer UI update until permissions are handled
                         return false;
                     } else {
-                        mAccountHelper.removeAccount();
+                        executorService.execute(() -> mAccountHelper.removeAccount());
                         // Allow UI update immediately for deactivation
                         return true;
                     }
@@ -176,10 +185,14 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
 
         if (permissionsToRequest.isEmpty()) {
             // All permissions are already granted
-            mAccountHelper.addAccountAndSync();
-            if (mEnabled != null) {
-                mEnabled.setChecked(true);
-            }
+            executorService.execute(() -> {
+                mAccountHelper.addAccountAndSync();
+                handler.post(() -> {
+                    if (isAdded() && mEnabled != null) {
+                        mEnabled.setChecked(true);
+                    }
+                });
+            });
         } else {
             // Request the missing permissions
             requestPermissionLauncher.launch(permissionsToRequest.toArray(new String[0]));
@@ -187,10 +200,23 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        executorService.shutdown();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (mAccountHelper != null && mEnabled != null) {
-            mEnabled.setChecked(mAccountHelper.isAccountActivated());
+            executorService.execute(() -> {
+                final boolean isActivated = mAccountHelper.isAccountActivated();
+                handler.post(() -> {
+                    if (isAdded() && mEnabled != null) {
+                        mEnabled.setChecked(isActivated);
+                    }
+                });
+            });
         }
     }
 }
