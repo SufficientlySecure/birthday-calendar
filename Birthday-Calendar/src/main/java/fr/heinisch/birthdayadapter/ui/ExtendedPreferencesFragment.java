@@ -130,6 +130,10 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         PreferenceCategory advancedCategory = findPreference(getString(R.string.pref_advanced_category_key));
         if (advancedCategory != null) {
             advancedCategory.setVisible(isFullVersion);
+            Preference preferDdSlashMm = findPreference(getString(R.string.pref_prefer_dd_slash_mm_key));
+            if (preferDdSlashMm != null) {
+                preferDdSlashMm.setVisible(false);
+            }
         }
         PreferenceCategory buyCategory = findPreference(getString(R.string.pref_buy_category_key));
         if (buyCategory != null) {
