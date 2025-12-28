@@ -40,7 +40,7 @@
             android:defaultValue="@bool/pref_title_enable_def"
             android:key="@string/pref_title_enable_key"
             android:persistent="true"
-            android:summary=""
+            android:summary="@string/pref_title_enable_summary"
             android:title="@string/pref_title_enable" />
 
         <androidx.preference.EditTextPreference

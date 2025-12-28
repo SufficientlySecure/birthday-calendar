@@ -69,6 +69,7 @@
     </string-array>
     <string name="pref_title">Benutzerdefinierte Bezeichnungen</string>
     <string name="pref_title_enable">Benutzerdefinierte Bezeichnungen aktivieren</string>
+    <string name="pref_title_enable_summary">Passe Kalendertitel an. Lege für jeden Ereignistyp ein Format fest, je nachdem, ob das Ereignisjahr bekannt ist.</string>
     <string name="pref_title_birthday_without_age">Geburtstag</string>
     <string name="pref_title_birthday_with_age">Geburtstag mit Alter</string>
     <string name="pref_title_anniversary_without_age">Jahrestag</string>

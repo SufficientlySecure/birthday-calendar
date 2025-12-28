@@ -85,6 +85,7 @@
 
     <string name="pref_title">Custom Labels</string>
     <string name="pref_title_enable">Enable custom Labels</string>
+    <string name="pref_title_enable_summary">Customize calendar titles, with separate formats for when the event\'s year is known or unknown.</string>
     <string name="pref_title_birthday_without_age">Birthday</string>
     <string name="pref_title_birthday_with_age">Birthday with age</string>
     <string name="pref_title_anniversary_without_age">Anniversary</string>
