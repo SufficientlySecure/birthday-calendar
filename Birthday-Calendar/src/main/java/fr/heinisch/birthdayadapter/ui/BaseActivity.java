@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
  * Copyright (C) 2025 Matthias Heinisch <matthias@matthiasheinisch.de>
@@ -47,6 +48,8 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import fr.heinisch.birthdayadapter.R;
 import fr.heinisch.birthdayadapter.util.IPurchaseHelper;
@@ -125,7 +128,8 @@ public class BaseActivity extends AppCompatActivity {
 
         // Check for existing purchases and restore them if necessary
         if (!isFullVersionUnlocked(this)) {
-            mPurchaseHelper.verifyAndRestorePurchases(this);
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            executor.execute(() -> mPurchaseHelper.verifyAndRestorePurchases(this));
         }
     }
 
