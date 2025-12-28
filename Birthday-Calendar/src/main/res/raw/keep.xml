@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@string/event_title*,@string/pref_*,@bool/pref_*,@array/pref_*,@color/pref_color_def" />

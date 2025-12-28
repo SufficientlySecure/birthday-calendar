@@ -1,17 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
-dependencies {
-    implementation "androidx.core:core-ktx:1.17.0"
-    implementation "androidx.activity:activity-ktx:1.12.1"
-    implementation "androidx.fragment:fragment-ktx:1.8.9"
-    implementation 'androidx.appcompat:appcompat:1.7.1'
-    implementation 'com.google.android.material:material:1.13.0'
-    implementation 'androidx.preference:preference-ktx:1.2.1'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "androidx.work:work-runtime-ktx:2.11.0"
-}
-
 android {
     compileSdkVersion 36
 
@@ -33,9 +22,14 @@ android {
     }
 
     buildTypes {
+        debug {
+            minifyEnabled = false
+            shrinkResources = false
+        }
         release {
             minifyEnabled = true
             shrinkResources = true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -55,10 +49,10 @@ android {
 
         signingConfigs {
             release {
-                storeFile = file(signingStoreLocation)
-                storePassword = signingStorePassword
-                keyAlias = signingKeyAlias
-                keyPassword = signingKeyPassword
+                storeFile file(signingStoreLocation)
+                storePassword signingStorePassword
+                keyAlias signingKeyAlias
+                keyPassword signingKeyPassword
             }
         }
 
@@ -67,30 +61,41 @@ android {
         buildTypes.release.signingConfig = null
     }
 
+
     flavorDimensions += "version"
     productFlavors {
         create("full") {
             dimension = "version"
-            applicationId = "org.birthdayadapter"
+            applicationId = "fr.heinisch.birthdayadapter"
             buildConfigField("boolean", "FULL_VERSION", "true")
             buildConfigField("boolean", "GOOGLE_PLAY_VERSION", "false")
-            manifestPlaceholders = [authority: "org.birthdayadapter"]
-            resValue "string", "account_type", "org.birthdayadapter.auth"
+            manifestPlaceholders = [authority: "fr.heinisch.birthdayadapter"]
         }
         create("free") {
             dimension = "version"
-            applicationId = "org.birthdayadapter"
+            applicationId = "fr.heinisch.birthdayadapter"
             buildConfigField("boolean", "FULL_VERSION", "false")
             buildConfigField("boolean", "GOOGLE_PLAY_VERSION", "true")
-            manifestPlaceholders = [authority: "org.birthdayadapter"]
-            resValue "string", "account_type", "org.birthdayadapter.auth"
+            manifestPlaceholders = [authority: "fr.heinisch.birthdayadapter"]
         }
     }
-    namespace = 'org.birthdayadapter'
+    namespace = 'fr.heinisch.birthdayadapter'
     lint {
         disable('MissingTranslation', 'ExtraTranslation')
     }
     buildFeatures {
         buildConfig = true
     }
+}
+
+dependencies {
+    implementation "androidx.core:core-ktx:1.17.0"
+    implementation "androidx.activity:activity-ktx:1.12.1"
+    implementation "androidx.fragment:fragment-ktx:1.8.9"
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'com.google.android.material:material:1.13.0'
+    implementation 'androidx.preference:preference-ktx:1.2.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "androidx.work:work-runtime-ktx:2.11.0"
+    freeImplementation "com.android.billingclient:billing:8.2.0"
 }

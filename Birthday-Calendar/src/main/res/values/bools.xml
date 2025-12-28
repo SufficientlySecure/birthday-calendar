@@ -1,4 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <bool name="pref_reminder_enable_def">true</bool>
+    <bool name="pref_title_enable_def">false</bool>
+    <bool name="pref_prefer_dd_slash_mm_def">false</bool>
     <bool name="pref_group_filtering_def">false</bool>
 </resources>
