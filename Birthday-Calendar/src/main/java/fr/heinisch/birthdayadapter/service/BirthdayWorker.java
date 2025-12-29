@@ -259,12 +259,12 @@ public class BirthdayWorker extends Worker {
                     Date eventDate = parseEventDateString(context, eventDateString, displayName);
 
                     if (eventDate != null) {
-                        Calendar eventCal = Calendar.getInstance();
+                        Calendar eventCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                         eventCal.setTime(eventDate);
                         int eventYear = eventCal.get(Calendar.YEAR);
 
                         boolean hasYear = eventYear >= 1800;
-                        int currYear = Calendar.getInstance().get(Calendar.YEAR);
+                        int currYear = Calendar.getInstance(TimeZone.getTimeZone("UTC")).get(Calendar.YEAR);
 
                         int startYear = currYear - 3;
                         int endYear = currYear + 5;
@@ -752,7 +752,7 @@ public class BirthdayWorker extends Worker {
             Date parsedDate = parseStringWithSimpleDateFormat(eventDateString, format);
             if (parsedDate != null) {
                 if (setYear1700) {
-                    Calendar cal = Calendar.getInstance();
+                    Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                     cal.setTime(parsedDate);
                     cal.set(Calendar.YEAR, 1700);
                     parsedDate = cal.getTime();
