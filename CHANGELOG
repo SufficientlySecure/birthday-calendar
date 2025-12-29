@@ -1,3 +1,13 @@
+3.8
+* Rearrange settings, make advanced settings available with one click
+* Explain custom labels, hide alternate date formatting option
+* Rework free version, rename namespace
+- Add Privacy Policy
+- Move purchase logic out of full version
+- Update translations using Weblate (add Bulgarian) (#133)
+- Stop status monitor when app is in the background
+- Update dependencies, remove redundant code, fix warnings
+
 3.7
 * Use Android foreground notification when required (until Android 12L) to allow for background syncs
 * List only accounts with contacts and that are actually used by Birthday Adapter
