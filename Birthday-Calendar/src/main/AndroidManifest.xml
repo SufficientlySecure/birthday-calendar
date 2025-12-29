@@ -54,7 +54,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name">
         <activity
-            android:name="org.birthdayadapter.ui.BaseActivity"
+            android:name="fr.heinisch.birthdayadapter.ui.BaseActivity"
             android:theme="@style/MyMaterialTheme.Base"
             android:exported="true">
             <intent-filter>
@@ -63,20 +63,20 @@
             </intent-filter>
             <!-- required to start it from Account settings -->
             <intent-filter>
-                <action android:name="org.birthdayadapter.settings.MAIN" />
+                <action android:name="fr.heinisch.birthdayadapter.settings.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <!-- launchMode and taskAffinity required to not launch
         AddAccountActivity on the existing task of Birthday Calendar -->
         <activity
-            android:name="org.birthdayadapter.ui.AddAccountActivity"
+            android:name="fr.heinisch.birthdayadapter.ui.AddAccountActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:taskAffinity="org.birthdayadapter.addaccount"
+            android:taskAffinity="fr.heinisch.birthdayadapter.addaccount"
             android:theme="@style/Theme.App.Transparent" />
         <activity
-            android:name="org.birthdayadapter.ui.ShowContactActivity"
+            android:name="fr.heinisch.birthdayadapter.ui.ShowContactActivity"
             android:exported="true"
             android:theme="@style/Theme.App.Transparent">
             <!-- special Intent to be called from calendar app's event -->
@@ -88,7 +88,7 @@
         </activity>
 
         <service
-            android:name="org.birthdayadapter.service.AccountAuthenticatorService"
+            android:name="fr.heinisch.birthdayadapter.service.AccountAuthenticatorService"
             android:exported="true"
             android:process=":auth"
             tools:ignore="ExportedService">
@@ -102,7 +102,7 @@
         </service>
 
         <provider
-            android:name="org.birthdayadapter.provider.BirthdayAdapterProvider"
+            android:name="fr.heinisch.birthdayadapter.provider.BirthdayAdapterProvider"
             android:authorities="${authority}"
             android:exported="false"/>
     </application>

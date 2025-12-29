@@ -13,18 +13,11 @@
     <string name="pref_force_sync_key" translatable="false">forceSync</string>
 
     <string name="pref_reminders_key" translatable="false">reminders</string>
-
-    <string name="pref_advanced_key" translatable="false">advanced</string>
-
-    <item name="pref_advanced_def" format="boolean" type="string">false</item>
+    <string name="pref_reminder_event_types" translatable="false">pref_reminder_event_types</string>
 
     <string name="pref_prefer_dd_slash_mm_key" translatable="false">preferddSlashMM</string>
 
-    <item name="pref_prefer_dd_slash_mm_def" format="boolean" type="string">false</item>
-
     <string name="pref_title_enable_key" translatable="false">titlesEnable</string>
-
-    <item name="pref_title_enable_def" format="boolean" type="string">false</item>
 
     <string name="pref_title_birthday_without_age_key">birthday</string>
     <string name="pref_title_birthday_with_age_key">birthdayAge</string>
@@ -40,4 +33,10 @@
     <string name="pref_jubilee_years_def" translatable="false">18, 20, 30, 40, 50, 60, 70, 75, 80, 90, 100</string>
 
     <string name="pref_disable_permission_monitoring_key" translatable="false">disablePermissionMonitoring</string>
+
+    <!-- Category Keys -->
+    <string name="pref_buy_category_key" translatable="false">pref_buy_category</string>
+    <string name="pref_reminders_category_key" translatable="false">pref_reminders_category</string>
+    <string name="pref_title_category_key" translatable="false">pref_title_category</string>
+    <string name="pref_advanced_category_key" translatable="false">pref_advanced_category</string>
 </resources>
