@@ -137,4 +137,9 @@
     </plurals>
     <string name="pref_buy_full_summary">Редовно синхронизиране във фонов режим, потребителски напомняния и заглавия на събития, филтър за групи от контакти, подчертаване на юбилейни рождени дни</string>
     <string name="pref_title_enable_summary">Променяне заглавието на календар, с формати за случаите в които годината на събитието е известна и неизвестна.</string>
+    <string name="pref_name_format_title">Фамилията отпред</string>
+    <string name="pref_name_format_summary">Променя показването на името от „Име Фамилия“ на „Фамилия, Име“</string>
+    <string name="summary_placeholder_firstname">Иван</string>
+    <string name="summary_placeholder_lastname">Петров</string>
+    <string name="summary_placeholder_custom_label">Първа среща</string>
 </resources>
