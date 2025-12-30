@@ -174,6 +174,12 @@ public class PreferencesHelper {
                 context.getResources().getBoolean(R.bool.pref_prefer_dd_slash_mm_def));
     }
 
+    public static boolean getUseLastNameFirst(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getBoolean(context.getString(R.string.pref_name_format_key),
+                context.getResources().getBoolean(R.bool.pref_name_format_def));
+    }
+
     public static String getJubileeYears(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getString(context.getString(R.string.pref_jubilee_years_key),

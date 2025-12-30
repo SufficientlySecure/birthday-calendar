@@ -120,6 +120,19 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                 updateTitlePreferenceSummary(pref, newValue);
             }
         }
+
+        if (key.equals(getString(R.string.pref_name_format_key))) {
+            // Update all title preference summaries when the name format changes
+            if (mTitlePrefKeys != null) {
+                for (String titleKey : mTitlePrefKeys) {
+                    Preference pref = findPreference(titleKey);
+                    if (pref instanceof EditTextPreference) {
+                        String value = ((EditTextPreference) pref).getText();
+                        updateTitlePreferenceSummary(pref, value);
+                    }
+                }
+            }
+        }
     };
 
     private final int[] baseColors = new int[]{
@@ -294,7 +307,9 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
 
     private void updateTitlePreferenceSummary(Preference preference, Object newValue) {
         String template = (String) newValue;
-        String summary = template.replace("{NAME}", "Jane Doe")
+        boolean useLastNameFirst = PreferencesHelper.getUseLastNameFirst(requireContext());
+        String name = useLastNameFirst ? "Doe, Jane" : "Jane Doe";
+        String summary = template.replace("{NAME}", name)
                                  .replace("{FIRSTNAME}", "Jane")
                                  .replace("{AGE}", "42")
                                  .replace("{LABEL}", "First Date");

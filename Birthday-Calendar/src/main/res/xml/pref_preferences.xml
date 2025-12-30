@@ -134,6 +134,12 @@
             android:summary="@string/pref_prefer_dd_slash_mm_summary"
             android:title="@string/pref_prefer_dd_slash_mm"
             android:visible="false" />
+        <androidx.preference.CheckBoxPreference
+            android:defaultValue="@bool/pref_name_format_def"
+            android:key="@string/pref_name_format_key"
+            android:persistent="true"
+            android:summary="@string/pref_name_format_summary"
+            android:title="@string/pref_name_format_title" />
     </androidx.preference.PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>
