@@ -66,17 +66,15 @@ android {
     productFlavors {
         create("full") {
             dimension = "version"
-            applicationId = "fr.heinisch.birthdayadapter"
+            applicationId = "org.birthdayadapter"
             buildConfigField("boolean", "FULL_VERSION", "true")
             buildConfigField("boolean", "GOOGLE_PLAY_VERSION", "false")
-            manifestPlaceholders = [authority: "fr.heinisch.birthdayadapter"]
         }
         create("free") {
             dimension = "version"
             applicationId = "fr.heinisch.birthdayadapter"
             buildConfigField("boolean", "FULL_VERSION", "false")
             buildConfigField("boolean", "GOOGLE_PLAY_VERSION", "true")
-            manifestPlaceholders = [authority: "fr.heinisch.birthdayadapter"]
         }
     }
     namespace = 'fr.heinisch.birthdayadapter'

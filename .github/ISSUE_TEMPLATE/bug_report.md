@@ -23,6 +23,7 @@ If applicable, add screenshots to help explain the issue.
 
 **Version**
 - Birthday Adapter: [insert version here]
+- Installed via: [insert app store/source here]
 - Your Calendar application: [insert app name and version here]
 - Android: [insert version here]
 

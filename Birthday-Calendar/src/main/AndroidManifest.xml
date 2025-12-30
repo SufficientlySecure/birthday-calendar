@@ -63,7 +63,7 @@
             </intent-filter>
             <!-- required to start it from Account settings -->
             <intent-filter>
-                <action android:name="fr.heinisch.birthdayadapter.settings.MAIN" />
+                <action android:name="${applicationId}.settings.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -73,7 +73,7 @@
             android:name="fr.heinisch.birthdayadapter.ui.AddAccountActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:taskAffinity="fr.heinisch.birthdayadapter.addaccount"
+            android:taskAffinity="${applicationId}.addaccount"
             android:theme="@style/Theme.App.Transparent" />
         <activity
             android:name="fr.heinisch.birthdayadapter.ui.ShowContactActivity"
@@ -103,7 +103,7 @@
 
         <provider
             android:name="fr.heinisch.birthdayadapter.provider.BirthdayAdapterProvider"
-            android:authorities="${authority}"
+            android:authorities="${applicationId}"
             android:exported="false"/>
     </application>
 

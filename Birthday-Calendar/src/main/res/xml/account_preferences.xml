@@ -8,7 +8,7 @@
 
         <!-- package relative class name -->
         <intent
-            android:action="fr.heinisch.birthdayadapter.settings.MAIN"
+            android:action="${applicationId}.settings.MAIN"
             android:targetClass=".ui.BaseActivity" />
     </PreferenceScreen>
 
