@@ -308,11 +308,14 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     private void updateTitlePreferenceSummary(Preference preference, Object newValue) {
         String template = (String) newValue;
         boolean useLastNameFirst = PreferencesHelper.getUseLastNameFirst(requireContext());
-        String name = useLastNameFirst ? "Doe, Jane" : "Jane Doe";
+        String firstName = getString(R.string.summary_placeholder_firstname);
+        String lastName = getString(R.string.summary_placeholder_lastname);
+        String name = useLastNameFirst ? lastName + ", " + firstName : firstName + " " + lastName;
+
         String summary = template.replace("{NAME}", name)
-                                 .replace("{FIRSTNAME}", "Jane")
-                                 .replace("{AGE}", "42")
-                                 .replace("{LABEL}", "First Date");
+                .replace("{FIRSTNAME}", firstName)
+                .replace("{AGE}", "42")
+                .replace("{LABEL}", getString(R.string.summary_placeholder_custom_label));
         preference.setSummary(summary);
     }
 

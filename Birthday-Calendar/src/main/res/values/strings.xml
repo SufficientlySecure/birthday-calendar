@@ -157,4 +157,9 @@
     <string name="pref_buy_full">Open Google Play to buy full version…</string>
     <string name="pref_buy_full_summary">Regular background syncs, custom reminders and custom event titles, filter for contact groups, highlighting jubilee birthdays</string>
 
+    <!-- Title summary placeholders -->
+    <string name="summary_placeholder_firstname">Jane</string>
+    <string name="summary_placeholder_lastname">Doe</string>
+    <string name="summary_placeholder_custom_label">First Date</string>
+
 </resources>
