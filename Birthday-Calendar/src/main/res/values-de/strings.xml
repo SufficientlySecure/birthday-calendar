@@ -140,4 +140,9 @@
     <string name="account_list_loading">Lade Konten...</string>
     <string name="pref_disable_permission_monitoring_title">App-Berechtigungen bei Nichtnutzung</string>
     <string name="pref_disable_permission_monitoring_summary">Behalte die App-Berechtigungen bei Nichtnutzung. Notwendig, wenn du nur die Hintergrund-Synchronisierung nutzt.</string>
+    <string name="pref_name_format_title">Nachnamen voranstellen</string>
+    <string name="pref_name_format_summary">Formatiere Kalendereinträge \"Nachname, Vorname\" anstelle von \"Vorname Nachname\"</string>
+    <string name="summary_placeholder_firstname">Erika</string>
+    <string name="summary_placeholder_lastname">Mustermann</string>
+    <string name="summary_placeholder_custom_label">erster Kuss</string>
 </resources>
