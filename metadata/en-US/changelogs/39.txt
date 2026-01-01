@@ -1,0 +1,6 @@
+3.9
+* Fix: Correctly handle yearless dates in UTC
+* Add option for Lastname, Firstname formatting
+- Add example summaries to custom labels
+- Keep legacy namespace for F-Droid
+- Update translations
