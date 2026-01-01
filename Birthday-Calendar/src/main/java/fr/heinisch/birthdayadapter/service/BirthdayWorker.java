@@ -225,6 +225,7 @@ public class BirthdayWorker extends Worker {
 
             ArrayList<ContentProviderOperation> operationList = new ArrayList<>();
             Map<String, String> firstNameCache = new HashMap<>();
+            Map<String, String> lastNameCache = new HashMap<>();
 
             try (Cursor cursor = getContactsEvents(context, contentResolver)) {
                 if (cursor == null) {
@@ -245,6 +246,8 @@ public class BirthdayWorker extends Worker {
 
                 int backRef = 0;
 
+                boolean useLastNameFirst = PreferencesHelper.getUseLastNameFirst(context);
+
                 while (cursor.moveToNext()) {
                     if (Thread.currentThread().isInterrupted()) {
                         throw new OperationCanceledException();
@@ -259,12 +262,12 @@ public class BirthdayWorker extends Worker {
                     Date eventDate = parseEventDateString(context, eventDateString, displayName);
 
                     if (eventDate != null) {
-                        Calendar eventCal = Calendar.getInstance();
+                        Calendar eventCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                         eventCal.setTime(eventDate);
                         int eventYear = eventCal.get(Calendar.YEAR);
 
                         boolean hasYear = eventYear >= 1800;
-                        int currYear = Calendar.getInstance().get(Calendar.YEAR);
+                        int currYear = Calendar.getInstance(TimeZone.getTimeZone("UTC")).get(Calendar.YEAR);
 
                         int startYear = currYear - 3;
                         int endYear = currYear + 5;
@@ -294,7 +297,7 @@ public class BirthdayWorker extends Worker {
                             boolean includeAge = hasYear && age >= 0;
 
                             String title = generateTitle(context, eventType, cursor,
-                                    eventCustomLabelColumn, includeAge, displayName, age, eventLookupKey, firstNameCache);
+                                    eventCustomLabelColumn, includeAge, displayName, age, eventLookupKey, firstNameCache, lastNameCache, useLastNameFirst);
 
                             if (title != null && !title.trim().isEmpty()) {
                                 newEventsCount++;
@@ -584,7 +587,7 @@ public class BirthdayWorker extends Worker {
     }
 
     private String generateTitle(Context context, int eventType, Cursor cursor,
-                                 int eventCustomLabelColumn, boolean includeAge, String displayName, int age, String lookupKey, Map<String, String> firstNameCache) {
+                                 int eventCustomLabelColumn, boolean includeAge, String displayName, int age, String lookupKey, Map<String, String> firstNameCache, Map<String, String> lastNameCache, boolean useLastNameFirst) {
         if (TextUtils.isEmpty(displayName)) {
             return null;
         }
@@ -607,11 +610,12 @@ public class BirthdayWorker extends Worker {
         }
 
         // Replace placeholders
+        String formattedDisplayName = getDisplayName(context, lookupKey, displayName, firstNameCache, lastNameCache, useLastNameFirst);
         if (title.contains("{FIRSTNAME}")) {
             String firstName = getFirstName(context, lookupKey, displayName, firstNameCache);
             title = title.replace("{FIRSTNAME}", firstName);
         }
-        title = title.replace("{NAME}", displayName);
+        title = title.replace("{NAME}", formattedDisplayName);
         if (includeAge) {
             title = title.replace("{AGE}", String.valueOf(age));
         }
@@ -620,6 +624,23 @@ public class BirthdayWorker extends Worker {
         }
 
         return title;
+    }
+
+    private String getDisplayName(Context context, String lookupKey, String displayName, Map<String, String> firstNameCache, Map<String, String> lastNameCache, boolean useLastNameFirst) {
+        if (!useLastNameFirst) {
+            return displayName;
+        }
+
+        String firstName = getFirstName(context, lookupKey, displayName, firstNameCache);
+        String lastName = getLastName(context, lookupKey, displayName, lastNameCache);
+
+        if (!TextUtils.isEmpty(lastName) && !TextUtils.isEmpty(firstName)) {
+            return lastName + ", " + firstName;
+        } else if (!TextUtils.isEmpty(lastName)) {
+            return lastName;
+        } else {
+            return displayName; // Fallback to full display name
+        }
     }
 
     private String getFirstName(Context context, String lookupKey, String displayName, Map<String, String> firstNameCache) {
@@ -641,6 +662,24 @@ public class BirthdayWorker extends Worker {
             firstName = displayName;
         }
         return firstName;
+    }
+
+    private String getLastName(Context context, String lookupKey, String displayName, Map<String, String> lastNameCache) {
+        String lastName = lastNameCache.get(lookupKey);
+        if (lastName == null && lookupKey != null) {
+            lastName = getLastNameFromLookupKey(context, lookupKey);
+            // Fallback to splitting the display name if structured name is not available
+            if (TextUtils.isEmpty(lastName) && displayName.contains(" ")) {
+                lastName = displayName.substring(displayName.lastIndexOf(' ') + 1);
+            }
+            lastNameCache.put(lookupKey, lastName);
+        } else if (lastName == null) {
+            // Fallback for when lookupKey is null for some reason
+            if (displayName.contains(" ")) {
+                lastName = displayName.substring(displayName.lastIndexOf(' ') + 1);
+            }
+        }
+        return lastName;
     }
 
     private String getFirstNameFromLookupKey(Context context, String lookupKey) {
@@ -668,6 +707,35 @@ public class BirthdayWorker extends Worker {
             }
         } catch (Exception e) {
             Log.e(Constants.TAG, "Error querying for given name using lookup key: " + lookupKey, e);
+        }
+        return null;
+    }
+
+    private String getLastNameFromLookupKey(Context context, String lookupKey) {
+        if (lookupKey == null) {
+            return null;
+        }
+        Uri lookupUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
+        Uri dataUri = Uri.withAppendedPath(lookupUri, ContactsContract.Contacts.Data.CONTENT_DIRECTORY);
+
+        String[] projection = {ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME};
+        String selection = ContactsContract.Data.MIMETYPE + " = ?";
+        String[] selectionArgs = {ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE};
+
+        try (Cursor cursor = context.getContentResolver().query(dataUri, projection, selection, selectionArgs, null)) {
+            if (cursor != null) {
+                while (cursor.moveToNext()) {
+                    int familyNameColumnIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME);
+                    if (familyNameColumnIndex != -1) {
+                        String familyName = cursor.getString(familyNameColumnIndex);
+                        if (!TextUtils.isEmpty(familyName)) {
+                            return familyName;
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.e(Constants.TAG, "Error querying for family name using lookup key: " + lookupKey, e);
         }
         return null;
     }
@@ -752,7 +820,7 @@ public class BirthdayWorker extends Worker {
             Date parsedDate = parseStringWithSimpleDateFormat(eventDateString, format);
             if (parsedDate != null) {
                 if (setYear1700) {
-                    Calendar cal = Calendar.getInstance();
+                    Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                     cal.setTime(parsedDate);
                     cal.set(Calendar.YEAR, 1700);
                     parsedDate = cal.getTime();

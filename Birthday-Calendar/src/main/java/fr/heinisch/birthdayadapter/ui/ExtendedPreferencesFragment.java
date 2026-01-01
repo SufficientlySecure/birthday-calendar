@@ -47,6 +47,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
+import androidx.preference.EditTextPreference;
 import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
@@ -89,6 +90,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     private SharedPreferences mSyncStatusPrefs;
     private WorkInfo mBirthdaySyncWorkInfo;
     private IPurchaseHelper mPurchaseHelper;
+    private Set<String> mTitlePrefKeys;
 
     private final Handler mSyncUpdateHandler = new Handler(Looper.getMainLooper());
     private Runnable mSyncUpdateRunnable;
@@ -99,10 +101,37 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         }
     };
 
-    private final SharedPreferences.OnSharedPreferenceChangeListener mPurchaseListener = (sharedPreferences, key) -> {
-        if (key != null && key.equals(VersionHelper.PREF_FULL_VERSION_PURCHASED) && getActivity() != null) {
-            // Re-create the activity to apply changes, like removing the upgrade button
+    private final SharedPreferences.OnSharedPreferenceChangeListener mSettingsListener = (sharedPreferences, key) -> {
+        if (key == null || getActivity() == null) {
+            return;
+        }
+
+        // Handle purchase change
+        if (key.equals(VersionHelper.PREF_FULL_VERSION_PURCHASED)) {
             getActivity().recreate();
+            return; // Recreating, so no need to update summaries now
+        }
+
+        // Handle title summary updates
+        if (mTitlePrefKeys != null && mTitlePrefKeys.contains(key)) {
+            Preference pref = findPreference(key);
+            if (pref != null) {
+                String newValue = sharedPreferences.getString(key, "");
+                updateTitlePreferenceSummary(pref, newValue);
+            }
+        }
+
+        if (key.equals(getString(R.string.pref_name_format_key))) {
+            // Update all title preference summaries when the name format changes
+            if (mTitlePrefKeys != null) {
+                for (String titleKey : mTitlePrefKeys) {
+                    Preference pref = findPreference(titleKey);
+                    if (pref instanceof EditTextPreference) {
+                        String value = ((EditTextPreference) pref).getText();
+                        updateTitlePreferenceSummary(pref, value);
+                    }
+                }
+            }
         }
     };
 
@@ -184,6 +213,22 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                 populateReminders();
             }
 
+            mTitlePrefKeys = new HashSet<>(Arrays.asList(
+                    getString(R.string.pref_title_birthday_without_age_key),
+                    getString(R.string.pref_title_birthday_with_age_key),
+                    getString(R.string.pref_title_anniversary_without_age_key),
+                    getString(R.string.pref_title_anniversary_with_age_key),
+                    getString(R.string.pref_title_other_without_age_key),
+                    getString(R.string.pref_title_other_with_age_key),
+                    getString(R.string.pref_title_custom_without_age_key),
+                    getString(R.string.pref_title_custom_with_age_key)
+            ));
+
+            // Title preferences
+            for (String key : mTitlePrefKeys) {
+                setupTitlePreference(key);
+            }
+
             mJubileeYearsPref = findPreference(getString(R.string.pref_jubilee_years_key));
             if (mJubileeYearsPref != null) {
                 mJubileeYearsPref.setOnPreferenceClickListener(preference -> {
@@ -251,6 +296,27 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                 });
 
         updatePermissionMonitoringPrefVisibility();
+    }
+
+    private void setupTitlePreference(String key) {
+        EditTextPreference preference = findPreference(key);
+        if (preference != null) {
+            updateTitlePreferenceSummary(preference, preference.getText());
+        }
+    }
+
+    private void updateTitlePreferenceSummary(Preference preference, Object newValue) {
+        String template = (String) newValue;
+        boolean useLastNameFirst = PreferencesHelper.getUseLastNameFirst(requireContext());
+        String firstName = getString(R.string.summary_placeholder_firstname);
+        String lastName = getString(R.string.summary_placeholder_lastname);
+        String name = useLastNameFirst ? lastName + ", " + firstName : firstName + " " + lastName;
+
+        String summary = template.replace("{NAME}", name)
+                .replace("{FIRSTNAME}", firstName)
+                .replace("{AGE}", "42")
+                .replace("{LABEL}", getString(R.string.summary_placeholder_custom_label));
+        preference.setSummary(summary);
     }
 
     private void updateReminderEventTypesSummary(MultiSelectListPreference preference) {
@@ -574,7 +640,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     public void onResume() {
         super.onResume();
         mSyncStatusPrefs.registerOnSharedPreferenceChangeListener(mSyncStatusListener);
-        PreferenceManager.getDefaultSharedPreferences(requireContext()).registerOnSharedPreferenceChangeListener(mPurchaseListener);
+        PreferenceManager.getDefaultSharedPreferences(requireContext()).registerOnSharedPreferenceChangeListener(mSettingsListener);
         updatePermissionMonitoringPrefVisibility();
 
         mSyncUpdateRunnable = new Runnable() {
@@ -593,7 +659,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     public void onPause() {
         super.onPause();
         mSyncStatusPrefs.unregisterOnSharedPreferenceChangeListener(mSyncStatusListener);
-        PreferenceManager.getDefaultSharedPreferences(requireContext()).unregisterOnSharedPreferenceChangeListener(mPurchaseListener);
+        PreferenceManager.getDefaultSharedPreferences(requireContext()).unregisterOnSharedPreferenceChangeListener(mSettingsListener);
         // Stop the periodic UI updates
         mSyncUpdateHandler.removeCallbacks(mSyncUpdateRunnable);
     }

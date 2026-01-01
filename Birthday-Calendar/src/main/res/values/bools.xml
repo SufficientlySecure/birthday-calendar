@@ -3,4 +3,5 @@
     <bool name="pref_title_enable_def">false</bool>
     <bool name="pref_prefer_dd_slash_mm_def">false</bool>
     <bool name="pref_group_filtering_def">false</bool>
+    <bool name="pref_name_format_def">false</bool>
 </resources>

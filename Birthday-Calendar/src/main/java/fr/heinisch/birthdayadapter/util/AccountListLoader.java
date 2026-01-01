@@ -31,6 +31,7 @@ import android.text.TextUtils;
 
 import androidx.loader.content.AsyncTaskLoader;
 
+import fr.heinisch.birthdayadapter.BuildConfig;
 import fr.heinisch.birthdayadapter.R;
 import fr.heinisch.birthdayadapter.provider.ProviderHelper;
 
@@ -105,7 +106,7 @@ public class AccountListLoader extends AsyncTaskLoader<List<AccountListEntry>> {
 
         // Process the combined list of unique accounts
         for (Account account : allDiscoveredAccounts) {
-            if (account.type.startsWith("fr.heinisch.birthdayadapter")) {
+            if (account.type.startsWith(BuildConfig.APPLICATION_ID)) {
                 continue;
             }
 

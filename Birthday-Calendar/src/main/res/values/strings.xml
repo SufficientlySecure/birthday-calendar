@@ -102,6 +102,8 @@
     <string name="pref_advanced_category">Advanced Settings</string>
     <string name="pref_prefer_dd_slash_mm">Prefer dd/MM/yyyy format</string>
     <string name="pref_prefer_dd_slash_mm_summary">Prefer dd/MM/yyyy to MM/dd/yyyy when parsing date formats</string>
+    <string name="pref_name_format_title">Show last name first</string>
+    <string name="pref_name_format_summary">Changes the name display from \"Firstname Lastname\" to \"Lastname, Firstname\"</string>
     <string name="pref_jubilee_years_title">Jubilee Anniversaries</string>
     <string name="pref_jubilee_years_dialog_message">Enter a comma-separated list of jubilee anniversaries.</string>
     <string name="pref_reminder_event_types_birthday">Birthdays</string>
@@ -154,5 +156,10 @@
     <string name="pref_buy">Buy full version!</string>
     <string name="pref_buy_full">Open Google Play to buy full version…</string>
     <string name="pref_buy_full_summary">Regular background syncs, custom reminders and custom event titles, filter for contact groups, highlighting jubilee birthdays</string>
+
+    <!-- Title summary placeholders -->
+    <string name="summary_placeholder_firstname">Jane</string>
+    <string name="summary_placeholder_lastname">Doe</string>
+    <string name="summary_placeholder_custom_label">First Date</string>
 
 </resources>
