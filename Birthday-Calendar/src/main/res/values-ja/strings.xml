@@ -16,21 +16,17 @@
 
  You should have received a copy of the GNU General Public License
  along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
--->
-<resources>
-
+--><resources>
     <!-- Calendar -->
     <string name="calendar_display_name">誕生日</string>
     <!-- About -->
     <string name="about_version">バージョン:</string>
-
     <!-- Tabs -->
     <string name="tab_main">メイン</string>
     <string name="tab_preferences">設定</string>
     <string name="tab_accounts">アカウントフィルター</string>
     <string name="tab_help">ヘルプ</string>
     <string name="tab_about">アプリについて</string>
-
     <!-- Preferences -->
     <string name="pref_general">全般</string>
     <string name="pref_color">色</string>
@@ -47,7 +43,6 @@
         <item>10 日前</item>
         <item>14 日前</item>
     </string-array>
-
     <string name="pref_title">カスタムラベル</string>
     <string name="pref_title_enable">カスタムラベルを有効にする</string>
     <string name="pref_title_birthday_without_age">誕生日</string>
@@ -58,7 +53,6 @@
     <string name="pref_title_other_with_age">その他のイベントと年齢</string>
     <string name="pref_title_custom_without_age">カスタム</string>
     <string name="pref_title_custom_with_age">カスタムと年齢</string>
-
     <string name="pref_advanced_category">追加の設定</string>
     <string name="pref_prefer_dd_slash_mm">dd/MM/yyyy 形式を用いる</string>
     <string name="pref_prefer_dd_slash_mm_summary">日付形式の解析時に dd/MM/yyyy から MM/dd/yyyy を用いる</string>
@@ -67,9 +61,83 @@
     <!-- Adapter Screen -->
     <string name="pref_account_header">設定</string>
     <string name="pref_account_settings">誕生日アダプターを構成</string>
-
     <string name="account_list_empty">アカウントがありません</string>
     <!--Free Version -->
     <string name="pref_buy">完全バージョンを購入!</string>
     <string name="pref_buy_full">完全バージョンを購入するためGoogle Playを開く…</string>
-    </resources>
+    <string name="event_title_custom_with_age"></string>
+    <string name="pref_title_summary_without_age"></string>
+    <string name="pref_title_enable_summary"></string>
+    <string name="pref_title_summary_custom_with_age"></string>
+    <string name="event_title_anniversary_without_age"></string>
+    <string name="summary_placeholder_lastname"></string>
+    <string name="pref_title_summary_custom_without_age"></string>
+    <string name="account_list_counters_format"></string>
+    <string name="remove"></string>
+    <plurals name="dates_count">
+        <item quantity="other"></item>
+    </plurals>
+    <string name="summary_placeholder_custom_label"></string>
+    <string name="add_reminder"></string>
+    <string name="pref_buy_full_summary"></string>
+    <string name="last_sync"></string>
+    <string name="permission_read_contacts_denied"></string>
+    <string name="pref_reminder_time"></string>
+    <string name="event_title_custom_without_age"></string>
+    <string name="pref_reminder_event_types_other"></string>
+    <string name="delete_reminder_title"></string>
+    <string name="invalid_format"></string>
+    <string name="pref_force_sync_summary"></string>
+    <string name="event_title_other_without_age"></string>
+    <string name="no_events_selected"></string>
+    <string name="pref_disable_permission_monitoring_summary"></string>
+    <string name="event_title_birthday_with_age"></string>
+    <plurals name="contacts_count">
+        <item quantity="other"></item>
+    </plurals>
+    <string name="delete"></string>
+    <string name="next_sync"></string>
+    <string name="pref_contacts_open"></string>
+    <string name="pref_enable_switch"></string>
+    <string name="pref_reminder_event_types_custom"></string>
+    <string name="pref_group_filtering_summary"></string>
+    <string name="pref_calendar_open"></string>
+    <string name="pref_group_filtering_title"></string>
+    <string name="account_list_icon_description"></string>
+    <string name="no_reminder_set"></string>
+    <string name="item_color_content_description"></string>
+    <string name="pref_events_with_reminders"></string>
+    <string name="pref_reminder_event_types_anniversary"></string>
+    <string name="pref_enable"></string>
+    <string name="pref_reminder_summary"></string>
+    <string name="pref_calendar_summary"></string>
+    <string name="pref_name_format_title"></string>
+    <string name="pref_title_summary_with_age"></string>
+    <string name="account_list_description"></string>
+    <string name="event_title_other_with_age"></string>
+    <string name="notification_channel_name"></string>
+    <string name="account_list_group_button_description"></string>
+    <string name="event_title_birthday_without_age"></string>
+    <string name="pref_name_format_summary"></string>
+    <string name="pref_contacts_summary"></string>
+    <string name="pref_jubilee_years_title"></string>
+    <string name="account_list_no_group"></string>
+    <string name="permission_denied"></string>
+    <string name="pref_jubilee_years_dialog_message"></string>
+    <string name="hex_color_hint"></string>
+    <string name="pref_enable_summary"></string>
+    <string name="summary_placeholder_firstname"></string>
+    <string name="last_sync_never"></string>
+    <string name="delete_reminder_message"></string>
+    <string name="account_list_loading"></string>
+    <string name="notification_channel_description"></string>
+    <string name="app_name" translatable="false"></string>
+    <string name="account_type" translatable="false"></string>
+    <string name="hex_color_title"></string>
+    <string name="event_title_anniversary_with_age"></string>
+    <string name="pref_contacts"></string>
+    <string name="pref_disable_permission_monitoring_title"></string>
+    <string name="pref_calendar"></string>
+    <string name="notification_title"></string>
+    <string name="invalid_hex_code"></string>
+</resources>
