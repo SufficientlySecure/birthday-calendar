@@ -16,21 +16,17 @@
 
  You should have received a copy of the GNU General Public License
  along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
--->
-<resources>
-
+--><resources>
     <!-- Calendar -->
     <string name="calendar_display_name">誕生日</string>
     <!-- About -->
     <string name="about_version">バージョン:</string>
-
     <!-- Tabs -->
     <string name="tab_main">メイン</string>
     <string name="tab_preferences">設定</string>
     <string name="tab_accounts">アカウントフィルター</string>
     <string name="tab_help">ヘルプ</string>
     <string name="tab_about">アプリについて</string>
-
     <!-- Preferences -->
     <string name="pref_general">全般</string>
     <string name="pref_color">色</string>
@@ -47,7 +43,6 @@
         <item>10 日前</item>
         <item>14 日前</item>
     </string-array>
-
     <string name="pref_title">カスタムラベル</string>
     <string name="pref_title_enable">カスタムラベルを有効にする</string>
     <string name="pref_title_birthday_without_age">誕生日</string>
@@ -58,7 +53,6 @@
     <string name="pref_title_other_with_age">その他のイベントと年齢</string>
     <string name="pref_title_custom_without_age">カスタム</string>
     <string name="pref_title_custom_with_age">カスタムと年齢</string>
-
     <string name="pref_advanced_category">追加の設定</string>
     <string name="pref_prefer_dd_slash_mm">dd/MM/yyyy 形式を用いる</string>
     <string name="pref_prefer_dd_slash_mm_summary">日付形式の解析時に dd/MM/yyyy から MM/dd/yyyy を用いる</string>
@@ -67,9 +61,8 @@
     <!-- Adapter Screen -->
     <string name="pref_account_header">設定</string>
     <string name="pref_account_settings">誕生日アダプターを構成</string>
-
     <string name="account_list_empty">アカウントがありません</string>
     <!--Free Version -->
     <string name="pref_buy">完全バージョンを購入!</string>
     <string name="pref_buy_full">完全バージョンを購入するためGoogle Playを開く…</string>
-    </resources>
+</resources>

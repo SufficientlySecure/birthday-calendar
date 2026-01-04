@@ -16,21 +16,17 @@
 
  You should have received a copy of the GNU General Public License
  along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
--->
-<resources>
-
+--><resources>
     <!-- Calendar -->
     <string name="calendar_display_name">Urtebetetzea</string>
     <!-- About -->
     <string name="about_version">Bertsioa:</string>
-
     <!-- Tabs -->
     <string name="tab_main">Nagusia</string>
     <string name="tab_preferences">Hobespenak</string>
     <string name="tab_accounts">Kontu Iragazkia</string>
     <string name="tab_help">Laguntza</string>
     <string name="tab_about">Honi buruz</string>
-
     <!-- Preferences -->
     <string name="pref_general">Orokorra</string>
     <string name="pref_color">Margoa</string>
@@ -47,18 +43,16 @@
         <item>10 egun lehenago</item>
         <item>14 egun lehenago</item>
     </string-array>
-
     <string name="pref_title">Norbere Etiketak</string>
     <string name="pref_title_enable">Gaitu norbere etiketak</string>
     <string name="pref_title_birthday_without_age">Urtebetetzea</string>
     <string name="pref_title_birthday_with_age">Urtebetetzea adinarekin</string>
     <string name="pref_title_anniversary_without_age">Urteurrena</string>
-    <string name="pref_title_anniversary_with_age">Urteurrena  adinarekin</string>
+    <string name="pref_title_anniversary_with_age">Urteurrena adinarekin</string>
     <string name="pref_title_other_without_age">Beste gertaerak</string>
     <string name="pref_title_other_with_age">Beste gertaerak adinarekin</string>
     <string name="pref_title_custom_without_age">Norberea</string>
     <string name="pref_title_custom_with_age">Norberea adinarekin</string>
-
     <string name="pref_advanced_category">Ezarpen Aurreratuak</string>
     <string name="pref_prefer_dd_slash_mm">Hobetsi dd/MM/yyyy heuskarria</string>
     <string name="pref_prefer_dd_slash_mm_summary">Hobetsi MM/dd/yyyy -&gt; dd/MM/yyyy gain egun heuskarriak aztertzerakoan</string>
@@ -67,9 +61,8 @@
     <!-- Adapter Screen -->
     <string name="pref_account_header">Ezarpenak</string>
     <string name="pref_account_settings">Itxuratu Birthday Egokitzailea</string>
-
     <string name="account_list_empty">Ez dago konturik</string>
     <!--Free Version -->
     <string name="pref_buy">Erosi bertsio osoa!</string>
     <string name="pref_buy_full">Ireki Google Play bertsio osoa erosteko...</string>
-    </resources>
+</resources>

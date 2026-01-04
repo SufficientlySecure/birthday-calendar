@@ -16,18 +16,14 @@
 
  You should have received a copy of the GNU General Public License
  along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
--->
-<resources>
-
+--><resources>
     <!-- Calendar -->
     <string name="calendar_display_name">Sünnipäevad</string>
     <!-- About -->
     <string name="about_version">Versioon:</string>
-
     <string name="tab_preferences">Eelistused</string>
     <string name="tab_help">Abiinfo</string>
     <string name="tab_about">Rakendusest</string>
-
     <!-- Preferences -->
     <string name="pref_general">Üldine</string>
     <string name="pref_color">Värv</string>
@@ -41,11 +37,10 @@
     <string name="pref_title_other_with_age">Muu üritus koos vanusega</string>
     <string name="pref_advanced_category">Täpsemad seaded</string>
     <string name="pref_prefer_dd_slash_mm">Eelista pp/aaaa formaati</string>
-    <string name="pref_prefer_dd_slash_mm_summary">Eelista pp/aaaa kk/aaaa asemel </string>
+    <string name="pref_prefer_dd_slash_mm_summary">Eelista pp/aaaa kk/aaaa asemel</string>
     <string name="pref_advanced">Täpsemad seaded</string>
     <string name="pref_reminder_event_types_birthday">Sünnipäevad</string>
     <!-- Adapter Screen -->
     <string name="pref_account_header">Seaded</string>
     <string name="pref_account_settings">Seadista sünnipäevade adapterit</string>
-
-    </resources>
+</resources>
