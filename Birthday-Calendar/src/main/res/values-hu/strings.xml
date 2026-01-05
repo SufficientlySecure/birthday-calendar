@@ -16,21 +16,17 @@
 
  You should have received a copy of the GNU General Public License
  along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
--->
-<resources>
-
+--><resources>
     <!-- Calendar -->
     <string name="calendar_display_name">Születésnapok</string>
     <!-- About -->
     <string name="about_version">Verzió:</string>
-
     <!-- Tabs -->
     <string name="tab_main">Fő</string>
     <string name="tab_preferences">Preferenciák</string>
     <string name="tab_accounts">Fiók Szűrő</string>
     <string name="tab_help">Súgó</string>
     <string name="tab_about">Névjegy</string>
-
     <!-- Preferences -->
     <string name="pref_general">Általános</string>
     <string name="pref_color">Szín</string>
@@ -47,7 +43,6 @@
         <item>10 nappal előtte</item>
         <item>14 nappal előtte</item>
     </string-array>
-
     <string name="pref_title">Egyéni címkék</string>
     <string name="pref_title_enable">Egyéni címkék engedélyezése</string>
     <string name="pref_title_birthday_without_age">Születésnap</string>
@@ -58,7 +53,6 @@
     <string name="pref_title_other_with_age">Egyéb esemény korral</string>
     <string name="pref_title_custom_without_age">Egyéni</string>
     <string name="pref_title_custom_with_age">Egyéni korral</string>
-
     <string name="pref_advanced_category">Haladó Beállítások</string>
     <string name="pref_prefer_dd_slash_mm">nn/HH/ÉÉÉÉ formátum előnyben részesítése</string>
     <string name="pref_prefer_dd_slash_mm_summary">nn/HH/éééé előnyben részesítése HH/nn/éééé-hez képest a dátumformátum elemzésekor</string>
@@ -67,9 +61,8 @@
     <!-- Adapter Screen -->
     <string name="pref_account_header">Beállítások</string>
     <string name="pref_account_settings">Birthday Adapter konfigurálása</string>
-
     <string name="account_list_empty">Nincs fiók</string>
     <!--Free Version -->
     <string name="pref_buy">Teljes verzió megvásárlása!</string>
     <string name="pref_buy_full">Google Play megnyitása a teljes verzió megvásárlásához...</string>
-    </resources>
+</resources>

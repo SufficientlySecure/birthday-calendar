@@ -16,21 +16,17 @@
 
  You should have received a copy of the GNU General Public License
  along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
--->
-<resources>
-
+--><resources>
     <!-- Calendar -->
     <string name="calendar_display_name">Aniversários</string>
     <!-- About -->
     <string name="about_version">Versão:</string>
-
     <!-- Tabs -->
     <string name="tab_main">Principal</string>
     <string name="tab_preferences">Preferências</string>
     <string name="tab_accounts">Filtro de conta</string>
     <string name="tab_help">Ajuda</string>
     <string name="tab_about">Sobre</string>
-
     <!-- Preferences -->
     <string name="pref_general">Geral</string>
     <string name="pref_color">Cor</string>
@@ -47,7 +43,6 @@
         <item>10 dias antes</item>
         <item>14 dias antes</item>
     </string-array>
-
     <string name="pref_title">Rótulos personalizados</string>
     <string name="pref_title_enable">Ativar rótulos personalizados</string>
     <string name="pref_title_birthday_without_age">Aniversário</string>
@@ -58,7 +53,6 @@
     <string name="pref_title_other_with_age">Outro evento com idade</string>
     <string name="pref_title_custom_without_age">Personalizado</string>
     <string name="pref_title_custom_with_age">Personalizado com idade</string>
-
     <string name="pref_advanced_category">Configurações avançadas</string>
     <string name="pref_prefer_dd_slash_mm">Preferir o formato dd/MM/aaaa</string>
     <string name="pref_prefer_dd_slash_mm_summary">Preferir dd/MM/aaaa a MM/dd/aaaa ao processar os formatos de data</string>
@@ -67,9 +61,8 @@
     <!-- Adapter Screen -->
     <string name="pref_account_header">Configurações</string>
     <string name="pref_account_settings">Configurar o Birthday Adapter</string>
-
     <string name="account_list_empty">Nenhuma conta</string>
     <!--Free Version -->
     <string name="pref_buy">Compre a versão completa!</string>
     <string name="pref_buy_full">Abrir o Google Play para comprar a versão completa...</string>
-    </resources>
+</resources>

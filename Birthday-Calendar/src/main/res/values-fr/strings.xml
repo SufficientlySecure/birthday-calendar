@@ -16,21 +16,17 @@
 
  You should have received a copy of the GNU General Public License
  along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
--->
-<resources>
-
+--><resources>
     <!-- Calendar -->
     <string name="calendar_display_name">Anniversaires</string>
     <!-- About -->
     <string name="about_version">Version :</string>
-
     <!-- Tabs -->
     <string name="tab_main">Principal</string>
     <string name="tab_preferences">Préférences</string>
     <string name="tab_accounts">Filtre par compte</string>
     <string name="tab_help">Aide</string>
     <string name="tab_about">À propos de</string>
-
     <!-- Preferences -->
     <string name="pref_general">Général</string>
     <string name="pref_color">Couleur</string>
@@ -47,7 +43,6 @@
         <item>10 jours avant</item>
         <item>14 jours avant</item>
     </string-array>
-
     <string name="pref_title">Étiquettes personnalisées</string>
     <string name="pref_title_enable">Activer les étiquettes personnalisées</string>
     <string name="pref_title_birthday_without_age">Anniversaire</string>
@@ -58,7 +53,6 @@
     <string name="pref_title_other_with_age">Autre évènement avec âge</string>
     <string name="pref_title_custom_without_age">Personnalisé</string>
     <string name="pref_title_custom_with_age">Personnalisé avec âge</string>
-
     <string name="pref_advanced_category">Paramètres avancés</string>
     <string name="pref_prefer_dd_slash_mm">Préférer le format JJ/MM/aaaa</string>
     <string name="pref_prefer_dd_slash_mm_summary">Préférer JJ/MM/aaaa à MM/JJ/aaaaa pour les formats de dates</string>
@@ -67,9 +61,8 @@
     <!-- Adapter Screen -->
     <string name="pref_account_header">Paramètres</string>
     <string name="pref_account_settings">Configurer l\'Adaptateur d\'anniversaires</string>
-
     <string name="account_list_empty">Aucun compte</string>
     <!--Free Version -->
-    <string name="pref_buy">Acheter la version complète !</string>
+    <string name="pref_buy">Acheter la version complète !</string>
     <string name="pref_buy_full">Ouvrir Google Play pour acheter la version complète…</string>
-    </resources>
+</resources>

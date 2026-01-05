@@ -16,21 +16,17 @@
 
  You should have received a copy of the GNU General Public License
  along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
--->
-<resources>
-
+--><resources>
     <!-- Calendar -->
     <string name="calendar_display_name">Дни рождения</string>
     <!-- About -->
     <string name="about_version">Версия:</string>
-
     <!-- Tabs -->
     <string name="tab_main">Главное</string>
     <string name="tab_preferences">Настройки</string>
     <string name="tab_accounts">Фильтр учётных записей</string>
     <string name="tab_help">Помощь</string>
     <string name="tab_about">О приложении</string>
-
     <!-- Preferences -->
     <string name="pref_general">Основные</string>
     <string name="pref_color">Цвет</string>
@@ -47,7 +43,6 @@
         <item>За 10 дней</item>
         <item>За 14 дней</item>
     </string-array>
-
     <string name="pref_title">Пользовательские метки</string>
     <string name="pref_title_enable">Включить пользовательские метки</string>
     <string name="pref_title_birthday_without_age">День рождения</string>
@@ -58,7 +53,6 @@
     <string name="pref_title_other_with_age">Другое событие с возрастом</string>
     <string name="pref_title_custom_without_age">Специальное</string>
     <string name="pref_title_custom_with_age">Специальное с возрастом</string>
-
     <string name="pref_advanced_category">Расширенные настройки</string>
     <string name="pref_prefer_dd_slash_mm">Предпочитать формат dd/MM/yyyy</string>
     <string name="pref_prefer_dd_slash_mm_summary">Предпочитать формат dd/MM/yyyy вместо MM/dd/yyyy при разборе даты</string>
@@ -67,9 +61,8 @@
     <!-- Adapter Screen -->
     <string name="pref_account_header">Настройки</string>
     <string name="pref_account_settings">Настройки Birthday Adapter</string>
-
     <string name="account_list_empty">Нет учётных записей</string>
     <!--Free Version -->
     <string name="pref_buy">Купить полную версию!</string>
     <string name="pref_buy_full">Открыть Google Play для покупки полной версии…</string>
-    </resources>
+</resources>

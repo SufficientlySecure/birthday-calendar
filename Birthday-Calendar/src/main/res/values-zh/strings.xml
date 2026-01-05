@@ -16,21 +16,17 @@
 
  You should have received a copy of the GNU General Public License
  along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
--->
-<resources>
-
+--><resources>
     <!-- Calendar -->
     <string name="calendar_display_name">生日</string>
     <!-- About -->
     <string name="about_version">版本</string>
-
     <!-- Tabs -->
     <string name="tab_main">首页</string>
     <string name="tab_preferences">设置</string>
     <string name="tab_accounts">账户</string>
     <string name="tab_help">帮助</string>
     <string name="tab_about">关于</string>
-
     <!-- Preferences -->
     <string name="pref_general">常规</string>
     <string name="pref_color">日历颜色</string>
@@ -47,7 +43,6 @@
         <item>10 天前</item>
         <item>14 天前</item>
     </string-array>
-
     <string name="pref_title">自定义标题</string>
     <string name="pref_title_enable">启用自定义标题</string>
     <string name="pref_title_birthday_without_age">生日</string>
@@ -58,7 +53,6 @@
     <string name="pref_title_other_with_age">其它事件（有年数）</string>
     <string name="pref_title_custom_without_age">自定义事件</string>
     <string name="pref_title_custom_with_age">自定义事件（有年数）</string>
-
     <string name="pref_advanced_category">高级</string>
     <string name="pref_prefer_dd_slash_mm">优先使用 dd/MM/yyyy 格式</string>
     <string name="pref_prefer_dd_slash_mm_summary">解析日期时优先使用 dd/MM/yyyy 格式（默认为 MM/dd/yyyy）</string>
@@ -67,9 +61,8 @@
     <!-- Adapter Screen -->
     <string name="pref_account_header">设置</string>
     <string name="pref_account_settings">配置 Birthday Adapter</string>
-
     <string name="account_list_empty">没有账户</string>
     <!--Free Version -->
     <string name="pref_buy">购买完整版！</string>
     <string name="pref_buy_full">打开 Google Play 购买完整版</string>
-    </resources>
+</resources>

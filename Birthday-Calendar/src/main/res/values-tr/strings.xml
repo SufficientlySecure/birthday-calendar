@@ -16,21 +16,17 @@
 
  You should have received a copy of the GNU General Public License
  along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
--->
-<resources>
-
+--><resources>
     <!-- Calendar -->
     <string name="calendar_display_name">Doğumgünleri</string>
     <!-- About -->
     <string name="about_version">Sürüm:</string>
-
     <!-- Tabs -->
     <string name="tab_main">Ana</string>
     <string name="tab_preferences">Tercihler</string>
     <string name="tab_accounts">Hesap Süzgeci</string>
     <string name="tab_help">Yardım</string>
     <string name="tab_about">Hakkında</string>
-
     <!-- Preferences -->
     <string name="pref_general">Genel</string>
     <string name="pref_color">Renk</string>
@@ -47,7 +43,6 @@
         <item>10 gün önce</item>
         <item>14 gün önce</item>
     </string-array>
-
     <string name="pref_title">Özel Etiketler</string>
     <string name="pref_title_enable">Özel Etiketleri Etkinleştir</string>
     <string name="pref_title_birthday_without_age">Doğumgünü</string>
@@ -58,7 +53,6 @@
     <string name="pref_title_other_with_age">Yıl ile diğer olay</string>
     <string name="pref_title_custom_without_age">Özel</string>
     <string name="pref_title_custom_with_age">Yıl ile Özel</string>
-
     <string name="pref_advanced_category">Gelişmiş Ayarlar</string>
     <string name="pref_prefer_dd_slash_mm">gg/AA/yyyy biçimini tercih et</string>
     <string name="pref_prefer_dd_slash_mm_summary">AA/gg/yyyy biçiminde tarih gösterirken gg/AA/yyyy biçimini tercih et.</string>
@@ -67,9 +61,9 @@
     <!-- Adapter Screen -->
     <string name="pref_account_header">Ayarlar</string>
     <string name="pref_account_settings">Birthday Adapter Yapılandır</string>
-
     <string name="account_list_empty">Hesap yok</string>
     <!--Free Version -->
     <string name="pref_buy">Tam sürümünü satın al!</string>
     <string name="pref_buy_full">Tam sürümünü satın almak için Google Play\'i aç...</string>
-    </resources>
+    <string name="event_title_birthday_with_age">{NAME}: Doğum günü ({AGE})</string>
+</resources>

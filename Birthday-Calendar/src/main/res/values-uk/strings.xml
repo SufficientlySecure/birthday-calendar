@@ -16,21 +16,17 @@
 
  You should have received a copy of the GNU General Public License
  along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
--->
-<resources>
-
+--><resources>
     <!-- Calendar -->
     <string name="calendar_display_name">Дні народження</string>
     <!-- About -->
     <string name="about_version">Версія:</string>
-
     <!-- Tabs -->
     <string name="tab_main">Головне</string>
     <string name="tab_preferences">Параметри</string>
     <string name="tab_accounts">Фільтр профілів</string>
     <string name="tab_help">Допомога</string>
     <string name="tab_about">Про програму</string>
-
     <!-- Preferences -->
     <string name="pref_general">Основне</string>
     <string name="pref_color">Колір</string>
@@ -47,7 +43,6 @@
         <item>За 10 днів до події</item>
         <item>За 14 днів до події</item>
     </string-array>
-
     <string name="pref_title">Власні Мітки</string>
     <string name="pref_title_enable">Увімкнути власні Мітки</string>
     <string name="pref_title_birthday_without_age">День народження</string>
@@ -58,7 +53,6 @@
     <string name="pref_title_other_with_age">Інша подія з віком</string>
     <string name="pref_title_custom_without_age">Звичай</string>
     <string name="pref_title_custom_with_age">Звичай з віком</string>
-
     <string name="pref_advanced_category">Додаткові параметри</string>
     <string name="pref_prefer_dd_slash_mm">Формат дати dd/MM/yyyy</string>
     <string name="pref_prefer_dd_slash_mm_summary">Віддає перевагу dd/MM/yyyy над MM/dd/yyyy при аналізі формату дати</string>
@@ -67,9 +61,8 @@
     <!-- Adapter Screen -->
     <string name="pref_account_header">Налаштування</string>
     <string name="pref_account_settings">Налаштувати Birthday Adapter</string>
-
     <string name="account_list_empty">Нема профілів</string>
     <!--Free Version -->
     <string name="pref_buy">Купіть повну версію!</string>
     <string name="pref_buy_full">Відкрийте Google Play, щоб купити повну версію…</string>
-    </resources>
+</resources>

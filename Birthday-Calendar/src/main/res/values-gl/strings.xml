@@ -16,21 +16,17 @@
 
  You should have received a copy of the GNU General Public License
  along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
--->
-<resources>
-
+--><resources>
     <!-- Calendar -->
     <string name="calendar_display_name">Aniversarios</string>
     <!-- About -->
     <string name="about_version">Versión:</string>
-
     <!-- Tabs -->
     <string name="tab_main">Principal</string>
     <string name="tab_preferences">Preferencias</string>
     <string name="tab_accounts">Filtro de contas</string>
     <string name="tab_help">Axuda</string>
     <string name="tab_about">Acerca de</string>
-
     <!-- Preferences -->
     <string name="pref_general">Xeral</string>
     <string name="pref_color">Cor</string>
@@ -49,4 +45,4 @@
     <!--Free Version -->
     <string name="pref_buy">Mercar a versión completa!</string>
     <string name="pref_buy_full">Abrir Google Play para mercar a versión completa...</string>
-    </resources>
+</resources>

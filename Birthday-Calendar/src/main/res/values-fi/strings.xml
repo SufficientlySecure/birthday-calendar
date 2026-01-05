@@ -16,20 +16,16 @@
 
  You should have received a copy of the GNU General Public License
  along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
--->
-<resources>
-
+--><resources>
     <!-- Calendar -->
     <string name="calendar_display_name">Syntymäpäivät</string>
     <!-- About -->
     <string name="about_version">Versio:</string>
-
     <!-- Tabs -->
     <string name="tab_main">Päätaso</string>
     <string name="tab_preferences">Asetukset</string>
     <string name="tab_help">Apua</string>
     <string name="tab_about">Tietoja</string>
-
     <!-- Preferences -->
     <string name="pref_general">Yleiset</string>
     <string name="pref_color">Väri</string>
@@ -50,5 +46,4 @@
     <!-- Adapter Screen -->
     <string name="pref_account_header">Asetukset</string>
     <string name="pref_account_settings">Määritä Birthday Adapterin ominaisuudet</string>
-
-    </resources>
+</resources>

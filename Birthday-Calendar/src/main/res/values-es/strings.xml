@@ -16,21 +16,17 @@
 
  You should have received a copy of the GNU General Public License
  along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
--->
-<resources>
-
+--><resources>
     <!-- Calendar -->
     <string name="calendar_display_name">Cumpleaños</string>
     <!-- About -->
     <string name="about_version">Versión:</string>
-
     <!-- Tabs -->
     <string name="tab_main">Principal</string>
     <string name="tab_preferences">Preferencias</string>
     <string name="tab_accounts">Filtrar cuenta</string>
     <string name="tab_help">Ayuda</string>
     <string name="tab_about">Sobre</string>
-
     <!-- Preferences -->
     <string name="pref_general">General</string>
     <string name="pref_color">Color</string>
@@ -47,7 +43,6 @@
         <item>10 días antes</item>
         <item>14 días antes</item>
     </string-array>
-
     <string name="pref_title">Etiqueta personalizada</string>
     <string name="pref_title_enable">Activar etiquetas personalizadas</string>
     <string name="pref_title_birthday_without_age">Cumpleaños</string>
@@ -58,7 +53,6 @@
     <string name="pref_title_other_with_age">Otro evento con edad</string>
     <string name="pref_title_custom_without_age">Personalizado</string>
     <string name="pref_title_custom_with_age">Personalizado con edad</string>
-
     <string name="pref_advanced_category">Preferencias avanzadas.</string>
     <string name="pref_prefer_dd_slash_mm">Preferir formato dd/MM/yyyy</string>
     <string name="pref_prefer_dd_slash_mm_summary">Prefiero dd/mm/aaaa a MM/dd/aaaa al analizar los formatos de fecha</string>
@@ -67,9 +61,8 @@
     <!-- Adapter Screen -->
     <string name="pref_account_header">Ajustes</string>
     <string name="pref_account_settings">Configurar Birthday Adapter</string>
-
     <string name="account_list_empty">No hay cuentas</string>
     <!--Free Version -->
     <string name="pref_buy">¡Comprar la versión completa!</string>
     <string name="pref_buy_full">Ir a Google Play para comprar la versión completa...</string>
-    </resources>
+</resources>

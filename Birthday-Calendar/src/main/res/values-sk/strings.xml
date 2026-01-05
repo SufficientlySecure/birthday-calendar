@@ -16,21 +16,17 @@
 
  You should have received a copy of the GNU General Public License
  along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
--->
-<resources>
-
+--><resources>
     <!-- Calendar -->
     <string name="calendar_display_name">Narodeniny</string>
     <!-- About -->
     <string name="about_version">Verzia:</string>
-
     <!-- Tabs -->
     <string name="tab_main">Hlavné</string>
     <string name="tab_preferences">Nastavenia</string>
     <string name="tab_accounts">Filter účtu</string>
     <string name="tab_help">Pomoc</string>
     <string name="tab_about">O aplikácii</string>
-
     <!-- Preferences -->
     <string name="pref_general">Obecné</string>
     <string name="pref_color">Farba</string>
@@ -47,7 +43,6 @@
         <item>10 dní pred</item>
         <item>14 dní pred</item>
     </string-array>
-
     <string name="pref_title">Vlastné popisky</string>
     <string name="pref_title_enable">Zapnúť vlastné popisky</string>
     <string name="pref_title_birthday_without_age">Narodeniny</string>
@@ -58,7 +53,6 @@
     <string name="pref_title_other_with_age">Iná udalosť s vekom</string>
     <string name="pref_title_custom_without_age">Vlastné</string>
     <string name="pref_title_custom_with_age">Vlastné s vekom</string>
-
     <string name="pref_advanced_category">Rozšírené nastavenia</string>
     <string name="pref_prefer_dd_slash_mm">Navrhnúť dd/MM/rrrr formát</string>
     <string name="pref_prefer_dd_slash_mm_summary">Navrhnúť dd/MM/rrrr na MM/dd/rrrr pri parsovaní formátov dátumu</string>
@@ -67,9 +61,8 @@
     <!-- Adapter Screen -->
     <string name="pref_account_header">Nastavenia</string>
     <string name="pref_account_settings">Konfigurovať Birthday Adapter</string>
-
     <string name="account_list_empty">Žiadne účty</string>
     <!--Free Version -->
     <string name="pref_buy">Kúpiť plnú verziu!</string>
     <string name="pref_buy_full">Otvoriť Google Play pre zakúpenie plnej verzie...</string>
-    </resources>
+</resources>

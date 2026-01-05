@@ -16,21 +16,17 @@
 
  You should have received a copy of the GNU General Public License
  along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
--->
-<resources>
-
+--><resources>
     <!-- Calendar -->
     <string name="calendar_display_name">Compleanni</string>
     <!-- About -->
     <string name="about_version">Versione:</string>
-
     <!-- Tabs -->
     <string name="tab_main">Principale</string>
     <string name="tab_preferences">Preferenze</string>
     <string name="tab_accounts">Filtro account</string>
     <string name="tab_help">Aiuto</string>
     <string name="tab_about">Informazioni</string>
-
     <!-- Preferences -->
     <string name="pref_general">Generale</string>
     <string name="pref_color">Colore</string>
@@ -47,7 +43,6 @@
         <item>10 giorni prima</item>
         <item>14 giorni prima</item>
     </string-array>
-
     <string name="pref_title">Etichette personalizzate</string>
     <string name="pref_title_enable">Abilita etichette personalizzate</string>
     <string name="pref_title_birthday_without_age">Compleanno</string>
@@ -58,7 +53,6 @@
     <string name="pref_title_other_with_age">Altro evento con età</string>
     <string name="pref_title_custom_without_age">Personalizzata</string>
     <string name="pref_title_custom_with_age">Personalizzata con età</string>
-
     <string name="pref_advanced_category">Impostazioni avanzate</string>
     <string name="pref_prefer_dd_slash_mm">Preferisci formato gg/MM/aaaa</string>
     <string name="pref_prefer_dd_slash_mm_summary">Preferisce gg/MM/aaaa a MM/gg/aaaa quando elabora i formati delle date</string>
@@ -67,9 +61,85 @@
     <!-- Adapter Screen -->
     <string name="pref_account_header">Impostazioni</string>
     <string name="pref_account_settings">Configura adattatore compleanni</string>
-
     <string name="account_list_empty">Nessun account</string>
     <!--Free Version -->
     <string name="pref_buy">Compra la versione completa!</string>
     <string name="pref_buy_full">Apri Google Play per comprare la versione completa...</string>
-    </resources>
+    <string name="event_title_birthday_with_age">{NAME}: Giorno di Nascita ({AGE})</string>
+    <string name="event_title_birthday_without_age">{NAME}: Giorno di Nascita</string>
+    <string name="event_title_anniversary_with_age">{NAME}: Anniversario ({AGE})</string>
+    <string name="event_title_anniversary_without_age">{NAME}: Anniversario</string>
+    <string name="event_title_other_with_age">{NAME}: Altri Eventi ({AGE})</string>
+    <string name="event_title_other_without_age">{NAME}: Altro Evento</string>
+    <string name="event_title_custom_with_age">{NAME}: {LABEL} ({AGE})</string>
+    <string name="event_title_custom_without_age">{NAME}: {LABEL}</string>
+    <string name="pref_enable">1. Attiva Birthday Adapter</string>
+    <string name="pref_enable_summary">Questo crea eventi nel calendario dai compleanni dei tuoi contatti.</string>
+    <string name="pref_enable_switch">Birthday Adapter</string>
+    <string name="pref_contacts">2. Aggiungi i compleanni ai contatti</string>
+    <string name="pref_contacts_summary">Modifica i compleanni dei tuoi amici nell\'app dei contatti del tuo dispositivo.</string>
+    <string name="pref_contacts_open">Apri l\'app dei contatti</string>
+    <string name="pref_calendar">3. Compleanni nel calendario</string>
+    <string name="pref_calendar_summary">Attiva Birthday Adapter nell\'account della tua appa calendario preferita.</string>
+    <string name="pref_calendar_open">Apri l\'app calendario</string>
+    <string name="pref_force_sync_summary">Di solito non è necessario farlo, perché Birthday Adapter si sincronizza automaticamente una volta al giorno.</string>
+    <string name="add_reminder">Aggiungi promemoria</string>
+    <string name="pref_reminder_time">Promemoria</string>
+    <string name="pref_reminder_summary">%1$s alle %2$s</string>
+    <string name="no_reminder_set">Nessun promemoria impostato</string>
+    <string name="remove">Rimuovi</string>
+    <string name="delete_reminder_title">Cancella promemoria</string>
+    <string name="delete_reminder_message">Sei sicuro di voler eliminare questo promemoria?</string>
+    <string name="delete">Cancella</string>
+    <string name="no_events_selected">Nessuno</string>
+    <string name="pref_events_with_reminders">Eventi con promemoria</string>
+    <string name="invalid_format">Formato invalido</string>
+    <string name="invalid_hex_code">Codice esadecimale invalido</string>
+    <string name="pref_title_enable_summary">Personalizza i titoli del calendario, con formati separati per quando l\'anno dell\'evento è noto o sconosciuto.</string>
+    <string name="pref_title_summary_without_age">Inserisci {NAME} o {FIRSTNAME} per il nome del contatto.</string>
+    <string name="pref_title_summary_with_age">Inserisci {NAME} o {FIRSTNAME} per il nome del contatto e {AGE} per l\'età.</string>
+    <string name="pref_title_summary_custom_without_age">Inserisci {NAME} o {FIRSTNAME} per il nome del contatto e {LABEL} per l\'etichetta personalizzata di questo evento.</string>
+    <string name="pref_title_summary_custom_with_age">Inserisci {NAME} o {FIRSTNAME} per il nome del contatto, {LABEL} per l\'etichetta personalizzata di questo evento e {AGE} per l\'età.</string>
+    <string name="pref_name_format_title">Mostra cognome prima</string>
+    <string name="pref_name_format_summary">Cambia la visualizzazione del nome da “Nome Cognome” a “Cognome, Nome”</string>
+    <string name="pref_jubilee_years_title">Anniversari giubilari</string>
+    <string name="pref_jubilee_years_dialog_message">Inserisci un elenco separato da virgole degli anniversari giubilari.</string>
+    <string name="pref_reminder_event_types_anniversary">Anniversari</string>
+    <string name="pref_reminder_event_types_other">Altri eventi</string>
+    <string name="pref_reminder_event_types_custom">Eventi personalizzati</string>
+    <string name="pref_disable_permission_monitoring_title">Disattiva il monitoraggio delle autorizzazioni</string>
+    <string name="pref_disable_permission_monitoring_summary">Impedisci all\'app di perdere le autorizzazioni quando non viene utilizzata per un lungo periodo. Ciò è utile se utilizzi solo la sincronizzazione in background.</string>
+    <string name="last_sync">Ultima sincronizzazione: %s</string>
+    <string name="last_sync_never">Ultima sincronizzazione: Mai</string>
+    <string name="next_sync">Prossima sincronizzazione in background: %s</string>
+    <string name="notification_channel_name">Sincronizza Comoleanno</string>
+    <string name="notification_channel_description">Notifiche per la sincronizzazione dei compleanni</string>
+    <string name="notification_title">Sincronizzazione dei compleanni</string>
+    <string name="hex_color_title">Inserisci il codice esadecimale del colore</string>
+    <string name="hex_color_hint">#RRGGBB</string>
+    <string name="item_color_content_description">Indicatore di colore del calendario</string>
+    <string name="permission_denied">Le autorizzazioni richieste sono state negate. Adapter non può essere attivato.</string>
+    <string name="permission_read_contacts_denied">Autorizzazione alla lettura dei contatti negata. Impossibile caricare gli account.</string>
+    <string name="pref_group_filtering_title">Filtraggio dei Gruppi</string>
+    <string name="pref_group_filtering_summary">Consenti il filtraggio dei tuoi account per gruppi di contatti.</string>
+    <string name="account_list_description">Nel calendario verranno visualizzati solo i compleanni degli account selezionati.</string>
+    <string name="account_list_loading">Caricando gli account a...</string>
+    <string name="account_list_counters_format">%1$s, %2$s</string>
+    <string name="account_list_icon_description">Icona account</string>
+    <string name="account_list_group_button_description">Mostra dettagli gruppi</string>
+    <string name="account_list_no_group">Nessun Gruppi</string>
+    <plurals name="contacts_count">
+        <item quantity="one">%d contatto</item>
+        <item quantity="many">%d contatti</item>
+        <item quantity="other"/>
+    </plurals>
+    <plurals name="dates_count">
+        <item quantity="one">%d data</item>
+        <item quantity="many">%d date</item>
+        <item quantity="other"/>
+    </plurals>
+    <string name="pref_buy_full_summary">Sincronizzazioni regolari in background, promemoria personalizzati e titoli di eventi personalizzati, filtro per gruppi di contatti, evidenziazione dei compleanni importanti</string>
+    <string name="summary_placeholder_firstname">Giovanna</string>
+    <string name="summary_placeholder_lastname">Rossi</string>
+    <string name="summary_placeholder_custom_label">Prima Data</string>
+</resources>
