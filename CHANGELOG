@@ -1,3 +1,6 @@
+3.9.1
+* Add translation: Italian
+
 3.9
 * Fix: Correctly handle yearless dates in UTC
 * Add option for Lastname, Firstname formatting
