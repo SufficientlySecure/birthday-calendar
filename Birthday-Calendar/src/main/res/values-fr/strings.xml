@@ -43,8 +43,8 @@
         <item>10 jours avant</item>
         <item>14 jours avant</item>
     </string-array>
-    <string name="pref_title">Étiquettes personnalisées</string>
-    <string name="pref_title_enable">Activer les étiquettes personnalisées</string>
+    <string name="pref_title">Libellés personnalisées</string>
+    <string name="pref_title_enable">Activer les libellés personnalisées</string>
     <string name="pref_title_birthday_without_age">Anniversaire</string>
     <string name="pref_title_birthday_with_age">Anniversaire avec l\'âge</string>
     <string name="pref_title_anniversary_without_age">Fête</string>
@@ -65,4 +65,48 @@
     <!--Free Version -->
     <string name="pref_buy">Acheter la version complète !</string>
     <string name="pref_buy_full">Ouvrir Google Play pour acheter la version complète…</string>
+    <string name="event_title_birthday_with_age">{NAME} : Anniversaire ({AGE})</string>
+    <string name="event_title_birthday_without_age">{NAME} : Anniversaire</string>
+    <string name="event_title_anniversary_with_age">{NAME} : Anniversaire de mariage ({AGE})</string>
+    <string name="event_title_anniversary_without_age">{NAME} : Anniversaire de mariage</string>
+    <string name="event_title_other_with_age">{NAME} : Autre Évènement ({AGE})</string>
+    <string name="event_title_other_without_age">{NAME} : Autre Évènement</string>
+    <plurals name="contacts_count">
+        <item quantity="one">%d contact</item>
+        <item quantity="many">%d contacts</item>
+        <item quantity="other">%d contacts</item>
+    </plurals>
+    <plurals name="dates_count">
+        <item quantity="one">%d date</item>
+        <item quantity="many">%d dates</item>
+        <item quantity="other">%d dates</item>
+    </plurals>
+    <string name="event_title_custom_with_age">{NAME} : {LABEL} ({AGE})</string>
+    <string name="event_title_custom_without_age">{NAME} : {LABEL}</string>
+    <string name="pref_enable">1. Activer Birthday Adapter</string>
+    <string name="pref_enable_summary">Cela crée des évènements d\'agenda à partir des anniversaires de vos contacts.</string>
+    <string name="pref_enable_switch">Birthday Adapter</string>
+    <string name="pref_contacts">2. Ajouter les anniversaires de vos contacts</string>
+    <string name="pref_contacts_summary">Modifiez les anniversaires de vos amis dans votre application de contacts.</string>
+    <string name="pref_contacts_open">Ouvrir l\'application contacts</string>
+    <string name="pref_calendar">3. Anniversaires dans l\'agenda</string>
+    <string name="pref_calendar_summary">Activez Birthday Adapter dans les comptes de votre application d\'agenda préférée.</string>
+    <string name="pref_calendar_open">Ouvrir l\'Agenda</string>
+    <string name="pref_force_sync_summary">Normalement, vous n\'avez pas besoin de faire cela, car Birthday Adapter se synchronise automatiquement une fois par jour.</string>
+    <string name="add_reminder">Ajouter un rappel</string>
+    <string name="pref_reminder_time">Rappel</string>
+    <string name="pref_reminder_summary">%1$s à %2$s</string>
+    <string name="no_reminder_set">Aucun rappel défini</string>
+    <string name="remove">Supprimer</string>
+    <string name="delete_reminder_title">Supprimer le rappel</string>
+    <string name="delete_reminder_message">Voulez-vous vraiment supprimer ce rappel ?</string>
+    <string name="delete">Supprimer</string>
+    <string name="pref_events_with_reminders">Évènements avec rappels</string>
+    <string name="invalid_format">Format incorrect</string>
+    <string name="invalid_hex_code">Code hexadécimal invalide</string>
+    <string name="pref_title_enable_summary">Personnalisez les titres de l\'agenda, avec des formats distincts selon que l\'année de l\'évènement est connue ou inconnue.</string>
+    <string name="pref_title_summary_without_age">Utilisez {NAME} ou {FIRSTNAME} pour le nom du contact.</string>
+    <string name="pref_title_summary_with_age">Utilisez {NAME} ou {FIRSTNAME} pour le nom du contact, et {AGE} pour l\'âge.</string>
+    <string name="pref_title_summary_custom_without_age">Utilisez {NAME} ou {FIRSTNAME} pour le nom du contact, et {LABEL} pour le libellé personnalisé de cet évènement.</string>
+    <string name="pref_title_summary_custom_with_age">Utilisez {NAME} ou {FIRSTNAME} pour le nom du contact, {LABEL} pour le libellé personnalisé de cet évènement et {AGE} pour l\'âge.</string>
 </resources>
