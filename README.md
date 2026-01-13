@@ -70,6 +70,10 @@ Translations are hosted on Weblate.
 
 Help translating at https://hosted.weblate.org/engage/birthday-adapter/
 
+<a href="https://hosted.weblate.org/engage/birthday-adapter/">
+<img src="https://hosted.weblate.org/widget/birthday-adapter/multi-auto.svg" alt="Translation status" />
+</a>
+
 ## Coding Style
 
 ### Code
