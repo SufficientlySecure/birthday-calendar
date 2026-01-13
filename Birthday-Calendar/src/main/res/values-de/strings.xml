@@ -145,6 +145,4 @@
     <string name="summary_placeholder_firstname">Erika</string>
     <string name="summary_placeholder_lastname">Mustermann</string>
     <string name="summary_placeholder_custom_label">erster Kuss</string>
-    <string name="app_name" translatable="false"></string>
-    <string name="account_type" translatable="false"></string>
 </resources>
