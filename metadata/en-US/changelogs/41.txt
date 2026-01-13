@@ -1,0 +1,3 @@
+3.9.2
+* Add translation: French
+- Make about page translatable
