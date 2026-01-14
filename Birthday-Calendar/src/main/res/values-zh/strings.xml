@@ -96,4 +96,48 @@
     <string name="invalid_format">格式无效</string>
     <string name="invalid_hex_code">十六进制代码无效</string>
     <string name="pref_title_enable_summary">自定义日历标题，可为已知或未知活动年份设置不同格式。</string>
+    <string name="pref_title_summary_without_age"></string>
+    <string name="pref_title_summary_custom_with_age"></string>
+    <string name="summary_placeholder_lastname"></string>
+    <string name="pref_title_summary_custom_without_age"></string>
+    <string name="account_list_counters_format"></string>
+    <plurals name="dates_count">
+        <item quantity="other"></item>
+    </plurals>
+    <string name="summary_placeholder_custom_label"></string>
+    <string name="pref_buy_full_summary"></string>
+    <string name="last_sync"></string>
+    <string name="permission_read_contacts_denied"></string>
+    <string name="pref_reminder_event_types_other"></string>
+    <string name="pref_disable_permission_monitoring_summary"></string>
+    <plurals name="contacts_count">
+        <item quantity="other"></item>
+    </plurals>
+    <string name="next_sync"></string>
+    <string name="pref_reminder_event_types_custom"></string>
+    <string name="pref_group_filtering_summary"></string>
+    <string name="pref_group_filtering_title"></string>
+    <string name="account_list_icon_description"></string>
+    <string name="item_color_content_description"></string>
+    <string name="pref_reminder_event_types_anniversary"></string>
+    <string name="pref_name_format_title"></string>
+    <string name="pref_title_summary_with_age"></string>
+    <string name="account_list_description"></string>
+    <string name="notification_channel_name"></string>
+    <string name="account_list_group_button_description"></string>
+    <string name="pref_name_format_summary"></string>
+    <string name="pref_jubilee_years_title"></string>
+    <string name="account_list_no_group"></string>
+    <string name="permission_denied"></string>
+    <string name="pref_jubilee_years_dialog_message"></string>
+    <string name="hex_color_hint"></string>
+    <string name="summary_placeholder_firstname"></string>
+    <string name="last_sync_never"></string>
+    <string name="account_list_loading"></string>
+    <string name="notification_channel_description"></string>
+    <string name="app_name" translatable="false"></string>
+    <string name="account_type" translatable="false"></string>
+    <string name="hex_color_title"></string>
+    <string name="pref_disable_permission_monitoring_title"></string>
+    <string name="notification_title"></string>
 </resources>
