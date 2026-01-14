@@ -43,32 +43,32 @@
         <item>10 天前</item>
         <item>14 天前</item>
     </string-array>
-    <string name="pref_title">自定义标题</string>
-    <string name="pref_title_enable">启用自定义标题</string>
+    <string name="pref_title">自定义标签</string>
+    <string name="pref_title_enable">启用自定义标签</string>
     <string name="pref_title_birthday_without_age">生日</string>
-    <string name="pref_title_birthday_with_age">生日（有年数）</string>
+    <string name="pref_title_birthday_with_age">生日（含年龄）</string>
     <string name="pref_title_anniversary_without_age">纪念日</string>
-    <string name="pref_title_anniversary_with_age">纪念日（有年数）</string>
-    <string name="pref_title_other_without_age">其它事件</string>
-    <string name="pref_title_other_with_age">其它事件（有年数）</string>
-    <string name="pref_title_custom_without_age">自定义事件</string>
-    <string name="pref_title_custom_with_age">自定义事件（有年数）</string>
-    <string name="pref_advanced_category">高级</string>
-    <string name="pref_prefer_dd_slash_mm">优先使用 dd/MM/yyyy 格式</string>
-    <string name="pref_prefer_dd_slash_mm_summary">解析日期时优先使用 dd/MM/yyyy 格式（默认为 MM/dd/yyyy）</string>
+    <string name="pref_title_anniversary_with_age">纪念日（含年龄）</string>
+    <string name="pref_title_other_without_age">其他活动</string>
+    <string name="pref_title_other_with_age">其他活动（含年龄）</string>
+    <string name="pref_title_custom_without_age">自定义活动</string>
+    <string name="pref_title_custom_with_age">自定义活动（含年龄）</string>
+    <string name="pref_advanced_category">高级设置</string>
+    <string name="pref_prefer_dd_slash_mm">优先使用日/月/年格式</string>
+    <string name="pref_prefer_dd_slash_mm_summary">解析日期格式时，优先使用日/月/年而非月/日/年</string>
     <string name="pref_advanced">高级</string>
     <string name="pref_reminder_event_types_birthday">生日</string>
     <!-- Adapter Screen -->
     <string name="pref_account_header">设置</string>
     <string name="pref_account_settings">配置 Birthday Adapter</string>
-    <string name="account_list_empty">没有账户</string>
+    <string name="account_list_empty">未找到账号</string>
     <!--Free Version -->
     <string name="pref_buy">购买完整版！</string>
-    <string name="pref_buy_full">打开 Google Play 购买完整版</string>
+    <string name="pref_buy_full">打开 Google Play 购买完整版…</string>
     <string name="event_title_birthday_with_age">{NAME}：生日（{AGE}）</string>
     <string name="event_title_birthday_without_age">{NAME}：生日</string>
-    <string name="event_title_anniversary_with_age">{NAME}：周年纪念日（{AGE}）</string>
-    <string name="event_title_anniversary_without_age">{NAME}：周年纪念日</string>
+    <string name="event_title_anniversary_with_age">{NAME}：纪念日（{AGE}）</string>
+    <string name="event_title_anniversary_without_age">{NAME}：纪念日</string>
     <string name="event_title_other_with_age">{NAME}：其他活动（{AGE}）</string>
     <string name="event_title_other_without_age">{NAME}：其他活动</string>
     <string name="event_title_custom_with_age">{NAME}：{LABEL}（{AGE}）</string>
@@ -96,4 +96,46 @@
     <string name="invalid_format">格式无效</string>
     <string name="invalid_hex_code">十六进制代码无效</string>
     <string name="pref_title_enable_summary">自定义日历标题，可为已知或未知活动年份设置不同格式。</string>
+    <string name="pref_title_summary_without_age">插入 {NAME} 或 {FIRSTNAME} 表示联系人姓名。</string>
+    <string name="pref_title_summary_with_age">插入 {NAME} 或 {FIRSTNAME} 表示联系人姓名，{AGE} 表示年龄。</string>
+    <string name="pref_title_summary_custom_without_age">插入 {NAME} 或 {FIRSTNAME} 表示联系人姓名，{LABEL} 表示此活动的自定义标签。</string>
+    <string name="pref_title_summary_custom_with_age">插入 {NAME} 或 {FIRSTNAME} 表示联系人姓名，{LABEL} 表示此活动的自定义标签，{AGE} 表示年龄。</string>
+    <string name="pref_name_format_title">姓氏在前显示</string>
+    <string name="pref_name_format_summary">将姓名显示方式从“名字 姓氏”更改为“姓氏, 名字”</string>
+    <string name="pref_jubilee_years_title">周年纪念日</string>
+    <string name="pref_jubilee_years_dialog_message">输入以英文逗号分隔的周年纪念日列表。</string>
+    <string name="pref_reminder_event_types_anniversary">纪念日</string>
+    <string name="pref_reminder_event_types_other">其他活动</string>
+    <string name="pref_reminder_event_types_custom">自定义活动</string>
+    <string name="pref_disable_permission_monitoring_title">禁用权限监控</string>
+    <string name="pref_disable_permission_monitoring_summary">防止应用因长期未使用丢失权限。如果您仅使用后台同步，此功能非常有用。</string>
+    <string name="last_sync">上次同步：%s</string>
+    <string name="last_sync_never">上次同步：从未</string>
+    <string name="next_sync">下次后台同步：%s</string>
+    <string name="notification_channel_name">生日同步</string>
+    <string name="notification_channel_description">生日同步通知</string>
+    <string name="notification_title">正在同步生日</string>
+    <string name="hex_color_title">输入十六进制颜色</string>
+    <string name="hex_color_hint">#RRGGBB</string>
+    <string name="item_color_content_description">日历颜色指示器</string>
+    <string name="permission_denied">所需权限被拒绝，无法激活 Birthday Adapter。</string>
+    <string name="permission_read_contacts_denied">读取联系人的权限被拒绝，无法加载账号。</string>
+    <string name="pref_group_filtering_title">分组筛选</string>
+    <string name="pref_group_filtering_summary">允许按联系人分组筛选账号。</string>
+    <string name="account_list_description">日历中只会显示所选账号的生日。</string>
+    <string name="account_list_loading">正在加载账号…</string>
+    <string name="account_list_counters_format">%1$s, %2$s</string>
+    <string name="account_list_icon_description">账号图标</string>
+    <string name="account_list_group_button_description">显示分组详情</string>
+    <string name="account_list_no_group">无分组</string>
+    <plurals name="contacts_count">
+        <item quantity="other">%d 位联系人</item>
+    </plurals>
+    <plurals name="dates_count">
+        <item quantity="other">%d 个日期</item>
+    </plurals>
+    <string name="pref_buy_full_summary">定期后台同步、自定义提醒和自定义活动标题、按联系人分组筛选、突出显示周年纪念日</string>
+    <string name="summary_placeholder_firstname">三</string>
+    <string name="summary_placeholder_lastname">张</string>
+    <string name="summary_placeholder_custom_label">初次约会</string>
 </resources>
