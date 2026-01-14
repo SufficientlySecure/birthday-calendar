@@ -20,17 +20,17 @@
     <!-- Calendar -->
     <string name="calendar_display_name">生日</string>
     <!-- About -->
-    <string name="about_version">版本</string>
+    <string name="about_version">版本：</string>
     <!-- Tabs -->
     <string name="tab_main">首页</string>
-    <string name="tab_preferences">设置</string>
-    <string name="tab_accounts">账户</string>
+    <string name="tab_preferences">偏好设置</string>
+    <string name="tab_accounts">账号筛选</string>
     <string name="tab_help">帮助</string>
     <string name="tab_about">关于</string>
     <!-- Preferences -->
     <string name="pref_general">常规</string>
-    <string name="pref_color">日历颜色</string>
-    <string name="pref_force_sync">立即同步</string>
+    <string name="pref_color">颜色</string>
+    <string name="pref_force_sync">立即同步！</string>
     <string name="pref_reminders">提醒</string>
     <string name="pref_reminder_time_summary">设置提醒时间</string>
     <string-array name="pref_reminder_time_drop_down">
@@ -65,4 +65,35 @@
     <!--Free Version -->
     <string name="pref_buy">购买完整版！</string>
     <string name="pref_buy_full">打开 Google Play 购买完整版</string>
+    <string name="event_title_birthday_with_age">{NAME}：生日（{AGE}）</string>
+    <string name="event_title_birthday_without_age">{NAME}：生日</string>
+    <string name="event_title_anniversary_with_age">{NAME}：周年纪念日（{AGE}）</string>
+    <string name="event_title_anniversary_without_age">{NAME}：周年纪念日</string>
+    <string name="event_title_other_with_age">{NAME}：其他活动（{AGE}）</string>
+    <string name="event_title_other_without_age">{NAME}：其他活动</string>
+    <string name="event_title_custom_with_age">{NAME}：{LABEL}（{AGE}）</string>
+    <string name="event_title_custom_without_age">{NAME}：{LABEL}</string>
+    <string name="pref_enable">1. 启用 Birthday Adapter</string>
+    <string name="pref_enable_summary">这将根据您的联系人的生日创建日历活动。</string>
+    <string name="pref_enable_switch">Birthday Adapter</string>
+    <string name="pref_contacts">2. 添加生日到联系人</string>
+    <string name="pref_contacts_summary">在联系人应用中编辑朋友的生日。</string>
+    <string name="pref_contacts_open">打开联系人应用</string>
+    <string name="pref_calendar">3. 日历中的生日</string>
+    <string name="pref_calendar_summary">在您常用的日历应用账号中激活 Birthday Adapter。</string>
+    <string name="pref_calendar_open">打开日历应用</string>
+    <string name="pref_force_sync_summary">通常无需手动操作，Birthday Adapter 每天自动同步一次。</string>
+    <string name="add_reminder">添加提醒</string>
+    <string name="pref_reminder_time">提醒</string>
+    <string name="pref_reminder_summary">%1$s %2$s</string>
+    <string name="no_reminder_set">未设置提醒</string>
+    <string name="remove">移除</string>
+    <string name="delete_reminder_title">删除提醒</string>
+    <string name="delete_reminder_message">确定要删除此提醒吗？</string>
+    <string name="delete">删除</string>
+    <string name="no_events_selected">无</string>
+    <string name="pref_events_with_reminders">带有提醒的活动</string>
+    <string name="invalid_format">格式无效</string>
+    <string name="invalid_hex_code">十六进制代码无效</string>
+    <string name="pref_title_enable_summary">自定义日历标题，可为已知或未知活动年份设置不同格式。</string>
 </resources>
