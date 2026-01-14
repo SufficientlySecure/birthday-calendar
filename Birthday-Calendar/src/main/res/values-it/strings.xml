@@ -131,17 +131,15 @@
     <plurals name="contacts_count">
         <item quantity="one">%d contatto</item>
         <item quantity="many">%d contatti</item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
     <plurals name="dates_count">
         <item quantity="one">%d data</item>
         <item quantity="many">%d date</item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
     <string name="pref_buy_full_summary">Sincronizzazioni regolari in background, promemoria personalizzati e titoli di eventi personalizzati, filtro per gruppi di contatti, evidenziazione dei compleanni importanti</string>
     <string name="summary_placeholder_firstname">Giovanna</string>
     <string name="summary_placeholder_lastname">Rossi</string>
     <string name="summary_placeholder_custom_label">Prima Data</string>
-    <string name="app_name" translatable="false"></string>
-    <string name="account_type" translatable="false"></string>
 </resources>
