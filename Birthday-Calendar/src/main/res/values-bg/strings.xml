@@ -142,6 +142,4 @@
     <string name="summary_placeholder_firstname">Иван</string>
     <string name="summary_placeholder_lastname">Петров</string>
     <string name="summary_placeholder_custom_label">Първа среща</string>
-    <string name="app_name" translatable="false"></string>
-    <string name="account_type" translatable="false"></string>
 </resources>
