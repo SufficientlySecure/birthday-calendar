@@ -65,12 +65,12 @@
     <!--Free Version -->
     <string name="pref_buy">Acheter la version complète !</string>
     <string name="pref_buy_full">Ouvrir Google Play pour acheter la version complète…</string>
-    <string name="event_title_birthday_with_age">{NAME} : Anniversaire ({AGE})</string>
-    <string name="event_title_birthday_without_age">{NAME} : Anniversaire</string>
-    <string name="event_title_anniversary_with_age">{NAME} : Anniversaire de mariage ({AGE})</string>
-    <string name="event_title_anniversary_without_age">{NAME} : Anniversaire de mariage</string>
-    <string name="event_title_other_with_age">{NAME} : Autre Évènement ({AGE})</string>
-    <string name="event_title_other_without_age">{NAME} : Autre Évènement</string>
+    <string name="event_title_birthday_with_age">{NAME} : Anniversaire ({AGE})</string>
+    <string name="event_title_birthday_without_age">{NAME} : Anniversaire</string>
+    <string name="event_title_anniversary_with_age">{NAME} : Anniversaire de mariage ({AGE})</string>
+    <string name="event_title_anniversary_without_age">{NAME} : Anniversaire de mariage</string>
+    <string name="event_title_other_with_age">{NAME} : Autre Évènement ({AGE})</string>
+    <string name="event_title_other_without_age">{NAME} : Autre Évènement</string>
     <plurals name="contacts_count">
         <item quantity="one">%d contact</item>
         <item quantity="many">%d contacts</item>
@@ -81,8 +81,8 @@
         <item quantity="many">%d dates</item>
         <item quantity="other">%d dates</item>
     </plurals>
-    <string name="event_title_custom_with_age">{NAME} : {LABEL} ({AGE})</string>
-    <string name="event_title_custom_without_age">{NAME} : {LABEL}</string>
+    <string name="event_title_custom_with_age">{NAME} : {LABEL} ({AGE})</string>
+    <string name="event_title_custom_without_age">{NAME} : {LABEL}</string>
     <string name="pref_enable">1. Activer Birthday Adapter</string>
     <string name="pref_enable_summary">Cela crée des évènements d\'agenda à partir des anniversaires de vos contacts.</string>
     <string name="pref_enable_switch">Birthday Adapter</string>
@@ -99,7 +99,7 @@
     <string name="no_reminder_set">Aucun rappel défini</string>
     <string name="remove">Supprimer</string>
     <string name="delete_reminder_title">Supprimer le rappel</string>
-    <string name="delete_reminder_message">Voulez-vous vraiment supprimer ce rappel ?</string>
+    <string name="delete_reminder_message">Voulez-vous vraiment supprimer ce rappel ?</string>
     <string name="delete">Supprimer</string>
     <string name="pref_events_with_reminders">Évènements avec rappels</string>
     <string name="invalid_format">Format incorrect</string>
