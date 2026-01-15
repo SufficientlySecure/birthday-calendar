@@ -175,6 +175,7 @@
     <string name="onboarding_permission_denied">Permission denied. The app might not work as expected.</string>
     <string name="onboarding_finish_text_google_calendar">To see the birthdays in Google Calendar, open the menu and go to Settings. Tap \'Manage accounts\' and make sure the \'Birthday Adapter\' is enabled.</string>
     <string name="onboarding_finish_text_samsung_calendar">To see the birthdays in Samsung Calendar, open the menu, tap \'Manage calendars\' and make sure \'Birthday Adapter\' is turned on.</string>
+    <string name="onboarding_finish_text_fossify_calendar">To see the birthdays in Fossify Calendar, open the settings and make sure \'activate CalDAV sync\' is active, then select \'manage synchronized calendars\' and make sure the \'Birthday Adapter\' is enabled.</string>
     <string name="restart_onboarding">Restart</string>
 
     <!-- Title summary placeholders -->

@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import java.util.Calendar;
+import java.util.List;
 
 import fr.heinisch.birthdayadapter.R;
 import fr.heinisch.birthdayadapter.ui.OnboardingActivity;
@@ -53,11 +54,15 @@ public class OnboardingFinishFragment extends Fragment {
         return view;
     }
 
-    private void openCalendar() {
+    private Intent getOpenCalendarIntent() {
         Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
         builder.appendPath("time");
         ContentUris.appendId(builder, Calendar.getInstance().getTimeInMillis());
-        Intent intent = new Intent(Intent.ACTION_VIEW).setData(builder.build());
+        return new Intent(Intent.ACTION_VIEW).setData(builder.build());
+    }
+
+    private void openCalendar() {
+        Intent intent = getOpenCalendarIntent();
         try {
             startActivity(intent);
         } catch (ActivityNotFoundException e) {
@@ -88,19 +93,63 @@ public class OnboardingFinishFragment extends Fragment {
 
     private void setCalendarSpecificText() {
         PackageManager pm = requireActivity().getPackageManager();
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_APP_CALENDAR);
-        ResolveInfo resolveInfo = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        if (resolveInfo != null) {
-            String packageName = resolveInfo.activityInfo.packageName;
-            if ("com.google.android.calendar".equals(packageName)) {
-                textTextView.setText(R.string.onboarding_finish_text_google_calendar);
-            } else if ("com.samsung.android.calendar".equals(packageName)) {
-                textTextView.setText(R.string.onboarding_finish_text_samsung_calendar);
-            } else {
-                textTextView.setText(R.string.onboarding_finish_text);
+
+        // Intent to find the default app that will open for a specific calendar view
+        Intent specificCalendarIntent = getOpenCalendarIntent();
+        ResolveInfo defaultResolution = pm.resolveActivity(specificCalendarIntent, PackageManager.MATCH_DEFAULT_ONLY);
+
+        String defaultPackageName = null;
+        if (defaultResolution != null && defaultResolution.activityInfo != null) {
+            defaultPackageName = defaultResolution.activityInfo.packageName;
+        }
+
+        // 1. Check if the default app is one of our known calendars
+        if ("com.google.android.calendar".equals(defaultPackageName)) {
+            textTextView.setText(R.string.onboarding_finish_text_google_calendar);
+            return;
+        }
+        if ("com.samsung.android.calendar".equals(defaultPackageName)) {
+            textTextView.setText(R.string.onboarding_finish_text_samsung_calendar);
+            return;
+        }
+        if ("org.fossify.calendar".equals(defaultPackageName)) {
+            textTextView.setText(R.string.onboarding_finish_text_fossify_calendar);
+            return;
+        }
+
+        // 2. If default is unknown, check the list of all installed calendar apps
+        // Intent to find all calendar apps in general
+        Intent genericCalendarIntent = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_APP_CALENDAR);
+        List<ResolveInfo> allCalendars = pm.queryIntentActivities(genericCalendarIntent, PackageManager.MATCH_DEFAULT_ONLY);
+
+        boolean googleCalendarInstalled = false;
+        boolean samsungCalendarInstalled = false;
+        boolean fossifyCalendarInstalled = false;
+        if (allCalendars != null) {
+            for (ResolveInfo info : allCalendars) {
+                if (info.activityInfo != null) {
+                    if ("com.google.android.calendar".equals(info.activityInfo.packageName)) {
+                        googleCalendarInstalled = true;
+                    }
+                    if ("com.samsung.android.calendar".equals(info.activityInfo.packageName)) {
+                        samsungCalendarInstalled = true;
+                    }
+                    if ("org.fossify.calendar".equals(info.activityInfo.packageName)) {
+                        fossifyCalendarInstalled = true;
+                    }
+                }
             }
+        }
+
+        // 3. Prioritize and show instructions
+        if (googleCalendarInstalled) {
+            textTextView.setText(R.string.onboarding_finish_text_google_calendar);
+        } else if (samsungCalendarInstalled) {
+            textTextView.setText(R.string.onboarding_finish_text_samsung_calendar);
+        } else if (fossifyCalendarInstalled) {
+            textTextView.setText(R.string.onboarding_finish_text_fossify_calendar);
         } else {
+            // 4. Fallback to generic text
             textTextView.setText(R.string.onboarding_finish_text);
         }
     }
