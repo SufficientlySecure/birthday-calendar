@@ -157,6 +157,27 @@
     <string name="pref_buy_full">Open Google Play to buy full version…</string>
     <string name="pref_buy_full_summary">Regular background syncs, custom reminders and custom event titles, filter for contact groups, highlighting jubilee birthdays</string>
 
+    <!-- Onboarding -->
+    <string name="next">Next</string>
+    <string name="finish">Finish</string>
+    <string name="ignore">Ignore</string>
+    <string name="onboarding_intro_title">Welcome to Birthday Adapter</string>
+    <string name="onboarding_intro_text">This app syncs birthdays, anniversaries, and other events from your contacts directly into your Android calendar. Unlike other apps, it integrates seamlessly with your system calendar, so you can see all your important dates alongside your other events.</string>
+    <string name="onboarding_contacts_title">Contacts Access</string>
+    <string name="onboarding_contacts_text">To read birthdays, the app needs access to your contacts.</string>
+    <string name="onboarding_calendar_title">Calendar Access</string>
+    <string name="onboarding_calendar_text">To create birthday events, the app needs access to your calendar.</string>
+    <string name="onboarding_finish_title">Activate</string>
+    <string name="onboarding_finish_text">You need to enable the Birthday Adapter in the account settings of your calendar app to see the birthdays.</string>
+    <string name="onboarding_finish_warning_title">Permissions Missing</string>
+    <string name="onboarding_finish_warning_text">Some permissions were not granted. The Birthday Adapter cannot be activated. You can grant the permissions later by restarting the app.</string>
+    <string name="onboarding_grant_permission">Grant Permission</string>
+    <string name="onboarding_permission_denied">Permission denied. The app might not work as expected.</string>
+    <string name="onboarding_finish_text_google_calendar">To see the birthdays in Google Calendar, open the menu and go to Settings. Tap \'Manage accounts\' and make sure the \'Birthday Adapter\' is enabled.</string>
+    <string name="onboarding_finish_text_samsung_calendar">To see the birthdays in Samsung Calendar, open the menu, tap \'Manage calendars\' and make sure \'Birthday Adapter\' is turned on.</string>
+    <string name="onboarding_finish_text_fossify_calendar">To see the birthdays in Fossify Calendar, open the settings and make sure \'activate CalDAV sync\' is active, then select \'manage synchronized calendars\' and make sure the \'Birthday Adapter\' is enabled.</string>
+    <string name="restart_onboarding">Restart</string>
+
     <!-- Title summary placeholders -->
     <string name="summary_placeholder_firstname">Jane</string>
     <string name="summary_placeholder_lastname">Doe</string>

@@ -66,7 +66,6 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
     private static final String[] REQUIRED_PERMISSIONS = new String[]{
             Manifest.permission.GET_ACCOUNTS,
             Manifest.permission.READ_CONTACTS,
-            Manifest.permission.WRITE_CONTACTS,
             Manifest.permission.READ_CALENDAR,
             Manifest.permission.WRITE_CALENDAR
     };

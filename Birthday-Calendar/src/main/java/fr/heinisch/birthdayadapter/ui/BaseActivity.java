@@ -22,9 +22,15 @@
 
 package fr.heinisch.birthdayadapter.ui;
 
+import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static fr.heinisch.birthdayadapter.util.VersionHelper.isFullVersionUnlocked;
 
+import android.Manifest;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -32,6 +38,7 @@ import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
@@ -52,6 +59,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import fr.heinisch.birthdayadapter.R;
+import fr.heinisch.birthdayadapter.util.AccountHelper;
 import fr.heinisch.birthdayadapter.util.IPurchaseHelper;
 import fr.heinisch.birthdayadapter.util.MySharedPreferenceChangeListener;
 import fr.heinisch.birthdayadapter.util.PurchaseHelperFactory;
@@ -62,17 +70,34 @@ public class BaseActivity extends AppCompatActivity {
     public MySharedPreferenceChangeListener mySharedPreferenceChangeListener;
     private ProgressBar mProgressBar;
 
+    private static final String[] REQUIRED_PERMISSIONS = new String[]{
+            Manifest.permission.GET_ACCOUNTS,
+            Manifest.permission.READ_CONTACTS,
+            Manifest.permission.READ_CALENDAR,
+            Manifest.permission.WRITE_CALENDAR
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // overwrite locale to EN, for testing and screenshots only
-        //    Locale locale = new Locale("en");
-        //    Locale.setDefault(locale);
-        //    Resources resources = getResources();
-        //    Configuration config = resources.getConfiguration();
-        //    config.setLocale(locale);
-        //    resources.updateConfiguration(config, resources.getDisplayMetrics());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // Run migration for existing users
+        handleMigrations(prefs);
+
+        boolean hasSeenOnboarding = prefs.getBoolean("has_seen_onboarding", false);
+        boolean ignorePermissionCheck = getIntent().getBooleanExtra(OnboardingActivity.EXTRA_IGNORE_PERMISSION_CHECK_ONCE, false);
+
+        if (!hasSeenOnboarding) {
+            launchOnboarding();
+            return;
+        }
+
+        if (!ignorePermissionCheck && arePermissionsMissing()) {
+            launchOnboarding();
+            return;
+        }
 
         // Set default values from XML before any UI is created
         PreferenceManager.setDefaultValues(this, R.xml.pref_preferences, false);
@@ -104,7 +129,6 @@ public class BaseActivity extends AppCompatActivity {
             // Apply the bottom inset as padding to the ViewPager
             viewPager.setPadding(viewPager.getPaddingLeft(), viewPager.getPaddingTop(), viewPager.getPaddingRight(), systemBars.bottom);
 
-            // Return the original insets to allow children to handle them
             return windowInsets;
         });
 
@@ -128,8 +152,37 @@ public class BaseActivity extends AppCompatActivity {
 
         // Check for existing purchases and restore them if necessary
         if (!isFullVersionUnlocked(this)) {
-            ExecutorService executor = Executors.newSingleThreadExecutor();
+            ExecutorService executor = newSingleThreadExecutor();
             executor.execute(() -> mPurchaseHelper.verifyAndRestorePurchases(this));
+        }
+    }
+
+    private void handleMigrations(SharedPreferences prefs) {
+        try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            long currentVersionCode;
+            currentVersionCode = pInfo.getLongVersionCode();
+            long lastSeenVersionCode = prefs.getLong("last_seen_version_code", 0);
+            if (currentVersionCode > lastSeenVersionCode) {
+                // This is an update. Check if we need to migrate existing users.
+                if (!prefs.getBoolean("has_seen_onboarding", false) && areAllPermissionsGranted()) {
+                    // This is an existing user with all permissions. Mark onboarding as seen and enable the adapter.
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putBoolean("has_seen_onboarding", true);
+                    editor.putBoolean(getString(R.string.pref_enabled_key), true);
+                    editor.apply();
+
+                    // Activate the account in the background
+                    AccountHelper accountHelper = new AccountHelper(this);
+                    ExecutorService executor = newSingleThreadExecutor();
+                    executor.execute(accountHelper::addAccountAndSync);
+                }
+
+                // Update the last seen version code
+                prefs.edit().putLong("last_seen_version_code", currentVersionCode).apply();
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            // This should not happen
         }
     }
 
@@ -143,6 +196,30 @@ public class BaseActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mySharedPreferenceChangeListener);
+    }
+
+    private boolean arePermissionsMissing() {
+        for (String permission : REQUIRED_PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean areAllPermissionsGranted() {
+        for (String permission : REQUIRED_PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void launchOnboarding() {
+        Intent intent = new Intent(this, OnboardingActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void setDefaultReminder() {
@@ -203,5 +280,4 @@ public class BaseActivity extends AppCompatActivity {
             return mFragmentTitles[position];
         }
     }
-
 }
