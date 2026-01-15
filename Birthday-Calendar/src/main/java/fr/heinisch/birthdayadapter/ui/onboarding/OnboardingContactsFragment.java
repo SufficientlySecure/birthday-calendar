@@ -47,7 +47,6 @@ public class OnboardingContactsFragment extends Fragment {
         Button grantButton = view.findViewById(R.id.grant_contacts_button);
         grantButton.setOnClickListener(v -> requestPermissionLauncher.launch(new String[]{
                 Manifest.permission.READ_CONTACTS,
-                Manifest.permission.WRITE_CONTACTS,
                 Manifest.permission.GET_ACCOUNTS
         }));
 
