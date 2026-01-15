@@ -27,6 +27,7 @@ import static fr.heinisch.birthdayadapter.util.VersionHelper.isFullVersionUnlock
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
@@ -56,6 +57,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import fr.heinisch.birthdayadapter.R;
+import fr.heinisch.birthdayadapter.util.AccountHelper;
 import fr.heinisch.birthdayadapter.util.IPurchaseHelper;
 import fr.heinisch.birthdayadapter.util.MySharedPreferenceChangeListener;
 import fr.heinisch.birthdayadapter.util.PurchaseHelperFactory;
@@ -78,6 +80,10 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // Run migration for existing users
+        handleMigrations(prefs);
+
         boolean hasSeenOnboarding = prefs.getBoolean("has_seen_onboarding", false);
         boolean ignorePermissionCheck = getIntent().getBooleanExtra(OnboardingActivity.EXTRA_IGNORE_PERMISSION_CHECK_ONCE, false);
 
@@ -86,7 +92,8 @@ public class BaseActivity extends AppCompatActivity {
             return;
         }
 
-        if (!ignorePermissionCheck && checkPermissions()) {
+        if (!ignorePermissionCheck && arePermissionsMissing()) {
+            launchOnboarding();
             return;
         }
 
@@ -148,6 +155,35 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    private void handleMigrations(SharedPreferences prefs) {
+        try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            int currentVersionCode = pInfo.versionCode;
+            int lastSeenVersionCode = prefs.getInt("last_seen_version_code", 0);
+
+            if (currentVersionCode > lastSeenVersionCode) {
+                // This is an update. Check if we need to migrate existing users.
+                if (!prefs.getBoolean("has_seen_onboarding", false) && areAllPermissionsGranted()) {
+                    // This is an existing user with all permissions. Mark onboarding as seen and enable the adapter.
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putBoolean("has_seen_onboarding", true);
+                    editor.putBoolean(getString(R.string.pref_enabled_key), true);
+                    editor.apply();
+
+                    // Activate the account in the background
+                    AccountHelper accountHelper = new AccountHelper(this);
+                    ExecutorService executor = Executors.newSingleThreadExecutor();
+                    executor.execute(accountHelper::addAccountAndSync);
+                }
+
+                // Update the last seen version code
+                prefs.edit().putInt("last_seen_version_code", currentVersionCode).apply();
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            // This should not happen
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -160,25 +196,22 @@ public class BaseActivity extends AppCompatActivity {
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mySharedPreferenceChangeListener);
     }
 
-    /**
-     * Checks for required permissions and launches onboarding if any are missing.
-     * @return true if onboarding was launched, false otherwise.
-     */
-    private boolean checkPermissions() {
-        boolean permissionsMissing = false;
+    private boolean arePermissionsMissing() {
         for (String permission : REQUIRED_PERMISSIONS) {
             if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                permissionsMissing = true;
-                break;
+                return true;
             }
         }
-
-        if (permissionsMissing) {
-            launchOnboarding();
-            return true;
-        }
-
         return false;
+    }
+
+    private boolean areAllPermissionsGranted() {
+        for (String permission : REQUIRED_PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void launchOnboarding() {
