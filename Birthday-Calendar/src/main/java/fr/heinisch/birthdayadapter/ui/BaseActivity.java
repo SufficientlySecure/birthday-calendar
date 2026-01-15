@@ -24,7 +24,10 @@ package fr.heinisch.birthdayadapter.ui;
 
 import static fr.heinisch.birthdayadapter.util.VersionHelper.isFullVersionUnlocked;
 
+import android.Manifest;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -32,6 +35,7 @@ import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
@@ -62,17 +66,29 @@ public class BaseActivity extends AppCompatActivity {
     public MySharedPreferenceChangeListener mySharedPreferenceChangeListener;
     private ProgressBar mProgressBar;
 
+    private static final String[] REQUIRED_PERMISSIONS = new String[]{
+            Manifest.permission.GET_ACCOUNTS,
+            Manifest.permission.READ_CONTACTS,
+            Manifest.permission.READ_CALENDAR,
+            Manifest.permission.WRITE_CALENDAR
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // overwrite locale to EN, for testing and screenshots only
-        //    Locale locale = new Locale("en");
-        //    Locale.setDefault(locale);
-        //    Resources resources = getResources();
-        //    Configuration config = resources.getConfiguration();
-        //    config.setLocale(locale);
-        //    resources.updateConfiguration(config, resources.getDisplayMetrics());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean hasSeenOnboarding = prefs.getBoolean("has_seen_onboarding", false);
+
+        if (!hasSeenOnboarding) {
+            launchOnboarding();
+            return; // Stop further execution
+        }
+
+        // If onboarding has been seen, check if permissions are still granted
+        if (checkPermissions()) {
+            return; // Stop further execution if onboarding is launched
+        }
 
         // Set default values from XML before any UI is created
         PreferenceManager.setDefaultValues(this, R.xml.pref_preferences, false);
@@ -104,7 +120,6 @@ public class BaseActivity extends AppCompatActivity {
             // Apply the bottom inset as padding to the ViewPager
             viewPager.setPadding(viewPager.getPaddingLeft(), viewPager.getPaddingTop(), viewPager.getPaddingRight(), systemBars.bottom);
 
-            // Return the original insets to allow children to handle them
             return windowInsets;
         });
 
@@ -143,6 +158,33 @@ public class BaseActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mySharedPreferenceChangeListener);
+    }
+
+    /**
+     * Checks for required permissions and launches onboarding if any are missing.
+     * @return true if onboarding was launched, false otherwise.
+     */
+    private boolean checkPermissions() {
+        boolean permissionsMissing = false;
+        for (String permission : REQUIRED_PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                permissionsMissing = true;
+                break;
+            }
+        }
+
+        if (permissionsMissing) {
+            launchOnboarding();
+            return true;
+        }
+
+        return false;
+    }
+
+    private void launchOnboarding() {
+        Intent intent = new Intent(this, OnboardingActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void setDefaultReminder() {
@@ -203,5 +245,4 @@ public class BaseActivity extends AppCompatActivity {
             return mFragmentTitles[position];
         }
     }
-
 }

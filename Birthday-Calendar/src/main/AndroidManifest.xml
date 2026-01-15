@@ -67,6 +67,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="fr.heinisch.birthdayadapter.ui.OnboardingActivity"
+            android:theme="@style/MyMaterialTheme.Base" />
         <!-- launchMode and taskAffinity required to not launch
         AddAccountActivity on the existing task of Birthday Calendar -->
         <activity
