@@ -40,6 +40,9 @@ public class OnboardingActivity extends AppCompatActivity {
     private OnboardingAdapter adapter;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private ColorStateList defaultButtonColor;
+    private List<Fragment> onboardingFragments;
+
+    public static final String EXTRA_IGNORE_PERMISSION_CHECK_ONCE = "IGNORE_PERMISSION_CHECK_ONCE";
 
     private static final String[] REQUIRED_PERMISSIONS = new String[]{
             Manifest.permission.GET_ACCOUNTS,
@@ -67,7 +70,7 @@ public class OnboardingActivity extends AppCompatActivity {
         nextButton = findViewById(R.id.nextButton);
         defaultButtonColor = nextButton.getBackgroundTintList();
 
-        List<Fragment> onboardingFragments = createFragmentList();
+        onboardingFragments = createFragmentList();
         adapter = new OnboardingAdapter(this, onboardingFragments);
         viewPager.setAdapter(adapter);
 
@@ -88,7 +91,13 @@ public class OnboardingActivity extends AppCompatActivity {
             if (currentItem < adapter.getItemCount() - 1) {
                 viewPager.setCurrentItem(currentItem + 1);
             } else {
-                finishOnboarding();
+                nextButton.setEnabled(false);
+                if (areAllPermissionsGranted()) {
+                    activateAdapterIfNeeded();
+                    finishOnboarding();
+                } else {
+                    restartOnboardingProcess();
+                }
             }
         });
 
@@ -102,16 +111,14 @@ public class OnboardingActivity extends AppCompatActivity {
 
         fragments.add(new OnboardingIntroFragment());
 
-        if (!areAllPermissionsGranted()) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
-                fragments.add(new OnboardingContactsFragment());
-            }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
+            fragments.add(new OnboardingContactsFragment());
+        }
 
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-                fragments.add(new OnboardingCalendarFragment());
-            }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            fragments.add(new OnboardingCalendarFragment());
         }
 
         fragments.add(new OnboardingFinishFragment());
@@ -120,17 +127,26 @@ public class OnboardingActivity extends AppCompatActivity {
     }
 
     private void updateFinishScreen() {
-        OnboardingFinishFragment finishFragment = (OnboardingFinishFragment) adapter.fragments.get(adapter.getItemCount() - 1);
+        OnboardingFinishFragment finishFragment = (OnboardingFinishFragment) onboardingFragments.get(onboardingFragments.size() - 1);
         if (areAllPermissionsGranted()) {
             finishFragment.setWarningMode(false);
             nextButton.setText(R.string.finish);
             nextButton.setBackgroundTintList(defaultButtonColor);
-            activateAdapterIfNeeded();
         } else {
             finishFragment.setWarningMode(true);
-            nextButton.setText(R.string.ignore);
-            nextButton.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
+            nextButton.setText(R.string.restart_onboarding);
+            nextButton.setBackgroundTintList(defaultButtonColor);
         }
+    }
+
+    public void restartOnboardingProcess() {
+        onboardingFragments = createFragmentList();
+        adapter = new OnboardingAdapter(this, onboardingFragments);
+        viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(0, false);
+        nextButton.setEnabled(true);
+        nextButton.setText(R.string.next);
+        nextButton.setBackgroundTintList(defaultButtonColor);
     }
 
     private void activateAdapterIfNeeded() {
@@ -147,11 +163,14 @@ public class OnboardingActivity extends AppCompatActivity {
         prefs.edit().putBoolean(getString(R.string.pref_enabled_key), true).apply();
     }
 
-    private void finishOnboarding() {
+    public void finishOnboarding() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.edit().putBoolean("has_seen_onboarding", true).apply();
 
         Intent intent = new Intent(this, BaseActivity.class);
+        if (!areAllPermissionsGranted()) {
+            intent.putExtra(EXTRA_IGNORE_PERMISSION_CHECK_ONCE, true);
+        }
         startActivity(intent);
         finish();
     }

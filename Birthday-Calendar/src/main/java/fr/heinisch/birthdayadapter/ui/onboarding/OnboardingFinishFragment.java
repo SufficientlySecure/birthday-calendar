@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,11 +12,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import fr.heinisch.birthdayadapter.R;
+import fr.heinisch.birthdayadapter.ui.OnboardingActivity;
 
 public class OnboardingFinishFragment extends Fragment {
 
     private TextView titleTextView;
     private TextView textTextView;
+    private Button ignoreButton;
     private boolean warningMode = false;
 
     @Nullable
@@ -24,6 +27,14 @@ public class OnboardingFinishFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_onboarding_finish, container, false);
         titleTextView = view.findViewById(R.id.finish_title);
         textTextView = view.findViewById(R.id.finish_text);
+        ignoreButton = view.findViewById(R.id.ignore_button);
+
+        ignoreButton.setOnClickListener(v -> {
+            if (getActivity() instanceof OnboardingActivity) {
+                ((OnboardingActivity) getActivity()).finishOnboarding();
+            }
+        });
+
         updateTexts();
         return view;
     }
@@ -39,9 +50,11 @@ public class OnboardingFinishFragment extends Fragment {
         if (warningMode) {
             titleTextView.setText(R.string.onboarding_finish_warning_title);
             textTextView.setText(R.string.onboarding_finish_warning_text);
+            ignoreButton.setVisibility(View.VISIBLE);
         } else {
             titleTextView.setText(R.string.onboarding_finish_title);
             textTextView.setText(R.string.onboarding_finish_text);
+            ignoreButton.setVisibility(View.GONE);
         }
     }
 }

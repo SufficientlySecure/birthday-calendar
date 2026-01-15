@@ -30,4 +30,12 @@
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
+    <Button
+        android:id="@+id/ignore_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/ignore"
+        android:visibility="gone" />
+
 </LinearLayout>

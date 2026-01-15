@@ -79,15 +79,15 @@ public class BaseActivity extends AppCompatActivity {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean hasSeenOnboarding = prefs.getBoolean("has_seen_onboarding", false);
+        boolean ignorePermissionCheck = getIntent().getBooleanExtra(OnboardingActivity.EXTRA_IGNORE_PERMISSION_CHECK_ONCE, false);
 
         if (!hasSeenOnboarding) {
             launchOnboarding();
-            return; // Stop further execution
+            return;
         }
 
-        // If onboarding has been seen, check if permissions are still granted
-        if (checkPermissions()) {
-            return; // Stop further execution if onboarding is launched
+        if (!ignorePermissionCheck && checkPermissions()) {
+            return;
         }
 
         // Set default values from XML before any UI is created
