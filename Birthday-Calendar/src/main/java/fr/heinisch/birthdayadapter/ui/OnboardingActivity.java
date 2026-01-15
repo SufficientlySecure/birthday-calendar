@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -37,6 +39,14 @@ public class OnboardingActivity extends AppCompatActivity {
     private Button nextButton;
     private OnboardingAdapter adapter;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private ColorStateList defaultButtonColor;
+
+    private static final String[] REQUIRED_PERMISSIONS = new String[]{
+            Manifest.permission.GET_ACCOUNTS,
+            Manifest.permission.READ_CONTACTS,
+            Manifest.permission.READ_CALENDAR,
+            Manifest.permission.WRITE_CALENDAR
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +65,7 @@ public class OnboardingActivity extends AppCompatActivity {
 
         viewPager = findViewById(R.id.viewPager);
         nextButton = findViewById(R.id.nextButton);
+        defaultButtonColor = nextButton.getBackgroundTintList();
 
         List<Fragment> onboardingFragments = createFragmentList();
         adapter = new OnboardingAdapter(this, onboardingFragments);
@@ -64,11 +75,10 @@ public class OnboardingActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 if (position == adapter.getItemCount() - 1) {
-                    nextButton.setText(R.string.finish);
-                    // Activate the adapter as soon as the final page is visible
-                    activateAdapterIfNeeded();
+                    updateFinishScreen();
                 } else {
                     nextButton.setText(R.string.next);
+                    nextButton.setBackgroundTintList(defaultButtonColor);
                 }
             }
         });
@@ -78,39 +88,49 @@ public class OnboardingActivity extends AppCompatActivity {
             if (currentItem < adapter.getItemCount() - 1) {
                 viewPager.setCurrentItem(currentItem + 1);
             } else {
-                // By now, the adapter is already activated. Just finish the onboarding process.
                 finishOnboarding();
             }
         });
 
-        // Also handle the edge case where the finish screen is the only screen
         if (adapter.getItemCount() > 0 && viewPager.getCurrentItem() == adapter.getItemCount() - 1) {
-            activateAdapterIfNeeded();
+            updateFinishScreen();
         }
     }
 
     private List<Fragment> createFragmentList() {
         List<Fragment> fragments = new ArrayList<>();
 
-        // Screen 1: Intro
         fragments.add(new OnboardingIntroFragment());
 
-        // Screen 2: Contacts Permission (only if needed)
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
-            fragments.add(new OnboardingContactsFragment());
+        if (!areAllPermissionsGranted()) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
+                fragments.add(new OnboardingContactsFragment());
+            }
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+                fragments.add(new OnboardingCalendarFragment());
+            }
         }
 
-        // Screen 3: Calendar Permission (only if needed)
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-            fragments.add(new OnboardingCalendarFragment());
-        }
-
-        // Screen 4: Final explanation
         fragments.add(new OnboardingFinishFragment());
 
         return fragments;
+    }
+
+    private void updateFinishScreen() {
+        OnboardingFinishFragment finishFragment = (OnboardingFinishFragment) adapter.fragments.get(adapter.getItemCount() - 1);
+        if (areAllPermissionsGranted()) {
+            finishFragment.setWarningMode(false);
+            nextButton.setText(R.string.finish);
+            nextButton.setBackgroundTintList(defaultButtonColor);
+            activateAdapterIfNeeded();
+        } else {
+            finishFragment.setWarningMode(true);
+            nextButton.setText(R.string.ignore);
+            nextButton.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
+        }
     }
 
     private void activateAdapterIfNeeded() {
@@ -124,19 +144,25 @@ public class OnboardingActivity extends AppCompatActivity {
         AccountHelper accountHelper = new AccountHelper(this);
         executorService.execute(accountHelper::addAccountAndSync);
 
-        // Set the preference to reflect the activated state
         prefs.edit().putBoolean(getString(R.string.pref_enabled_key), true).apply();
     }
 
     private void finishOnboarding() {
-        // Save that the user has completed the onboarding process
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.edit().putBoolean("has_seen_onboarding", true).apply();
 
-        // Go to the main activity
         Intent intent = new Intent(this, BaseActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private boolean areAllPermissionsGranted() {
+        for (String permission : REQUIRED_PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void goToNextPage() {
