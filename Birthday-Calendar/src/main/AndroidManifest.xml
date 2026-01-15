@@ -33,7 +33,6 @@
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <uses-permission android:name="android.permission.READ_SYNC_STATS" />
@@ -42,6 +41,10 @@
     <queries>
         <intent>
             <action android:name="android.accounts.AccountAuthenticator" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.APP_CALENDAR" />
         </intent>
     </queries>
 
@@ -67,6 +70,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="fr.heinisch.birthdayadapter.ui.OnboardingActivity"
+            android:theme="@style/MyMaterialTheme.Base" />
         <!-- launchMode and taskAffinity required to not launch
         AddAccountActivity on the existing task of Birthday Calendar -->
         <activity
