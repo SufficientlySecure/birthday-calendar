@@ -173,6 +173,8 @@
     <string name="onboarding_finish_warning_text">Some permissions were not granted. The Birthday Adapter cannot be activated. You can grant the permissions later by restarting the app.</string>
     <string name="onboarding_grant_permission">Grant Permission</string>
     <string name="onboarding_permission_denied">Permission denied. The app might not work as expected.</string>
+    <string name="onboarding_finish_text_google_calendar">To see the birthdays in Google Calendar, open the menu and go to Settings. Tap \'Manage accounts\' and make sure the \'Birthday Adapter\' is enabled.</string>
+    <string name="onboarding_finish_text_samsung_calendar">To see the birthdays in Samsung Calendar, open the menu, tap \'Manage calendars\' and make sure \'Birthday Adapter\' is turned on.</string>
     <string name="restart_onboarding">Restart</string>
 
     <!-- Title summary placeholders -->
