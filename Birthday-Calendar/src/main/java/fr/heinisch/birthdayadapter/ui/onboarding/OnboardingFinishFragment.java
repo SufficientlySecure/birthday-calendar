@@ -125,18 +125,16 @@ public class OnboardingFinishFragment extends Fragment {
         boolean googleCalendarInstalled = false;
         boolean samsungCalendarInstalled = false;
         boolean fossifyCalendarInstalled = false;
-        if (allCalendars != null) {
-            for (ResolveInfo info : allCalendars) {
-                if (info.activityInfo != null) {
-                    if ("com.google.android.calendar".equals(info.activityInfo.packageName)) {
-                        googleCalendarInstalled = true;
-                    }
-                    if ("com.samsung.android.calendar".equals(info.activityInfo.packageName)) {
-                        samsungCalendarInstalled = true;
-                    }
-                    if ("org.fossify.calendar".equals(info.activityInfo.packageName)) {
-                        fossifyCalendarInstalled = true;
-                    }
+        for (ResolveInfo info : allCalendars) {
+            if (info.activityInfo != null) {
+                if ("com.google.android.calendar".equals(info.activityInfo.packageName)) {
+                    googleCalendarInstalled = true;
+                }
+                if ("com.samsung.android.calendar".equals(info.activityInfo.packageName)) {
+                    samsungCalendarInstalled = true;
+                }
+                if ("org.fossify.calendar".equals(info.activityInfo.packageName)) {
+                    fossifyCalendarInstalled = true;
                 }
             }
         }

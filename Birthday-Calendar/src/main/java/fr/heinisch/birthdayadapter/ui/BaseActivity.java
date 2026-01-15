@@ -22,6 +22,7 @@
 
 package fr.heinisch.birthdayadapter.ui;
 
+import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static fr.heinisch.birthdayadapter.util.VersionHelper.isFullVersionUnlocked;
 
 import android.Manifest;
@@ -29,6 +30,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -150,7 +152,7 @@ public class BaseActivity extends AppCompatActivity {
 
         // Check for existing purchases and restore them if necessary
         if (!isFullVersionUnlocked(this)) {
-            ExecutorService executor = Executors.newSingleThreadExecutor();
+            ExecutorService executor = newSingleThreadExecutor();
             executor.execute(() -> mPurchaseHelper.verifyAndRestorePurchases(this));
         }
     }
@@ -158,9 +160,9 @@ public class BaseActivity extends AppCompatActivity {
     private void handleMigrations(SharedPreferences prefs) {
         try {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            int currentVersionCode = pInfo.versionCode;
-            int lastSeenVersionCode = prefs.getInt("last_seen_version_code", 0);
-
+            long currentVersionCode;
+            currentVersionCode = pInfo.getLongVersionCode();
+            long lastSeenVersionCode = prefs.getLong("last_seen_version_code", 0);
             if (currentVersionCode > lastSeenVersionCode) {
                 // This is an update. Check if we need to migrate existing users.
                 if (!prefs.getBoolean("has_seen_onboarding", false) && areAllPermissionsGranted()) {
@@ -172,12 +174,12 @@ public class BaseActivity extends AppCompatActivity {
 
                     // Activate the account in the background
                     AccountHelper accountHelper = new AccountHelper(this);
-                    ExecutorService executor = Executors.newSingleThreadExecutor();
+                    ExecutorService executor = newSingleThreadExecutor();
                     executor.execute(accountHelper::addAccountAndSync);
                 }
 
                 // Update the last seen version code
-                prefs.edit().putInt("last_seen_version_code", currentVersionCode).apply();
+                prefs.edit().putLong("last_seen_version_code", currentVersionCode).apply();
             }
         } catch (PackageManager.NameNotFoundException e) {
             // This should not happen
