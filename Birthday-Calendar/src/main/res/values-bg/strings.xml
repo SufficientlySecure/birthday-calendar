@@ -142,4 +142,13 @@
     <string name="summary_placeholder_firstname">Иван</string>
     <string name="summary_placeholder_lastname">Петров</string>
     <string name="summary_placeholder_custom_label">Първа среща</string>
+    <string name="next">Напред</string>
+    <string name="finish">Готово</string>
+    <string name="ignore">Пренебрегване</string>
+    <string name="onboarding_intro_title">Здравейте от Birthday Adapter</string>
+    <string name="onboarding_intro_text">Приложението синхронизира рождени дни, годишнини и други събития от вашите контакти директно в календара на устройството. За разлика от други приложения, то се интегрира безпроблемно с календара на вашата система, така че можете да виждате всички важни дати заедно с другите събития.</string>
+    <string name="onboarding_contacts_title">Достъп до контактите</string>
+    <string name="onboarding_contacts_text">За да вземе рождените дни, приложението се нуждае от достъп до контактите.</string>
+    <string name="onboarding_calendar_title">Достъп до календара</string>
+    <string name="onboarding_calendar_text">За да създава събития за рождени дни, приложението се нуждае от достъп до календара.</string>
 </resources>
