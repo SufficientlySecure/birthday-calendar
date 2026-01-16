@@ -145,4 +145,23 @@
     <string name="summary_placeholder_firstname">Erika</string>
     <string name="summary_placeholder_lastname">Mustermann</string>
     <string name="summary_placeholder_custom_label">erster Kuss</string>
+    <string name="next">Weiter</string>
+    <string name="finish">Fertig</string>
+    <string name="ignore">Ignorieren</string>
+    <string name="onboarding_intro_title">Willkommen bei Birthday Adapter</string>
+    <string name="onboarding_intro_text">Diese App synchronisiert Geburtstage, Jahrestage und andere Ereignisse aus deinen Kontakten direkt mit deinem Android-Kalender. Im Gegensatz zu anderen Apps lässt sie sich nahtlos in deinen Systemkalender integrieren, sodass du alle wichtigen Termine zusammen mit deinen anderen Ereignissen sehen kannst.</string>
+    <string name="onboarding_contacts_title">Zugriff auf Kontakte</string>
+    <string name="onboarding_contacts_text">Um Geburtstage lesen zu können, benötigt die App Zugriff auf deine Kontakte.</string>
+    <string name="onboarding_calendar_title">Zugriff auf Kalender</string>
+    <string name="onboarding_calendar_text">Um Geburtstagsereignisse zu erstellen, benötigt die App Zugriff auf deinen Kalender.</string>
+    <string name="onboarding_finish_title">Aktivieren</string>
+    <string name="onboarding_finish_text">Du musst den Birthday Adapter in den Kontoeinstellungen deiner Kalender-App aktivieren, um die Geburtstage zu sehen.</string>
+    <string name="onboarding_finish_warning_title">Fehlende Berechtigungen</string>
+    <string name="onboarding_finish_warning_text">Einige Berechtigungen wurden nicht erteilt. Birthday Adapter kann nicht aktiviert werden. Du kannst die Berechtigungen später erteilen, indem du die App neu startest.</string>
+    <string name="onboarding_grant_permission">Berechtigung erteilen</string>
+    <string name="onboarding_permission_denied">Berechtigung verweigert. Die App funktioniert möglicherweise nicht wie erwartet.</string>
+    <string name="onboarding_finish_text_google_calendar">Um die Geburtstage im Google-Kalender anzuzeigen, öffne das Menü und gehe zu „Einstellungen“. Tippe auf „Konten verwalten“ und stelle sicher, dass „Birthday Adapter“ aktiviert ist.</string>
+    <string name="onboarding_finish_text_samsung_calendar">Um die Geburtstage im Samsung-Kalender anzuzeigen, öffne das Menü, tippe auf „Kalender verwalten” und stelle sicher, dass „Birthday Adapter” aktiviert ist.</string>
+    <string name="onboarding_finish_text_fossify_calendar">Um die Geburtstage im Fossify-Kalender anzuzeigen, öffne die Einstellungen und stelle sicher, dass „CalDAV-Synchronisierung aktivieren” aktiviert ist. Wähle dann „Synchronisierte Kalender verwalten” und stelle sicher, dass der „Birthday Adapter” aktiviert ist.</string>
+    <string name="restart_onboarding">Neustarten</string>
 </resources>
