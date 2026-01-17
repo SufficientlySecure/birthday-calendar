@@ -138,4 +138,23 @@
     <string name="summary_placeholder_firstname">三</string>
     <string name="summary_placeholder_lastname">张</string>
     <string name="summary_placeholder_custom_label">初次约会</string>
+    <string name="next">下一步</string>
+    <string name="finish">完成</string>
+    <string name="ignore">忽略</string>
+    <string name="onboarding_intro_title">欢迎使用 Birthday Adapter</string>
+    <string name="onboarding_intro_text">此应用可将联系人中的生日、纪念日和其他活动直接同步到您的 Android 日历中。与其他应用不同，它与您的系统日历无缝集成，因此您可以同时查看所有重要日期和其他活动。</string>
+    <string name="onboarding_contacts_title">联系人访问权限</string>
+    <string name="onboarding_contacts_text">要读取生日信息，应用需要访问您的联系人。</string>
+    <string name="onboarding_calendar_title">日历访问权限</string>
+    <string name="onboarding_calendar_text">要创建生日活动，应用需要访问您的日历。</string>
+    <string name="onboarding_finish_title">激活</string>
+    <string name="onboarding_finish_text">您需要在日历应用的账号设置中启用 Birthday Adapter 才能查看生日信息。</string>
+    <string name="onboarding_finish_warning_title">缺少权限</string>
+    <string name="onboarding_finish_warning_text">部分权限未被授予。Birthday Adapter 无法激活。您可以稍后通过重启应用来授予权限。</string>
+    <string name="onboarding_grant_permission">授予权限</string>
+    <string name="onboarding_permission_denied">权限被拒绝。应用可能无法按预期运行。</string>
+    <string name="onboarding_finish_text_google_calendar">要在 Google 日历中查看生日信息，请打开菜单并转到“设置”。点击“管理账号”，确保“Birthday Adapter”已启用。</string>
+    <string name="onboarding_finish_text_samsung_calendar">要在 Samsung 日历中查看生日信息，请打开菜单，点击“管理日历”，确保“Birthday Adapter”已开启。</string>
+    <string name="onboarding_finish_text_fossify_calendar">要在 Fossify 日历中查看生日信息，请打开设置，确保“激活 CalDAV 同步”已开启，然后选择“管理已同步日历”，确保“Birthday Adapter”已启用。</string>
+    <string name="restart_onboarding">重启</string>
 </resources>
