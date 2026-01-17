@@ -162,6 +162,6 @@
     <string name="onboarding_permission_denied">Berechtigung verweigert. Die App funktioniert möglicherweise nicht wie erwartet.</string>
     <string name="onboarding_finish_text_google_calendar">Um die Geburtstage im Google-Kalender anzuzeigen, öffne das Menü und gehe zu „Einstellungen“. Tippe auf „Konten verwalten“ und stelle sicher, dass „Birthday Adapter“ aktiviert ist.</string>
     <string name="onboarding_finish_text_samsung_calendar">Um die Geburtstage im Samsung-Kalender anzuzeigen, öffne das Menü, tippe auf „Kalender verwalten” und stelle sicher, dass „Birthday Adapter” aktiviert ist.</string>
-    <string name="onboarding_finish_text_fossify_calendar">Um die Geburtstage im Fossify-Kalender anzuzeigen, öffne die Einstellungen und stelle sicher, dass „CalDAV-Synchronisierung aktivieren” aktiviert ist. Wähle dann „Synchronisierte Kalender verwalten” und stelle sicher, dass der „Birthday Adapter” aktiviert ist.</string>
+    <string name="onboarding_finish_text_fossify_calendar">Um die Geburtstage im Fossify-Kalender anzuzeigen, öffne die Einstellungen und stelle sicher, dass „CalDAV-Synchronisierung” aktiviert ist. Wähle dann „Synchronisierte Kalender verwalten” und stelle sicher, dass der „Birthday Adapter” aktiviert ist.</string>
     <string name="restart_onboarding">Neustarten</string>
 </resources>
