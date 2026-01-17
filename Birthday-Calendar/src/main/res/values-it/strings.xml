@@ -142,4 +142,25 @@
     <string name="summary_placeholder_firstname">Giovanna</string>
     <string name="summary_placeholder_lastname">Rossi</string>
     <string name="summary_placeholder_custom_label">Prima Data</string>
+    <string name="restart_onboarding"></string>
+    <string name="onboarding_finish_text"></string>
+    <string name="next"></string>
+    <string name="onboarding_calendar_title"></string>
+    <string name="onboarding_grant_permission"></string>
+    <string name="onboarding_contacts_title"></string>
+    <string name="onboarding_finish_text_samsung_calendar"></string>
+    <string name="onboarding_finish_text_fossify_calendar"></string>
+    <string name="onboarding_calendar_text"></string>
+    <string name="onboarding_permission_denied"></string>
+    <string name="finish"></string>
+    <string name="ignore"></string>
+    <string name="onboarding_finish_warning_title"></string>
+    <string name="onboarding_intro_text"></string>
+    <string name="onboarding_finish_title"></string>
+    <string name="onboarding_intro_title"></string>
+    <string name="onboarding_contacts_text"></string>
+    <string name="app_name" translatable="false"></string>
+    <string name="account_type" translatable="false"></string>
+    <string name="onboarding_finish_text_google_calendar"></string>
+    <string name="onboarding_finish_warning_text"></string>
 </resources>
