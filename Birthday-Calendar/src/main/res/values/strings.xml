@@ -148,8 +148,8 @@
         <item quantity="other">%d contacts</item>
     </plurals>
     <plurals name="dates_count">
-        <item quantity="one">%d date</item>
-        <item quantity="other">%d dates</item>
+        <item quantity="one">%d birthday</item>
+        <item quantity="other">%d birthdays</item>
     </plurals>
 
     <!--Free Version -->
