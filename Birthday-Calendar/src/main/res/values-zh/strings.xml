@@ -132,7 +132,7 @@
         <item quantity="other">%d 位联系人</item>
     </plurals>
     <plurals name="dates_count">
-        <item quantity="other">%d 个日期</item>
+        <item quantity="other">%d 个生日</item>
     </plurals>
     <string name="pref_buy_full_summary">定期后台同步、自定义提醒和自定义活动标题、按联系人分组筛选、突出显示周年纪念日</string>
     <string name="summary_placeholder_firstname">三</string>
