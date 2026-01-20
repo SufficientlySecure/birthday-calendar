@@ -131,15 +131,34 @@
     <plurals name="contacts_count">
         <item quantity="one">%d contatto</item>
         <item quantity="many">%d contatti</item>
-        <item quantity="other"/>
+        <item quantity="other">%d contatti</item>
     </plurals>
     <plurals name="dates_count">
-        <item quantity="one">%d data</item>
-        <item quantity="many">%d date</item>
+        <item quantity="one">%d compleanno</item>
+        <item quantity="many">%d compleanni</item>
         <item quantity="other"/>
     </plurals>
     <string name="pref_buy_full_summary">Sincronizzazioni regolari in background, promemoria personalizzati e titoli di eventi personalizzati, filtro per gruppi di contatti, evidenziazione dei compleanni importanti</string>
     <string name="summary_placeholder_firstname">Giovanna</string>
     <string name="summary_placeholder_lastname">Rossi</string>
     <string name="summary_placeholder_custom_label">Prima Data</string>
+    <string name="next">Prossimo</string>
+    <string name="finish">Finito</string>
+    <string name="ignore">Ignora</string>
+    <string name="onboarding_intro_title">Benvenuto in Birthday Adapter</string>
+    <string name="onboarding_intro_text">Questa app sincronizza compleanni, anniversari ed altri eventi dai tuoi contatti direttamente nel calendario di Android. A differenza di altre app, si integra perfettamente nel calendario di sistema, di modo che puoi vedere tutte le date importanti vicino agli altri eventi.</string>
+    <string name="onboarding_contacts_title">Accesso Contatti</string>
+    <string name="onboarding_contacts_text">Per leggere i compleanni, l\'app ha bisogno di accedere ai tuoi contatti.</string>
+    <string name="onboarding_calendar_title">Accesso Calendario</string>
+    <string name="onboarding_calendar_text">Perrl creare eventi in calendario, l\'app ha bisogno di accedere al tuo calendario.</string>
+    <string name="onboarding_finish_title">Attiva</string>
+    <string name="onboarding_finish_text">Devi abilitare Birthday Adapter nei settaggi dell\'account del tuo calendario di sistema, per vedere i compleanni.</string>
+    <string name="onboarding_finish_warning_title">Permesso Mancante</string>
+    <string name="onboarding_finish_warning_text">Alcuni permessi non sono stati garantiti. Birthday Adapter non può essere attivato. Puoi garantire permessi in un secondo momento, riavviando l\'applicazione.</string>
+    <string name="onboarding_grant_permission">Garantisci Permesso</string>
+    <string name="onboarding_permission_denied">Permesso rifiutato. L\'app potrebbe non funzionare correttamente.</string>
+    <string name="onboarding_finish_text_google_calendar">Per vedere i compleanni nel calendario di Google, apri il menu e vai in impostazioni. Clicca su \'Gestisci Account\' e assicurati che \'Birthday Adapter\' sia attivo.</string>
+    <string name="onboarding_finish_text_samsung_calendar">Per vedere i compleanni nel Calendario Samsung, apri il menu, clicca \'Gestisci calendari\', e assicurati che \'Birthday Adapter\' sia attivo.</string>
+    <string name="onboarding_finish_text_fossify_calendar">Per vedere i calendari in Fossify Calendar, apri le impostazioni e assicurati che \'Atriva sincronizzazione CalDAV \' sia attivo, poi seleziona \'gestisci calendari sincronizzati\' e assicurati che \'Birthday Adapter\' sia attivato.</string>
+    <string name="restart_onboarding">Riavvia</string>
 </resources>

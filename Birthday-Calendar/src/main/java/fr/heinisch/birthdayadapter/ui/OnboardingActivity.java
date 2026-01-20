@@ -93,7 +93,6 @@ public class OnboardingActivity extends AppCompatActivity {
             } else {
                 nextButton.setEnabled(false);
                 if (areAllPermissionsGranted()) {
-                    activateAdapterIfNeeded();
                     finishOnboarding();
                 } else {
                     restartOnboardingProcess();
@@ -129,6 +128,7 @@ public class OnboardingActivity extends AppCompatActivity {
     private void updateFinishScreen() {
         OnboardingFinishFragment finishFragment = (OnboardingFinishFragment) onboardingFragments.get(onboardingFragments.size() - 1);
         if (areAllPermissionsGranted()) {
+            activateAdapterIfNeeded();
             finishFragment.setWarningMode(false);
             nextButton.setText(R.string.finish);
             nextButton.setBackgroundTintList(defaultButtonColor);
