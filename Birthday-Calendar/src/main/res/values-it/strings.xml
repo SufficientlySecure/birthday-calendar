@@ -136,7 +136,7 @@
     <plurals name="dates_count">
         <item quantity="one">%d compleanno</item>
         <item quantity="many">%d compleanni</item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
     <string name="pref_buy_full_summary">Sincronizzazioni regolari in background, promemoria personalizzati e titoli di eventi personalizzati, filtro per gruppi di contatti, evidenziazione dei compleanni importanti</string>
     <string name="summary_placeholder_firstname">Giovanna</string>
