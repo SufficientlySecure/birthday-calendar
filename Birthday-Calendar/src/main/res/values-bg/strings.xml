@@ -132,8 +132,8 @@
         <item quantity="other">%d контакта</item>
     </plurals>
     <plurals name="dates_count">
-        <item quantity="one">%d дата</item>
-        <item quantity="other">%d дати</item>
+        <item quantity="one">%d рожден ден</item>
+        <item quantity="other">%d рождени дни</item>
     </plurals>
     <string name="pref_buy_full_summary">Редовно синхронизиране във фонов режим, потребителски напомняния и заглавия на събития, филтър за групи от контакти, подчертаване на юбилейни рождени дни</string>
     <string name="pref_title_enable_summary">Променяне заглавието на календар, с формати за случаите в които годината на събитието е известна и неизвестна.</string>
