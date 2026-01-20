@@ -1,3 +1,9 @@
+3.10.1
+* Activate birthday adapter during onboarding to allow calendar activation there
+* Allow for offers in free version
+- Wording: Use 'birthdays' instead of 'dates' for clarity, despite broader scope
+- Update translations
+
 3.10
 * Create onboarding guide for new users
 - Fix translation language tags
