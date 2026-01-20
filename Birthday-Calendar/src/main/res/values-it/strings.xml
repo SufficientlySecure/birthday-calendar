@@ -161,6 +161,4 @@
     <string name="onboarding_finish_text_samsung_calendar">Per vedere i compleanni nel Calendario Samsung, apri il menu, clicca \'Gestisci calendari\', e assicurati che \'Birthday Adapter\' sia attivo.</string>
     <string name="onboarding_finish_text_fossify_calendar">Per vedere i calendari in Fossify Calendar, apri le impostazioni e assicurati che \'Atriva sincronizzazione CalDAV \' sia attivo, poi seleziona \'gestisci calendari sincronizzati\' e assicurati che \'Birthday Adapter\' sia attivato.</string>
     <string name="restart_onboarding">Riavvia</string>
-    <string name="app_name" translatable="false"></string>
-    <string name="account_type" translatable="false"></string>
 </resources>
