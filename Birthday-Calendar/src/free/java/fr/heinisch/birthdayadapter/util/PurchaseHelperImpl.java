@@ -92,11 +92,15 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
                         for (ProductDetails productDetails : productDetailsList) {
                             if (productDetails.getProductId().equals(SKU_FULL_VERSION)) {
                                 Log.d(Constants.TAG, "Product '" + SKU_FULL_VERSION + "' found. Launching billing flow...");
-                                BillingFlowParams.ProductDetailsParams productDetailsParams = BillingFlowParams.ProductDetailsParams.newBuilder()
-                                        .setProductDetails(productDetails)
-                                        .build();
+                                BillingFlowParams.ProductDetailsParams.Builder productDetailsParamsBuilder = BillingFlowParams.ProductDetailsParams.newBuilder()
+                                        .setProductDetails(productDetails);
+                                ProductDetails.OneTimePurchaseOfferDetails offerDetails = productDetails.getOneTimePurchaseOfferDetails();
+                                if (offerDetails != null) {
+                                    productDetailsParamsBuilder.setOfferToken(offerDetails.getOfferToken());
+                                }
+
                                 BillingFlowParams flowParams = BillingFlowParams.newBuilder()
-                                        .setProductDetailsParamsList(Collections.singletonList(productDetailsParams))
+                                        .setProductDetailsParamsList(Collections.singletonList(productDetailsParamsBuilder.build()))
                                         .build();
                                 billingClient.launchBillingFlow(activity, flowParams);
                                 flowLaunched = true;
