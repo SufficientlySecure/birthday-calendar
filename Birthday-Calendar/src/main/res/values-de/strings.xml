@@ -124,8 +124,8 @@
         <item quantity="other">%d Kontakte</item>
     </plurals>
     <plurals name="dates_count">
-        <item quantity="one">%d Datum</item>
-        <item quantity="other">%d Daten</item>
+        <item quantity="one">%d Geburtstag</item>
+        <item quantity="other">%d Geburtstage</item>
     </plurals>
     <!--Free Version -->
     <string name="pref_buy">Vollversion kaufen</string>
