@@ -195,6 +195,17 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         mSyncStatusPrefs = mActivity.getSharedPreferences("sync_status_prefs", Context.MODE_PRIVATE);
         mPurchaseHelper = PurchaseHelperFactory.create();
 
+        if (getContext() != null && !isFullVersionUnlocked(getContext())) {
+            Preference buyFullPref = findPreference(getString(R.string.pref_buy_full_key));
+            if (buyFullPref != null && getActivity() != null) {
+                mPurchaseHelper.queryProductDetails(getActivity(), price -> {
+                    if (price != null) {
+                        buyFullPref.setTitle(getString(R.string.buy_premium_for, price));
+                    }
+                });
+            }
+        }
+
         if (getContext() != null && isFullVersionUnlocked(getContext())) {
             remindersCategory = findPreference(getString(R.string.pref_reminders_category_key));
             if (remindersCategory != null) {

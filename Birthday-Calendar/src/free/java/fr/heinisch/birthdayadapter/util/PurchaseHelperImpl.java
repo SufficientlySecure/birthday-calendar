@@ -12,12 +12,9 @@ import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.PendingPurchasesParams;
 import com.android.billingclient.api.ProductDetails;
-import com.android.billingclient.api.ProductDetailsResponseListener;
 import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.PurchasesResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.QueryProductDetailsParams;
-import com.android.billingclient.api.QueryProductDetailsResult;
 import com.android.billingclient.api.QueryPurchasesParams;
 
 import java.util.Collections;
@@ -25,10 +22,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import fr.heinisch.birthdayadapter.BuildConfig;
-import fr.heinisch.birthdayadapter.util.AccountHelper;
-import fr.heinisch.birthdayadapter.util.Constants;
 import fr.heinisch.birthdayadapter.util.Log;
-import fr.heinisch.birthdayadapter.util.VersionHelper;
 
 public class PurchaseHelperImpl implements IPurchaseHelper {
 
@@ -121,6 +115,57 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
             @Override
             public void onBillingServiceDisconnected() {
                 Log.w(Constants.TAG, "Billing service disconnected during billing flow.");
+            }
+        });
+    }
+
+    @Override
+    public void queryProductDetails(Activity activity, PriceCallback callback) {
+        Log.d(Constants.TAG, "queryProductDetails called.");
+        BillingClient billingClient = BillingClient.newBuilder(activity)
+                .setListener((billingResult, purchases) -> {
+                    // Purchases can be handled in launchBillingFlow
+                })
+                .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
+                .build();
+
+        billingClient.startConnection(new BillingClientStateListener() {
+            @Override
+            public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
+                if (billingResult.getResponseCode() != BillingClient.BillingResponseCode.OK) {
+                    Log.e(Constants.TAG, "Billing setup failed. Closing connection.");
+                    billingClient.endConnection();
+                    return;
+                }
+
+                QueryProductDetailsParams.Product product = QueryProductDetailsParams.Product.newBuilder()
+                        .setProductId(SKU_FULL_VERSION)
+                        .setProductType(BillingClient.ProductType.INAPP)
+                        .build();
+                QueryProductDetailsParams params = QueryProductDetailsParams.newBuilder().setProductList(Collections.singletonList(product)).build();
+
+                billingClient.queryProductDetailsAsync(params, (br, productDetailsResult) -> {
+                    List<ProductDetails> productDetailsList = productDetailsResult.getProductDetailsList();
+                    if (br.getResponseCode() == BillingClient.BillingResponseCode.OK && productDetailsList != null && !productDetailsList.isEmpty()) {
+                        for (ProductDetails productDetails : productDetailsList) {
+                            if (productDetails.getProductId().equals(SKU_FULL_VERSION)) {
+                                ProductDetails.OneTimePurchaseOfferDetails offerDetails = productDetails.getOneTimePurchaseOfferDetails();
+                                if (offerDetails != null) {
+                                    callback.onPriceFound(offerDetails.getFormattedPrice());
+                                }
+                                break;
+                            }
+                        }
+                    } else {
+                        Log.e(Constants.TAG, "Product details query failed or returned no results.");
+                    }
+                    billingClient.endConnection();
+                });
+            }
+
+            @Override
+            public void onBillingServiceDisconnected() {
+                Log.w(Constants.TAG, "Billing service disconnected during query.");
             }
         });
     }

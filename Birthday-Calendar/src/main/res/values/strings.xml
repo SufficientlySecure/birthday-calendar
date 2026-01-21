@@ -156,6 +156,7 @@
     <string name="pref_buy">Buy full version!</string>
     <string name="pref_buy_full">Open Google Play to buy full version…</string>
     <string name="pref_buy_full_summary">Regular background syncs, custom reminders and custom event titles, filter for contact groups, highlighting jubilee birthdays</string>
+    <string name="buy_premium_for">Buy premium for %s</string>
 
     <!-- Onboarding -->
     <string name="next">Next</string>
