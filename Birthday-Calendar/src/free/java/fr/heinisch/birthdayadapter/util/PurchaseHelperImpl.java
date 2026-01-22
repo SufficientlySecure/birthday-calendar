@@ -19,6 +19,7 @@ import com.android.billingclient.api.QueryPurchasesParams;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import fr.heinisch.birthdayadapter.BuildConfig;
@@ -27,6 +28,58 @@ import fr.heinisch.birthdayadapter.util.Log;
 public class PurchaseHelperImpl implements IPurchaseHelper {
 
     private static final String SKU_FULL_VERSION = "full_version";
+    private BillingClient billingClient;
+    private final AtomicBoolean isBillingClientConnecting = new AtomicBoolean(false);
+
+    private void ensureBillingClient(Context context, Runnable onConnected) {
+        if (billingClient != null && billingClient.isReady()) {
+            if (onConnected != null) {
+                onConnected.run();
+            }
+            return;
+        }
+
+        if (isBillingClientConnecting.compareAndSet(false, true)) {
+            PurchasesUpdatedListener listener = (billingResult, purchases) -> {
+                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchases != null) {
+                    for (Purchase purchase : purchases) {
+                        handlePurchase(context, billingClient, purchase, () -> {});
+                    }
+                }
+            };
+
+            billingClient = BillingClient.newBuilder(context)
+                    .setListener(listener)
+                    .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
+                    .build();
+
+            billingClient.startConnection(new BillingClientStateListener() {
+                @Override
+                public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
+                    isBillingClientConnecting.set(false);
+                    if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                        Log.d(Constants.TAG, "BillingClient setup finished.");
+                        if (onConnected != null) {
+                            onConnected.run();
+                        }
+                    } else {
+                        Log.w(Constants.TAG, "BillingClient setup failed with code: " + billingResult.getResponseCode());
+                    }
+                }
+
+                @Override
+                public void onBillingServiceDisconnected() {
+                    Log.w(Constants.TAG, "BillingClient disconnected.");
+                    isBillingClientConnecting.set(false);
+                    // Optionally, you could try to reconnect here with a backoff strategy.
+                }
+            });
+        } else {
+            // You could queue the runnable or simply log that a connection is already in progress.
+            Log.d(Constants.TAG, "BillingClient connection already in progress.");
+        }
+    }
+
 
     @Override
     public void launchBillingFlow(Activity activity) {
@@ -36,139 +89,65 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
             return;
         }
 
-        final BillingClient[] billingClientHolder = new BillingClient[1];
+        ensureBillingClient(activity, () -> {
+            QueryProductDetailsParams.Product product = QueryProductDetailsParams.Product.newBuilder()
+                    .setProductId(SKU_FULL_VERSION)
+                    .setProductType(BillingClient.ProductType.INAPP)
+                    .build();
+            QueryProductDetailsParams params = QueryProductDetailsParams.newBuilder().setProductList(Collections.singletonList(product)).build();
 
-        PurchasesUpdatedListener purchasesUpdatedListener = (billingResult, purchases) -> {
-            Log.d(Constants.TAG, "PurchasesUpdatedListener invoked with response code: " + billingResult.getResponseCode());
-            final BillingClient client = billingClientHolder[0];
-            if (client == null) {
-                Log.e(Constants.TAG, "BillingClient was null in PurchasesUpdatedListener.");
-                return;
-            }
-
-            if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchases != null && !purchases.isEmpty()) {
-                handlePurchase(activity, client, purchases.get(0), client::endConnection);
-            } else {
-                Log.w(Constants.TAG, "Purchase failed, was cancelled, or is pending. Response code: " + billingResult.getResponseCode());
-                client.endConnection();
-            }
-        };
-
-        BillingClient billingClient = BillingClient.newBuilder(activity)
-                .setListener(purchasesUpdatedListener)
-                .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
-                .build();
-        billingClientHolder[0] = billingClient;
-
-        Log.d(Constants.TAG, "Starting BillingClient connection for billing flow...");
-        billingClient.startConnection(new BillingClientStateListener() {
-            @Override
-            public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
-                Log.d(Constants.TAG, "Billing flow setup finished with response code: " + billingResult.getResponseCode());
-                if (billingResult.getResponseCode() != BillingClient.BillingResponseCode.OK) {
-                    Log.e(Constants.TAG, "Billing setup failed. Closing connection.");
-                    billingClient.endConnection();
-                    return;
-                }
-
-                Log.d(Constants.TAG, "Billing setup successful. Querying product details...");
-                QueryProductDetailsParams.Product product = QueryProductDetailsParams.Product.newBuilder()
-                        .setProductId(SKU_FULL_VERSION)
-                        .setProductType(BillingClient.ProductType.INAPP)
-                        .build();
-                QueryProductDetailsParams params = QueryProductDetailsParams.newBuilder().setProductList(Collections.singletonList(product)).build();
-
-                billingClient.queryProductDetailsAsync(params, (br, productDetailsResult) -> {
-                    Log.d(Constants.TAG, "Product details query finished with response code: " + br.getResponseCode());
-                    boolean flowLaunched = false;
-                    List<ProductDetails> productDetailsList = productDetailsResult.getProductDetailsList();
-                    if (br.getResponseCode() == BillingClient.BillingResponseCode.OK && productDetailsList != null && !productDetailsList.isEmpty()) {
-                        for (ProductDetails productDetails : productDetailsList) {
-                            if (productDetails.getProductId().equals(SKU_FULL_VERSION)) {
-                                Log.d(Constants.TAG, "Product '" + SKU_FULL_VERSION + "' found. Launching billing flow...");
-                                BillingFlowParams.ProductDetailsParams.Builder productDetailsParamsBuilder = BillingFlowParams.ProductDetailsParams.newBuilder()
-                                        .setProductDetails(productDetails);
-                                ProductDetails.OneTimePurchaseOfferDetails offerDetails = productDetails.getOneTimePurchaseOfferDetails();
-                                if (offerDetails != null) {
-                                    productDetailsParamsBuilder.setOfferToken(offerDetails.getOfferToken());
-                                }
-
-                                BillingFlowParams flowParams = BillingFlowParams.newBuilder()
-                                        .setProductDetailsParamsList(Collections.singletonList(productDetailsParamsBuilder.build()))
-                                        .build();
-                                billingClient.launchBillingFlow(activity, flowParams);
-                                flowLaunched = true;
-                                break;
+            billingClient.queryProductDetailsAsync(params, (br, productDetailsResult) -> {
+                List<ProductDetails> productDetailsList = productDetailsResult.getProductDetailsList();
+                if (br.getResponseCode() == BillingClient.BillingResponseCode.OK && productDetailsList != null && !productDetailsList.isEmpty()) {
+                    for (ProductDetails productDetails : productDetailsList) {
+                        if (productDetails.getProductId().equals(SKU_FULL_VERSION)) {
+                            BillingFlowParams.ProductDetailsParams.Builder productDetailsParamsBuilder = BillingFlowParams.ProductDetailsParams.newBuilder()
+                                    .setProductDetails(productDetails);
+                            ProductDetails.OneTimePurchaseOfferDetails offerDetails = productDetails.getOneTimePurchaseOfferDetails();
+                            if (offerDetails != null) {
+                                productDetailsParamsBuilder.setOfferToken(offerDetails.getOfferToken());
                             }
+                            BillingFlowParams flowParams = BillingFlowParams.newBuilder()
+                                    .setProductDetailsParamsList(Collections.singletonList(productDetailsParamsBuilder.build()))
+                                    .build();
+                            activity.runOnUiThread(() -> billingClient.launchBillingFlow(activity, flowParams));
+                            return;
                         }
-                    } else {
-                        Log.e(Constants.TAG, "Product details query failed or returned no results.");
                     }
-
-                    if (!flowLaunched) {
-                        Log.w(Constants.TAG, "Did not launch billing flow. Closing connection.");
-                        billingClient.endConnection();
-                    }
-                });
-            }
-
-            @Override
-            public void onBillingServiceDisconnected() {
-                Log.w(Constants.TAG, "Billing service disconnected during billing flow.");
-            }
+                }
+                Log.e(Constants.TAG, "Product details query failed or returned no results.");
+            });
         });
     }
 
     @Override
     public void queryProductDetails(Activity activity, PriceCallback callback) {
         Log.d(Constants.TAG, "queryProductDetails called.");
-        BillingClient billingClient = BillingClient.newBuilder(activity)
-                .setListener((billingResult, purchases) -> {
-                    // Purchases can be handled in launchBillingFlow
-                })
-                .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
-                .build();
+        ensureBillingClient(activity, () -> {
+            QueryProductDetailsParams.Product product = QueryProductDetailsParams.Product.newBuilder()
+                    .setProductId(SKU_FULL_VERSION)
+                    .setProductType(BillingClient.ProductType.INAPP)
+                    .build();
+            QueryProductDetailsParams params = QueryProductDetailsParams.newBuilder().setProductList(Collections.singletonList(product)).build();
 
-        billingClient.startConnection(new BillingClientStateListener() {
-            @Override
-            public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
-                if (billingResult.getResponseCode() != BillingClient.BillingResponseCode.OK) {
-                    Log.e(Constants.TAG, "Billing setup failed. Closing connection.");
-                    billingClient.endConnection();
-                    return;
-                }
-
-                QueryProductDetailsParams.Product product = QueryProductDetailsParams.Product.newBuilder()
-                        .setProductId(SKU_FULL_VERSION)
-                        .setProductType(BillingClient.ProductType.INAPP)
-                        .build();
-                QueryProductDetailsParams params = QueryProductDetailsParams.newBuilder().setProductList(Collections.singletonList(product)).build();
-
-                billingClient.queryProductDetailsAsync(params, (br, productDetailsResult) -> {
-                    List<ProductDetails> productDetailsList = productDetailsResult.getProductDetailsList();
-                    if (br.getResponseCode() == BillingClient.BillingResponseCode.OK && productDetailsList != null && !productDetailsList.isEmpty()) {
-                        for (ProductDetails productDetails : productDetailsList) {
-                            if (productDetails.getProductId().equals(SKU_FULL_VERSION)) {
-                                ProductDetails.OneTimePurchaseOfferDetails offerDetails = productDetails.getOneTimePurchaseOfferDetails();
-                                if (offerDetails != null) {
-                                    callback.onPriceFound(offerDetails.getFormattedPrice());
-                                }
-                                break;
+            billingClient.queryProductDetailsAsync(params, (br, productDetailsResult) -> {
+                List<ProductDetails> productDetailsList = productDetailsResult.getProductDetailsList();
+                if (br.getResponseCode() == BillingClient.BillingResponseCode.OK && productDetailsList != null && !productDetailsList.isEmpty()) {
+                    for (ProductDetails productDetails : productDetailsList) {
+                        if (productDetails.getProductId().equals(SKU_FULL_VERSION)) {
+                            ProductDetails.OneTimePurchaseOfferDetails offerDetails = productDetails.getOneTimePurchaseOfferDetails();
+                            if (offerDetails != null) {
+                                activity.runOnUiThread(() -> callback.onPriceFound(offerDetails.getFormattedPrice()));
                             }
+                            return; // Exit after finding the product
                         }
-                    } else {
-                        Log.e(Constants.TAG, "Product details query failed or returned no results.");
                     }
-                    billingClient.endConnection();
-                });
-            }
-
-            @Override
-            public void onBillingServiceDisconnected() {
-                Log.w(Constants.TAG, "Billing service disconnected during query.");
-            }
+                }
+                Log.e(Constants.TAG, "Product details query failed or returned no results for price query.");
+            });
         });
     }
+
 
     @Override
     public void verifyAndRestorePurchases(Context context) {
@@ -178,56 +157,19 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
             return;
         }
 
-        final BillingClient billingClient = BillingClient.newBuilder(context)
-                .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
-                .setListener((result, list) -> {
-                }) // Dummy listener, not used for queries.
-                .build();
-
-        Log.d(Constants.TAG, "verifyAndRestorePurchases: Starting BillingClient connection...");
-        billingClient.startConnection(new BillingClientStateListener() {
-            @Override
-            public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
-                Log.d(Constants.TAG, "verifyAndRestorePurchases: onBillingSetupFinished response: " + billingResult.getResponseCode());
-                if (billingResult.getResponseCode() != BillingClient.BillingResponseCode.OK) {
-                    Log.e(Constants.TAG, "verifyAndRestorePurchases: Billing setup failed. Closing connection.");
-                    billingClient.endConnection();
-                    return;
-                }
-
-                QueryPurchasesParams params = QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build();
-                billingClient.queryPurchasesAsync(params, (br, purchases) -> {
-                    Log.d(Constants.TAG, "verifyAndRestorePurchases: queryPurchasesAsync response: " + br.getResponseCode());
-                    if (br.getResponseCode() != BillingClient.BillingResponseCode.OK || purchases == null || purchases.isEmpty()) {
-                        Log.i(Constants.TAG, "verifyAndRestorePurchases: No active purchases found or query failed.");
-                        billingClient.endConnection();
-                        return;
-                    }
-
-                    Log.d(Constants.TAG, "verifyAndRestorePurchases: Found " + purchases.size() + " purchase(s). Processing...");
-                    final AtomicInteger pendingOperations = new AtomicInteger(purchases.size());
-                    Runnable onFinishedListener = () -> {
-                        if (pendingOperations.decrementAndGet() == 0) {
-                            Log.d(Constants.TAG, "verifyAndRestorePurchases: All purchase processing finished. Closing connection.");
-                            billingClient.endConnection();
-                        }
-                    };
-
+        ensureBillingClient(context.getApplicationContext(), () -> {
+            QueryPurchasesParams params = QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build();
+            billingClient.queryPurchasesAsync(params, (br, purchases) -> {
+                if (br.getResponseCode() == BillingClient.BillingResponseCode.OK && purchases != null) {
                     for (Purchase purchase : purchases) {
                         if (purchase.getProducts().contains(SKU_FULL_VERSION)) {
-                            Log.i(Constants.TAG, "verifyAndRestorePurchases: Found matching full version purchase.");
-                            handlePurchase(context, billingClient, purchase, onFinishedListener);
-                        } else {
-                            onFinishedListener.run();
+                            handlePurchase(context, billingClient, purchase, () -> {});
                         }
                     }
-                });
-            }
-
-            @Override
-            public void onBillingServiceDisconnected() {
-                Log.w(Constants.TAG, "verifyAndRestorePurchases: Billing service disconnected.");
-            }
+                } else {
+                    Log.i(Constants.TAG, "verifyAndRestorePurchases: No active purchases found or query failed.");
+                }
+            });
         });
     }
 
@@ -265,7 +207,7 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
             Log.d(Constants.TAG, "unlockFullVersion: Already unlocked, no action taken.");
             return;
         }
-        
+
         Log.i(Constants.TAG, "unlockFullVersion: Setting full version to purchased.");
         VersionHelper.setFullVersionUnlocked(context, true);
 
