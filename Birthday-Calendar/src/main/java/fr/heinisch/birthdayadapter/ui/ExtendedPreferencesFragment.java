@@ -199,7 +199,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
             Preference buyFullPref = findPreference(getString(R.string.pref_buy_full_key));
             if (buyFullPref != null && getActivity() != null) {
                 mPurchaseHelper.queryProductDetails(getActivity(), price -> {
-                    if (price != null) {
+                    if (isAdded() && price != null) {
                         buyFullPref.setTitle(getString(R.string.buy_premium_for, price));
                     }
                 });
@@ -514,7 +514,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     }
 
     private void updateSyncStatus() {
-        if (forceSyncPref == null || mActivity == null) return;
+        if (!isAdded() || forceSyncPref == null || mActivity == null) return;
 
         long lastSync = mSyncStatusPrefs.getLong("last_sync_timestamp", 0);
         String summary;
