@@ -8,6 +8,7 @@
         android:title="@string/pref_enable" />
 
     <androidx.preference.SwitchPreferenceCompat
+        android:icon="@drawable/ic_cake"
         android:key="@string/pref_enabled_key"
         android:persistent="false"
         android:title="@string/pref_enable_switch" />
@@ -19,7 +20,7 @@
         android:title="@string/pref_contacts" />
 
     <androidx.preference.Preference
-        android:icon="@mipmap/google_contacts"
+        android:icon="@drawable/ic_contacts"
         android:key="@string/pref_contacts_key"
         android:persistent="false"
         android:title="@string/pref_contacts_open" />
@@ -31,7 +32,7 @@
         android:title="@string/pref_calendar" />
 
     <androidx.preference.Preference
-        android:icon="@mipmap/google_calendar"
+        android:icon="@drawable/ic_calendar"
         android:key="@string/pref_calendar_key"
         android:persistent="false"
         android:title="@string/pref_calendar_open" />
