@@ -162,6 +162,4 @@
     <string name="onboarding_permission_denied">Разрешението е отказано. Приложението може да не работи както се очаква.</string>
     <string name="restart_onboarding">Рестартиране</string>
     <string name="buy_premium_for">Купете платеното издание за %s</string>
-    <string name="app_name" translatable="false"></string>
-    <string name="account_type" translatable="false"></string>
 </resources>
