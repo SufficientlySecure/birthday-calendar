@@ -129,15 +129,15 @@ public class ReminderPreferenceCompat extends Preference {
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
         @SuppressLint("InflateParams")
-        View view = inflater.inflate(R.layout.pref_reminder, null);
+        View view = inflater.inflate(R.layout.preference_reminder, null);
         alert.setView(view);
 
         spinner = view.findViewById(R.id.pref_reminder_spinner);
         picker = view.findViewById(R.id.pref_reminder_timepicker);
 
         ArrayAdapter<CharSequence> dataAdapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.pref_reminder_time_drop_down, R.layout.custom_spinner_item);
-        dataAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
+                R.array.pref_reminder_time_drop_down, R.layout.item_spinner);
+        dataAdapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
         spinner.setAdapter(dataAdapter);
 
         if (DateFormat.is24HourFormat(getContext())) {
