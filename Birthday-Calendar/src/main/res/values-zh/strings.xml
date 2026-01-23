@@ -158,6 +158,4 @@
     <string name="onboarding_finish_text_fossify_calendar">要在 Fossify 日历中查看生日信息，请打开设置，确保“激活 CalDAV 同步”已开启，然后选择“管理已同步日历”，确保“Birthday Adapter”已启用。</string>
     <string name="restart_onboarding">重启</string>
     <string name="buy_premium_for">购买 %s 的高级版</string>
-    <string name="app_name" translatable="false"></string>
-    <string name="account_type" translatable="false"></string>
 </resources>
