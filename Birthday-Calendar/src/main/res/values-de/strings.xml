@@ -164,7 +164,7 @@
     <string name="onboarding_finish_text_samsung_calendar">Um die Geburtstage im Samsung-Kalender anzuzeigen, öffne das Menü, tippe auf „Kalender verwalten” und stelle sicher, dass „Birthday Adapter” aktiviert ist.</string>
     <string name="onboarding_finish_text_fossify_calendar">Um die Geburtstage im Fossify-Kalender anzuzeigen, öffne die Einstellungen und stelle sicher, dass „CalDAV-Synchronisierung” aktiviert ist. Wähle dann „Synchronisierte Kalender verwalten” und stelle sicher, dass der „Birthday Adapter” aktiviert ist.</string>
     <string name="restart_onboarding">Neustarten</string>
-    <string name="buy_premium_for">Kaufe Premium für %s</string>
+    <string name="buy_premium_for">Premium für %s kaufen</string>
     <string name="premium_feat_sync_title">Automatische Synchronisation</string>
     <string name="premium_feat_sync_summary">Dein Kalender bleibt immer automatisch aktuell.</string>
     <string name="premium_feat_reminders_title">Individuelle Erinnerungen</string>
