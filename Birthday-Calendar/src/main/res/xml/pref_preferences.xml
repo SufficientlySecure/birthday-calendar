@@ -8,6 +8,7 @@
             android:persistent="true"
             android:title="@string/pref_color" />
         <androidx.preference.Preference
+            app:icon="@drawable/ic_sync"
             android:key="@string/pref_force_sync_key"
             android:persistent="false"
             android:summary="@string/pref_force_sync_summary"
