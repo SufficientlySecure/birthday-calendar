@@ -161,4 +161,5 @@
     <string name="onboarding_grant_permission">Разрешаване</string>
     <string name="onboarding_permission_denied">Разрешението е отказано. Приложението може да не работи както се очаква.</string>
     <string name="restart_onboarding">Рестартиране</string>
+    <string name="buy_premium_for">Купете платеното издание за %s</string>
 </resources>
