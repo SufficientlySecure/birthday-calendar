@@ -130,7 +130,7 @@
     <!--Free Version -->
     <string name="pref_buy">Vollversion kaufen</string>
     <string name="pref_buy_full">Google Play öffnen, um Vollversion zu kaufen…</string>
-    <string name="pref_buy_full_summary">Automatische Hintergrundsynchronisierung, benutzerdefinierte Erinnerungen und Beschriftungen der Kalendereinträge, Filter nach Kontaktgruppen, Hervorhebung von Jubiläen</string>
+    <string name="pref_buy_full_summary">Erhalte Zugriff auf alle Premium-Funktionen</string>
     <string name="delete_reminder_title">Erinnerung löschen</string>
     <string name="delete_reminder_message">Bist du sicher, dass du diese Erinnerung löschen möchtest?</string>
     <string name="delete">Löschen</string>
@@ -165,4 +165,14 @@
     <string name="onboarding_finish_text_fossify_calendar">Um die Geburtstage im Fossify-Kalender anzuzeigen, öffne die Einstellungen und stelle sicher, dass „CalDAV-Synchronisierung” aktiviert ist. Wähle dann „Synchronisierte Kalender verwalten” und stelle sicher, dass der „Birthday Adapter” aktiviert ist.</string>
     <string name="restart_onboarding">Neustarten</string>
     <string name="buy_premium_for">Kaufe Premium für %s</string>
+    <string name="premium_feat_sync_title">Automatische Synchronisation</string>
+    <string name="premium_feat_sync_summary">Dein Kalender bleibt immer automatisch aktuell.</string>
+    <string name="premium_feat_reminders_title">Individuelle Erinnerungen</string>
+    <string name="premium_feat_reminders_summary">Lege fest, wann und wie oft du an Geburtstage erinnert werden möchtest.</string>
+    <string name="premium_feat_titles_title">Eigene Beschriftungen der Kalendereinträge</string>
+    <string name="premium_feat_titles_summary">Passe an, wie Kalendereinträge angezeigt werden.</string>
+    <string name="premium_feat_filtering_title">Filter nach Kontaktgruppen</string>
+    <string name="premium_feat_filtering_summary">Synchronisiere nur die Kontaktgruppen, die dich interessieren.</string>
+    <string name="premium_feat_jubilee_title">Hervorhebung von Jubiläen</string>
+    <string name="premium_feat_jubilee_summary">Hebe spezielle Geburtstage im Kalender hervor.</string>
 </resources>
