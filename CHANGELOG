@@ -1,3 +1,12 @@
+3.10.5
+* Use more decent icons on main page
+* Do not grant network permission to WorkManager
+* Freemium: List premium features
+* Add translation: Dutch
+- Update translations
+- Robustness improvement of UI updates
+- Harmonize filename structure
+
 3.10.1
 * Activate birthday adapter during onboarding to allow calendar activation there
 * Allow for offers in free version
