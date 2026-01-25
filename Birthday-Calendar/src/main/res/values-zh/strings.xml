@@ -168,6 +168,4 @@
     <string name="premium_feat_filtering_summary">选择仅同步您关心的联系人分组。</string>
     <string name="premium_feat_jubilee_title">周年纪念日</string>
     <string name="premium_feat_jubilee_summary">突出显示特殊场合，例如 18 岁或 50 岁生日。</string>
-    <string name="app_name" translatable="false"></string>
-    <string name="account_type" translatable="false"></string>
 </resources>
