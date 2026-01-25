@@ -24,31 +24,31 @@
             android:summary="@string/pref_buy_full_summary"
             android:title="@string/pref_buy_full" />
 
-        <Preference
+        <androidx.preference.Preference
+            android:persistent="false"
+            android:selectable="false"
             app:title="@string/premium_feat_sync_title"
-            app:summary="@string/premium_feat_sync_summary"
-            app:enabled="false"
-            app:shouldDisableView="false" />
-        <Preference
+            app:summary="@string/premium_feat_sync_summary" />
+        <androidx.preference.Preference
+            android:persistent="false"
+            android:selectable="false"
             app:title="@string/premium_feat_reminders_title"
-            app:summary="@string/premium_feat_reminders_summary"
-            app:enabled="false"
-            app:shouldDisableView="false" />
-        <Preference
+            app:summary="@string/premium_feat_reminders_summary" />
+        <androidx.preference.Preference
+            android:persistent="false"
+            android:selectable="false"
             app:title="@string/premium_feat_titles_title"
-            app:summary="@string/premium_feat_titles_summary"
-            app:enabled="false"
-            app:shouldDisableView="false" />
-        <Preference
+            app:summary="@string/premium_feat_titles_summary" />
+        <androidx.preference.Preference
+            android:persistent="false"
+            android:selectable="false"
             app:title="@string/premium_feat_filtering_title"
-            app:summary="@string/premium_feat_filtering_summary"
-            app:enabled="false"
-            app:shouldDisableView="false" />
-        <Preference
+            app:summary="@string/premium_feat_filtering_summary" />
+        <androidx.preference.Preference
+            android:persistent="false"
+            android:selectable="false"
             app:title="@string/premium_feat_jubilee_title"
-            app:summary="@string/premium_feat_jubilee_summary"
-            app:enabled="false"
-            app:shouldDisableView="false" />
+            app:summary="@string/premium_feat_jubilee_summary" />
 
     </androidx.preference.PreferenceCategory>
 
