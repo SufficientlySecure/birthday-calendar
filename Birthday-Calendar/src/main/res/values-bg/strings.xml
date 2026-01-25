@@ -172,6 +172,4 @@
     <string name="premium_feat_filtering_summary">Избиране на групите контакти, които ви интересуват.</string>
     <string name="premium_feat_jubilee_title">Юбилейни рождени дни</string>
     <string name="premium_feat_jubilee_summary">Подчертаване на специални поводи като 18-ти или 50-ти рожден ден.</string>
-    <string name="app_name" translatable="false"></string>
-    <string name="account_type" translatable="false"></string>
 </resources>
