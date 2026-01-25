@@ -65,4 +65,12 @@
     <!--Free Version -->
     <string name="pref_buy">Koop de volledige versie!</string>
     <string name="pref_buy_full">Open de Google Play Store om de volledige versie te kopen...</string>
+    <string name="event_title_birthday_with_age">{NAME}: Verjaardag ({AGE})</string>
+    <string name="event_title_birthday_without_age">{NAME}: Verjaardag</string>
+    <string name="event_title_anniversary_with_age">{NAME}: Jubileum ({AGE})</string>
+    <string name="event_title_anniversary_without_age">{NAME}: Jubileum</string>
+    <string name="event_title_other_with_age">{NAME}: Ander Evenement ({AGE})</string>
+    <string name="event_title_other_without_age">{NAME}: Ander Evenement</string>
+    <string name="event_title_custom_with_age">{NAME}: {LABEL} ({AGE})</string>
+    <string name="event_title_custom_without_age">{NAME}: {LABEL}</string>
 </resources>
