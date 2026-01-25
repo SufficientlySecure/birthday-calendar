@@ -175,4 +175,6 @@
     <string name="premium_feat_filtering_summary">Synchronisiere nur die Kontaktgruppen, die dich interessieren.</string>
     <string name="premium_feat_jubilee_title">Hervorhebung von Jubiläen</string>
     <string name="premium_feat_jubilee_summary">Hebe spezielle Geburtstage im Kalender hervor.</string>
+    <string name="pref_sync">4. Änderungen synchronisieren</string>
+    <string name="pref_sync_summary">Lass die App neu eingetragene Geburtstage im Kalender eintragen.</string>
 </resources>
