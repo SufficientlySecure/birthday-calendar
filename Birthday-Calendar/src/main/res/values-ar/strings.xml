@@ -162,4 +162,5 @@
     <string name="onboarding_finish_warning_text"></string>
     <string name="invalid_hex_code"></string>
     <string name="pref_force_sync"></string>
+    <string name="pref_reminder_summary"></string>
 </resources>
