@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.preference.Preference
         android:persistent="false"
@@ -36,5 +37,17 @@
         android:key="@string/pref_calendar_key"
         android:persistent="false"
         android:title="@string/pref_calendar_open" />
+
+    <androidx.preference.Preference
+        android:persistent="false"
+        android:selectable="false"
+        android:summary="@string/pref_sync_summary"
+        android:title="@string/pref_sync" />
+
+    <androidx.preference.Preference
+        app:icon="@drawable/ic_sync"
+        android:key="@string/pref_force_sync_key"
+        android:persistent="false"
+        android:title="@string/pref_force_sync" />
 
 </androidx.preference.PreferenceScreen>

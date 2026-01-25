@@ -32,13 +32,10 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -55,8 +52,6 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.work.WorkInfo;
-import androidx.work.WorkManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
@@ -67,16 +62,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import fr.heinisch.birthdayadapter.R;
 import fr.heinisch.birthdayadapter.util.AccountHelper;
-import fr.heinisch.birthdayadapter.util.Constants;
 import fr.heinisch.birthdayadapter.util.IPurchaseHelper;
 import fr.heinisch.birthdayadapter.util.PreferencesHelper;
 import fr.heinisch.birthdayadapter.util.PurchaseHelperFactory;
-import fr.heinisch.birthdayadapter.util.SyncStatusManager;
 import fr.heinisch.birthdayadapter.util.VersionHelper;
 
 public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
@@ -84,22 +76,10 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     BaseActivity mActivity;
     private AccountHelper mAccountHelper;
     private Preference colorPref;
-    private Preference forceSyncPref;
     private Preference mJubileeYearsPref;
     private PreferenceCategory remindersCategory;
-    private SharedPreferences mSyncStatusPrefs;
-    private WorkInfo mBirthdaySyncWorkInfo;
     private IPurchaseHelper mPurchaseHelper;
     private Set<String> mTitlePrefKeys;
-
-    private final Handler mSyncUpdateHandler = new Handler(Looper.getMainLooper());
-    private Runnable mSyncUpdateRunnable;
-
-    private final SharedPreferences.OnSharedPreferenceChangeListener mSyncStatusListener = (sharedPreferences, key) -> {
-        if (key != null && key.equals("last_sync_timestamp") && getActivity() != null) {
-            getActivity().runOnUiThread(this::updateSyncStatus);
-        }
-    };
 
     private final SharedPreferences.OnSharedPreferenceChangeListener mSettingsListener = (sharedPreferences, key) -> {
         if (key == null || getActivity() == null) {
@@ -192,7 +172,6 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         }
 
         mAccountHelper = new AccountHelper(mActivity);
-        mSyncStatusPrefs = mActivity.getSharedPreferences("sync_status_prefs", Context.MODE_PRIVATE);
         mPurchaseHelper = PurchaseHelperFactory.create();
 
         if (getContext() != null && !isFullVersionUnlocked(getContext())) {
@@ -277,16 +256,6 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
             }
         }
 
-        forceSyncPref = findPreference(getString(R.string.pref_force_sync_key));
-        if (forceSyncPref != null) {
-            forceSyncPref.setOnPreferenceClickListener(preference -> {
-                SyncStatusManager.getInstance().setSyncing(true);
-                mAccountHelper.differentialSync();
-                updateSyncStatus();
-                return true;
-            });
-        }
-
         colorPref = findPreference(getString(R.string.pref_color_key));
         if (colorPref != null) {
             updateColorPreferenceIcon();
@@ -295,16 +264,6 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                 return true;
             });
         }
-
-        WorkManager.getInstance(mActivity).getWorkInfosForUniqueWorkLiveData("periodic_sync")
-                .observe(getViewLifecycleOwner(), workInfos -> {
-                    if (workInfos != null && !workInfos.isEmpty()) {
-                        mBirthdaySyncWorkInfo = workInfos.get(0);
-                    } else {
-                        mBirthdaySyncWorkInfo = null;
-                    }
-                    updateSyncStatus();
-                });
 
         updatePermissionMonitoringPrefVisibility();
     }
@@ -513,33 +472,6 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         updateJubileeYearsSummary();
     }
 
-    private void updateSyncStatus() {
-        if (!isAdded() || forceSyncPref == null || mActivity == null) return;
-
-        long lastSync = mSyncStatusPrefs.getLong("last_sync_timestamp", 0);
-        String summary;
-
-        if (lastSync == 0) {
-            summary = getString(R.string.last_sync_never);
-        } else {
-            summary = getString(R.string.last_sync, DateUtils.getRelativeTimeSpanString(lastSync, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS));
-        }
-
-        if (mAccountHelper != null && mAccountHelper.isAccountActivated()) {
-            if (mBirthdaySyncWorkInfo != null) {
-                long nextRun = mBirthdaySyncWorkInfo.getNextScheduleTimeMillis();
-                long now = System.currentTimeMillis();
-                long sanityThreshold = now + TimeUnit.DAYS.toMillis(Constants.SYNC_INTERVAL_DAYS * 2);
-
-                if (nextRun > now && nextRun < sanityThreshold) {
-                    summary += "\n" + getString(R.string.next_sync, DateUtils.getRelativeTimeSpanString(nextRun, now, DateUtils.MINUTE_IN_MILLIS));
-                }
-            }
-        }
-
-        forceSyncPref.setSummary(summary);
-    }
-
     private void showColorPickerDialog() {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_color_picker, null);
         RecyclerView recyclerView = dialogView.findViewById(R.id.colorPicker);
@@ -650,29 +582,14 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     @Override
     public void onResume() {
         super.onResume();
-        mSyncStatusPrefs.registerOnSharedPreferenceChangeListener(mSyncStatusListener);
         PreferenceManager.getDefaultSharedPreferences(requireContext()).registerOnSharedPreferenceChangeListener(mSettingsListener);
         updatePermissionMonitoringPrefVisibility();
-
-        mSyncUpdateRunnable = new Runnable() {
-            @Override
-            public void run() {
-                updateSyncStatus();
-                // Rerun every minute
-                mSyncUpdateHandler.postDelayed(this, DateUtils.MINUTE_IN_MILLIS);
-            }
-        };
-        // Immediately run and start the cycle
-        mSyncUpdateHandler.post(mSyncUpdateRunnable);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mSyncStatusPrefs.unregisterOnSharedPreferenceChangeListener(mSyncStatusListener);
         PreferenceManager.getDefaultSharedPreferences(requireContext()).unregisterOnSharedPreferenceChangeListener(mSettingsListener);
-        // Stop the periodic UI updates
-        mSyncUpdateHandler.removeCallbacks(mSyncUpdateRunnable);
     }
 
     private void updatePermissionMonitoringPrefVisibility() {
