@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="@string/onboarding_finish_title"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textStyle="bold" />
 
     <TextView
@@ -28,7 +28,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/onboarding_finish_text"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
     <Button
         android:id="@+id/open_calendar_button"
