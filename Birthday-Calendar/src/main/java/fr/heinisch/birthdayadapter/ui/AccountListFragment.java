@@ -88,7 +88,7 @@ public class AccountListFragment extends Fragment implements
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.account_list_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_account_list, container, false);
         mListView = view.findViewById(R.id.account_list);
         mEmptyView = view.findViewById(android.R.id.empty);
         return view;

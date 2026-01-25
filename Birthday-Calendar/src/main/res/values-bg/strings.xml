@@ -135,7 +135,7 @@
         <item quantity="one">%d рожден ден</item>
         <item quantity="other">%d рождени дни</item>
     </plurals>
-    <string name="pref_buy_full_summary">Редовно синхронизиране във фонов режим, потребителски напомняния и заглавия на събития, филтър за групи от контакти, подчертаване на юбилейни рождени дни</string>
+    <string name="pref_buy_full_summary">Получете достъп до всички платени възможности</string>
     <string name="pref_title_enable_summary">Променяне заглавието на календар, с формати за случаите в които годината на събитието е известна и неизвестна.</string>
     <string name="pref_name_format_title">Фамилията отпред</string>
     <string name="pref_name_format_summary">Променя показването на името от „Име Фамилия“ на „Фамилия, Име“</string>
@@ -161,4 +161,15 @@
     <string name="onboarding_grant_permission">Разрешаване</string>
     <string name="onboarding_permission_denied">Разрешението е отказано. Приложението може да не работи както се очаква.</string>
     <string name="restart_onboarding">Рестартиране</string>
+    <string name="buy_premium_for">Купете платеното издание за %s</string>
+    <string name="premium_feat_sync_title">Редовно фоново синхронизиране</string>
+    <string name="premium_feat_sync_summary">Бъдете сигурни, че календарът се обновява автоматично.</string>
+    <string name="premium_feat_reminders_title">Напомняния по избор</string>
+    <string name="premium_feat_reminders_summary">Задаване на напомняния по избор за дадено събитие.</string>
+    <string name="premium_feat_titles_title">Задаване на заглавия на събития</string>
+    <string name="premium_feat_titles_summary">Задаване на заглавия на рождените дни и годишнините.</string>
+    <string name="premium_feat_filtering_title">Филтриране на групи</string>
+    <string name="premium_feat_filtering_summary">Избиране на групите контакти, които ви интересуват.</string>
+    <string name="premium_feat_jubilee_title">Юбилейни рождени дни</string>
+    <string name="premium_feat_jubilee_summary">Подчертаване на специални поводи като 18-ти или 50-ти рожден ден.</string>
 </resources>

@@ -155,7 +155,18 @@
     <!--Free Version -->
     <string name="pref_buy">Buy full version!</string>
     <string name="pref_buy_full">Open Google Play to buy full version…</string>
-    <string name="pref_buy_full_summary">Regular background syncs, custom reminders and custom event titles, filter for contact groups, highlighting jubilee birthdays</string>
+    <string name="pref_buy_full_summary">Get access to all premium features</string>
+    <string name="buy_premium_for">Buy premium for %s</string>
+    <string name="premium_feat_sync_title">Regular Background Syncs</string>
+    <string name="premium_feat_sync_summary">Ensure your calendar is always up-to-date automatically.</string>
+    <string name="premium_feat_reminders_title">Custom Reminders</string>
+    <string name="premium_feat_reminders_summary">Set multiple, custom reminders for any event.</string>
+    <string name="premium_feat_titles_title">Custom Event Titles</string>
+    <string name="premium_feat_titles_summary">Personalize how birthday and anniversary titles appear.</string>
+    <string name="premium_feat_filtering_title">Group Filtering</string>
+    <string name="premium_feat_filtering_summary">Choose to sync only the contact groups you care about.</string>
+    <string name="premium_feat_jubilee_title">Jubilee Birthdays</string>
+    <string name="premium_feat_jubilee_summary">Highlight special occasions like the 18th or 50th birthday.</string>
 
     <!-- Onboarding -->
     <string name="next">Next</string>

@@ -134,7 +134,7 @@
     <plurals name="dates_count">
         <item quantity="other">%d 个生日</item>
     </plurals>
-    <string name="pref_buy_full_summary">定期后台同步、自定义提醒和自定义活动标题、按联系人分组筛选、突出显示周年纪念日</string>
+    <string name="pref_buy_full_summary">获取所有高级功能</string>
     <string name="summary_placeholder_firstname">三</string>
     <string name="summary_placeholder_lastname">张</string>
     <string name="summary_placeholder_custom_label">初次约会</string>
@@ -157,4 +157,15 @@
     <string name="onboarding_finish_text_samsung_calendar">要在 Samsung 日历中查看生日信息，请打开菜单，点击“管理日历”，确保“Birthday Adapter”已开启。</string>
     <string name="onboarding_finish_text_fossify_calendar">要在 Fossify 日历中查看生日信息，请打开设置，确保“激活 CalDAV 同步”已开启，然后选择“管理已同步日历”，确保“Birthday Adapter”已启用。</string>
     <string name="restart_onboarding">重启</string>
+    <string name="buy_premium_for">购买 %s 的高级版</string>
+    <string name="premium_feat_sync_title">定期后台同步</string>
+    <string name="premium_feat_sync_summary">确保您的日历始终自动更新。</string>
+    <string name="premium_feat_reminders_title">自定义提醒</string>
+    <string name="premium_feat_reminders_summary">为任何活动设置多个自定义提醒。</string>
+    <string name="premium_feat_titles_title">自定义活动标题</string>
+    <string name="premium_feat_titles_summary">个性化设置生日和纪念日标题的显示方式。</string>
+    <string name="premium_feat_filtering_title">分组筛选</string>
+    <string name="premium_feat_filtering_summary">选择仅同步您关心的联系人分组。</string>
+    <string name="premium_feat_jubilee_title">周年纪念日</string>
+    <string name="premium_feat_jubilee_summary">突出显示特殊场合，例如 18 岁或 50 岁生日。</string>
 </resources>

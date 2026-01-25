@@ -114,7 +114,7 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
         View view;
 
         if (convertView == null) {
-            view = mInflater.inflate(R.layout.account_list_entry, parent, false);
+            view = mInflater.inflate(R.layout.item_account_list, parent, false);
         } else {
             view = convertView;
         }
@@ -201,7 +201,7 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
                     LinearLayout groupContainer = dialogView.findViewById(R.id.group_container);
 
                     for (GroupListEntry group : entry.getGroups()) {
-                        View groupEntryView = mInflater.inflate(R.layout.group_list_entry, groupContainer, false);
+                        View groupEntryView = mInflater.inflate(R.layout.item_group_list, groupContainer, false);
 
                         MaterialCheckBox checkBox = groupEntryView.findViewById(R.id.group_list_cbox);
                         TextView groupTitleView = groupEntryView.findViewById(R.id.group_list_text);

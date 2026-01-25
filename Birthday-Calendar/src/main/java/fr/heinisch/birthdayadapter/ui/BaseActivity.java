@@ -30,7 +30,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -56,7 +55,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import fr.heinisch.birthdayadapter.R;
 import fr.heinisch.birthdayadapter.util.AccountHelper;
@@ -106,7 +104,7 @@ public class BaseActivity extends AppCompatActivity {
 
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
-        setContentView(R.layout.base_activity);
+        setContentView(R.layout.activity_base);
 
         IPurchaseHelper mPurchaseHelper = PurchaseHelperFactory.create();
 

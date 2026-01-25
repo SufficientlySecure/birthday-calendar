@@ -10,6 +10,11 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
     }
 
     @Override
+    public void queryProductDetails(Activity activity, PriceCallback callback) {
+        // Not used in the full version
+    }
+
+    @Override
     public void verifyAndRestorePurchases(Context context) {
         // Not used in the full version
     }

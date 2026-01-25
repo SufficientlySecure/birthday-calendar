@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.preference.PreferenceCategory android:title="@string/pref_general">
         <androidx.preference.Preference
@@ -7,6 +8,7 @@
             android:persistent="true"
             android:title="@string/pref_color" />
         <androidx.preference.Preference
+            app:icon="@drawable/ic_sync"
             android:key="@string/pref_force_sync_key"
             android:persistent="false"
             android:summary="@string/pref_force_sync_summary"
@@ -17,9 +19,37 @@
         android:key="@string/pref_buy_category_key"
         android:title="@string/pref_buy">
         <androidx.preference.Preference
+            app:icon="@drawable/ic_star"
             android:key="@string/pref_buy_full_key"
             android:summary="@string/pref_buy_full_summary"
             android:title="@string/pref_buy_full" />
+
+        <Preference
+            app:title="@string/premium_feat_sync_title"
+            app:summary="@string/premium_feat_sync_summary"
+            app:enabled="false"
+            app:shouldDisableView="false" />
+        <Preference
+            app:title="@string/premium_feat_reminders_title"
+            app:summary="@string/premium_feat_reminders_summary"
+            app:enabled="false"
+            app:shouldDisableView="false" />
+        <Preference
+            app:title="@string/premium_feat_titles_title"
+            app:summary="@string/premium_feat_titles_summary"
+            app:enabled="false"
+            app:shouldDisableView="false" />
+        <Preference
+            app:title="@string/premium_feat_filtering_title"
+            app:summary="@string/premium_feat_filtering_summary"
+            app:enabled="false"
+            app:shouldDisableView="false" />
+        <Preference
+            app:title="@string/premium_feat_jubilee_title"
+            app:summary="@string/premium_feat_jubilee_summary"
+            app:enabled="false"
+            app:shouldDisableView="false" />
+
     </androidx.preference.PreferenceCategory>
 
     <androidx.preference.PreferenceCategory
