@@ -109,4 +109,10 @@
     <string name="pref_title_summary_with_age">Utilisez {NAME} ou {FIRSTNAME} pour le nom du contact, et {AGE} pour l\'âge.</string>
     <string name="pref_title_summary_custom_without_age">Utilisez {NAME} ou {FIRSTNAME} pour le nom du contact, et {LABEL} pour le libellé personnalisé de cet évènement.</string>
     <string name="pref_title_summary_custom_with_age">Utilisez {NAME} ou {FIRSTNAME} pour le nom du contact, {LABEL} pour le libellé personnalisé de cet évènement et {AGE} pour l\'âge.</string>
+    <string name="pref_sync">4. Synchronisation des changements</string>
+    <string name="pref_sync_summary">Laisse l’appli vérifier les nouveaux anniversaires et mets ton calendrier à jour.</string>
+    <string name="no_events_selected">Aucun</string>
+    <string name="pref_name_format_title">Format Nom Prénom</string>
+    <string name="pref_name_format_summary">Passe l’affichage des noms de « Prénom Nom » à « Nom, Prénom »</string>
+    <string name="pref_jubilee_years_title">Anniversaires jubilaires</string>
 </resources>
