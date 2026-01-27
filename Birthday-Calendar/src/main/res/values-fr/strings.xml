@@ -116,7 +116,7 @@
     <string name="pref_name_format_summary">Passe l’affichage des noms de « Prénom Nom » à « Nom, Prénom »</string>
     <string name="pref_jubilee_years_title">Anniversaires jubilaires</string>
     <string name="pref_jubilee_years_dialog_message">Saisis les années à mettre en avant (sépare par une virgule).</string>
-    <string name="pref_reminder_event_types_anniversary">Anniversaires</string>
+    <string name="pref_reminder_event_types_anniversary">Anniversaires de marriage</string>
     <string name="pref_reminder_event_types_other">Autres événements</string>
     <string name="pref_reminder_event_types_custom">Événements personnalisés</string>
     <string name="pref_disable_permission_monitoring_title">Désactiver la surveillance des autorisations</string>
