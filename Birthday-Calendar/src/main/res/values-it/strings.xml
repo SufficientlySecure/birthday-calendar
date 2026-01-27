@@ -138,7 +138,7 @@
         <item quantity="many">%d compleanni</item>
         <item quantity="other"/>
     </plurals>
-    <string name="pref_buy_full_summary">Sincronizzazioni regolari in background, promemoria personalizzati e titoli di eventi personalizzati, filtro per gruppi di contatti, evidenziazione dei compleanni importanti</string>
+    <string name="pref_buy_full_summary">Sincronizzazioni regolari in background, promemoria personalizzati e titoli di eventi personalizzati, filtro per gruppi di contatti, evidenziazione dei compleanni importanti.Richiedi accesso alla versione premium</string>
     <string name="summary_placeholder_firstname">Giovanna</string>
     <string name="summary_placeholder_lastname">Rossi</string>
     <string name="summary_placeholder_custom_label">Prima Data</string>
@@ -161,4 +161,17 @@
     <string name="onboarding_finish_text_samsung_calendar">Per vedere i compleanni nel Calendario Samsung, apri il menu, clicca \'Gestisci calendari\', e assicurati che \'Birthday Adapter\' sia attivo.</string>
     <string name="onboarding_finish_text_fossify_calendar">Per vedere i calendari in Fossify Calendar, apri le impostazioni e assicurati che \'Atriva sincronizzazione CalDAV \' sia attivo, poi seleziona \'gestisci calendari sincronizzati\' e assicurati che \'Birthday Adapter\' sia attivato.</string>
     <string name="restart_onboarding">Riavvia</string>
+    <string name="pref_sync_summary">Lascia che l\'app controlli nuovi compleanni ed aggiorni il calendario.</string>
+    <string name="pref_sync">4. Sincronizza cambiamenti</string>
+    <string name="buy_premium_for">Acquista premium per %s</string>
+    <string name="premium_feat_sync_title">Sincronizzazione in background regolare</string>
+    <string name="premium_feat_sync_summary">Assicura che il tuo calendario sia sempre aggiornato automaticamente.</string>
+    <string name="premium_feat_reminders_title">Promemoria Personalizzati</string>
+    <string name="premium_feat_reminders_summary">Imposta promemoria multipli, personalizzati per qualsiasi evento.</string>
+    <string name="premium_feat_titles_title">Titoli Eventi Personalizzati</string>
+    <string name="premium_feat_titles_summary">Personalizza l\'apparenza dei titoli dei compleanni e degli anniversari.</string>
+    <string name="premium_feat_filtering_title">Filtra Gruppo</string>
+    <string name="premium_feat_filtering_summary">Scegli di sincronizzare solo il gruppo di contatto di cui ti importa.</string>
+    <string name="premium_feat_jubilee_title">Compleanni Giubilari</string>
+    <string name="premium_feat_jubilee_summary">Evidenzia occasioni speciali come i 18 anni o i 50 anni.</string>
 </resources>
