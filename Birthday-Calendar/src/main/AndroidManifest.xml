@@ -56,6 +56,10 @@
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name">
+        <receiver
+            android:name="androidx.work.impl.diagnostics.DiagnosticsReceiver"
+            tools:node="remove" />
+
         <activity
             android:name="fr.heinisch.birthdayadapter.ui.BaseActivity"
             android:theme="@style/MyMaterialTheme.Base"
