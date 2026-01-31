@@ -172,4 +172,6 @@
     <string name="premium_feat_filtering_summary">Избиране на групите контакти, които ви интересуват.</string>
     <string name="premium_feat_jubilee_title">Юбилейни рождени дни</string>
     <string name="premium_feat_jubilee_summary">Подчертаване на специални поводи като 18-ти или 50-ти рожден ден.</string>
+    <string name="pref_sync">4. Синхронизиране на промени</string>
+    <string name="pref_sync_summary">Приложението обновява календара с нови рождени дни.</string>
 </resources>

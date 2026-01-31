@@ -24,6 +24,7 @@ import android.Manifest;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.CalendarContract;
 import android.provider.ContactsContract;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.Toast;
 
@@ -42,21 +44,37 @@ import androidx.core.content.ContextCompat;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import fr.heinisch.birthdayadapter.R;
 import fr.heinisch.birthdayadapter.util.AccountHelper;
 import fr.heinisch.birthdayadapter.util.Constants;
+import fr.heinisch.birthdayadapter.util.SyncStatusManager;
 
 public class BasePreferenceFragment extends PreferenceFragmentCompat {
     private AccountHelper mAccountHelper;
 
     private SwitchPreferenceCompat mEnabled;
+    private Preference forceSyncPref;
+    private SharedPreferences mSyncStatusPrefs;
+    private WorkInfo mBirthdaySyncWorkInfo;
+
+    private final Handler mSyncUpdateHandler = new Handler(Looper.getMainLooper());
+    private Runnable mSyncUpdateRunnable;
+
+    private final SharedPreferences.OnSharedPreferenceChangeListener mSyncStatusListener = (sharedPreferences, key) -> {
+        if (key != null && key.equals("last_sync_timestamp") && getActivity() != null) {
+            getActivity().runOnUiThread(this::updateSyncStatus);
+        }
+    };
 
     private ActivityResultLauncher<String[]> requestPermissionLauncher;
 
@@ -130,6 +148,7 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
         }
 
         mAccountHelper = new AccountHelper(mActivity);
+        mSyncStatusPrefs = mActivity.getSharedPreferences("sync_status_prefs", Context.MODE_PRIVATE);
 
         mEnabled = findPreference(getString(R.string.pref_enabled_key));
         if (mEnabled != null) {
@@ -169,6 +188,26 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
                 return true;
             });
         }
+
+        forceSyncPref = findPreference(getString(R.string.pref_force_sync_key));
+        if (forceSyncPref != null) {
+            forceSyncPref.setOnPreferenceClickListener(preference -> {
+                SyncStatusManager.getInstance().setSyncing(true);
+                mAccountHelper.differentialSync();
+                updateSyncStatus();
+                return true;
+            });
+        }
+
+        WorkManager.getInstance(mActivity).getWorkInfosForUniqueWorkLiveData("periodic_sync")
+                .observe(getViewLifecycleOwner(), workInfos -> {
+                    if (workInfos != null && !workInfos.isEmpty()) {
+                        mBirthdaySyncWorkInfo = workInfos.get(0);
+                    } else {
+                        mBirthdaySyncWorkInfo = null;
+                    }
+                    updateSyncStatus();
+                });
     }
 
     private void checkAndRequestPermissions() {
@@ -205,6 +244,14 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        mSyncStatusPrefs.unregisterOnSharedPreferenceChangeListener(mSyncStatusListener);
+        // Stop the periodic UI updates
+        mSyncUpdateHandler.removeCallbacks(mSyncUpdateRunnable);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (mAccountHelper != null && mEnabled != null) {
@@ -217,5 +264,42 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
                 });
             });
         }
+
+        mSyncStatusPrefs.registerOnSharedPreferenceChangeListener(mSyncStatusListener);
+
+        mSyncUpdateRunnable = () -> {
+            updateSyncStatus();
+            // Rerun every minute
+            mSyncUpdateHandler.postDelayed(mSyncUpdateRunnable, DateUtils.MINUTE_IN_MILLIS);
+        };
+        // Immediately run and start the cycle
+        mSyncUpdateHandler.post(mSyncUpdateRunnable);
+    }
+
+    private void updateSyncStatus() {
+        if (!isAdded() || forceSyncPref == null || getActivity() == null) return;
+
+        long lastSync = mSyncStatusPrefs.getLong("last_sync_timestamp", 0);
+        String summary;
+
+        if (lastSync == 0) {
+            summary = getString(R.string.last_sync_never);
+        } else {
+            summary = getString(R.string.last_sync, DateUtils.getRelativeTimeSpanString(lastSync, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS));
+        }
+
+        if (mAccountHelper != null && mAccountHelper.isAccountActivated()) {
+            if (mBirthdaySyncWorkInfo != null) {
+                long nextRun = mBirthdaySyncWorkInfo.getNextScheduleTimeMillis();
+                long now = System.currentTimeMillis();
+                long sanityThreshold = now + TimeUnit.DAYS.toMillis(Constants.SYNC_INTERVAL_DAYS * 2);
+
+                if (nextRun > now && nextRun < sanityThreshold) {
+                    summary += "\n" + getString(R.string.next_sync, DateUtils.getRelativeTimeSpanString(nextRun, now, DateUtils.MINUTE_IN_MILLIS));
+                }
+            }
+        }
+
+        forceSyncPref.setSummary(summary);
     }
 }
