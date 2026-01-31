@@ -1,0 +1,5 @@
+3.11
+* Move sync button to main screen
+* Improve accessibility (contrast, button size, screenreader, dynamic text changes)
+- Increase font size of onboarding
+- Update translations

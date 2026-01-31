@@ -1,3 +1,9 @@
+3.11
+* Move sync button to main screen
+* Improve accessibility (contrast, button size, screenreader, dynamic text changes)
+- Increase font size of onboarding
+- Update translations
+
 3.10.5
 * Use more decent icons on main page
 * Do not grant network permission to WorkManager
