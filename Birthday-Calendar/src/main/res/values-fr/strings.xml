@@ -97,7 +97,7 @@
     <string name="pref_reminder_time">Rappel</string>
     <string name="pref_reminder_summary">%1$s à %2$s</string>
     <string name="no_reminder_set">Aucun rappel défini</string>
-    <string name="remove">Supprimer</string>
+    <string name="remove">Retirer</string>
     <string name="delete_reminder_title">Supprimer le rappel</string>
     <string name="delete_reminder_message">Voulez-vous vraiment supprimer ce rappel ?</string>
     <string name="delete">Supprimer</string>
@@ -124,7 +124,7 @@
     <string name="last_sync">dernière synchronisation : %s</string>
     <string name="last_sync_never">Dernière synchronisation : jamais</string>
     <string name="next_sync">Prochaine synchro (fond) : %s</string>
-    <string name="notification_channel_name">Synchro des anniversaires</string>
+    <string name="notification_channel_name">Synchro anniversaires</string>
     <string name="notification_channel_description">Notifications pour la synchro des anniversaires</string>
     <string name="notification_title">Synchro des anniversaires</string>
     <string name="hex_color_hint">#RRGGBB</string>
