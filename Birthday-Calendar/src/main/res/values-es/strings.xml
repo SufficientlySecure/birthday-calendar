@@ -65,4 +65,12 @@
     <!--Free Version -->
     <string name="pref_buy">¡Comprar la versión completa!</string>
     <string name="pref_buy_full">Ir a Google Play para comprar la versión completa...</string>
+    <string name="event_title_birthday_with_age">{NAME}: Cumpleaños ({AGE})</string>
+    <string name="event_title_birthday_without_age">{NAME}: Cumpleaños</string>
+    <string name="event_title_anniversary_with_age">{NAME}: Aniversario ({AGE})</string>
+    <string name="event_title_anniversary_without_age">{NAME}: Aniversario</string>
+    <string name="event_title_other_with_age">{NAME}: Otro evento ({AGE})</string>
+    <string name="event_title_other_without_age">{NAME}: Otro evento</string>
+    <string name="event_title_custom_with_age">{NAME}: {LABEL} ({AGE})</string>
+    <string name="event_title_custom_without_age">{NAME}: {LABEL}</string>
 </resources>
