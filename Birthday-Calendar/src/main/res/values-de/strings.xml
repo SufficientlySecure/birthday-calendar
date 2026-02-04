@@ -165,16 +165,16 @@
     <string name="onboarding_finish_text_fossify_calendar">Um die Geburtstage im Fossify-Kalender anzuzeigen, öffne die Einstellungen und stelle sicher, dass „CalDAV-Synchronisierung” aktiviert ist. Wähle dann „Synchronisierte Kalender verwalten” und stelle sicher, dass der „Birthday Adapter” aktiviert ist.</string>
     <string name="restart_onboarding">Neustarten</string>
     <string name="buy_premium_for">Premium für %s kaufen</string>
-    <string name="premium_feat_sync_title">Automatische Synchronisation</string>
+    <string name="premium_feat_sync_title">Regelmäßige Datensynchronisierung im Hintergrund</string>
     <string name="premium_feat_sync_summary">Dein Kalender bleibt immer automatisch aktuell.</string>
     <string name="premium_feat_reminders_title">Individuelle Erinnerungen</string>
-    <string name="premium_feat_reminders_summary">Lege fest, wann und wie oft du an Geburtstage erinnert werden möchtest.</string>
-    <string name="premium_feat_titles_title">Eigene Beschriftungen der Kalendereinträge</string>
-    <string name="premium_feat_titles_summary">Passe an, wie Kalendereinträge angezeigt werden.</string>
+    <string name="premium_feat_reminders_summary">Lege beliebig viele individuelle Erinnerungen für jedes Ereignis an.</string>
+    <string name="premium_feat_titles_title">Individuelle Ereignistitel der Kalendereinträge</string>
+    <string name="premium_feat_titles_summary">Individualisiere die Darstellung von Geburtstags- und Jahrestagstiteln.</string>
     <string name="premium_feat_filtering_title">Filter nach Kontaktgruppen</string>
-    <string name="premium_feat_filtering_summary">Synchronisiere nur die Kontaktgruppen, die dich interessieren.</string>
+    <string name="premium_feat_filtering_summary">Synchronisiere nur die Kontaktgruppen, die für dich wichtig sind.</string>
     <string name="premium_feat_jubilee_title">Hervorhebung von Jubiläen</string>
-    <string name="premium_feat_jubilee_summary">Hebe spezielle Geburtstage im Kalender hervor.</string>
+    <string name="premium_feat_jubilee_summary">Hebe besondere Anlässe wie den 18. oder 50. Geburtstag hervor.</string>
     <string name="pref_sync">4. Änderungen synchronisieren</string>
     <string name="pref_sync_summary">Lass die App nach neuen Geburtstagen suchen und deinen Kalender aktualisieren.</string>
 </resources>
