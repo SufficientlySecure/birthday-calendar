@@ -1,0 +1,5 @@
+3.11.3
+* Improve contrast in dark mode
+- Explicitly remove AD-ID permission
+- Update dependencies
+- Update translations
