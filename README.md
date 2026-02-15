@@ -4,9 +4,9 @@
 &nbsp; &nbsp; &nbsp;
 [<img src="metadata/en-US/images/GetItGooglePlay.png" alt="Get it on Google Play" height="80">](https://play.google.com/store/apps/details?id=fr.heinisch.birthdayadapter)
 
-Birthday Adapter is the first implementation to really display all contact birthdays automatically in your standard Android calendar without hassle.
-
-Birthday Adapter provides birthdays, anniversaries, and other events from your contacts as a real calendar, which is displayed in your standard Android calendar application. To my knowledge, this is the first implementation that implements birthdays as a real calendar integrated in the Android calendar. All other apps only displays their own lists but have no real integration! 
+Birthday Adapter syncs birthdays, anniversaries, and other events from your contacts directly into
+your Android calendar. Unlike other apps, it integrates seamlessly with your system calendar, so you
+can see all your important dates alongside your other events.
 
 ## Screenshots
 
@@ -49,20 +49,6 @@ Birthday Adapter provides birthdays, anniversaries, and other events from your c
   </tr>
 </table>
 
-## Build with Gradle
-
-1. Have Android SDK "tools", "platform-tools", and "build-tools" directories in your PATH (http://developer.android.com/sdk/index.html)
-2. Open the Android SDK Manager (shell command: ``android``). Expand the Extras directory and install "Android Support Repository"
-3. Export ANDROID_HOME pointing to your Android SDK
-4. Execute ``./gradlew build``
-
-Different productFlavors are build with gradle:
-- ``full``
-- ``free`` without settings
-
-## Contribute
-
-Fork Birthday Adapter and do a Pull Request. I will merge your changes back into the main project.
 
 ## Translations
 
@@ -74,23 +60,42 @@ Help translating at https://hosted.weblate.org/engage/birthday-adapter/
 <img src="https://hosted.weblate.org/widget/birthday-adapter/multi-auto.svg" alt="Translation status" />
 </a>
 
+
+## Building the Project
+
+The easiest way to build the project is to open it in [Android Studio](https://developer.android.com/studio).
+Android Studio will handle the download of the required SDK and build tools.
+
+You can also build the project from the command line using Gradle:
+```bash
+./gradlew assemble
+```
+
+### Product Flavors
+
+The project contains two product flavors:
+- `free`: The freemium version of the app.
+- `full`: The full version with all features unlocked.
+
+You can build a specific variant, for example `freeDebug`, by running:
+```bash
+./gradlew assembleFreeDebug
+```
+
+
+## Contribute
+
+We welcome contributions! Please start by opening an issue to let us know what you’re working on.
+
+Then, Fork Birthday Adapter and do a Pull Request. I will merge your changes back into the main project.
+
+
 ## Coding Style
 
-### Code
-* Indentation: 4 spaces, no tabs
-* Maximum line width for code and comments: 100
-* Opening braces don't go on their own line
-* Field names: Non-public, non-static fields start with m.
-* Acronyms are words: Treat acronyms as words in names, yielding !XmlHttpRequest, getUrl(), etc.
+The project generally follows the standard [Android code style guidelines](http://source.android.com/source/code-style.html).
 
-See http://source.android.com/source/code-style.html
-
-### XML
-* XML Maximum line width 999
-* XML: Split multiple attributes each on a new line (Eclipse: Properties -> XML -> XML Files -> Editor)
-* XML: Indent using spaces with Indention size 4 (Eclipse: Properties -> XML -> XML Files -> Editor)
-
-See http://www.androidpolice.com/2009/11/04/auto-formatting-android-xml-files-with-eclipse/
+The code is formatted using the default Android Studio formatter. You can
+reformat any file using `Code -> Reformat Code`.
 
 ## Licenses
 Birthday Adapter is licensed under the GPLv3+.
@@ -123,3 +128,9 @@ along with Birthday Adapter.  If not, see <http://www.gnu.org/licenses/>.
   Based on Tango Icon Library and Tango Pidgin Icon Theme
   http://tango.freedesktop.org/
   Public Domain (Tango Icon Library) and GPL (Tango Pidgin Icon Theme)
+
+## Donations
+
+If you would like to provide a financial contribution, you can show your
+support by donating via [Liberapay](https://liberapay.com/mattitude/donate)
+or [PayPal](https://www.paypal.com/donate/?hosted_button_id=74N2SGUSHWPWL).
