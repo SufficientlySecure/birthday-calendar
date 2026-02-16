@@ -136,7 +136,7 @@
     <plurals name="dates_count">
         <item quantity="one">%d compleanno</item>
         <item quantity="many">%d compleanni</item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
     <string name="pref_buy_full_summary">Sincronizzazioni regolari in background, promemoria personalizzati e titoli di eventi personalizzati, filtro per gruppi di contatti, evidenziazione dei compleanni importanti.Richiedi accesso alla versione premium</string>
     <string name="summary_placeholder_firstname">Giovanna</string>
@@ -174,6 +174,4 @@
     <string name="premium_feat_filtering_summary">Scegli di sincronizzare solo il gruppo di contatto di cui ti importa.</string>
     <string name="premium_feat_jubilee_title">Compleanni Giubilari</string>
     <string name="premium_feat_jubilee_summary">Evidenzia occasioni speciali come i 18 anni o i 50 anni.</string>
-    <string name="app_name" translatable="false"></string>
-    <string name="account_type" translatable="false"></string>
 </resources>

@@ -175,6 +175,4 @@
     <string name="summary_placeholder_custom_label">Первое свидание</string>
     <string name="pref_enable_switch">Birthday Adapter</string>
     <string name="no_events_selected">Не установлено</string>
-    <string name="app_name" translatable="false"></string>
-    <string name="account_type" translatable="false"></string>
 </resources>
