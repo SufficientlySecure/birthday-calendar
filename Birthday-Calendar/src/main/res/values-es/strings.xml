@@ -73,4 +73,5 @@
     <string name="event_title_other_without_age">{NAME}: Otro evento</string>
     <string name="event_title_custom_with_age">{NAME}: {LABEL} ({AGE})</string>
     <string name="event_title_custom_without_age">{NAME}: {LABEL}</string>
+    <string name="pref_reminder_summary"></string>
 </resources>
