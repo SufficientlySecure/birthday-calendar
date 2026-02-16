@@ -177,4 +177,6 @@
     <string name="premium_feat_jubilee_summary">Hebe besondere Anlässe wie den 18. oder 50. Geburtstag hervor.</string>
     <string name="pref_sync">4. Änderungen synchronisieren</string>
     <string name="pref_sync_summary">Lass die App nach neuen Geburtstagen suchen und deinen Kalender aktualisieren.</string>
+    <string name="app_name" translatable="false"></string>
+    <string name="account_type" translatable="false"></string>
 </resources>
