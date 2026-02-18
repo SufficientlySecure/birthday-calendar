@@ -22,9 +22,11 @@ package fr.heinisch.birthdayadapter.ui;
 
 import static fr.heinisch.birthdayadapter.util.VersionHelper.isFullVersionUnlocked;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -40,9 +42,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.EditTextPreference;
 import androidx.preference.MultiSelectListPreference;
@@ -66,6 +71,7 @@ import java.util.regex.Pattern;
 
 import fr.heinisch.birthdayadapter.R;
 import fr.heinisch.birthdayadapter.util.AccountHelper;
+import fr.heinisch.birthdayadapter.util.CalendarHelper;
 import fr.heinisch.birthdayadapter.util.IPurchaseHelper;
 import fr.heinisch.birthdayadapter.util.PreferencesHelper;
 import fr.heinisch.birthdayadapter.util.PurchaseHelperFactory;
@@ -80,6 +86,15 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     private PreferenceCategory remindersCategory;
     private IPurchaseHelper mPurchaseHelper;
     private Set<String> mTitlePrefKeys;
+
+    private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            isGranted -> {
+                if (isGranted) {
+                    showCalendarSelectionDialog();
+                }
+            }
+    );
 
     private final SharedPreferences.OnSharedPreferenceChangeListener mSettingsListener = (sharedPreferences, key) -> {
         if (key == null || getActivity() == null) {
@@ -186,6 +201,18 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         }
 
         if (getContext() != null && isFullVersionUnlocked(getContext())) {
+            Preference targetCalendarPref = findPreference(getString(R.string.pref_target_calendar_key));
+            if (targetCalendarPref != null) {
+                targetCalendarPref.setOnPreferenceClickListener(preference -> {
+                    if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+                        showCalendarSelectionDialog();
+                    } else {
+                        requestPermissionLauncher.launch(Manifest.permission.WRITE_CALENDAR);
+                    }
+                    return true;
+                });
+            }
+
             remindersCategory = findPreference(getString(R.string.pref_reminders_category_key));
             if (remindersCategory != null) {
                 MultiSelectListPreference reminderTypesPref = findPreference(getString(R.string.pref_reminder_event_types));
@@ -266,6 +293,26 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         }
 
         updatePermissionMonitoringPrefVisibility();
+    }
+
+    private void showCalendarSelectionDialog() {
+        List<CalendarHelper.CalendarItem> calendars = CalendarHelper.getWritableCalendars(requireContext());
+        CharSequence[] entries = new CharSequence[calendars.size()];
+        for (int i = 0; i < calendars.size(); i++) {
+            CalendarHelper.CalendarItem calendar = calendars.get(i);
+            entries[i] = calendar.name + " (" + calendar.accountName + ")";
+        }
+
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.pref_target_calendar_title)
+                .setItems(entries, (dialog, which) -> {
+                    long calendarId = calendars.get(which).id;
+                    SharedPreferences.Editor editor = Objects.requireNonNull(getPreferenceManager().getSharedPreferences()).edit();
+                    editor.putString(getString(R.string.pref_target_calendar_key), String.valueOf(calendarId));
+                    editor.apply();
+                    mAccountHelper.triggerFullResync();
+                })
+                .show();
     }
 
     private void setupTitlePreference(String key) {

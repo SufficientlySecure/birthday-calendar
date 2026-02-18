@@ -45,6 +45,7 @@
 
     <!-- Preferences -->
     <string name="pref_general">General</string>
+    <string name="pref_target_calendar_title">Target calendar</string>
     <string name="pref_enable">1. Enable Birthday Adapter</string>
     <string name="pref_enable_summary">This creates calendar events from your contacts\' birthdays.</string>
     <string name="pref_enable_switch">Birthday Adapter</string>

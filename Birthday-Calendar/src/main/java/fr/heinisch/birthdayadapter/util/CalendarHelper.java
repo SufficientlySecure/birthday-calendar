@@ -11,12 +11,59 @@ import android.provider.BaseColumns;
 import android.provider.CalendarContract;
 import androidx.core.content.ContextCompat;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fr.heinisch.birthdayadapter.BuildConfig;
 import fr.heinisch.birthdayadapter.R;
 
-import java.util.ArrayList;
-
 public class CalendarHelper {
+
+    public static class CalendarItem {
+        public final long id;
+        public final String name;
+        public final String accountName;
+
+        public CalendarItem(long id, String name, String accountName) {
+            this.id = id;
+            this.name = name;
+            this.accountName = accountName;
+        }
+    }
+
+    public static List<CalendarItem> getWritableCalendars(Context context) {
+        List<CalendarItem> calendars = new ArrayList<>();
+
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            Log.e(Constants.TAG, "Missing calendar permissions to get writable calendars!");
+            return calendars;
+        }
+
+        ContentResolver contentResolver = context.getContentResolver();
+        Uri uri = CalendarContract.Calendars.CONTENT_URI;
+
+        String[] projection = new String[]{
+                CalendarContract.Calendars._ID,
+                CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
+                CalendarContract.Calendars.ACCOUNT_NAME
+        };
+
+        String selection = CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL + " >= ?";
+        String[] selectionArgs = new String[]{String.valueOf(CalendarContract.Calendars.CAL_ACCESS_CONTRIBUTOR)};
+
+        try (Cursor cursor = contentResolver.query(uri, projection, selection, selectionArgs, null)) {
+            if (cursor != null) {
+                while (cursor.moveToNext()) {
+                    long id = cursor.getLong(0);
+                    String name = cursor.getString(1);
+                    String accountName = cursor.getString(2);
+                    calendars.add(new CalendarItem(id, name, accountName));
+                }
+            }
+        }
+
+        return calendars;
+    }
 
     /**
      * Gets calendar id, when no calendar is present, create one!
@@ -99,6 +146,29 @@ public class CalendarHelper {
             Log.i(Constants.TAG, "Successfully deleted birthday calendar.");
         } else {
             Log.w(Constants.TAG, "Birthday calendar not found or could not be deleted.");
+        }
+    }
+
+    public static void clearBirthdayAdapterEvents(Context context, long calendarId) {
+        Log.d(Constants.TAG, "Safely clearing all events from calendar " + calendarId);
+
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            Log.e(Constants.TAG, "Missing calendar permissions to clear events!");
+            return;
+        }
+
+        ContentResolver contentResolver = context.getContentResolver();
+        Uri eventsUri = CalendarContract.Events.CONTENT_URI;
+
+        String selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.CUSTOM_APP_PACKAGE + " = ?";
+        String[] selectionArgs = new String[]{String.valueOf(calendarId), context.getPackageName()};
+
+        int deletedRows = contentResolver.delete(eventsUri, selection, selectionArgs);
+
+        if (deletedRows > 0) {
+            Log.i(Constants.TAG, "Successfully cleared " + deletedRows + " old events from calendar " + calendarId);
+        } else {
+            Log.d(Constants.TAG, "Calendar " + calendarId + " was already empty or had no events from this app. No events to clear.");
         }
     }
 

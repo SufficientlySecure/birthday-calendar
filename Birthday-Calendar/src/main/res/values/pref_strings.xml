@@ -7,6 +7,7 @@
     <string name="pref_enabled_key" translatable="false">enabled</string>
     <string name="pref_contacts_key" translatable="false">contacts</string>
     <string name="pref_calendar_key" translatable="false">calendar</string>
+    <string name="pref_target_calendar_key" translatable="false">targetCalendar</string>
     <string name="pref_color_key" translatable="false">color</string>
     <string name="pref_group_filtering_key" translatable="false">groupFiltering</string>
 

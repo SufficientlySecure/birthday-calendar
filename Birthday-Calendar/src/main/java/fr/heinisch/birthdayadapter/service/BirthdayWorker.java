@@ -106,7 +106,19 @@ public class BirthdayWorker extends Worker {
                     break;
                 case ACTION_FORCE_RESYNC:
                     Log.d(Constants.TAG, "Forcing a full resync...");
-                    CalendarHelper.deleteCalendar(getApplicationContext());
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    String targetCalendarIdStr = prefs.getString(getApplicationContext().getString(R.string.pref_target_calendar_key), null);
+                    if (targetCalendarIdStr != null) {
+                        try {
+                            long calendarId = Long.parseLong(targetCalendarIdStr);
+                            CalendarHelper.clearBirthdayAdapterEvents(getApplicationContext(), calendarId);
+                        } catch (NumberFormatException e) {
+                            Log.e(Constants.TAG, "Invalid target calendar ID during resync, falling back to deleting default calendar.");
+                            CalendarHelper.deleteCalendar(getApplicationContext());
+                        }
+                    } else {
+                        CalendarHelper.deleteCalendar(getApplicationContext());
+                    }
                     performSync(getApplicationContext());
                     break;
                 case ACTION_SYNC:
@@ -212,7 +224,21 @@ public class BirthdayWorker extends Worker {
                 return;
             }
 
-            long calendarId = CalendarHelper.getCalendar(context);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            String targetCalendarIdStr = prefs.getString(context.getString(R.string.pref_target_calendar_key), null);
+
+            long calendarId;
+            if (targetCalendarIdStr != null) {
+                try {
+                    calendarId = Long.parseLong(targetCalendarIdStr);
+                } catch (NumberFormatException e) {
+                    Log.e(Constants.TAG, "Invalid target calendar ID, falling back to default calendar.");
+                    calendarId = CalendarHelper.getCalendar(context);
+                }
+            } else {
+                calendarId = CalendarHelper.getCalendar(context);
+            }
+
             if (calendarId == -1) {
                 Log.e(Constants.TAG, "Unable to create or find calendar");
                 return;

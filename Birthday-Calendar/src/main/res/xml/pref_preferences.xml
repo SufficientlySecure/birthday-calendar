@@ -3,6 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.preference.PreferenceCategory android:title="@string/pref_general">
+        <Preference
+            android:key="@string/pref_target_calendar_key"
+            android:title="@string/pref_target_calendar_title" />
         <androidx.preference.Preference
             android:key="@string/pref_color_key"
             android:persistent="true"
