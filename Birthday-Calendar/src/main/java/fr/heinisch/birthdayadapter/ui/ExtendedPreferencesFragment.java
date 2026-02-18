@@ -203,6 +203,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         if (getContext() != null && isFullVersionUnlocked(getContext())) {
             Preference targetCalendarPref = findPreference(getString(R.string.pref_target_calendar_key));
             if (targetCalendarPref != null) {
+                updateCalendarPreferenceSummary(targetCalendarPref);
                 targetCalendarPref.setOnPreferenceClickListener(preference -> {
                     if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
                         showCalendarSelectionDialog();
@@ -295,6 +296,28 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         updatePermissionMonitoringPrefVisibility();
     }
 
+    private void updateCalendarPreferenceSummary(Preference preference) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
+        String calendarIdStr = prefs.getString(preference.getKey(), null);
+        if (calendarIdStr != null) {
+            try {
+                long calendarId = Long.parseLong(calendarIdStr);
+                List<CalendarHelper.CalendarItem> calendars = CalendarHelper.getWritableCalendars(requireContext());
+                for (CalendarHelper.CalendarItem calendar : calendars) {
+                    if (calendar.id == calendarId) {
+                        preference.setSummary(calendar.name + " (" + calendar.accountName + ")");
+                        return;
+                    }
+                }
+                preference.setSummary(getString(R.string.not_found));
+            } catch (NumberFormatException e) {
+                preference.setSummary(getString(R.string.not_set));
+            }
+        } else {
+            preference.setSummary(getString(R.string.not_set));
+        }
+    }
+
     private void showCalendarSelectionDialog() {
         List<CalendarHelper.CalendarItem> calendars = CalendarHelper.getWritableCalendars(requireContext());
         CharSequence[] entries = new CharSequence[calendars.size()];
@@ -306,11 +329,33 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.pref_target_calendar_title)
                 .setItems(entries, (dialog, which) -> {
-                    long calendarId = calendars.get(which).id;
-                    SharedPreferences.Editor editor = Objects.requireNonNull(getPreferenceManager().getSharedPreferences()).edit();
-                    editor.putString(getString(R.string.pref_target_calendar_key), String.valueOf(calendarId));
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
+                    String oldCalendarIdStr = prefs.getString(getString(R.string.pref_target_calendar_key), null);
+                    long oldCalendarId = -1;
+                    if (oldCalendarIdStr != null) {
+                        try {
+                            oldCalendarId = Long.parseLong(oldCalendarIdStr);
+                        } catch (NumberFormatException e) {
+                            // Ignore invalid old id
+                        }
+                    }
+
+                    long newCalendarId = calendars.get(which).id;
+
+                    if (newCalendarId == oldCalendarId) {
+                        return; // Same calendar selected, do nothing
+                    }
+
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString(getString(R.string.pref_target_calendar_key), String.valueOf(newCalendarId));
                     editor.apply();
-                    mAccountHelper.triggerFullResync();
+
+                    Preference targetCalendarPref = findPreference(getString(R.string.pref_target_calendar_key));
+                    if (targetCalendarPref != null) {
+                        updateCalendarPreferenceSummary(targetCalendarPref);
+                    }
+
+                    mAccountHelper.triggerFullResync(oldCalendarId);
                 })
                 .show();
     }
@@ -631,6 +676,11 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         super.onResume();
         PreferenceManager.getDefaultSharedPreferences(requireContext()).registerOnSharedPreferenceChangeListener(mSettingsListener);
         updatePermissionMonitoringPrefVisibility();
+
+        Preference targetCalendarPref = findPreference(getString(R.string.pref_target_calendar_key));
+        if (targetCalendarPref != null) {
+            updateCalendarPreferenceSummary(targetCalendarPref);
+        }
     }
 
     @Override

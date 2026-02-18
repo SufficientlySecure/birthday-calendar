@@ -131,8 +131,23 @@ public class AccountHelper {
      * Enqueues a worker to perform a full resync, which involves deleting the calendar and all events.
      */
     public void triggerFullResync() {
-        Log.i(Constants.TAG, "Full resync triggered.");
-        syncWithAction("full_resync", BirthdayWorker.ACTION_FORCE_RESYNC);
+        triggerFullResync(-1);
+    }
+
+    /**
+     * Enqueues a worker to perform a full resync, which involves deleting the calendar and all events,
+     * and optionally cleaning up events from a previous calendar.
+     *
+     * @param oldCalendarId The ID of the old calendar to clean up. Pass -1 if no cleanup is needed.
+     */
+    public void triggerFullResync(long oldCalendarId) {
+        Log.i(Constants.TAG, "Full resync triggered. Old calendar to clean: " + oldCalendarId);
+        Data.Builder dataBuilder = new Data.Builder();
+        dataBuilder.putString(BirthdayWorker.ACTION, BirthdayWorker.ACTION_FORCE_RESYNC);
+        if (oldCalendarId != -1) {
+            dataBuilder.putLong(BirthdayWorker.EXTRA_OLD_CALENDAR_ID, oldCalendarId);
+        }
+        syncWithAction("full_resync", dataBuilder.build());
     }
 
     /**
@@ -142,11 +157,14 @@ public class AccountHelper {
      * @param action           The action to be performed by the worker.
      */
     private void syncWithAction(String uniqueWorkName, String action) {
-        Log.d(Constants.TAG, "Enqueuing one-time work with name '" + uniqueWorkName + "' and action '" + action + "'");
-
         Data inputData = new Data.Builder()
                 .putString(BirthdayWorker.ACTION, action)
                 .build();
+        syncWithAction(uniqueWorkName, inputData);
+    }
+
+    private void syncWithAction(String uniqueWorkName, Data inputData) {
+        Log.d(Constants.TAG, "Enqueuing one-time work with name '" + uniqueWorkName + "'");
 
         OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(BirthdayWorker.class)
                 .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)

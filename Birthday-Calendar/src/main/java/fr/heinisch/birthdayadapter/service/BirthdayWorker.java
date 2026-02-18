@@ -60,6 +60,7 @@ import fr.heinisch.birthdayadapter.util.SyncStatusManager;
 public class BirthdayWorker extends Worker {
 
     public static final String ACTION = "action";
+    public static final String EXTRA_OLD_CALENDAR_ID = "old_calendar_id";
     public static final String ACTION_CHANGE_COLOR = "CHANGE_COLOR";
     public static final String ACTION_SYNC = "SYNC";
     public static final String ACTION_FORCE_RESYNC = "FORCE_RESYNC";
@@ -106,6 +107,11 @@ public class BirthdayWorker extends Worker {
                     break;
                 case ACTION_FORCE_RESYNC:
                     Log.d(Constants.TAG, "Forcing a full resync...");
+                    long oldCalendarId = getInputData().getLong(EXTRA_OLD_CALENDAR_ID, -1);
+                    if (oldCalendarId != -1) {
+                        CalendarHelper.clearBirthdayAdapterEvents(getApplicationContext(), oldCalendarId);
+                    }
+
                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     String targetCalendarIdStr = prefs.getString(getApplicationContext().getString(R.string.pref_target_calendar_key), null);
                     if (targetCalendarIdStr != null) {
