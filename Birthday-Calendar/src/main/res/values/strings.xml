@@ -73,8 +73,7 @@
     <string name="pref_events_with_reminders">Events with reminders</string>
     <string name="invalid_format">Invalid format</string>
     <string name="invalid_hex_code">Invalid hex code</string>
-    <string name="not_set">Not set</string>
-    <string name="not_found">Not found</string>
+    <string name="default_calendar">Default app calendar</string>
 
     <string-array name="pref_reminder_time_drop_down">
         <item>At the day of event</item>
