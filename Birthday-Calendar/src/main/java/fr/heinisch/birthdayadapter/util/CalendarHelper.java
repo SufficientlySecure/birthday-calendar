@@ -1,14 +1,17 @@
 package fr.heinisch.birthdayadapter.util;
 
 import android.Manifest;
+import android.accounts.Account;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.provider.CalendarContract;
+import android.text.TextUtils;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
@@ -70,6 +73,32 @@ public class CalendarHelper {
         }
 
         return calendars;
+    }
+
+    public static Account getAccountForCalendar(Context context, long calendarId) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            Log.e(Constants.TAG, "Missing calendar permissions to get account for calendar!");
+            return null;
+        }
+
+        ContentResolver contentResolver = context.getContentResolver();
+        Uri uri = ContentUris.withAppendedId(CalendarContract.Calendars.CONTENT_URI, calendarId);
+
+        String[] projection = new String[]{
+                CalendarContract.Calendars.ACCOUNT_NAME,
+                CalendarContract.Calendars.ACCOUNT_TYPE
+        };
+
+        try (Cursor cursor = contentResolver.query(uri, projection, null, null, null)) {
+            if (cursor != null && cursor.moveToFirst()) {
+                String accountName = cursor.getString(0);
+                String accountType = cursor.getString(1);
+                if (!TextUtils.isEmpty(accountName) && !TextUtils.isEmpty(accountType)) {
+                    return new Account(accountName, accountType);
+                }
+            }
+        }
+        return null;
     }
 
     /**
@@ -165,7 +194,8 @@ public class CalendarHelper {
         }
 
         ContentResolver contentResolver = context.getContentResolver();
-        Uri eventsUri = CalendarContract.Events.CONTENT_URI;
+        Account account = getAccountForCalendar(context, calendarId);
+        Uri eventsUri = getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI, account);
 
         String selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.CUSTOM_APP_PACKAGE + " = ?";
         String[] selectionArgs = new String[]{String.valueOf(calendarId), context.getPackageName()};
@@ -208,9 +238,23 @@ public class CalendarHelper {
      * Adapter is chosen.
      */
     public static Uri getBirthdayAdapterUri(Context context, Uri uri) {
-        return uri.buildUpon().appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, Constants.getAccountName(context))
-                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, context.getString(R.string.account_type)).build();
+        return getBirthdayAdapterUri(uri, new Account(Constants.getAccountName(context), context.getString(R.string.account_type)));
+    }
+
+    /**
+     * Builds URI for a sync adapter operation.
+     *
+     * @param uri The base URI.
+     * @param account The account to use for the operation. Can be null.
+     * @return The URI with sync adapter parameters.
+     */
+    public static Uri getBirthdayAdapterUri(Uri uri, Account account) {
+        Uri.Builder builder = uri.buildUpon().appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true");
+        if (account != null) {
+            builder.appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, account.name)
+                    .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, account.type);
+        }
+        return builder.build();
     }
 
 }

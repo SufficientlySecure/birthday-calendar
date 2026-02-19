@@ -201,11 +201,8 @@ public class BirthdayWorker extends Worker {
 
         Uri calendarUri = ContentUris.withAppendedId(CalendarContract.Calendars.CONTENT_URI, calendarId);
 
-        calendarUri = calendarUri.buildUpon()
-                .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, Constants.getAccountName(context))
-                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, context.getString(R.string.account_type))
-                .build();
+        Account account = CalendarHelper.getAccountForCalendar(context, calendarId);
+        calendarUri = CalendarHelper.getBirthdayAdapterUri(calendarUri, account);
 
         int updatedRows = context.getContentResolver().update(calendarUri, values, null, null);
         if (updatedRows > 0) {
@@ -258,8 +255,10 @@ public class BirthdayWorker extends Worker {
                 return;
             }
 
+            Account account = CalendarHelper.getAccountForCalendar(context, calendarId);
+
             // Get all existing event UIDs
-            ArrayList<String> existingEventUids = getExistingEventUids(context, contentResolver, calendarId);
+            ArrayList<String> existingEventUids = getExistingEventUids(context, contentResolver, calendarId, account);
             final int totalEventsBeforeSync = existingEventUids.size();
             int newEventsCount = 0;
 
@@ -354,12 +353,12 @@ public class BirthdayWorker extends Worker {
                                 boolean shouldAddReminder = hasReminders && reminderEventTypes.contains(String.valueOf(eventType));
 
                                 Log.v(Constants.TAG, "Adding event: " + title);
-                                operationList.add(insertEvent(context, calendarId, dtstart, title, eventLookupKey, eventUid, shouldAddReminder));
+                                operationList.add(insertEvent(context, calendarId, dtstart, title, eventLookupKey, eventUid, shouldAddReminder, account));
 
                                 if (shouldAddReminder) {
                                     for (int minute : reminderMinutes) {
                                         ContentProviderOperation.Builder builder = ContentProviderOperation
-                                                .newInsert(CalendarHelper.getBirthdayAdapterUri(context, CalendarContract.Reminders.CONTENT_URI));
+                                                .newInsert(CalendarHelper.getBirthdayAdapterUri(CalendarContract.Reminders.CONTENT_URI, account));
 
                                         builder.withValueBackReference(CalendarContract.Reminders.EVENT_ID, backRef);
                                         builder.withValue(CalendarContract.Reminders.MINUTES, minute);
@@ -393,7 +392,7 @@ public class BirthdayWorker extends Worker {
                 Log.d(Constants.TAG, "Deleting " + deletedEventsCount + " old events.");
                 ArrayList<ContentProviderOperation> deleteOperationList = new ArrayList<>();
                 for (String uid : existingEventUids) {
-                    deleteOperationList.add(ContentProviderOperation.newDelete(CalendarHelper.getBirthdayAdapterUri(context, CalendarContract.Events.CONTENT_URI))
+                    deleteOperationList.add(ContentProviderOperation.newDelete(CalendarHelper.getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI, account))
                             .withSelection(CalendarContract.Events.UID_2445 + " = ?", new String[]{uid})
                             .build());
                 }
@@ -422,9 +421,9 @@ public class BirthdayWorker extends Worker {
         }
     }
 
-    private ArrayList<String> getExistingEventUids(Context context, ContentResolver contentResolver, long calendarId) {
+    private ArrayList<String> getExistingEventUids(Context context, ContentResolver contentResolver, long calendarId, Account account) {
         ArrayList<String> existingUids = new ArrayList<>();
-        Uri uri = CalendarHelper.getBirthdayAdapterUri(context, CalendarContract.Events.CONTENT_URI);
+        Uri uri = CalendarHelper.getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI, account);
 
         try (Cursor cursor = contentResolver.query(uri,
                 new String[]{CalendarContract.Events.UID_2445},
@@ -803,14 +802,14 @@ public class BirthdayWorker extends Worker {
     }
 
     private ContentProviderOperation insertEvent(Context context, long calendarId,
-                                                 long dtstart, String title, String lookupKey, String eventUid, boolean hasReminders)
+                                                 long dtstart, String title, String lookupKey, String eventUid, boolean hasReminders, Account account)
             throws OperationCanceledException {
         if (Thread.currentThread().isInterrupted()) {
             throw new OperationCanceledException();
         }
 
         ContentProviderOperation.Builder builder =
-                ContentProviderOperation.newInsert(CalendarHelper.getBirthdayAdapterUri(context, CalendarContract.Events.CONTENT_URI));
+                ContentProviderOperation.newInsert(CalendarHelper.getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI, account));
 
         long dtend = dtstart + DateUtils.DAY_IN_MILLIS;
 
