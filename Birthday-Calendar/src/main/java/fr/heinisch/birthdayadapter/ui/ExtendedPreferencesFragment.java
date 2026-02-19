@@ -41,6 +41,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -87,14 +88,22 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     private IPurchaseHelper mPurchaseHelper;
     private Set<String> mTitlePrefKeys;
 
-    private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
-            new ActivityResultContracts.RequestPermission(),
-            isGranted -> {
-                if (isGranted) {
-                    showCalendarSelectionDialog();
+    private final ActivityResultLauncher<String[]> requestPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestMultiplePermissions(), permissions -> {
+                boolean allGranted = true;
+                for (boolean isGranted : permissions.values()) {
+                    if (!isGranted) {
+                        allGranted = false;
+                        break;
+                    }
                 }
-            }
-    );
+
+                if (allGranted) {
+                    showCalendarSelectionDialog();
+                } else {
+                    Toast.makeText(requireContext(), R.string.onboarding_permission_denied, Toast.LENGTH_SHORT).show();
+                }
+            });
 
     private final SharedPreferences.OnSharedPreferenceChangeListener mSettingsListener = (sharedPreferences, key) -> {
         if (key == null || getActivity() == null) {
@@ -213,10 +222,14 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
             if (targetCalendarPref != null) {
                 updateCalendarPreferenceSummary(targetCalendarPref);
                 targetCalendarPref.setOnPreferenceClickListener(preference -> {
-                    if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED &&
+                            ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
                         showCalendarSelectionDialog();
                     } else {
-                        requestPermissionLauncher.launch(Manifest.permission.WRITE_CALENDAR);
+                        requestPermissionLauncher.launch(new String[]{
+                                Manifest.permission.READ_CALENDAR,
+                                Manifest.permission.WRITE_CALENDAR
+                        });
                     }
                     return true;
                 });
