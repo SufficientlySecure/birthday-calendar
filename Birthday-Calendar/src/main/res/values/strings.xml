@@ -168,6 +168,8 @@
     <string name="premium_feat_titles_summary">Personalize how birthday and anniversary titles appear.</string>
     <string name="premium_feat_filtering_title">Group Filtering</string>
     <string name="premium_feat_filtering_summary">Choose to sync only the contact groups you care about.</string>
+    <string name="premium_feat_any_calendar_title">Sync to any calendar</string>
+    <string name="premium_feat_any_calendar_summary">Choose any calendar on your device to sync birthdays to.</string>
     <string name="premium_feat_jubilee_title">Jubilee Birthdays</string>
     <string name="premium_feat_jubilee_summary">Highlight special occasions like the 18th or 50th birthday.</string>
 

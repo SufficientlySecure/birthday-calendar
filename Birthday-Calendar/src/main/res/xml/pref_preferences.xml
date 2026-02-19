@@ -2,10 +2,9 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.preference.PreferenceCategory android:title="@string/pref_general">
-        <Preference
-            android:key="@string/pref_target_calendar_key"
-            android:title="@string/pref_target_calendar_title" />
+    <androidx.preference.PreferenceCategory
+        android:title="@string/pref_general"
+        android:key="@string/pref_general_category_key">
         <androidx.preference.Preference
             android:key="@string/pref_color_key"
             android:persistent="true"
@@ -41,6 +40,11 @@
             android:selectable="false"
             app:title="@string/premium_feat_filtering_title"
             app:summary="@string/premium_feat_filtering_summary" />
+        <androidx.preference.Preference
+            android:persistent="false"
+            android:selectable="false"
+            app:title="@string/premium_feat_any_calendar_title"
+            app:summary="@string/premium_feat_any_calendar_summary" />
         <androidx.preference.Preference
             android:persistent="false"
             android:selectable="false"
@@ -167,6 +171,9 @@
             android:persistent="true"
             android:summary="@string/pref_name_format_summary"
             android:title="@string/pref_name_format_title" />
+        <Preference
+            android:key="@string/pref_target_calendar_key"
+            android:title="@string/pref_target_calendar_title" />
     </androidx.preference.PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

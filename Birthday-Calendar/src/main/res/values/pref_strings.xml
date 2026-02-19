@@ -37,6 +37,7 @@
     <string name="pref_name_format_key" translatable="false">nameFormat</string>
 
     <!-- Category Keys -->
+    <string name="pref_general_category_key" translatable="false">pref_general_category</string>
     <string name="pref_buy_category_key" translatable="false">pref_buy_category</string>
     <string name="pref_reminders_category_key" translatable="false">pref_reminders_category</string>
     <string name="pref_title_category_key" translatable="false">pref_title_category</string>

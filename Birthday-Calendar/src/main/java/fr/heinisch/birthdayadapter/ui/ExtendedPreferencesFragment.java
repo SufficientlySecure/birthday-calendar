@@ -176,6 +176,10 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                 preferDdSlashMm.setVisible(false);
             }
         }
+        Preference preferTargetCalendar = findPreference(getString(R.string.pref_target_calendar_key));
+        if (preferTargetCalendar != null) {
+            preferTargetCalendar.setVisible(isFullVersion);
+        }
         PreferenceCategory buyCategory = findPreference(getString(R.string.pref_buy_category_key));
         if (buyCategory != null) {
             buyCategory.setVisible(!isFullVersion);
@@ -319,10 +323,15 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     }
 
     private void updateColorPreferenceVisibility() {
-        if (colorPref == null) return;
+        // we want to hide the color picker for external calendars - but as it is the only item
+        // in the general category, we are hiding the complete category
+        PreferenceCategory generalCategory = findPreference(getString(R.string.pref_general_category_key));
+        if (generalCategory == null) {
+            return;
+        }
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
         String calendarIdStr = prefs.getString(getString(R.string.pref_target_calendar_key), null);
-        colorPref.setVisible(calendarIdStr == null);
+        generalCategory.setVisible(calendarIdStr == null);
     }
 
     private void updateCalendarPreferenceSummary(Preference preference) {
@@ -359,7 +368,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     }
 
     private void showCalendarSelectionDialog() {
-        List<CalendarHelper.CalendarItem> calendars = CalendarHelper.getWritableCalendars(requireContext());
+        final List<CalendarHelper.CalendarItem> calendars = CalendarHelper.getWritableCalendars(requireContext());
         List<CharSequence> entries = new ArrayList<>();
         entries.add(getString(R.string.default_calendar)); // Add default option
 
@@ -367,10 +376,29 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
             entries.add(calendar.name + " (" + calendar.accountName + ")");
         }
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
+        String calendarIdStr = prefs.getString(getString(R.string.pref_target_calendar_key), null);
+        int checkedItem = 0; // Default is the first item
+        if (calendarIdStr != null) {
+            try {
+                long selectedId = Long.parseLong(calendarIdStr);
+                for (int i = 0; i < calendars.size(); i++) {
+                    if (calendars.get(i).id == selectedId) {
+                        checkedItem = i + 1; // +1 because "Default" is at index 0
+                        break;
+                    }
+                }
+            } catch (NumberFormatException e) {
+                // Fallback to default if stored value is invalid
+            }
+        }
+
         new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.pref_target_calendar_title)
-                .setItems(entries.toArray(new CharSequence[0]), (dialog, which) -> {
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
+                .setSingleChoiceItems(entries.toArray(new CharSequence[0]), checkedItem, null)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    int selectedPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+
                     String oldCalendarIdStr = prefs.getString(getString(R.string.pref_target_calendar_key), null);
                     long oldCalendarId = -1;
                     if (oldCalendarIdStr != null) {
@@ -383,24 +411,32 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
 
                     SharedPreferences.Editor editor = prefs.edit();
 
-                    if (which == 0) { // Default calendar selected
+                    if (selectedPosition == 0) { // Default calendar selected
                         if (oldCalendarId != -1) { // It was not default before
                             editor.remove(getString(R.string.pref_target_calendar_key));
                             mAccountHelper.triggerFullResync(oldCalendarId);
-                        } else {
-                            // It was already default, do nothing
-                            return;
                         }
                     } else { // An external calendar was selected
-                        long newCalendarId = calendars.get(which - 1).id; // -1 because of the default option
-                        if (newCalendarId == oldCalendarId) {
-                            return; // Same calendar selected, do nothing
+                        // Check if selection is valid
+                        if (selectedPosition > 0 && selectedPosition <= calendars.size()) {
+                            long newCalendarId = calendars.get(selectedPosition - 1).id; // -1 because of the default option
+                            if (newCalendarId != oldCalendarId) {
+                                editor.putString(getString(R.string.pref_target_calendar_key), String.valueOf(newCalendarId));
+                                mAccountHelper.triggerFullResync(oldCalendarId);
+                            }
                         }
-                        editor.putString(getString(R.string.pref_target_calendar_key), String.valueOf(newCalendarId));
-                        mAccountHelper.triggerFullResync(oldCalendarId);
                     }
                     editor.apply();
+
+                    // Update UI
+                    /*
+                    if (targetCalendarPref != null) {
+                        updateCalendarPreferenceSummary(targetCalendarPref);
+                    }
+                    updateColorPreferenceVisibility();
+                    */
                 })
+                .setNegativeButton(android.R.string.cancel, null)
                 .show();
     }
 
