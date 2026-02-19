@@ -101,6 +101,33 @@ public class CalendarHelper {
         return null;
     }
 
+    public static String getCalendarName(Context context, long calendarId) {
+        if (calendarId == -1) {
+            return "unknown calendar";
+        }
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            Log.e(Constants.TAG, "Missing calendar permissions to get calendar name!");
+            return String.valueOf(calendarId); // fallback to id
+        }
+
+        ContentResolver contentResolver = context.getContentResolver();
+        Uri uri = ContentUris.withAppendedId(CalendarContract.Calendars.CONTENT_URI, calendarId);
+
+        String[] projection = new String[]{
+                CalendarContract.Calendars.CALENDAR_DISPLAY_NAME
+        };
+
+        try (Cursor cursor = contentResolver.query(uri, projection, null, null, null)) {
+            if (cursor != null && cursor.moveToFirst()) {
+                String name = cursor.getString(0);
+                if (!TextUtils.isEmpty(name)) {
+                    return name;
+                }
+            }
+        }
+        return String.valueOf(calendarId); // fallback to id
+    }
+
     /**
      * Gets calendar id, when no calendar is present, create one!
      */
@@ -186,7 +213,8 @@ public class CalendarHelper {
     }
 
     public static void clearBirthdayAdapterEvents(Context context, long calendarId) {
-        Log.d(Constants.TAG, "Safely clearing all events from calendar " + calendarId);
+        String calendarName = getCalendarName(context, calendarId);
+        Log.d(Constants.TAG, "Safely clearing all events from calendar: " + calendarName);
 
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             Log.e(Constants.TAG, "Missing calendar permissions to clear events!");
@@ -203,9 +231,9 @@ public class CalendarHelper {
         int deletedRows = contentResolver.delete(eventsUri, selection, selectionArgs);
 
         if (deletedRows > 0) {
-            Log.i(Constants.TAG, "Successfully cleared " + deletedRows + " old events from calendar " + calendarId);
+            Log.i(Constants.TAG, "Successfully cleared " + deletedRows + " old events from calendar: " + calendarName);
         } else {
-            Log.d(Constants.TAG, "Calendar " + calendarId + " was already empty or had no events from this app. No events to clear.");
+            Log.d(Constants.TAG, "Calendar " + calendarName + " was already empty or had no events from this app. No events to clear.");
         }
     }
 

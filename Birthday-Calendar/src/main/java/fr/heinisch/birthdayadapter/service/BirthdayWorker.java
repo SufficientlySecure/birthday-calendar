@@ -101,7 +101,8 @@ public class BirthdayWorker extends Worker {
             if (ACTION_FORCE_RESYNC.equals(action)) {
                 long oldCalendarId = getInputData().getLong(EXTRA_OLD_CALENDAR_ID, -1);
                 if (oldCalendarId != -1) {
-                    Log.i(Constants.TAG, "Cleaning up old calendar with ID: " + oldCalendarId);
+                    String calendarName = CalendarHelper.getCalendarName(context, oldCalendarId);
+                    Log.i(Constants.TAG, "Cleaning up old calendar: " + calendarName);
                     CalendarHelper.clearBirthdayAdapterEvents(context, oldCalendarId);
                 }
             }
@@ -205,10 +206,11 @@ public class BirthdayWorker extends Worker {
         calendarUri = CalendarHelper.getBirthdayAdapterUri(calendarUri, account);
 
         int updatedRows = context.getContentResolver().update(calendarUri, values, null, null);
+        String calendarName = CalendarHelper.getCalendarName(context, calendarId);
         if (updatedRows > 0) {
-            Log.d(Constants.TAG, "Calendar color updated successfully.");
+            Log.d(Constants.TAG, "Calendar color updated successfully for calendar: " + calendarName);
         } else {
-            Log.w(Constants.TAG, "Could not update calendar color.");
+            Log.w(Constants.TAG, "Could not update calendar color for calendar: " + calendarName);
         }
     }
 
@@ -216,7 +218,6 @@ public class BirthdayWorker extends Worker {
         // Use a static lock to prevent concurrent syncs from interfering with each other,
         // which would cause race conditions and duplicate events.
         synchronized (sSyncLock) {
-            Log.d(Constants.TAG, "Starting sync inside lock...");
 
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED ||
                     ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
@@ -254,6 +255,10 @@ public class BirthdayWorker extends Worker {
                 Log.e(Constants.TAG, "Unable to create or find calendar");
                 return;
             }
+
+            String calendarName = CalendarHelper.getCalendarName(context, calendarId);
+            Log.d(Constants.TAG, "Starting sync for calendar: " + calendarName);
+
 
             Account account = CalendarHelper.getAccountForCalendar(context, calendarId);
 
@@ -389,7 +394,7 @@ public class BirthdayWorker extends Worker {
             int deletedEventsCount = 0;
             if (!existingEventUids.isEmpty()) {
                 deletedEventsCount = existingEventUids.size();
-                Log.d(Constants.TAG, "Deleting " + deletedEventsCount + " old events.");
+                Log.d(Constants.TAG, "Deleting " + deletedEventsCount + " old events from calendar: " + calendarName);
                 ArrayList<ContentProviderOperation> deleteOperationList = new ArrayList<>();
                 for (String uid : existingEventUids) {
                     deleteOperationList.add(ContentProviderOperation.newDelete(CalendarHelper.getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI, account))
@@ -400,7 +405,7 @@ public class BirthdayWorker extends Worker {
             }
 
             int checkedEventsCount = totalEventsBeforeSync - deletedEventsCount;
-            Log.i(Constants.TAG, "Sync summary: " + checkedEventsCount + " events confirmed, "
+            Log.i(Constants.TAG, "Sync summary for calendar \"" + calendarName + "\": " + checkedEventsCount + " events confirmed, "
                     + newEventsCount + " new events added, " + deletedEventsCount + " old events removed.");
 
 
@@ -423,6 +428,7 @@ public class BirthdayWorker extends Worker {
 
     private ArrayList<String> getExistingEventUids(Context context, ContentResolver contentResolver, long calendarId, Account account) {
         ArrayList<String> existingUids = new ArrayList<>();
+        String calendarName = CalendarHelper.getCalendarName(context, calendarId);
         Uri uri = CalendarHelper.getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI, account);
 
         try (Cursor cursor = contentResolver.query(uri,
@@ -432,7 +438,7 @@ public class BirthdayWorker extends Worker {
                 null)) {
 
             if (cursor == null) {
-                Log.e(Constants.TAG, "Unable to get existing events! Cursor is null!");
+                Log.e(Constants.TAG, "Unable to get existing events for calendar " + calendarName + "! Cursor is null!");
                 return existingUids;
             }
 
