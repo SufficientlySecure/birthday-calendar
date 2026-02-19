@@ -131,20 +131,21 @@ public class AccountHelper {
      * Enqueues a worker to perform a full resync, which involves deleting the calendar and all events.
      */
     public void triggerFullResync() {
-        triggerFullResync(-1);
+        triggerFullResync(null);
     }
 
     /**
      * Enqueues a worker to perform a full resync, which involves deleting the calendar and all events,
      * and optionally cleaning up events from a previous calendar.
      *
-     * @param oldCalendarId The ID of the old calendar to clean up. Pass -1 if no cleanup is needed.
+     * @param oldCalendarId The ID of the old calendar to clean up. Pass null if no cleanup is needed.
      */
-    public void triggerFullResync(long oldCalendarId) {
-        Log.i(Constants.TAG, "Full resync triggered. Old calendar to clean: " + oldCalendarId);
+    public void triggerFullResync(Long oldCalendarId) {
+        Log.i(Constants.TAG, "Full resync triggered.");
         Data.Builder dataBuilder = new Data.Builder();
         dataBuilder.putString(BirthdayWorker.ACTION, BirthdayWorker.ACTION_FORCE_RESYNC);
-        if (oldCalendarId != -1) {
+        if (oldCalendarId != null) {
+            Log.i(Constants.TAG, "Previously selected calendar to clean: " + CalendarHelper.getCalendarName(mContext, oldCalendarId));
             dataBuilder.putLong(BirthdayWorker.EXTRA_OLD_CALENDAR_ID, oldCalendarId);
         }
         syncWithAction("full_resync", dataBuilder.build());
