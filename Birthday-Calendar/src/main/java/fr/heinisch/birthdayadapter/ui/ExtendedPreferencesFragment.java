@@ -334,6 +334,14 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         generalCategory.setVisible(calendarIdStr == null);
     }
 
+    private CharSequence formatCalendarName(CalendarHelper.CalendarItem calendar) {
+        if (calendar.name != null && calendar.name.equals(calendar.accountName)) {
+            return calendar.name;
+        } else {
+            return calendar.name + " (" + calendar.accountName + ")";
+        }
+    }
+
     private void updateCalendarPreferenceSummary(Preference preference) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
         String calendarIdStr = prefs.getString(preference.getKey(), null);
@@ -344,7 +352,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                 boolean found = false;
                 for (CalendarHelper.CalendarItem calendar : calendars) {
                     if (calendar.id == calendarId) {
-                        preference.setSummary(calendar.name + " (" + calendar.accountName + ")");
+                        preference.setSummary(formatCalendarName(calendar));
                         found = true;
                         break;
                     }
@@ -373,7 +381,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         entries.add(getString(R.string.default_calendar)); // Add default option
 
         for (CalendarHelper.CalendarItem calendar : calendars) {
-            entries.add(calendar.name + " (" + calendar.accountName + ")");
+            entries.add(formatCalendarName(calendar));
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
