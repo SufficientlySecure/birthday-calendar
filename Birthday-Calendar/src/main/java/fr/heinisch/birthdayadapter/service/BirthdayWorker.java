@@ -95,40 +95,48 @@ public class BirthdayWorker extends Worker {
         }
 
         try {
-            AccountHelper accountHelper = new AccountHelper(getApplicationContext());
+            Context context = getApplicationContext();
+
+            // On a calendar change, we must always clean the old calendar, even if the adapter is disabled.
+            if (ACTION_FORCE_RESYNC.equals(action)) {
+                long oldCalendarId = getInputData().getLong(EXTRA_OLD_CALENDAR_ID, -1);
+                if (oldCalendarId != -1) {
+                    Log.i(Constants.TAG, "Cleaning up old calendar with ID: " + oldCalendarId);
+                    CalendarHelper.clearBirthdayAdapterEvents(context, oldCalendarId);
+                }
+            }
+
+            AccountHelper accountHelper = new AccountHelper(context);
             if (!accountHelper.isAccountActivated()) {
                 Log.d(Constants.TAG, "Account not active, skipping work.");
+                // We already cleaned the old calendar, so we can just stop here.
                 return Result.success();
             }
 
             switch (action) {
                 case ACTION_CHANGE_COLOR:
-                    updateCalendarColor(getApplicationContext());
+                    updateCalendarColor(context);
                     break;
                 case ACTION_FORCE_RESYNC:
                     Log.d(Constants.TAG, "Forcing a full resync...");
-                    long oldCalendarId = getInputData().getLong(EXTRA_OLD_CALENDAR_ID, -1);
-                    if (oldCalendarId != -1) {
-                        CalendarHelper.clearBirthdayAdapterEvents(getApplicationContext(), oldCalendarId);
-                    }
-
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    String targetCalendarIdStr = prefs.getString(getApplicationContext().getString(R.string.pref_target_calendar_key), null);
+                    // The old calendar is already cleaned. Now, we just need to clean the new one and sync.
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                    String targetCalendarIdStr = prefs.getString(context.getString(R.string.pref_target_calendar_key), null);
                     if (targetCalendarIdStr != null) {
                         try {
                             long calendarId = Long.parseLong(targetCalendarIdStr);
-                            CalendarHelper.clearBirthdayAdapterEvents(getApplicationContext(), calendarId);
+                            CalendarHelper.clearBirthdayAdapterEvents(context, calendarId);
                         } catch (NumberFormatException e) {
                             Log.e(Constants.TAG, "Invalid target calendar ID during resync, falling back to deleting default calendar.");
-                            CalendarHelper.deleteCalendar(getApplicationContext());
+                            CalendarHelper.deleteCalendar(context);
                         }
                     } else {
-                        CalendarHelper.deleteCalendar(getApplicationContext());
+                        CalendarHelper.deleteCalendar(context);
                     }
-                    performSync(getApplicationContext());
+                    performSync(context);
                     break;
                 case ACTION_SYNC:
-                    performSync(getApplicationContext());
+                    performSync(context);
                     break;
             }
 
