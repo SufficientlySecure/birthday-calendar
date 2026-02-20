@@ -431,10 +431,13 @@ public class BirthdayWorker extends Worker {
         String calendarName = CalendarHelper.getCalendarName(context, calendarId);
         Uri uri = CalendarHelper.getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI, account);
 
+        String selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.CUSTOM_APP_PACKAGE + " = ?";
+        String[] selectionArgs = new String[]{String.valueOf(calendarId), context.getPackageName()};
+
         try (Cursor cursor = contentResolver.query(uri,
                 new String[]{CalendarContract.Events.UID_2445},
-                CalendarContract.Events.CALENDAR_ID + " = ?",
-                new String[]{String.valueOf(calendarId)},
+                selection,
+                selectionArgs,
                 null)) {
 
             if (cursor == null) {
