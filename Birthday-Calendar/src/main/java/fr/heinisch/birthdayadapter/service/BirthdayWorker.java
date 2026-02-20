@@ -261,6 +261,10 @@ public class BirthdayWorker extends Worker {
 
 
             Account account = CalendarHelper.getAccountForCalendar(context, calendarId);
+            if (account == null) {
+                Log.e(Constants.TAG, "Sync failed for calendar '" + calendarName + "' because it is not associated with a syncable account. Please select another calendar in the settings.");
+                return;
+            }
 
             // Get all existing event UIDs
             ArrayList<String> existingEventUids = getExistingEventUids(context, contentResolver, calendarId, account);
