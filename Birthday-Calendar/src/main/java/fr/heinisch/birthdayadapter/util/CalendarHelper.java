@@ -42,14 +42,15 @@ public class CalendarHelper {
             return calendars;
         }
 
+        long birthdayCalendarId = getCalendar(context);
+
         ContentResolver contentResolver = context.getContentResolver();
         Uri uri = CalendarContract.Calendars.CONTENT_URI;
 
         String[] projection = new String[]{
                 CalendarContract.Calendars._ID,
                 CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
-                CalendarContract.Calendars.ACCOUNT_NAME,
-                CalendarContract.Calendars.ACCOUNT_TYPE
+                CalendarContract.Calendars.ACCOUNT_NAME
         };
 
         String selection = CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL + " >= ?";
@@ -61,13 +62,10 @@ public class CalendarHelper {
                     long id = cursor.getLong(0);
                     String name = cursor.getString(1);
                     String accountName = cursor.getString(2);
-                    String accountType = cursor.getString(3);
 
-                    if (accountName.equals(Constants.getAccountName(context)) && accountType.equals(context.getString(R.string.account_type))) {
-                        continue; // Skip the app's own calendar
+                    if (id != birthdayCalendarId) {
+                        calendars.add(new CalendarItem(id, name, accountName));
                     }
-
-                    calendars.add(new CalendarItem(id, name, accountName));
                 }
             }
         }

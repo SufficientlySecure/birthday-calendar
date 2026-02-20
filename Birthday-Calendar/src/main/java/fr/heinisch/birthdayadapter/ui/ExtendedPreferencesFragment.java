@@ -407,19 +407,25 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                     int selectedPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
 
                     String oldCalendarIdStr = prefs.getString(getString(R.string.pref_target_calendar_key), null);
-                    long oldCalendarId = -1;
+                    long oldCalendarId;
+                    boolean wasDefault;
                     if (oldCalendarIdStr != null) {
                         try {
                             oldCalendarId = Long.parseLong(oldCalendarIdStr);
+                            wasDefault = false;
                         } catch (NumberFormatException e) {
-                            // Ignore invalid old id
+                            oldCalendarId = -1; // Treat as invalid
+                            wasDefault = true; // and fallback to default logic
                         }
+                    } else {
+                        oldCalendarId = CalendarHelper.getCalendar(requireContext());
+                        wasDefault = true;
                     }
 
                     SharedPreferences.Editor editor = prefs.edit();
 
                     if (selectedPosition == 0) { // Default calendar selected
-                        if (oldCalendarId != -1) { // It was not default before
+                        if (!wasDefault) { // It was not default before
                             editor.remove(getString(R.string.pref_target_calendar_key));
                             mAccountHelper.triggerFullResync(oldCalendarId);
                         }
