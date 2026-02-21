@@ -1,5 +1,6 @@
 package fr.heinisch.birthdayadapter.service;
 
+import static fr.heinisch.birthdayadapter.util.CalendarHelper.getAppPackageName;
 import static fr.heinisch.birthdayadapter.util.VersionHelper.isFullVersionUnlocked;
 
 import android.Manifest;
@@ -34,6 +35,8 @@ import androidx.work.ForegroundInfo;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -330,11 +333,11 @@ public class BirthdayWorker extends Worker {
                             }
 
                             // Create a stable, unique ID for the event instance based on raw data
-                            String uidCore = eventLookupKey + ":" + eventDateString + ":" + eventType + ":" + displayName.hashCode();
+                            String uidCore = calendarId + ":" + eventLookupKey + ":" + eventDateString + ":" + eventType + ":" + displayName;
                             if (eventType == ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM && eventCustomLabel != null) {
                                 uidCore += ":" + eventCustomLabel;
                             }
-                            String eventUid = uidCore + ":" + iteratedYear;
+                            String eventUid = generateHash(uidCore) + ":" + iteratedYear;
 
                             // If the event already exists, remove it from the list of existing UIDs and continue
                             if (existingEventUids.remove(eventUid)) {
@@ -402,7 +405,7 @@ public class BirthdayWorker extends Worker {
                 ArrayList<ContentProviderOperation> deleteOperationList = new ArrayList<>();
                 for (String uid : existingEventUids) {
                     deleteOperationList.add(ContentProviderOperation.newDelete(CalendarHelper.getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI, account))
-                            .withSelection(CalendarContract.Events.UID_2445 + " = ?", new String[]{uid})
+                            .withSelection(CalendarContract.Events.UID_2445 + " = ? AND " + CalendarContract.Events.CUSTOM_APP_PACKAGE + " = ?", new String[]{uid, getAppPackageName(context, account)})
                             .build());
                 }
                 applyBatchOperations(contentResolver, deleteOperationList);
@@ -436,7 +439,7 @@ public class BirthdayWorker extends Worker {
         Uri uri = CalendarHelper.getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI, account);
 
         String selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.CUSTOM_APP_PACKAGE + " = ?";
-        String[] selectionArgs = new String[]{String.valueOf(calendarId), context.getPackageName()};
+        String[] selectionArgs = new String[]{String.valueOf(calendarId), getAppPackageName(context, account)};
 
         try (Cursor cursor = contentResolver.query(uri,
                 new String[]{CalendarContract.Events.UID_2445},
@@ -841,7 +844,7 @@ public class BirthdayWorker extends Worker {
         builder.withValue(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);
 
         if (lookupKey != null) {
-            builder.withValue(CalendarContract.Events.CUSTOM_APP_PACKAGE, context.getPackageName());
+            builder.withValue(CalendarContract.Events.CUSTOM_APP_PACKAGE, getAppPackageName(context, account));
             Uri contactLookupUri = Uri.withAppendedPath(
                     ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
             builder.withValue(CalendarContract.Events.CUSTOM_APP_URI, contactLookupUri.toString());
@@ -898,6 +901,24 @@ public class BirthdayWorker extends Worker {
             return dateFormat.parse(input);
         } catch (ParseException e) {
             return null;
+        }
+    }
+
+    private String generateHash(String input) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(input.getBytes());
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            // SHA-256 is guaranteed on all Android platforms, so this should never happen.
+            Log.e(Constants.TAG, "Failed to generate hash", e);
+            return input; // Fallback to the original string
         }
     }
 }

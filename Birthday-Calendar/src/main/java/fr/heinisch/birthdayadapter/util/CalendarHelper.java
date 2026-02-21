@@ -221,10 +221,14 @@ public class CalendarHelper {
 
         ContentResolver contentResolver = context.getContentResolver();
         Account account = getAccountForCalendar(context, calendarId);
+        if (account == null) {
+            Log.w(Constants.TAG, "Cannot clear events from calendar '" + calendarName + "' because it has no syncable account.");
+            return;
+        }
         Uri eventsUri = getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI, account);
 
         String selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.CUSTOM_APP_PACKAGE + " = ?";
-        String[] selectionArgs = new String[]{String.valueOf(calendarId), context.getPackageName()};
+        String[] selectionArgs = new String[]{String.valueOf(calendarId), getAppPackageName(context, account)};
 
         int deletedRows = contentResolver.delete(eventsUri, selection, selectionArgs);
 
@@ -281,6 +285,10 @@ public class CalendarHelper {
                     .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, account.type);
         }
         return builder.build();
+    }
+
+    public static String getAppPackageName(Context context, Account account) {
+        return context.getPackageName() + "/" + account.name + "/" + account.type;
     }
 
 }
