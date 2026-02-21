@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2025-2026 Matthias Heinisch <birthdayadapter@heinisch.fr>
  * Copyright (C) 2013 Dominik Schürmann <dominik@dominikschuermann.de>
  *
  * This file is part of Birthday Adapter.

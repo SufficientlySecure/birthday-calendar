@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2025-2026 Matthias Heinisch <birthdayadapter@heinisch.fr>
  * Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
  * Copyright (C) 2010 Sam Steele
  *
