@@ -210,6 +210,35 @@ public class CalendarHelper {
         }
     }
 
+    public static void clearLegacyBirthdayAdapterEvents(Context context, long calendarId) {
+        String calendarName = getCalendarName(context, calendarId);
+        Log.d(Constants.TAG, "Safely clearing all legacy events from calendar: " + calendarName);
+
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            Log.e(Constants.TAG, "Missing calendar permissions to clear legacy events!");
+            return;
+        }
+
+        ContentResolver contentResolver = context.getContentResolver();
+        Account account = getAccountForCalendar(context, calendarId);
+        if (account == null) {
+            Log.w(Constants.TAG, "Cannot clear legacy events from calendar '" + calendarName + "' because it has no syncable account.");
+            return;
+        }
+        Uri eventsUri = getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI, account);
+
+        String selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.CUSTOM_APP_PACKAGE + " = ? AND " + CalendarContract.Events.SYNC_DATA1 + " IS NULL";
+        String[] selectionArgs = new String[]{String.valueOf(calendarId), getAppPackageName(context, account)};
+
+        int deletedRows = contentResolver.delete(eventsUri, selection, selectionArgs);
+
+        if (deletedRows > 0) {
+            Log.i(Constants.TAG, "Successfully cleared " + deletedRows + " legacy events from calendar: " + calendarName);
+        } else {
+            Log.d(Constants.TAG, "Calendar " + calendarName + " had no legacy events from this app. No events to clear.");
+        }
+    }
+
     public static void clearBirthdayAdapterEvents(Context context, long calendarId) {
         String calendarName = getCalendarName(context, calendarId);
         Log.d(Constants.TAG, "Safely clearing all events from calendar: " + calendarName);

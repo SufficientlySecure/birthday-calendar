@@ -28,7 +28,6 @@ import static fr.heinisch.birthdayadapter.util.VersionHelper.isFullVersionUnlock
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
@@ -59,6 +58,7 @@ import java.util.concurrent.ExecutorService;
 import fr.heinisch.birthdayadapter.R;
 import fr.heinisch.birthdayadapter.util.AccountHelper;
 import fr.heinisch.birthdayadapter.util.IPurchaseHelper;
+import fr.heinisch.birthdayadapter.util.MigrationManager;
 import fr.heinisch.birthdayadapter.util.MySharedPreferenceChangeListener;
 import fr.heinisch.birthdayadapter.util.PurchaseHelperFactory;
 import fr.heinisch.birthdayadapter.util.SyncStatusManager;
@@ -79,10 +79,10 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        // Run any necessary migrations before doing anything else
+        MigrationManager.migrate(this);
 
-        // Run migration for existing users
-        handleMigrations(prefs);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         boolean hasSeenOnboarding = prefs.getBoolean("has_seen_onboarding", false);
         boolean ignorePermissionCheck = getIntent().getBooleanExtra(OnboardingActivity.EXTRA_IGNORE_PERMISSION_CHECK_ONCE, false);
@@ -155,35 +155,6 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    private void handleMigrations(SharedPreferences prefs) {
-        try {
-            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            long currentVersionCode;
-            currentVersionCode = pInfo.getLongVersionCode();
-            long lastSeenVersionCode = prefs.getLong("last_seen_version_code", 0);
-            if (currentVersionCode > lastSeenVersionCode) {
-                // This is an update. Check if we need to migrate existing users.
-                if (!prefs.getBoolean("has_seen_onboarding", false) && areAllPermissionsGranted()) {
-                    // This is an existing user with all permissions. Mark onboarding as seen and enable the adapter.
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putBoolean("has_seen_onboarding", true);
-                    editor.putBoolean(getString(R.string.pref_enabled_key), true);
-                    editor.apply();
-
-                    // Activate the account in the background
-                    AccountHelper accountHelper = new AccountHelper(this);
-                    ExecutorService executor = newSingleThreadExecutor();
-                    executor.execute(accountHelper::addAccountAndSync);
-                }
-
-                // Update the last seen version code
-                prefs.edit().putLong("last_seen_version_code", currentVersionCode).apply();
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            // This should not happen
-        }
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -203,15 +174,6 @@ public class BaseActivity extends AppCompatActivity {
             }
         }
         return false;
-    }
-
-    private boolean areAllPermissionsGranted() {
-        for (String permission : REQUIRED_PERMISSIONS) {
-            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                return false;
-            }
-        }
-        return true;
     }
 
     private void launchOnboarding() {
