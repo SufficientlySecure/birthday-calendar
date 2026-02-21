@@ -56,6 +56,7 @@ import fr.heinisch.birthdayadapter.provider.ProviderHelper;
 import fr.heinisch.birthdayadapter.util.AccountHelper;
 import fr.heinisch.birthdayadapter.util.CalendarHelper;
 import fr.heinisch.birthdayadapter.util.Constants;
+import fr.heinisch.birthdayadapter.util.Installation;
 import fr.heinisch.birthdayadapter.util.Log;
 import fr.heinisch.birthdayadapter.util.PreferencesHelper;
 import fr.heinisch.birthdayadapter.util.SyncStatusManager;
@@ -333,7 +334,7 @@ public class BirthdayWorker extends Worker {
                             }
 
                             // Create a stable, unique ID for the event instance based on raw data
-                            String uidCore = calendarId + ":" + eventLookupKey + ":" + eventDateString + ":" + eventType + ":" + displayName;
+                            String uidCore = Installation.id(context) + ":" + calendarId + ":" + eventLookupKey + ":" + eventDateString + ":" + eventType + ":" + displayName;
                             if (eventType == ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM && eventCustomLabel != null) {
                                 uidCore += ":" + eventCustomLabel;
                             }
@@ -405,7 +406,7 @@ public class BirthdayWorker extends Worker {
                 ArrayList<ContentProviderOperation> deleteOperationList = new ArrayList<>();
                 for (String uid : existingEventUids) {
                     deleteOperationList.add(ContentProviderOperation.newDelete(CalendarHelper.getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI, account))
-                            .withSelection(CalendarContract.Events.UID_2445 + " = ? AND " + CalendarContract.Events.CUSTOM_APP_PACKAGE + " = ?", new String[]{uid, getAppPackageName(context, account)})
+                            .withSelection(CalendarContract.Events.UID_2445 + " = ?", new String[]{uid})
                             .build());
                 }
                 applyBatchOperations(contentResolver, deleteOperationList);
@@ -438,8 +439,8 @@ public class BirthdayWorker extends Worker {
         String calendarName = CalendarHelper.getCalendarName(context, calendarId);
         Uri uri = CalendarHelper.getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI, account);
 
-        String selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.CUSTOM_APP_PACKAGE + " = ?";
-        String[] selectionArgs = new String[]{String.valueOf(calendarId), getAppPackageName(context, account)};
+        String selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.CUSTOM_APP_PACKAGE + " = ? AND " + CalendarContract.Events.SYNC_DATA1 + " = ?";
+        String[] selectionArgs = new String[]{String.valueOf(calendarId), getAppPackageName(context, account), Installation.id(context)};
 
         try (Cursor cursor = contentResolver.query(uri,
                 new String[]{CalendarContract.Events.UID_2445},
@@ -845,6 +846,7 @@ public class BirthdayWorker extends Worker {
 
         if (lookupKey != null) {
             builder.withValue(CalendarContract.Events.CUSTOM_APP_PACKAGE, getAppPackageName(context, account));
+            builder.withValue(CalendarContract.Events.SYNC_DATA1, Installation.id(context));
             Uri contactLookupUri = Uri.withAppendedPath(
                     ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
             builder.withValue(CalendarContract.Events.CUSTOM_APP_URI, contactLookupUri.toString());
