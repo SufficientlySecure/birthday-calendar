@@ -48,6 +48,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -270,9 +271,9 @@ public class BirthdayWorker extends Worker {
                 return;
             }
 
-            // Get all existing event UIDs
-            ArrayList<String> existingEventUids = getExistingEventUids(context, contentResolver, calendarId, account);
-            final int totalEventsBeforeSync = existingEventUids.size();
+            // Get all existing events
+            ExistingEvents existingEvents = getExistingEvents(context, contentResolver, calendarId, account);
+            final int totalEventsBeforeSync = existingEvents.uids.size();
             int newEventsCount = 0;
 
             ArrayList<ContentProviderOperation> operationList = new ArrayList<>();
@@ -341,7 +342,7 @@ public class BirthdayWorker extends Worker {
                             String eventUid = generateHash(uidCore) + ":" + iteratedYear;
 
                             // If the event already exists, remove it from the list of existing UIDs and continue
-                            if (existingEventUids.remove(eventUid)) {
+                            if (existingEvents.uids.remove(eventUid)) {
                                 continue;
                             }
 
@@ -352,7 +353,7 @@ public class BirthdayWorker extends Worker {
                                     eventCustomLabelColumn, includeAge, displayName, age, eventLookupKey, firstNameCache, lastNameCache, useLastNameFirst);
 
                             if (title != null && !title.trim().isEmpty()) {
-                                newEventsCount++;
+
                                 // Calculate the exact start time for this specific instance of the event
                                 Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                                 cal.setTime(eventDate);
@@ -362,6 +363,13 @@ public class BirthdayWorker extends Worker {
                                 cal.set(Calendar.SECOND, 0);
                                 cal.set(Calendar.MILLISECOND, 0);
                                 long dtstart = cal.getTimeInMillis();
+
+                                // Check for duplicates from other installations
+                                if (existingEvents.eventExists(title, dtstart)) {
+                                    continue;
+                                }
+
+                                newEventsCount++;
 
                                 boolean shouldAddReminder = hasReminders && reminderEventTypes.contains(String.valueOf(eventType));
 
@@ -398,13 +406,13 @@ public class BirthdayWorker extends Worker {
                 applyBatchOperations(contentResolver, operationList);
             }
 
-            // Delete old events
+            // Delete old events from this installation
             int deletedEventsCount = 0;
-            if (!existingEventUids.isEmpty()) {
-                deletedEventsCount = existingEventUids.size();
+            if (!existingEvents.uids.isEmpty()) {
+                deletedEventsCount = existingEvents.uids.size();
                 Log.d(Constants.TAG, "Deleting " + deletedEventsCount + " old events from calendar: " + calendarName);
                 ArrayList<ContentProviderOperation> deleteOperationList = new ArrayList<>();
-                for (String uid : existingEventUids) {
+                for (String uid : existingEvents.uids) {
                     deleteOperationList.add(ContentProviderOperation.newDelete(CalendarHelper.getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI, account))
                             .withSelection(CalendarContract.Events.UID_2445 + " = ?", new String[]{uid})
                             .build());
@@ -434,31 +442,91 @@ public class BirthdayWorker extends Worker {
         }
     }
 
-    private ArrayList<String> getExistingEventUids(Context context, ContentResolver contentResolver, long calendarId, Account account) {
-        ArrayList<String> existingUids = new ArrayList<>();
+    private static class ExistingEventInfo {
+        final String title;
+        final long dtstart;
+
+        ExistingEventInfo(String title, long dtstart) {
+            this.title = title;
+            this.dtstart = dtstart;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ExistingEventInfo that = (ExistingEventInfo) o;
+            return dtstart == that.dtstart && Objects.equals(title, that.title);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(title, dtstart);
+        }
+    }
+
+    private static class ExistingEvents {
+        final ArrayList<String> uids = new ArrayList<>();
+        private final HashSet<ExistingEventInfo> infos = new HashSet<>();
+
+        void add(String uid, String title, long dtstart) {
+            if (uid != null) {
+                uids.add(uid);
+            }
+            if (title != null) {
+                infos.add(new ExistingEventInfo(title, dtstart));
+            }
+        }
+
+        boolean eventExists(String title, long dtstart) {
+            return infos.contains(new ExistingEventInfo(title, dtstart));
+        }
+    }
+
+
+    private ExistingEvents getExistingEvents(Context context, ContentResolver contentResolver, long calendarId, Account account) {
+        ExistingEvents existingEvents = new ExistingEvents();
         String calendarName = CalendarHelper.getCalendarName(context, calendarId);
         Uri uri = CalendarHelper.getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI, account);
 
-        String selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.CUSTOM_APP_PACKAGE + " = ? AND " + CalendarContract.Events.SYNC_DATA1 + " = ?";
-        String[] selectionArgs = new String[]{String.valueOf(calendarId), getAppPackageName(context, account), Installation.id(context)};
+        // Fetch all events from the target calendar to check for duplicates.
+        // We check for events created by this app instance (via SYNC_DATA1) and remove them if they are outdated.
+        // We also check for events created by other instances (or manually) by comparing title and start date.
+        String selection = CalendarContract.Events.CALENDAR_ID + " = ?";
+        String[] selectionArgs = new String[]{String.valueOf(calendarId)};
 
         try (Cursor cursor = contentResolver.query(uri,
-                new String[]{CalendarContract.Events.UID_2445},
+                new String[]{CalendarContract.Events.UID_2445, CalendarContract.Events.TITLE, CalendarContract.Events.DTSTART, CalendarContract.Events.SYNC_DATA1},
                 selection,
                 selectionArgs,
                 null)) {
 
             if (cursor == null) {
                 Log.e(Constants.TAG, "Unable to get existing events for calendar " + calendarName + "! Cursor is null!");
-                return existingUids;
+                return existingEvents;
             }
 
             int uidColumn = cursor.getColumnIndex(CalendarContract.Events.UID_2445);
+            int titleColumn = cursor.getColumnIndex(CalendarContract.Events.TITLE);
+            int dtstartColumn = cursor.getColumnIndex(CalendarContract.Events.DTSTART);
+            int syncData1Column = cursor.getColumnIndex(CalendarContract.Events.SYNC_DATA1);
+            String installationId = Installation.id(context);
+
             while (cursor.moveToNext()) {
-                existingUids.add(cursor.getString(uidColumn));
+                String uid = cursor.getString(uidColumn);
+                String title = cursor.getString(titleColumn);
+                long dtstart = cursor.getLong(dtstartColumn);
+                String syncData1 = cursor.getString(syncData1Column);
+
+                // Only UIDs from the current installation are added to the list for potential deletion.
+                if (installationId.equals(syncData1)) {
+                    existingEvents.add(uid, title, dtstart);
+                } else {
+                    existingEvents.add(null, title, dtstart);
+                }
             }
         }
-        return existingUids;
+        return existingEvents;
     }
 
     private Map<String, List<String>> getRawContactGroupTitles(ContentResolver contentResolver) {
