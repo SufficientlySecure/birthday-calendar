@@ -242,34 +242,63 @@ public class BirthdayWorker extends Worker {
             }
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-            String targetCalendarIdStr = prefs.getString(context.getString(R.string.pref_target_calendar_key), null);
+            String prefKey = context.getString(R.string.pref_target_calendar_key);
+            String targetCalendarIdStr = prefs.getString(prefKey, null);
 
-            long calendarId;
+            long calendarId = -1;
             if (targetCalendarIdStr != null) {
                 try {
                     calendarId = Long.parseLong(targetCalendarIdStr);
                 } catch (NumberFormatException e) {
-                    Log.e(Constants.TAG, "Invalid target calendar ID, falling back to default calendar.");
-                    calendarId = CalendarHelper.getCalendar(context);
+                    Log.w(Constants.TAG, "Invalid target calendar ID format in preferences: " + targetCalendarIdStr);
+                    // ID is -1, will fall back to default below
                 }
-            } else {
+            }
+
+            Account account = null;
+            if (calendarId != -1) {
+                account = CalendarHelper.getAccountForCalendar(context, calendarId);
+            }
+
+            // Fallback logic if no valid calendar is found
+            if (account == null) {
+                if (calendarId != -1) {
+                    // This means the previously selected calendar is no longer valid.
+                    Log.w(Constants.TAG, "Previously selected calendar (ID: " + calendarId + ") is no longer valid or has been deleted. Falling back to the default app calendar.");
+                } else if (targetCalendarIdStr != null) {
+                    // ID was invalid format
+                    Log.w(Constants.TAG, "Invalid calendar ID in preferences. Falling back to default app calendar.");
+                } else {
+                    // No calendar was selected yet
+                    Log.i(Constants.TAG, "No calendar selected. Using default app calendar.");
+                }
+
+
+                // Get the default calendar, which will create it if necessary.
                 calendarId = CalendarHelper.getCalendar(context);
+
+                if (calendarId == -1) {
+                    Log.e(Constants.TAG, "Unable to create or find a fallback calendar. Aborting sync.");
+                    return;
+                }
+
+                // Re-check account for the new/default calendar
+                account = CalendarHelper.getAccountForCalendar(context, calendarId);
+
+                if (account == null) {
+                    String fallbackCalendarName = CalendarHelper.getCalendarName(context, calendarId);
+                    Log.e(Constants.TAG, "Fatal: Failed to get a syncable account even for the default calendar '" + fallbackCalendarName + "'. Aborting sync.");
+                    return;
+                }
+
+                // Save the valid calendar ID for future syncs.
+                prefs.edit().putString(prefKey, String.valueOf(calendarId)).apply();
+                Log.i(Constants.TAG, "Switched to default calendar (ID: " + calendarId + ") and saved it to preferences.");
             }
 
-            if (calendarId == -1) {
-                Log.e(Constants.TAG, "Unable to create or find calendar");
-                return;
-            }
-
+            // At this point, calendarId and account are guaranteed to be valid.
             String calendarName = CalendarHelper.getCalendarName(context, calendarId);
             Log.d(Constants.TAG, "Starting sync for calendar: " + calendarName);
-
-
-            Account account = CalendarHelper.getAccountForCalendar(context, calendarId);
-            if (account == null) {
-                Log.e(Constants.TAG, "Sync failed for calendar '" + calendarName + "' because it is not associated with a syncable account. Please select another calendar in the settings.");
-                return;
-            }
 
             // Get all existing events
             ExistingEvents existingEvents = getExistingEvents(context, contentResolver, calendarId, account);
