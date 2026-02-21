@@ -238,6 +238,14 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                 });
             }
 
+            Preference resetCalendarPref = findPreference(getString(R.string.pref_reset_calendar_key));
+            if (resetCalendarPref != null) {
+                resetCalendarPref.setOnPreferenceClickListener(preference -> {
+                    showResetCalendarDialog();
+                    return true;
+                });
+            }
+
             remindersCategory = findPreference(getString(R.string.pref_reminders_category_key));
             if (remindersCategory != null) {
                 MultiSelectListPreference reminderTypesPref = findPreference(getString(R.string.pref_reminder_event_types));
@@ -319,6 +327,26 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
 
         updateColorPreferenceVisibility();
         updatePermissionMonitoringPrefVisibility();
+    }
+
+    private void showResetCalendarDialog() {
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.pref_reset_calendar_dialog_title)
+                .setMessage(R.string.pref_reset_calendar_dialog_message)
+                .setPositiveButton(R.string.delete, (dialog, which) -> {
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
+                    String calendarIdStr = prefs.getString(getString(R.string.pref_target_calendar_key), null);
+                    long calendarId;
+                    if (calendarIdStr != null) {
+                        calendarId = Long.parseLong(calendarIdStr);
+                    } else {
+                        calendarId = CalendarHelper.getCalendar(requireContext());
+                    }
+                    CalendarHelper.resetAllBirthdayAdapterEventsInCalendar(requireContext(), calendarId);
+                    Toast.makeText(requireContext(), R.string.pref_reset_calendar_title, Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
     }
 
     private void updateColorPreferenceVisibility() {

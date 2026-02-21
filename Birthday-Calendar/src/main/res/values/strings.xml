@@ -115,6 +115,10 @@
     <string name="pref_reminder_event_types_custom">Custom events</string>
     <string name="pref_disable_permission_monitoring_title">Disable permission monitoring</string>
     <string name="pref_disable_permission_monitoring_summary">Prevent the app from losing its permissions when not used for a long time. This is useful if you only use the background sync.</string>
+    <string name="pref_reset_calendar_title">Reset Calendar</string>
+    <string name="pref_reset_calendar_summary">Deletes all birthdays created by any installation of Birthday Adapter from the calendar. This also affects entries from other app installations that are normally not touched.</string>
+    <string name="pref_reset_calendar_dialog_title">Reset calendar</string>
+    <string name="pref_reset_calendar_dialog_message">This will delete ALL birthdays created by ANY installation of Birthday Adapter from your calendar. Are you sure?</string>
 
 
     <!-- Sync Status -->

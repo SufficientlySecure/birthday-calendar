@@ -239,6 +239,36 @@ public class CalendarHelper {
         }
     }
 
+    public static void resetAllBirthdayAdapterEventsInCalendar(Context context, long calendarId) {
+        String calendarName = getCalendarName(context, calendarId);
+        Log.d(Constants.TAG, "Force clearing all events from calendar: " + calendarName);
+
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            Log.e(Constants.TAG, "Missing calendar permissions to clear events!");
+            return;
+        }
+
+        ContentResolver contentResolver = context.getContentResolver();
+        Account account = getAccountForCalendar(context, calendarId);
+        if (account == null) {
+            Log.w(Constants.TAG, "Cannot clear events from calendar '" + calendarName + "' because it has no syncable account.");
+            return;
+        }
+        Uri eventsUri = getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI, account);
+
+        String selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.CUSTOM_APP_PACKAGE + " LIKE ?";
+        String[] selectionArgs = new String[]{String.valueOf(calendarId), context.getPackageName() + "%"};
+
+        int deletedRows = contentResolver.delete(eventsUri, selection, selectionArgs);
+
+        if (deletedRows > 0) {
+            Log.i(Constants.TAG, "Successfully force cleared " + deletedRows + " events from calendar: " + calendarName);
+        } else {
+            Log.d(Constants.TAG, "Calendar " + calendarName + " had no events from this app. No events to clear.");
+        }
+    }
+
+
     /**
      * Deletes all events from the birthday calendar.
      */
