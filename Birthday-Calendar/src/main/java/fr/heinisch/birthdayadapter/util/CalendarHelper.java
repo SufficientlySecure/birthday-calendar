@@ -306,7 +306,8 @@ public class CalendarHelper {
         Uri eventsUri = getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI, account);
 
         String selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.CUSTOM_APP_PACKAGE + " LIKE ?";
-        String[] selectionArgs = new String[]{String.valueOf(calendarId), context.getPackageName() + "%"};
+        // Use a fixed package name for all variants to ensure we can clean up events from all app versions.
+        String[] selectionArgs = new String[]{String.valueOf(calendarId), "fr.heinisch.birthdayadapter" + "%"};
 
         int deletedRows = contentResolver.delete(eventsUri, selection, selectionArgs);
 
@@ -366,8 +367,20 @@ public class CalendarHelper {
         return builder.build();
     }
 
+    /**
+     * Builds the package name string used to identify events created by this app.
+     * <p>
+     * NOTE: To ensure that events can be correctly identified across multiple devices and
+     * different app versions (free/full), a hardcoded package name is used.
+     * This prevents issues where one version of the app does not recognize events created by another.
+     *
+     * @param context The application context. Not used anymore but kept for compatibility.
+     * @param account The account associated with the calendar.
+     * @return A unique identifier string for the app's events.
+     */
     public static String getAppPackageName(Context context, Account account) {
-        return context.getPackageName() + "/" + account.name + "/" + account.type;
+        // Use a fixed package name for all variants to ensure interoperability
+        return "fr.heinisch.birthdayadapter" + "/" + account.name + "/" + account.type;
     }
 
 }
