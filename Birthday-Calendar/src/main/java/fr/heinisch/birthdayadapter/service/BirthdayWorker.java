@@ -72,6 +72,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import fr.heinisch.birthdayadapter.R;
 import fr.heinisch.birthdayadapter.provider.ProviderHelper;
@@ -95,6 +97,9 @@ public class BirthdayWorker extends Worker {
 
     private static final int NOTIFICATION_ID = 3105;
     private static final String NOTIFICATION_CHANNEL_ID = "birthday_sync_channel";
+
+    // Using a regex to extract the UID from the description field, format is [BA:uid:the_uid]
+    private static final Pattern BA_UID_PATTERN = Pattern.compile("\\[BA:uid:([a-zA-Z0-9:]+)]");
 
     private HashSet<Integer> jubileeYears;
 
@@ -227,11 +232,9 @@ public class BirthdayWorker extends Worker {
         values.put(CalendarContract.Calendars.CALENDAR_COLOR, color);
 
         Uri calendarUri = ContentUris.withAppendedId(CalendarContract.Calendars.CONTENT_URI, calendarId);
-
         Account account = CalendarHelper.getAccountForCalendar(context, calendarId);
-        calendarUri = CalendarHelper.getBirthdayAdapterUri(calendarUri, account);
 
-        int updatedRows = context.getContentResolver().update(calendarUri, values, null, null);
+        int updatedRows = context.getContentResolver().update(CalendarHelper.getBirthdayAdapterUri(calendarUri, account, true), values, null, null);
         String calendarName = CalendarHelper.getCalendarName(context, calendarId);
         if (updatedRows > 0) {
             Log.d(Constants.TAG, "Calendar color updated successfully for calendar: " + calendarName);
@@ -291,7 +294,7 @@ public class BirthdayWorker extends Worker {
                     Log.w(Constants.TAG, "Invalid calendar ID in preferences. Falling back to default app calendar.");
                 } else {
                     // No calendar was selected yet
-                    Log.i(Constants.TAG, "No calendar selected. Using default app calendar.");
+                    Log.d(Constants.TAG, "Using default app calendar.");
                 }
 
 
@@ -312,17 +315,15 @@ public class BirthdayWorker extends Worker {
                     return;
                 }
 
-                // Save the valid calendar ID for future syncs.
-                prefs.edit().putString(prefKey, String.valueOf(calendarId)).apply();
-                Log.i(Constants.TAG, "Switched to default calendar (ID: " + calendarId + ") and saved it to preferences.");
             }
 
             // At this point, calendarId and account are guaranteed to be valid.
+            final boolean isOwnCalendar = CalendarHelper.isBirthdayAdapterAccount(context, account);
             String calendarName = CalendarHelper.getCalendarName(context, calendarId);
             Log.d(Constants.TAG, "Starting sync for calendar: " + calendarName);
 
             // Get all existing events
-            ExistingEvents existingEvents = getExistingEvents(context, contentResolver, calendarId, account);
+            ExistingEvents existingEvents = getExistingEvents(context, contentResolver, calendarId, account, isOwnCalendar);
             final int totalEventsBeforeSync = existingEvents.uids.size();
             int newEventsCount = 0;
 
@@ -424,12 +425,12 @@ public class BirthdayWorker extends Worker {
                                 boolean shouldAddReminder = hasReminders && reminderEventTypes.contains(String.valueOf(eventType));
 
                                 Log.v(Constants.TAG, "Adding event: " + title);
-                                operationList.add(insertEvent(context, calendarId, dtstart, title, eventLookupKey, eventUid, shouldAddReminder, account));
+                                operationList.add(insertEvent(context, calendarId, dtstart, title, eventLookupKey, eventUid, shouldAddReminder, account, isOwnCalendar));
 
                                 if (shouldAddReminder) {
                                     for (int minute : reminderMinutes) {
                                         ContentProviderOperation.Builder builder = ContentProviderOperation
-                                                .newInsert(CalendarHelper.getBirthdayAdapterUri(CalendarContract.Reminders.CONTENT_URI, account));
+                                                .newInsert(CalendarHelper.getRemindersUri(account, isOwnCalendar));
 
                                         builder.withValueBackReference(CalendarContract.Reminders.EVENT_ID, backRef);
                                         builder.withValue(CalendarContract.Reminders.MINUTES, minute);
@@ -462,10 +463,16 @@ public class BirthdayWorker extends Worker {
                 deletedEventsCount = existingEvents.uids.size();
                 Log.d(Constants.TAG, "Deleting " + deletedEventsCount + " old events from calendar: " + calendarName);
                 ArrayList<ContentProviderOperation> deleteOperationList = new ArrayList<>();
+                Uri deleteUri = CalendarHelper.getEventsUri(account, isOwnCalendar);
+
                 for (String uid : existingEvents.uids) {
-                    deleteOperationList.add(ContentProviderOperation.newDelete(CalendarHelper.getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI, account))
-                            .withSelection(CalendarContract.Events.UID_2445 + " = ?", new String[]{uid})
-                            .build());
+                    ContentProviderOperation.Builder builder = ContentProviderOperation.newDelete(deleteUri);
+                    if (isOwnCalendar) {
+                        builder.withSelection(CalendarContract.Events.UID_2445 + " = ?", new String[]{uid});
+                    } else {
+                        builder.withSelection(CalendarContract.Events.DESCRIPTION + " LIKE ?", new String[]{"%[BA:uid:" + uid + "]%"});
+                    }
+                    deleteOperationList.add(builder.build());
                 }
                 applyBatchOperations(contentResolver, deleteOperationList);
             }
@@ -539,19 +546,23 @@ public class BirthdayWorker extends Worker {
     }
 
 
-    private ExistingEvents getExistingEvents(Context context, ContentResolver contentResolver, long calendarId, Account account) {
+    private ExistingEvents getExistingEvents(Context context, ContentResolver contentResolver, long calendarId, Account account, boolean isOwnCalendar) {
         ExistingEvents existingEvents = new ExistingEvents();
         String calendarName = CalendarHelper.getCalendarName(context, calendarId);
-        Uri uri = CalendarHelper.getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI, account);
+        Uri uri = CalendarHelper.getEventsUri(account, isOwnCalendar);
 
-        // Fetch all events from the target calendar to check for duplicates.
-        // We check for events created by this app instance (via SYNC_DATA1) and remove them if they are outdated.
-        // We also check for events created by other instances (or manually) by comparing title and start date.
+        String[] projection;
+        if (isOwnCalendar) {
+            projection = new String[]{CalendarContract.Events.UID_2445, CalendarContract.Events.TITLE, CalendarContract.Events.DTSTART, CalendarContract.Events.SYNC_DATA1};
+        } else {
+            projection = new String[]{CalendarContract.Events.UID_2445, CalendarContract.Events.TITLE, CalendarContract.Events.DTSTART, CalendarContract.Events.DESCRIPTION};
+        }
+
         String selection = CalendarContract.Events.CALENDAR_ID + " = ?";
         String[] selectionArgs = new String[]{String.valueOf(calendarId)};
 
         try (Cursor cursor = contentResolver.query(uri,
-                new String[]{CalendarContract.Events.UID_2445, CalendarContract.Events.TITLE, CalendarContract.Events.DTSTART, CalendarContract.Events.SYNC_DATA1},
+                projection,
                 selection,
                 selectionArgs,
                 null)) {
@@ -564,19 +575,39 @@ public class BirthdayWorker extends Worker {
             int uidColumn = cursor.getColumnIndex(CalendarContract.Events.UID_2445);
             int titleColumn = cursor.getColumnIndex(CalendarContract.Events.TITLE);
             int dtstartColumn = cursor.getColumnIndex(CalendarContract.Events.DTSTART);
-            int syncData1Column = cursor.getColumnIndex(CalendarContract.Events.SYNC_DATA1);
             String installationId = Installation.id(context);
 
-            while (cursor.moveToNext()) {
-                String uid = cursor.getString(uidColumn);
-                String title = cursor.getString(titleColumn);
-                long dtstart = cursor.getLong(dtstartColumn);
-                String syncData1 = cursor.getString(syncData1Column);
+            if (isOwnCalendar) {
+                int syncData1Column = cursor.getColumnIndex(CalendarContract.Events.SYNC_DATA1);
+                while (cursor.moveToNext()) {
+                    String uid = cursor.getString(uidColumn);
+                    String title = cursor.getString(titleColumn);
+                    long dtstart = cursor.getLong(dtstartColumn);
+                    String syncData1 = cursor.getString(syncData1Column);
 
-                // Only UIDs from the current installation are added to the list for potential deletion.
-                if (installationId.equals(syncData1)) {
-                    existingEvents.add(uid, title, dtstart);
-                } else {
+                    if (installationId.equals(syncData1)) {
+                        existingEvents.add(uid, title, dtstart);
+                    } else {
+                        existingEvents.add(null, title, dtstart);
+                    }
+                }
+            } else {
+                int descriptionColumn = cursor.getColumnIndex(CalendarContract.Events.DESCRIPTION);
+                while (cursor.moveToNext()) {
+                    String uid = cursor.getString(uidColumn);
+                    String title = cursor.getString(titleColumn);
+                    long dtstart = cursor.getLong(dtstartColumn);
+                    String description = cursor.getString(descriptionColumn);
+
+                    if (description != null) {
+                        Matcher matcher = BA_UID_PATTERN.matcher(description);
+                        if (matcher.find()) {
+                            String extractedUid = matcher.group(1);
+                            if (extractedUid != null && extractedUid.startsWith(installationId)) {
+                                existingEvents.add(uid, title, dtstart);
+                            }
+                        }
+                    }
                     existingEvents.add(null, title, dtstart);
                 }
             }
@@ -942,14 +973,14 @@ public class BirthdayWorker extends Worker {
     }
 
     private ContentProviderOperation insertEvent(Context context, long calendarId,
-                                                 long dtstart, String title, String lookupKey, String eventUid, boolean hasReminders, Account account)
+                                                 long dtstart, String title, String lookupKey, String eventUid, boolean hasReminders, Account account, boolean isOwnCalendar)
             throws OperationCanceledException {
         if (Thread.currentThread().isInterrupted()) {
             throw new OperationCanceledException();
         }
 
         ContentProviderOperation.Builder builder =
-                ContentProviderOperation.newInsert(CalendarHelper.getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI, account));
+                ContentProviderOperation.newInsert(CalendarHelper.getEventsUri(account, isOwnCalendar));
 
         long dtend = dtstart + DateUtils.DAY_IN_MILLIS;
 
@@ -967,12 +998,17 @@ public class BirthdayWorker extends Worker {
 
         builder.withValue(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);
 
-        if (lookupKey != null) {
-            builder.withValue(CalendarContract.Events.CUSTOM_APP_PACKAGE, getAppPackageName(context, account));
-            builder.withValue(CalendarContract.Events.SYNC_DATA1, Installation.id(context));
-            Uri contactLookupUri = Uri.withAppendedPath(
-                    ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
-            builder.withValue(CalendarContract.Events.CUSTOM_APP_URI, contactLookupUri.toString());
+        if (isOwnCalendar) {
+            if (lookupKey != null) {
+                builder.withValue(CalendarContract.Events.CUSTOM_APP_PACKAGE, getAppPackageName(context, account));
+                builder.withValue(CalendarContract.Events.SYNC_DATA1, Installation.id(context));
+                Uri contactLookupUri = Uri.withAppendedPath(
+                        ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
+                builder.withValue(CalendarContract.Events.CUSTOM_APP_URI, contactLookupUri.toString());
+            }
+        } else {
+            // For external calendars, we add a UID to the description field to identify our events
+            builder.withValue(CalendarContract.Events.DESCRIPTION, "[BA:uid:" + eventUid + "]");
         }
 
         return builder.build();

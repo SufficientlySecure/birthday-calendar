@@ -150,8 +150,6 @@ public class CalendarHelper {
      * Gets calendar id, when no calendar is present, create one!
      */
     public static long getCalendar(Context context) {
-        Log.d(Constants.TAG, "getCalendar Method...");
-
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             Log.e(Constants.TAG, "Missing calendar permissions to get or create calendar!");
@@ -161,7 +159,7 @@ public class CalendarHelper {
         ContentResolver contentResolver = context.getContentResolver();
 
         // Find the calendar if we've got one
-        Uri calenderUri = getBirthdayAdapterUri(context, CalendarContract.Calendars.CONTENT_URI);
+        Uri calenderUri = getBirthdayAdapterUri(context, CalendarContract.Calendars.CONTENT_URI, true);
 
         // be sure to select the birthday calendar only (additionally to appendQueries in
         // getBirthdayAdapterUri for Android < 4)
@@ -219,7 +217,7 @@ public class CalendarHelper {
         }
 
         ContentResolver contentResolver = context.getContentResolver();
-        Uri calendarUri = getBirthdayAdapterUri(context, CalendarContract.Calendars.CONTENT_URI);
+        Uri calendarUri = getBirthdayAdapterUri(context, CalendarContract.Calendars.CONTENT_URI, true);
 
         int deletedRows = contentResolver.delete(calendarUri, null, null);
 
@@ -245,10 +243,18 @@ public class CalendarHelper {
             Log.w(Constants.TAG, "Cannot clear legacy events from calendar '" + calendarName + "' because it has no syncable account.");
             return;
         }
-        Uri eventsUri = getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI, account);
+        boolean isOwnCalendar = isBirthdayAdapterAccount(context, account);
+        Uri eventsUri = getEventsUri(account, isOwnCalendar);
 
-        String selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.CUSTOM_APP_PACKAGE + " = ? AND " + CalendarContract.Events.SYNC_DATA1 + " IS NULL";
-        String[] selectionArgs = new String[]{String.valueOf(calendarId), getAppPackageName(context, account)};
+        String selection;
+        String[] selectionArgs;
+        if (isOwnCalendar) {
+            selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.CUSTOM_APP_PACKAGE + " = ? AND " + CalendarContract.Events.SYNC_DATA1 + " IS NULL";
+            selectionArgs = new String[]{String.valueOf(calendarId), getAppPackageName(context, account)};
+        } else {
+            selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.DESCRIPTION + " LIKE ?";
+            selectionArgs = new String[]{String.valueOf(calendarId), "%[BA:uid:%"};
+        }
 
         int deletedRows = contentResolver.delete(eventsUri, selection, selectionArgs);
 
@@ -274,10 +280,18 @@ public class CalendarHelper {
             Log.w(Constants.TAG, "Cannot clear events from calendar '" + calendarName + "' because it has no syncable account.");
             return;
         }
-        Uri eventsUri = getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI, account);
+        boolean isOwnCalendar = isBirthdayAdapterAccount(context, account);
+        Uri eventsUri = getEventsUri(account, isOwnCalendar);
 
-        String selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.CUSTOM_APP_PACKAGE + " = ?";
-        String[] selectionArgs = new String[]{String.valueOf(calendarId), getAppPackageName(context, account)};
+        String selection;
+        String[] selectionArgs;
+        if (isOwnCalendar) {
+            selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.CUSTOM_APP_PACKAGE + " = ?";
+            selectionArgs = new String[]{String.valueOf(calendarId), getAppPackageName(context, account)};
+        } else {
+            selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.DESCRIPTION + " LIKE ?";
+            selectionArgs = new String[]{String.valueOf(calendarId), "%[BA:uid:%"};
+        }
 
         int deletedRows = contentResolver.delete(eventsUri, selection, selectionArgs);
 
@@ -303,11 +317,19 @@ public class CalendarHelper {
             Log.w(Constants.TAG, "Cannot clear events from calendar '" + calendarName + "' because it has no syncable account.");
             return;
         }
-        Uri eventsUri = getBirthdayAdapterUri(CalendarContract.Events.CONTENT_URI, account);
+        boolean isOwnCalendar = isBirthdayAdapterAccount(context, account);
+        Uri eventsUri = getEventsUri(account, isOwnCalendar);
 
-        String selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.CUSTOM_APP_PACKAGE + " LIKE ?";
-        // Use a fixed package name for all variants to ensure we can clean up events from all app versions.
-        String[] selectionArgs = new String[]{String.valueOf(calendarId), "fr.heinisch.birthdayadapter" + "%"};
+        String selection;
+        String[] selectionArgs;
+        if (isOwnCalendar) {
+            selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.CUSTOM_APP_PACKAGE + " LIKE ?";
+            // Use a fixed package name for all variants to ensure we can clean up events from all app versions.
+            selectionArgs = new String[]{String.valueOf(calendarId), "fr.heinisch.birthdayadapter" + "%"};
+        } else {
+            selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.DESCRIPTION + " LIKE ?";
+            selectionArgs = new String[]{String.valueOf(calendarId), "%[BA:uid:%"};
+        }
 
         int deletedRows = contentResolver.delete(eventsUri, selection, selectionArgs);
 
@@ -331,7 +353,7 @@ public class CalendarHelper {
         }
 
         ContentResolver contentResolver = context.getContentResolver();
-        Uri eventsUri = getBirthdayAdapterUri(context, CalendarContract.Events.CONTENT_URI);
+        Uri eventsUri = getBirthdayAdapterUri(context, CalendarContract.Events.CONTENT_URI, true);
 
         // A selection is required when using CALLER_IS_SYNCADAPTER=true
         int deletedRows = contentResolver.delete(eventsUri, "1", null);
@@ -343,12 +365,37 @@ public class CalendarHelper {
         }
     }
 
+    public static Uri getEventsUri(Account account, boolean isOwnCalendar) {
+        Uri.Builder builder = CalendarContract.Events.CONTENT_URI.buildUpon();
+        if (isOwnCalendar) {
+            builder.appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true");
+            if (account != null) {
+                builder.appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, account.name)
+                        .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, account.type);
+            }
+        }
+        return builder.build();
+    }
+
+    public static Uri getRemindersUri(Account account, boolean isOwnCalendar) {
+        Uri.Builder builder = CalendarContract.Reminders.CONTENT_URI.buildUpon();
+        if (isOwnCalendar) {
+            builder.appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true");
+            if (account != null) {
+                builder.appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, account.name)
+                        .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, account.type);
+            }
+        }
+        return builder.build();
+    }
+
+
     /**
      * Builds URI for Birthday Adapter based on account. Ensures that only the calendar of Birthday
      * Adapter is chosen.
      */
-    public static Uri getBirthdayAdapterUri(Context context, Uri uri) {
-        return getBirthdayAdapterUri(uri, new Account(Constants.getAccountName(context), context.getString(R.string.account_type)));
+    public static Uri getBirthdayAdapterUri(Context context, Uri uri, boolean asSyncAdapter) {
+        return getBirthdayAdapterUri(uri, new Account(Constants.getAccountName(context), context.getString(R.string.account_type)), asSyncAdapter);
     }
 
     /**
@@ -358,13 +405,25 @@ public class CalendarHelper {
      * @param account The account to use for the operation. Can be null.
      * @return The URI with sync adapter parameters.
      */
-    public static Uri getBirthdayAdapterUri(Uri uri, Account account) {
-        Uri.Builder builder = uri.buildUpon().appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true");
+    public static Uri getBirthdayAdapterUri(Uri uri, Account account, boolean asSyncAdapter) {
+        Uri.Builder builder = uri.buildUpon();
+        if (asSyncAdapter) {
+            builder.appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true");
+        }
         if (account != null) {
             builder.appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, account.name)
                     .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, account.type);
         }
         return builder.build();
+    }
+
+    public static boolean isBirthdayAdapterAccount(Context context, Account account) {
+        if (account == null) {
+            return false;
+        }
+        String expectedAccountName = Constants.getAccountName(context);
+        String expectedAccountType = context.getString(R.string.account_type);
+        return expectedAccountName.equals(account.name) && expectedAccountType.equals(account.type);
     }
 
     /**
