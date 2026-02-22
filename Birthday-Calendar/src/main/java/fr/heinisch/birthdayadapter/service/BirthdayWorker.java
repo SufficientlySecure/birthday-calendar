@@ -40,6 +40,7 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.OperationCanceledException;
 import android.provider.BaseColumns;
 import android.provider.CalendarContract;
@@ -467,6 +468,11 @@ public class BirthdayWorker extends Worker {
                             .build());
                 }
                 applyBatchOperations(contentResolver, deleteOperationList);
+            }
+
+            if (newEventsCount > 0 || deletedEventsCount > 0) {
+                Log.d(Constants.TAG, "Requesting sync for calendar: " + calendarName);
+                ContentResolver.requestSync(account, CalendarContract.AUTHORITY, new Bundle());
             }
 
             int checkedEventsCount = totalEventsBeforeSync - deletedEventsCount;
