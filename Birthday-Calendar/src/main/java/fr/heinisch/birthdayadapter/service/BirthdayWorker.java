@@ -151,20 +151,30 @@ public class BirthdayWorker extends Worker {
                     break;
                 case ACTION_FORCE_RESYNC:
                     Log.d(Constants.TAG, "Forcing a full resync...");
-                    // The old calendar is already cleaned. Now, we just need to clean the new one and sync.
+                    // Clean the target calendar and then sync.
                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
                     String targetCalendarIdStr = prefs.getString(context.getString(R.string.pref_target_calendar_key), null);
-                    if (targetCalendarIdStr != null) {
-                        try {
-                            long calendarId = Long.parseLong(targetCalendarIdStr);
-                            CalendarHelper.clearBirthdayAdapterEvents(context, calendarId);
-                        } catch (NumberFormatException e) {
-                            Log.e(Constants.TAG, "Invalid target calendar ID during resync, falling back to deleting default calendar.");
-                            CalendarHelper.deleteCalendar(context);
+                    long calendarIdToClear;
+                    try {
+                        if (targetCalendarIdStr != null) {
+                            calendarIdToClear = Long.parseLong(targetCalendarIdStr);
+                        } else {
+                            // No specific calendar selected, so use the default one.
+                            calendarIdToClear = CalendarHelper.getCalendar(context);
                         }
-                    } else {
-                        CalendarHelper.deleteCalendar(context);
+                    } catch (NumberFormatException e) {
+                        Log.w(Constants.TAG, "Invalid target calendar ID during resync, falling back to default calendar.");
+                        // Fallback to the default calendar if the stored ID is invalid.
+                        calendarIdToClear = CalendarHelper.getCalendar(context);
                     }
+
+                    if (calendarIdToClear != -1) {
+                        Log.d(Constants.TAG, "Cleaning new target calendar (ID: " + calendarIdToClear + ")");
+                        CalendarHelper.clearBirthdayAdapterEvents(context, calendarIdToClear);
+                    } else {
+                        Log.e(Constants.TAG, "Could not determine calendar to clear during resync.");
+                    }
+
                     performSync(context);
                     break;
                 case ACTION_SYNC:
