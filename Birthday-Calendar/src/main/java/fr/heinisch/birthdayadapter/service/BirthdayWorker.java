@@ -326,6 +326,7 @@ public class BirthdayWorker extends Worker {
             ExistingEvents existingEvents = getExistingEvents(context, contentResolver, calendarId, account, isOwnCalendar);
             final int totalEventsBeforeSync = existingEvents.uids.size();
             int newEventsCount = 0;
+            int existingSkippedCount = 0;
 
             ArrayList<ContentProviderOperation> operationList = new ArrayList<>();
             Map<String, String> firstNameCache = new HashMap<>();
@@ -417,6 +418,7 @@ public class BirthdayWorker extends Worker {
 
                                 // Check for duplicates from other installations
                                 if (existingEvents.eventExists(title, dtstart)) {
+                                    existingSkippedCount++;
                                     continue;
                                 }
 
@@ -482,7 +484,7 @@ public class BirthdayWorker extends Worker {
                 ContentResolver.requestSync(account, CalendarContract.AUTHORITY, new Bundle());
             }
 
-            int checkedEventsCount = totalEventsBeforeSync - deletedEventsCount;
+            int checkedEventsCount = totalEventsBeforeSync - deletedEventsCount + existingSkippedCount;
             Log.i(Constants.TAG, "Sync summary for calendar \"" + calendarName + "\": " + checkedEventsCount + " events confirmed, "
                     + newEventsCount + " new events added, " + deletedEventsCount + " old events removed.");
 
