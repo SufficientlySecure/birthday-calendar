@@ -97,9 +97,7 @@ public class BirthdayWorker extends Worker {
 
     private static final int NOTIFICATION_ID = 3105;
     private static final String NOTIFICATION_CHANNEL_ID = "birthday_sync_channel";
-
-    // Using a regex to extract the UID from the description field, format is [BA:uid:the_uid]
-    private static final Pattern BA_UID_PATTERN = Pattern.compile("\\[BA:uid:([a-zA-Z0-9:]+)]");
+    private static final String MANAGED_BY_DESCRIPTION_PREFIX = "Managed by Birthday Adapter Installation-ID:";
 
     private HashSet<Integer> jubileeYears;
 
@@ -482,7 +480,7 @@ public class BirthdayWorker extends Worker {
                     if (isOwnCalendar) {
                         builder.withSelection(CalendarContract.Events.UID_2445 + " = ?", new String[]{uid});
                     } else {
-                        builder.withSelection(CalendarContract.Events.DESCRIPTION + " LIKE ?", new String[]{"%[BA:uid:" + uid + "]%"});
+                        builder.withSelection(CalendarContract.Events.DESCRIPTION + " LIKE ? AND " + CalendarContract.Events.UID_2445 + " = ?", new String[]{MANAGED_BY_DESCRIPTION_PREFIX + "%", uid});
                     }
                     deleteOperationList.add(builder.build());
                 }
@@ -611,14 +609,8 @@ public class BirthdayWorker extends Worker {
                     long dtstart = cursor.getLong(dtstartColumn);
                     String description = cursor.getString(descriptionColumn);
 
-                    if (description != null) {
-                        Matcher matcher = BA_UID_PATTERN.matcher(description);
-                        if (matcher.find()) {
-                            String extractedUid = matcher.group(1);
-                            if (extractedUid != null && extractedUid.startsWith(installationId)) {
-                                existingEvents.add(uid, title, dtstart);
-                            }
-                        }
+                    if (description != null && description.startsWith(MANAGED_BY_DESCRIPTION_PREFIX + installationId)) {
+                        existingEvents.add(uid, title, dtstart);
                     }
                     existingEvents.add(null, title, dtstart);
                 }
@@ -1020,7 +1012,7 @@ public class BirthdayWorker extends Worker {
             }
         } else {
             // For external calendars, we add a UID to the description field to identify our events
-            builder.withValue(CalendarContract.Events.DESCRIPTION, "[BA:uid:" + eventUid + "]");
+            builder.withValue(CalendarContract.Events.DESCRIPTION, MANAGED_BY_DESCRIPTION_PREFIX + Installation.id(context));
         }
 
         return builder.build();
