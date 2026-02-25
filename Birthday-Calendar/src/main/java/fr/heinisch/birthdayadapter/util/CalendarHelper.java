@@ -32,6 +32,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.provider.CalendarContract;
 import android.text.TextUtils;
+import android.util.Log;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
@@ -41,8 +42,6 @@ import fr.heinisch.birthdayadapter.BuildConfig;
 import fr.heinisch.birthdayadapter.R;
 
 public class CalendarHelper {
-
-    private static final String[] APP_PACKAGE_NAMES = {"fr.heinisch.birthdayadapter", "fr.heinisch.birthdayadapter.free", "org.birthdayadapter"};
 
     public static class CalendarItem {
         public final long id;
@@ -230,43 +229,6 @@ public class CalendarHelper {
         }
     }
 
-    public static void clearLegacyBirthdayAdapterEvents(Context context, long calendarId) {
-        String calendarName = getCalendarName(context, calendarId);
-        Log.d(Constants.TAG, "Safely clearing all legacy events from calendar: " + calendarName);
-
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-            Log.e(Constants.TAG, "Missing calendar permissions to clear legacy events!");
-            return;
-        }
-
-        ContentResolver contentResolver = context.getContentResolver();
-        Account account = getAccountForCalendar(context, calendarId);
-        if (account == null) {
-            Log.w(Constants.TAG, "Cannot clear legacy events from calendar '" + calendarName + "' because it has no syncable account.");
-            return;
-        }
-        boolean isOwnCalendar = isBirthdayAdapterAccount(context, account);
-        Uri eventsUri = getEventsUri(account, isOwnCalendar);
-
-        String selection;
-        String[] selectionArgs;
-        if (isOwnCalendar) {
-            selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.CUSTOM_APP_PACKAGE + " = ? AND " + CalendarContract.Events.SYNC_DATA1 + " IS NULL";
-            selectionArgs = new String[]{String.valueOf(calendarId), getAppPackageName(context, account)};
-        } else {
-            selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.DESCRIPTION + " LIKE ?";
-            selectionArgs = new String[]{String.valueOf(calendarId), "%[BA:uid:%"};
-        }
-
-        int deletedRows = contentResolver.delete(eventsUri, selection, selectionArgs);
-
-        if (deletedRows > 0) {
-            Log.i(Constants.TAG, "Successfully cleared " + deletedRows + " legacy events from calendar: " + calendarName);
-        } else {
-            Log.d(Constants.TAG, "Calendar " + calendarName + " had no legacy events from this app. No events to clear.");
-        }
-    }
-
     public static void clearBirthdayAdapterEvents(Context context, long calendarId) {
         String calendarName = getCalendarName(context, calendarId);
         Log.d(Constants.TAG, "Safely clearing all events from calendar: " + calendarName);
@@ -292,7 +254,7 @@ public class CalendarHelper {
             selectionArgs = new String[]{String.valueOf(calendarId), getAppPackageName(context, account)};
         } else {
             selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.DESCRIPTION + " LIKE ?";
-            selectionArgs = new String[]{String.valueOf(calendarId), "%[BA:uid:%"};
+            selectionArgs = new String[]{String.valueOf(calendarId), Constants.MANAGED_BY_BIRTHDAY_ADAPTER + "%"};
         }
 
         int deletedRows = contentResolver.delete(eventsUri, selection, selectionArgs);
@@ -322,27 +284,23 @@ public class CalendarHelper {
         boolean isOwnCalendar = isBirthdayAdapterAccount(context, account);
         Uri eventsUri = getEventsUri(account, isOwnCalendar);
 
-        StringBuilder selection = new StringBuilder(CalendarContract.Events.CALENDAR_ID + " = ? AND (");
-        for (int i = 0; i < APP_PACKAGE_NAMES.length; i++) {
-            selection.append(CalendarContract.Events.CUSTOM_APP_PACKAGE + " LIKE ?");
-            if (i < APP_PACKAGE_NAMES.length - 1) {
-                selection.append(" OR ");
-            }
-        }
-        selection.append(")");
+        String selection;
+        String[] selectionArgs;
 
-        String[] selectionArgs = new String[APP_PACKAGE_NAMES.length + 1];
-        selectionArgs[0] = String.valueOf(calendarId);
-        for (int i = 0; i < APP_PACKAGE_NAMES.length; i++) {
-            selectionArgs[i + 1] = APP_PACKAGE_NAMES[i] + "%";
+        if (isOwnCalendar) {
+            selection = CalendarContract.Events.CALENDAR_ID + " = ?";
+            selectionArgs = new String[]{String.valueOf(calendarId)};
+        } else {
+            selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.DESCRIPTION + " LIKE ?";
+            selectionArgs = new String[]{String.valueOf(calendarId), Constants.MANAGED_BY_BIRTHDAY_ADAPTER + "%"};
         }
 
-        int deletedRows = contentResolver.delete(eventsUri, selection.toString(), selectionArgs);
+        int deletedRows = contentResolver.delete(eventsUri, selection, selectionArgs);
 
         if (deletedRows > 0) {
             Log.i(Constants.TAG, "Successfully force cleared " + deletedRows + " events from calendar: " + calendarName);
         } else {
-            Log.d(Constants.TAG, "Calendar " + calendarName + " had no events from this app. No events to clear.");
+            Log.d(Constants.TAG, "Calendar " + calendarName + " had no events from this app to clear.");
         }
     }
 

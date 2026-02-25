@@ -97,7 +97,6 @@ public class BirthdayWorker extends Worker {
 
     private static final int NOTIFICATION_ID = 3105;
     private static final String NOTIFICATION_CHANNEL_ID = "birthday_sync_channel";
-    private static final String MANAGED_BY_DESCRIPTION_PREFIX = "Managed by Birthday Adapter Installation-ID:";
 
     private HashSet<Integer> jubileeYears;
 
@@ -607,7 +606,7 @@ public class BirthdayWorker extends Worker {
                     long dtstart = cursor.getLong(dtstartColumn);
                     String description = cursor.getString(descriptionColumn);
 
-                    if (description != null && description.startsWith(MANAGED_BY_DESCRIPTION_PREFIX + installationId)) {
+                    if (description != null && description.startsWith(Constants.MANAGED_BY_BIRTHDAY_ADAPTER + " Installation-ID:" + installationId)) {
                         existingEvents.add(uid, title, dtstart);
                     }
                     existingEvents.add(null, title, dtstart);
@@ -1010,7 +1009,7 @@ public class BirthdayWorker extends Worker {
             }
         } else {
             // For external calendars, we add a UID to the description field to identify our events
-            builder.withValue(CalendarContract.Events.DESCRIPTION, MANAGED_BY_DESCRIPTION_PREFIX + Installation.id(context));
+            builder.withValue(CalendarContract.Events.DESCRIPTION, Constants.MANAGED_BY_BIRTHDAY_ADAPTER + " Installation-ID:" + Installation.id(context));
         }
 
         return builder.build();

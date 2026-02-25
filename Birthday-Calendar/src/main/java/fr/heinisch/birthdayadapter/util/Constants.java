@@ -28,6 +28,8 @@ import fr.heinisch.birthdayadapter.R;
 public class Constants {
     public static final String TAG = "Birthday Adapter";
 
+    public static final String MANAGED_BY_BIRTHDAY_ADAPTER = "Managed by Birthday Adapter";
+
     public static String getAccountName(Context context) {
         return context.getString(R.string.app_name);
     }

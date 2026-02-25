@@ -27,6 +27,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
@@ -68,10 +69,6 @@ public class MigrationManager {
                 skipOnboarding(context, prefs);
             }
 
-            // Migration for users from versions before installation ID was introduced
-            if (lastSeenVersionCode < 42) { // Version 42 introduces the installation ID
-                migrateToInstallationId(context);
-            }
             // Future migrations can be added here...
 
             Log.i(Constants.TAG, "Migration finished.");
@@ -94,21 +91,6 @@ public class MigrationManager {
         ExecutorService executor = newSingleThreadExecutor();
         executor.execute(accountHelper::addAccountAndSync);
         Log.i(Constants.TAG, "Legacy user migration finished.");
-    }
-
-
-    private static void migrateToInstallationId(Context context) {
-        Log.i(Constants.TAG, "Running migration for installation ID.");
-        long calendarId = CalendarHelper.getCalendar(context);
-        if (calendarId != -1) {
-            // This will delete all events that were created by this app but don't have an installation ID yet.
-            CalendarHelper.clearLegacyBirthdayAdapterEvents(context, calendarId);
-            // Trigger a new sync to re-create the events with the installation ID.
-            new AccountHelper(context).triggerFullResync();
-            Log.i(Constants.TAG, "Legacy events cleared and sync requested.");
-        } else {
-            Log.w(Constants.TAG, "Could not find calendar to run installation ID migration.");
-        }
     }
 
     private static boolean areAllPermissionsGranted(Context context) {
