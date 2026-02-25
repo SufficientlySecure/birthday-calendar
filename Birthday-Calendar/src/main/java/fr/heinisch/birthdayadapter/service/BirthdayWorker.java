@@ -477,11 +477,9 @@ public class BirthdayWorker extends Worker {
 
                 for (String uid : existingEvents.uids) {
                     ContentProviderOperation.Builder builder = ContentProviderOperation.newDelete(deleteUri);
-                    if (isOwnCalendar) {
-                        builder.withSelection(CalendarContract.Events.UID_2445 + " = ?", new String[]{uid});
-                    } else {
-                        builder.withSelection(CalendarContract.Events.DESCRIPTION + " LIKE ? AND " + CalendarContract.Events.UID_2445 + " = ?", new String[]{MANAGED_BY_DESCRIPTION_PREFIX + "%", uid});
-                    }
+                    // We can rely on the UID, as the getExistingEvents method has already
+                    // filtered for events belonging to this installation.
+                    builder.withSelection(CalendarContract.Events.UID_2445 + " = ?", new String[]{uid});
                     deleteOperationList.add(builder.build());
                 }
                 applyBatchOperations(contentResolver, deleteOperationList);
