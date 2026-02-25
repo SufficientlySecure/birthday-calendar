@@ -45,10 +45,19 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/about_version"
+                    android:id="@+id/version_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?attr/textAppearanceBody2" />
+
+                <TextView
+                    android:id="@+id/installation_id_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textIsSelectable="true" />
+
             </LinearLayout>
         </LinearLayout>
 

@@ -37,6 +37,7 @@ import androidx.fragment.app.Fragment;
 import fr.heinisch.birthdayadapter.BuildConfig;
 import fr.heinisch.birthdayadapter.R;
 import fr.heinisch.birthdayadapter.util.Constants;
+import fr.heinisch.birthdayadapter.util.Installation;
 import fr.heinisch.birthdayadapter.util.Log;
 
 import java.io.InputStream;
@@ -47,8 +48,11 @@ public class AboutFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_about, container, false);
 
-        TextView versionText = view.findViewById(R.id.about_version);
-        versionText.setText(String.format("%s %s", getString(R.string.about_version), getVersion()));
+        TextView versionTextView = view.findViewById(R.id.version_text_view);
+        versionTextView.setText(String.format("%s %s", getString(R.string.about_version), getVersion()));
+
+        TextView installationIdTextView = view.findViewById(R.id.installation_id_text_view);
+        installationIdTextView.setText(String.format("Installation ID: %s", Installation.id(requireContext())));
 
         TextView aboutTextView = view.findViewById(R.id.about_text);
         
