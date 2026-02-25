@@ -42,6 +42,8 @@ import fr.heinisch.birthdayadapter.R;
 
 public class CalendarHelper {
 
+    private static final String[] APP_PACKAGE_NAMES = {"fr.heinisch.birthdayadapter", "fr.heinisch.birthdayadapter.free", "org.birthdayadapter"};
+
     public static class CalendarItem {
         public final long id;
         public final String name;
@@ -320,18 +322,22 @@ public class CalendarHelper {
         boolean isOwnCalendar = isBirthdayAdapterAccount(context, account);
         Uri eventsUri = getEventsUri(account, isOwnCalendar);
 
-        String selection;
-        String[] selectionArgs;
-        if (isOwnCalendar) {
-            selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.CUSTOM_APP_PACKAGE + " LIKE ?";
-            // Use a fixed package name for all variants to ensure we can clean up events from all app versions.
-            selectionArgs = new String[]{String.valueOf(calendarId), "fr.heinisch.birthdayadapter" + "%"};
-        } else {
-            selection = CalendarContract.Events.CALENDAR_ID + " = ? AND " + CalendarContract.Events.DESCRIPTION + " LIKE ?";
-            selectionArgs = new String[]{String.valueOf(calendarId), "%[BA:uid:%"};
+        StringBuilder selection = new StringBuilder(CalendarContract.Events.CALENDAR_ID + " = ? AND (");
+        for (int i = 0; i < APP_PACKAGE_NAMES.length; i++) {
+            selection.append(CalendarContract.Events.CUSTOM_APP_PACKAGE + " LIKE ?");
+            if (i < APP_PACKAGE_NAMES.length - 1) {
+                selection.append(" OR ");
+            }
+        }
+        selection.append(")");
+
+        String[] selectionArgs = new String[APP_PACKAGE_NAMES.length + 1];
+        selectionArgs[0] = String.valueOf(calendarId);
+        for (int i = 0; i < APP_PACKAGE_NAMES.length; i++) {
+            selectionArgs[i + 1] = APP_PACKAGE_NAMES[i] + "%";
         }
 
-        int deletedRows = contentResolver.delete(eventsUri, selection, selectionArgs);
+        int deletedRows = contentResolver.delete(eventsUri, selection.toString(), selectionArgs);
 
         if (deletedRows > 0) {
             Log.i(Constants.TAG, "Successfully force cleared " + deletedRows + " events from calendar: " + calendarName);
@@ -428,18 +434,13 @@ public class CalendarHelper {
 
     /**
      * Builds the package name string used to identify events created by this app.
-     * <p>
-     * NOTE: To ensure that events can be correctly identified across multiple devices and
-     * different app versions (free/full), a hardcoded package name is used.
-     * This prevents issues where one version of the app does not recognize events created by another.
      *
-     * @param context The application context. Not used anymore but kept for compatibility.
+     * @param context The application context.
      * @param account The account associated with the calendar.
      * @return A unique identifier string for the app's events.
      */
     public static String getAppPackageName(Context context, Account account) {
-        // Use a fixed package name for all variants to ensure interoperability
-        return "fr.heinisch.birthdayadapter" + "/" + account.name + "/" + account.type;
+        return context.getPackageName() + "/" + account.name + "/" + account.type;
     }
 
 }
