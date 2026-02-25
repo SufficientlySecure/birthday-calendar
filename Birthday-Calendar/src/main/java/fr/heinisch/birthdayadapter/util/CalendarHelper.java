@@ -29,6 +29,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.provider.CalendarContract;
 import android.text.TextUtils;
@@ -261,6 +262,7 @@ public class CalendarHelper {
 
         if (deletedRows > 0) {
             Log.i(Constants.TAG, "Successfully cleared " + deletedRows + " old events from calendar: " + calendarName);
+            if (!isOwnCalendar) { requestCalendarSync(context, calendarId, true); }
         } else {
             Log.d(Constants.TAG, "Calendar " + calendarName + " was already empty or had no events from this app. No events to clear.");
         }
@@ -299,9 +301,27 @@ public class CalendarHelper {
 
         if (deletedRows > 0) {
             Log.i(Constants.TAG, "Successfully force cleared " + deletedRows + " events from calendar: " + calendarName);
+            if (!isOwnCalendar) { requestCalendarSync(context, calendarId, true); }
         } else {
             Log.d(Constants.TAG, "Calendar " + calendarName + " had no events from this app to clear.");
         }
+    }
+
+    public static void requestCalendarSync(Context context, long calendarId, boolean isUrgent) {
+        Account account = getAccountForCalendar(context, calendarId);
+        if (account == null) {
+            Log.w(Constants.TAG, "Cannot request sync for calendar " + calendarId + " because no account was found.");
+            return;
+        }
+        Bundle bundle = new Bundle();
+        if (isUrgent) {
+            Log.d(Constants.TAG, "Requesting immediate sync for calendar " + calendarId + " with account " + account.name);
+            bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+            bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        } else {
+            Log.d(Constants.TAG, "Requesting sync for calendar " + calendarId + " with account " + account.name);
+        }
+        ContentResolver.requestSync(account, CalendarContract.AUTHORITY, bundle);
     }
 
 

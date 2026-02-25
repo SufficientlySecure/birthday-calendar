@@ -485,8 +485,7 @@ public class BirthdayWorker extends Worker {
             }
 
             if (newEventsCount > 0 || deletedEventsCount > 0) {
-                Log.d(Constants.TAG, "Requesting sync for calendar: " + calendarName);
-                ContentResolver.requestSync(account, CalendarContract.AUTHORITY, new Bundle());
+                CalendarHelper.requestCalendarSync(context, calendarId, false);
             }
 
             int checkedEventsCount = totalEventsBeforeSync - deletedEventsCount + existingSkippedCount;
