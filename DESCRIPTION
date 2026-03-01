@@ -1,32 +1,32 @@
-<b>Description</b>
+**Description**
 Birthday Adapter provides birthdays, anniversaries, and other events from your contacts directly into
 your Android calendar. Unlike other apps, it integrates seamlessly with your system calendar, so you
 can see all your important dates alongside your other events.
 
-<b>Features</b>
-• Complete integration of birthdays, anniversaries, and other events from Android's contacts to the Android calendar system
-• Filter contact events based on account and contact groups
-• Event Reminders
-• Jubilee markers
-• Customize all event titles
-• Chose which events will have reminders
-• Color picker for the birthday calendar
+**Features**
+* Complete integration of birthdays, anniversaries, and other events from Android's contacts to the Android calendar system
+* Filter contact events based on account and contact groups
+* Event Reminders
+* Jubilee markers
+* Customize all event titles
+* Chose which events will have reminders
+* Color picker for the birthday calendar
 
-<b>Problems</b>
+**Problems**
 If you have problems with this app, please report them on the following website:
 https://github.com/SufficientlySecure/birthday-calendar/issues
 
-<b>Translations</b>
+**Translations**
 Help translating Birthday Adapter on https://hosted.weblate.org/engage/birthday-adapter/
 
-<b>Source code and information</b>
+**Source code and information**
 https://github.com/SufficientlySecure/birthday-calendar
 
-<b>License</b>
+**License**
 GPLv3
 
-<b>Keywords</b>
+**Keywords**
 birthday calendar, birthday adapter, calendar integration, birthdays, events, special dates
 
-<b>Open source alternative to</b>
+**Open source alternative to**
 EboBirthday, Birthdays, TKBirthdayReminder, Birthday Widget
