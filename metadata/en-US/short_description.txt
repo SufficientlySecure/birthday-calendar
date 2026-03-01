@@ -1,1 +1,1 @@
-Birthday Adapter provides birthdays, anniversaries, and other events from your contacts to the Android calendar system, which is displayed in your standard Android calendar application.
+Display birthdays, anniversaries, and other events from your contacts automatically in your favorite calendar app.
