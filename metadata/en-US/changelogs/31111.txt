@@ -1,0 +1,7 @@
+3.11.11
+- Use monochrome app icon for the account authenticator
+- Update to Material 3 Expressive-Design
+- Harmonize input field styling across the app
+- Move checkbox in Account Filter tab from left to right to match other settings tabs
+- Update dependencies
+- Update translations
