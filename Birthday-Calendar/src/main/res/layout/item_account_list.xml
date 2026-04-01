@@ -10,16 +10,6 @@
     android:paddingTop="8dp"
     android:paddingBottom="8dp">
 
-    <com.google.android.material.checkbox.MaterialCheckBox
-        android:id="@+id/account_list_cbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:clickable="false"
-        android:focusable="false"
-        android:focusableInTouchMode="false" />
-    <!-- focusable and clickable MUST be false to handle click and longClick in ListView Activity -->
-
     <ImageView
         android:id="@+id/account_list_icon"
         android:layout_width="32dp"
@@ -66,5 +56,15 @@
         android:focusable="true"
         android:padding="8dp"
         app:srcCompat="@drawable/ic_group_24dp" />
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/account_list_cbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
+    <!-- focusable and clickable MUST be false to handle click and longClick in ListView Activity -->
 
 </LinearLayout>
