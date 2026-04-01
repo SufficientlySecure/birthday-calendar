@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2025-2026 Matthias Heinisch <birthdayadapter@heinisch.fr>
  * Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
  *
  * This file is part of Birthday Adapter.
@@ -33,6 +34,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TimePicker;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import fr.heinisch.birthdayadapter.R;
 
@@ -125,12 +128,12 @@ public class ReminderPreferenceCompat extends Preference {
     }
 
     public void performClick(boolean isNew) {
-        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        MaterialAlertDialogBuilder alertBuilder = new MaterialAlertDialogBuilder(getContext());
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
         @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.preference_reminder, null);
-        alert.setView(view);
+        alertBuilder.setView(view);
 
         spinner = view.findViewById(R.id.pref_reminder_spinner);
         picker = view.findViewById(R.id.pref_reminder_timepicker);
@@ -144,8 +147,8 @@ public class ReminderPreferenceCompat extends Preference {
             picker.setIs24HourView(true);
         }
 
-        alert.setPositiveButton(android.R.string.ok, (dialogInterface, i) -> save());
-        alert.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+        alertBuilder.setPositiveButton(android.R.string.ok, (dialogInterface, i) -> save());
+        alertBuilder.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
             if (isNew) {
                 if (mOnRemoveListener != null) {
                     mOnRemoveListener.onRemove(this);
@@ -153,7 +156,7 @@ public class ReminderPreferenceCompat extends Preference {
             }
         });
         if (!isNew) {
-            alert.setNeutralButton(R.string.remove, (dialog, which) -> {
+            alertBuilder.setNeutralButton(R.string.remove, (dialog, which) -> {
                 if (mOnRemoveListener != null) {
                     mOnRemoveListener.onRemove(this);
                 }
@@ -162,7 +165,7 @@ public class ReminderPreferenceCompat extends Preference {
 
         bind();
 
-        alert.create().show();
+        alertBuilder.show();
     }
 
     private void bind() {

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2025-2026 Matthias Heinisch <birthdayadapter@heinisch.fr>
  * Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
  *
  * This file is part of Birthday Adapter.
@@ -273,6 +274,67 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         if (preference != null) {
             updateTitlePreferenceSummary(preference, preference.getText());
         }
+    }
+
+    @Override
+    public void onDisplayPreferenceDialog(@NonNull Preference preference) {
+        if (mTitlePrefKeys != null && mTitlePrefKeys.contains(preference.getKey())) {
+            showTitleInputDialog((EditTextPreference) preference);
+        } else if (getString(R.string.pref_reminder_event_types).equals(preference.getKey())) {
+            showMultiSelectListDialog((MultiSelectListPreference) preference);
+        } else {
+            super.onDisplayPreferenceDialog(preference);
+        }
+    }
+
+    private void showTitleInputDialog(EditTextPreference preference) {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_preference_input, null);
+        final EditText textInput = dialogView.findViewById(R.id.textInput);
+        final TextInputLayout textInputLayout = dialogView.findViewById(R.id.textInputLayout);
+
+        textInput.setText(preference.getText());
+        textInputLayout.setHint(preference.getDialogMessage());
+
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(preference.getDialogTitle())
+                .setView(dialogView)
+                .setPositiveButton(android.R.string.ok, (d, which) -> {
+                    String newValue = textInput.getText().toString();
+                    preference.setText(newValue);
+                    updateTitlePreferenceSummary(preference, newValue);
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private void showMultiSelectListDialog(MultiSelectListPreference preference) {
+        final CharSequence[] entries = preference.getEntries();
+        final CharSequence[] entryValues = preference.getEntryValues();
+        final Set<String> values = preference.getValues();
+        final boolean[] checkedItems = new boolean[entryValues.length];
+        final Set<String> newValues = new HashSet<>(values);
+
+        for (int i = 0; i < entryValues.length; i++) {
+            checkedItems[i] = values.contains(entryValues[i].toString());
+        }
+
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(preference.getTitle())
+                .setMultiChoiceItems(entries, checkedItems, (dialog, which, isChecked) -> {
+                    if (isChecked) {
+                        newValues.add(entryValues[which].toString());
+                    } else {
+                        newValues.remove(entryValues[which].toString());
+                    }
+                })
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    if (preference.callChangeListener(newValues)) {
+                        preference.setValues(newValues);
+                        updateReminderEventTypesSummary(preference, newValues);
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
     }
 
     private void updateTitlePreferenceSummary(Preference preference, Object newValue) {

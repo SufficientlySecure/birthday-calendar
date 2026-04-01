@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Matthias
+ * Copyright (C) 2025-2026 Matthias Heinisch <birthdayadapter@heinisch.fr>
  *
  * This file is part of Birthday Adapter.
  *

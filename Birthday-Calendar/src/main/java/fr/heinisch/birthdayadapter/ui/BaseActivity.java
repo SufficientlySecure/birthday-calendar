@@ -1,7 +1,7 @@
 
 /*
+ * Copyright (C) 2025-2026 Matthias Heinisch <birthdayadapter@heinisch.fr>
  * Copyright (C) 2012-2016 Dominik Schürmann <dominik@dominikschuermann.de>
- * Copyright (C) 2025 Matthias Heinisch <matthias@matthiasheinisch.de>
  *
  * This file is part of Birthday Adapter.
  *
@@ -34,13 +34,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -48,6 +48,7 @@ import androidx.preference.PreferenceManager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -77,6 +78,9 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Enable Edge-to-Edge display
+        EdgeToEdge.enable(this);
+        
         super.onCreate(savedInstanceState);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -102,30 +106,33 @@ public class BaseActivity extends AppCompatActivity {
 
         setDefaultReminder();
 
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-
         setContentView(R.layout.activity_base);
 
         IPurchaseHelper mPurchaseHelper = PurchaseHelperFactory.create();
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
+        final AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
+        
         if (!isFullVersionUnlocked(this)) {
             toolbar.setTitle(getString(R.string.app_name) + " (Free)");
+        } else {
+            toolbar.setTitle(getString(R.string.app_name));
         }
         setSupportActionBar(toolbar);
 
         final ViewPager2 viewPager = findViewById(R.id.viewpager);
         View mainContent = findViewById(R.id.main_content);
 
-        // Apply insets to handle edge-to-edge display
+        // Apply insets to handle edge-to-edge display using the modern API
         ViewCompat.setOnApplyWindowInsetsListener(mainContent, (v, windowInsets) -> {
             Insets systemBars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-
-            // Apply the top inset as padding to the toolbar
-            toolbar.setPadding(toolbar.getPaddingLeft(), systemBars.top, toolbar.getPaddingRight(), toolbar.getPaddingBottom());
-
-            // Apply the bottom inset as padding to the ViewPager
-            viewPager.setPadding(viewPager.getPaddingLeft(), viewPager.getPaddingTop(), viewPager.getPaddingRight(), systemBars.bottom);
+            
+            // Padding the main content to avoid overlap with system bars
+            v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
+            
+            // Apply the top inset as padding to the AppBarLayout instead of the Toolbar
+            // This prevents the title from being pushed out of view
+            appBarLayout.setPadding(appBarLayout.getPaddingLeft(), systemBars.top, appBarLayout.getPaddingRight(), appBarLayout.getPaddingBottom());
 
             return windowInsets;
         });

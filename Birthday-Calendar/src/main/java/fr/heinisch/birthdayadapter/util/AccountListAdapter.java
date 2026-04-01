@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2025-2026 Matthias Heinisch <birthdayadapter@heinisch.fr>
  * Copyright (C) 2012-2013 Dominik Schürmann <dominik@dominikschuermann.de>
  *
  * This file is part of Birthday Adapter.
@@ -21,7 +22,6 @@
 package fr.heinisch.birthdayadapter.util;
 
 import android.accounts.Account;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -39,6 +39,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import fr.heinisch.birthdayadapter.R;
 
@@ -224,7 +225,7 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
                         groupContainer.addView(groupEntryView);
                     }
 
-                    new AlertDialog.Builder(getContext())
+                    new MaterialAlertDialogBuilder(getContext())
                             .setTitle(entry.getLabel())
                             .setView(dialogView)
                             .setPositiveButton(android.R.string.ok, (dialog, which) -> {

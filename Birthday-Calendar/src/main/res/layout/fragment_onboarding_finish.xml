@@ -18,8 +18,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="@string/onboarding_finish_title"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:textStyle="bold" />
+        android:textAppearance="?attr/textAppearanceDisplayMedium"
+        android:textStyle="bold"
+        android:textAlignment="center" />
 
     <TextView
         android:id="@+id/finish_text"
@@ -28,21 +29,23 @@
         android:layout_marginTop="16dp"
         android:text="@string/onboarding_finish_text"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:textAppearance="?attr/textAppearanceBodyLarge" />
 
     <Button
         android:id="@+id/open_calendar_button"
+        style="@style/Widget.Material3.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:text="@string/pref_calendar_open"
         android:visibility="gone" />
 
     <Button
         android:id="@+id/ignore_button"
+        style="@style/Widget.Material3.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:text="@string/ignore"
         android:visibility="gone" />
 

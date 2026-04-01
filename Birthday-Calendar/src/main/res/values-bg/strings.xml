@@ -76,7 +76,7 @@
     <string name="pref_enable">1. Включване на Адаптор за рождени дни</string>
     <string name="pref_enable_summary">Създава събития в календара от рождените дни на контактите ви.</string>
     <string name="pref_enable_switch">Адаптор за рождени дни</string>
-    <string name="pref_contacts">2. Добавяне на рождени дни не контактит</string>
+    <string name="pref_contacts">2. Добавяне на рождените дни на контактите</string>
     <string name="pref_contacts_summary">Променете рождените дни в приложението за контакти.</string>
     <string name="pref_contacts_open">Отваряне на приложението за контакти</string>
     <string name="pref_calendar">3. Рождени дни в календара</string>
