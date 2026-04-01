@@ -29,12 +29,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
@@ -59,7 +59,6 @@ public class OnboardingActivity extends AppCompatActivity {
     private Button nextButton;
     private OnboardingAdapter adapter;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
-    private ColorStateList defaultButtonColor;
     private List<Fragment> onboardingFragments;
 
     public static final String EXTRA_IGNORE_PERMISSION_CHECK_ONCE = "IGNORE_PERMISSION_CHECK_ONCE";
@@ -73,9 +72,10 @@ public class OnboardingActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Enable Edge-to-Edge display
+        EdgeToEdge.enable(this);
+        
         super.onCreate(savedInstanceState);
-
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
         setContentView(R.layout.activity_onboarding);
 
@@ -83,12 +83,11 @@ public class OnboardingActivity extends AppCompatActivity {
         ViewCompat.setOnApplyWindowInsetsListener(mainView, (v, windowInsets) -> {
             Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(insets.left, insets.top, insets.right, insets.bottom);
-            return WindowInsetsCompat.CONSUMED;
+            return windowInsets;
         });
 
         viewPager = findViewById(R.id.viewPager);
         nextButton = findViewById(R.id.nextButton);
-        defaultButtonColor = nextButton.getBackgroundTintList();
 
         onboardingFragments = createFragmentList();
         adapter = new OnboardingAdapter(this, onboardingFragments);
@@ -101,7 +100,6 @@ public class OnboardingActivity extends AppCompatActivity {
                     updateFinishScreen();
                 } else {
                     nextButton.setText(R.string.next);
-                    nextButton.setBackgroundTintList(defaultButtonColor);
                 }
             }
         });
@@ -151,11 +149,9 @@ public class OnboardingActivity extends AppCompatActivity {
             activateAdapterIfNeeded();
             finishFragment.setWarningMode(false);
             nextButton.setText(R.string.finish);
-            nextButton.setBackgroundTintList(defaultButtonColor);
         } else {
             finishFragment.setWarningMode(true);
             nextButton.setText(R.string.restart_onboarding);
-            nextButton.setBackgroundTintList(defaultButtonColor);
         }
     }
 
@@ -166,7 +162,6 @@ public class OnboardingActivity extends AppCompatActivity {
         viewPager.setCurrentItem(0, false);
         nextButton.setEnabled(true);
         nextButton.setText(R.string.next);
-        nextButton.setBackgroundTintList(defaultButtonColor);
     }
 
     private void activateAdapterIfNeeded() {

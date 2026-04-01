@@ -17,8 +17,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="@string/onboarding_intro_title"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:textStyle="bold" />
+        android:textAppearance="?attr/textAppearanceDisplayMedium"
+        android:textStyle="bold"
+        android:textAlignment="center" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -26,6 +27,6 @@
         android:layout_marginTop="16dp"
         android:text="@string/onboarding_intro_text"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:textAppearance="?attr/textAppearanceBodyLarge" />
 
 </LinearLayout>

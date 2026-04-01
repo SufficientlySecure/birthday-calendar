@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
@@ -10,15 +11,17 @@
         android:layout_width="96dp"
         android:layout_height="96dp"
         android:src="@drawable/ic_calendar"
-        android:importantForAccessibility="no" />
+        android:importantForAccessibility="no"
+        app:tint="?attr/colorPrimary" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="@string/onboarding_calendar_title"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:textStyle="bold" />
+        android:textAppearance="?attr/textAppearanceDisplayMedium"
+        android:textStyle="bold"
+        android:textAlignment="center" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -26,14 +29,14 @@
         android:layout_marginTop="16dp"
         android:text="@string/onboarding_calendar_text"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:textAppearance="?attr/textAppearanceBodyLarge" />
 
     <Button
         android:id="@+id/grant_calendar_button"
+        style="@style/Widget.Material3.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:minHeight="48dp"
+        android:layout_marginTop="32dp"
         android:text="@string/onboarding_grant_permission" />
 
 </LinearLayout>

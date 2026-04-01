@@ -10,31 +10,43 @@
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:background="@color/colorPrimary"
+        app:elevation="0dp"
+        app:liftOnScroll="false">
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+            android:layout_height="48dp"
+            app:contentInsetStart="16dp"
+            app:contentInsetStartWithNavigation="0dp"
+            app:titleCentered="false"
+            app:titleTextColor="@android:color/white"
+            android:theme="@style/ThemeOverlay.Material3.Dark">
 
             <ProgressBar
                 android:id="@+id/progress_spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="12dp"
                 android:indeterminate="true"
-                android:visibility="gone" />
-        </androidx.appcompat.widget.Toolbar>
+                android:visibility="gone"
+                android:indeterminateTint="@android:color/white"
+                style="?android:attr/progressBarStyleSmall" />
+        </com.google.android.material.appbar.MaterialToolbar>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
+            android:background="?attr/colorSurface"
             app:tabGravity="start"
-            app:tabMode="scrollable" />
+            app:tabMode="scrollable"
+            app:tabPaddingStart="12dp"
+            app:tabPaddingEnd="12dp"
+            app:tabIndicatorFullWidth="false"
+            style="@style/Widget.Material3.TabLayout" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager2.widget.ViewPager2
