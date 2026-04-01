@@ -121,9 +121,9 @@
     <string name="pref_reminder_event_types_custom">Événements personnalisés</string>
     <string name="pref_disable_permission_monitoring_title">Désactiver la surveillance des autorisations</string>
     <string name="pref_disable_permission_monitoring_summary">Garde tes autorisations actives même sans ouvrir l\'appli. Indispensable pour une synchronisation en arrière-plan sans coupure.</string>
-    <string name="last_sync">dernière synchronisation : %s</string>
-    <string name="last_sync_never">Dernière synchronisation : jamais</string>
-    <string name="next_sync">Prochaine synchro (fond) : %s</string>
+    <string name="last_sync">dernière synchronisation : %s</string>
+    <string name="last_sync_never">Dernière synchronisation : jamais</string>
+    <string name="next_sync">Prochaine synchro (fond) : %s</string>
     <string name="notification_channel_name">Synchro anniversaires</string>
     <string name="notification_channel_description">Notifications pour la synchro des anniversaires</string>
     <string name="notification_title">Synchro des anniversaires</string>
@@ -141,7 +141,7 @@
     <string name="account_list_group_button_description">Afficher les groupes du compte</string>
     <string name="account_list_no_group">Pas de groupe</string>
     <string name="pref_buy_full_summary">Profite de toutes les options Premium</string>
-    <string name="buy_premium_for">Passer au Premium : %s</string>
+    <string name="buy_premium_for">Passer au Premium : %s</string>
     <string name="premium_feat_sync_title">Synchronisation automatique en arrière-plan</string>
     <string name="premium_feat_sync_summary">Garde ton calendrier toujours à jour automatiquement.</string>
     <string name="premium_feat_reminders_title">Rappels personnalisés</string>
