@@ -148,13 +148,8 @@ public class ReminderPreferenceCompat extends Preference {
         }
 
         alertBuilder.setPositiveButton(android.R.string.ok, (dialogInterface, i) -> save());
-        alertBuilder.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-            if (isNew) {
-                if (mOnRemoveListener != null) {
-                    mOnRemoveListener.onRemove(this);
-                }
-            }
-        });
+        alertBuilder.setNegativeButton(android.R.string.cancel, null);
+        
         if (!isNew) {
             alertBuilder.setNeutralButton(R.string.remove, (dialog, which) -> {
                 if (mOnRemoveListener != null) {
