@@ -416,6 +416,23 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         reminderPref.setTitle(getString(R.string.pref_reminder_time) + " " + (index + 1));
         reminderPref.setPersistent(false); // We are handling persistence manually
         reminderPref.setValue(minutes);
+
+        if (isNew) {
+            reminderPref.setOnPreferenceChangeListener((preference, newValue) -> {
+                // On OK, add to category and setup normal listeners
+                setupReminderListeners(reminderPref);
+                remindersCategory.addPreference(reminderPref);
+                saveReminders();
+                return true;
+            });
+            reminderPref.performClick(true);
+        } else {
+            setupReminderListeners(reminderPref);
+            remindersCategory.addPreference(reminderPref);
+        }
+    }
+
+    private void setupReminderListeners(ReminderPreferenceCompat reminderPref) {
         reminderPref.setOnPreferenceChangeListener((preference, newValue) -> {
             saveReminders();
             return true;
@@ -428,12 +445,6 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
             showDeleteReminderDialog(reminderPref);
             return true;
         });
-
-        remindersCategory.addPreference(reminderPref);
-
-        if (isNew) {
-            reminderPref.performClick(true);
-        }
     }
 
     private void showDeleteReminderDialog(Preference preference) {
