@@ -1,3 +1,6 @@
+3.11.13
+* Add translation: Finnish
+
 3.11.12
 - Use monochrome app icon for the account authenticator
 - Update to Material 3 Expressive-Design
@@ -8,7 +11,7 @@
 - Update translations
 
 3.11.4
-- Add translation: Russian
+* Add translation: Russian
 
 3.11.3
 * Improve contrast in dark mode
