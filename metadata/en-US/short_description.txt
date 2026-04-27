@@ -1,1 +1,1 @@
-Display birthdays, anniversaries, and other events from your contacts automatically in your favorite calendar app.
+See birthdays and other events from your contacts in your calendar.

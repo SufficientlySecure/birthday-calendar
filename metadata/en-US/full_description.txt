@@ -1,34 +1,31 @@
-**Description**
-Birthday Adapter provides birthdays, anniversaries, and other events from your contacts directly into
-your Android calendar. Unlike other apps, it integrates seamlessly with your system calendar, so you
-can see all your important dates alongside your other events.
+Birthday Adapter provides birthdays, anniversaries, and other events from your contacts into your Android calendar. Unlike other apps, it integrates with your system calendar, so you can see all your contact dates alongside your other events.
 
-**Features**
-* Seamless Integration: See your contacts' birthdays directly in your favorite calendar app alongside your daily schedule - no manual lists or double entries required.
+FEATURES
+* Integration: See your contacts' birthdays directly in your favorite calendar app alongside your daily schedule - no manual lists or double entries required.
 * Age Display: With the age automatically being added to every event, you always know which milestone is ahead.
 * Beyond Birthdays: Sync any custom-labeled date from your address book - perfect for keeping track of your contacts' anniversaries or their children’s and partners' birthdays.
-* Background Sync: Your calendar stays in sync with regular updates of your latest contact changes in the background.
-* Smart Filtering: Stay organized by choosing exactly which accounts or contact groups you want to see in your calendar.
-* Custom Reminders: Set as many reminders as you need for each event to ensure you never miss a special moment.
-* Jubilee Markers: Easily spot major milestones and big anniversaries with clear markers.
-* Full Customization: Personalize all event titles and choose exactly which event types should trigger a notification.
-* Visual Personalization: Use the integrated color picker to style your birthday calendar to match your personal preference.
+* Background Sync: Your calendar stays in sync with regular updates in the background.
+* Filtering: Choose which accounts or contact groups you want to see in your calendar.
+* Reminders: Set as many reminders as you need for your events.
+* Jubilee Markers: Spot major milestones and big anniversaries.
+* Customization: Personalize event titles and choose which event types should trigger a notification.
+* Personalization: Use the color picker to style your birthday calendar to match your personal preference.
 
-**Problems**
+PROBLEMS
 If you have problems with this app, please report them on the following website:
 https://github.com/SufficientlySecure/birthday-calendar/issues
 
-**Translations**
+TRANSLATIONS
 Help translating Birthday Adapter on https://hosted.weblate.org/engage/birthday-adapter/
 
-**Source code and information**
+SOURCE CODE
 https://github.com/SufficientlySecure/birthday-calendar
 
-**License**
+LICENSE
 GPLv3
 
-**Keywords**
+KEYWORDS
 birthday calendar, birthday adapter, calendar integration, birthdays, events, special dates
 
-**Open source alternative to**
+OPEN SOURCE ALTERNATIVE TO
 EboBirthday, Birthdays, TKBirthdayReminder, Birthday Widget
