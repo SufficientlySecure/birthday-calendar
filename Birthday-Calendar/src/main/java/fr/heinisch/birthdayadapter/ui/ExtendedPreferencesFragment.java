@@ -70,6 +70,8 @@ import fr.heinisch.birthdayadapter.util.AccountHelper;
 import fr.heinisch.birthdayadapter.util.IPurchaseHelper;
 import fr.heinisch.birthdayadapter.util.PreferencesHelper;
 import fr.heinisch.birthdayadapter.util.PurchaseHelperFactory;
+import fr.heinisch.birthdayadapter.util.ReviewHelper;
+import fr.heinisch.birthdayadapter.util.ReviewHelperFactory;
 import fr.heinisch.birthdayadapter.util.VersionHelper;
 
 public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
@@ -81,6 +83,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     private PreferenceCategory remindersCategory;
     private PreferenceCategory additionalRemindersCategory;
     private IPurchaseHelper mPurchaseHelper;
+    private ReviewHelper mReviewHelper;
     private Set<String> mTitlePrefKeys;
 
     private final SharedPreferences.OnSharedPreferenceChangeListener mSettingsListener = (sharedPreferences, key) -> {
@@ -178,6 +181,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
 
         mAccountHelper = new AccountHelper(mActivity);
         mPurchaseHelper = PurchaseHelperFactory.create();
+        mReviewHelper = ReviewHelperFactory.create();
 
         if (getContext() != null && !isFullVersionUnlocked(getContext())) {
             Preference buyFullPref = findPreference(getString(R.string.pref_buy_full_key));
@@ -276,6 +280,21 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         }
 
         updatePermissionMonitoringPrefVisibility();
+
+        // Trigger review dialog when reaching the bottom of the list
+        RecyclerView recyclerView = getListView();
+        if (recyclerView != null) {
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    // Check if the user can scroll further down
+                    if (!recyclerView.canScrollVertically(1)) {
+                        mReviewHelper.maybeShowReviewDialog(getActivity());
+                    }
+                }
+            });
+        }
     }
 
     private void setupTitlePreference(String key) {

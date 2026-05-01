@@ -95,5 +95,9 @@ dependencies {
     implementation 'androidx.preference:preference-ktx:1.2.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "androidx.work:work-runtime-ktx:2.11.2"
+    
+    // Google Play specific libraries (Review API and Billing)
+    freeImplementation 'com.google.android.play:review:2.0.2'
+    freeImplementation 'com.google.android.play:review-ktx:2.0.2'
     freeImplementation "com.android.billingclient:billing:8.3.0"
 }
