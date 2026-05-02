@@ -58,6 +58,18 @@
     </androidx.preference.PreferenceCategory>
 
     <androidx.preference.PreferenceCategory
+        android:key="@string/pref_additional_reminders_category_key"
+        android:title="@string/pref_additional_reminders_category">
+        <androidx.preference.EditTextPreference
+            android:key="@string/pref_additional_reminders_group_key"
+            android:title="@string/pref_additional_reminders_group_title"
+            android:dialogTitle="@string/pref_additional_reminders_group_title"
+            android:dialogMessage="@string/pref_additional_reminders_group_description"
+            android:defaultValue="@string/pref_additional_reminders_group_def"
+            app:useSimpleSummaryProvider="true" />
+    </androidx.preference.PreferenceCategory>
+
+    <androidx.preference.PreferenceCategory
         android:key="@string/pref_title_category_key"
         android:title="@string/pref_title">
         <androidx.preference.CheckBoxPreference

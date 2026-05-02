@@ -79,6 +79,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     private Preference colorPref;
     private Preference mJubileeYearsPref;
     private PreferenceCategory remindersCategory;
+    private PreferenceCategory additionalRemindersCategory;
     private IPurchaseHelper mPurchaseHelper;
     private Set<String> mTitlePrefKeys;
 
@@ -132,6 +133,10 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         PreferenceCategory remindersCategory = findPreference(getString(R.string.pref_reminders_category_key));
         if (remindersCategory != null) {
             remindersCategory.setVisible(isFullVersion);
+        }
+        PreferenceCategory additionalRemindersCategory = findPreference(getString(R.string.pref_additional_reminders_category_key));
+        if (additionalRemindersCategory != null) {
+            additionalRemindersCategory.setVisible(isFullVersion);
         }
         PreferenceCategory titleCategory = findPreference(getString(R.string.pref_title_category_key));
         if (titleCategory != null) {
@@ -200,7 +205,12 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                         return true;
                     });
                 }
-                populateReminders();
+                populateReminders(remindersCategory, getString(R.string.pref_reminders_key));
+            }
+
+            additionalRemindersCategory = findPreference(getString(R.string.pref_additional_reminders_category_key));
+            if (additionalRemindersCategory != null) {
+                populateReminders(additionalRemindersCategory, getString(R.string.pref_additional_reminders_key));
             }
 
             mTitlePrefKeys = new HashSet<>(Arrays.asList(
@@ -281,6 +291,8 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
             showTitleInputDialog((EditTextPreference) preference);
         } else if (getString(R.string.pref_reminder_event_types).equals(preference.getKey())) {
             showMultiSelectListDialog((MultiSelectListPreference) preference);
+        } else if (getString(R.string.pref_additional_reminders_group_key).equals(preference.getKey())) {
+            showGroupInputDialog((EditTextPreference) preference);
         } else {
             super.onDisplayPreferenceDialog(preference);
         }
@@ -289,18 +301,37 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     private void showTitleInputDialog(EditTextPreference preference) {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_preference_input, null);
         final EditText textInput = dialogView.findViewById(R.id.textInput);
-        final TextInputLayout textInputLayout = dialogView.findViewById(R.id.textInputLayout);
 
         textInput.setText(preference.getText());
-        textInputLayout.setHint(preference.getDialogMessage());
 
         new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(preference.getDialogTitle())
+                .setMessage(preference.getDialogMessage())
                 .setView(dialogView)
                 .setPositiveButton(android.R.string.ok, (d, which) -> {
                     String newValue = textInput.getText().toString();
                     preference.setText(newValue);
                     updateTitlePreferenceSummary(preference, newValue);
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private void showGroupInputDialog(EditTextPreference preference) {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_preference_input, null);
+        final EditText textInput = dialogView.findViewById(R.id.textInput);
+
+        textInput.setText(preference.getText());
+
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(preference.getDialogTitle())
+                .setMessage(preference.getDialogMessage())
+                .setView(dialogView)
+                .setPositiveButton(android.R.string.ok, (d, which) -> {
+                    String newValue = textInput.getText().toString();
+                    if (preference.callChangeListener(newValue)) {
+                        preference.setText(newValue);
+                    }
                 })
                 .setNegativeButton(android.R.string.cancel, null)
                 .show();
@@ -375,43 +406,50 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         preference.setSummary(TextUtils.join(", ", selectedEntries));
     }
 
-    private void populateReminders() {
-        if (getContext() == null || remindersCategory == null) return;
+    private void populateReminders(PreferenceCategory category, String prefKey) {
+        if (getContext() == null || category == null) return;
 
         List<Preference> prefsToKeep = new ArrayList<>();
-        for (int i = 0; i < remindersCategory.getPreferenceCount(); i++) {
-            Preference pref = remindersCategory.getPreference(i);
-            if (pref instanceof MultiSelectListPreference) {
+        for (int i = 0; i < category.getPreferenceCount(); i++) {
+            Preference pref = category.getPreference(i);
+            // Keep existing static preferences like event types or the group name
+            if (pref instanceof MultiSelectListPreference || pref instanceof EditTextPreference) {
                 prefsToKeep.add(pref);
             }
         }
 
-        remindersCategory.removeAll();
+        category.removeAll();
 
         for (Preference pref : prefsToKeep) {
-            remindersCategory.addPreference(pref);
+            category.addPreference(pref);
         }
 
-        int[] reminderMinutes = PreferencesHelper.getAllReminderMinutes(getContext());
+        int[] reminderMinutes;
+        if (prefKey.equals(getString(R.string.pref_reminders_key))) {
+            reminderMinutes = PreferencesHelper.getAllReminderMinutes(getContext());
+        } else {
+            reminderMinutes = PreferencesHelper.getAdditionalReminderMinutes(getContext());
+        }
+
         for (int i = 0; i < reminderMinutes.length; i++) {
-            addReminderPreference(reminderMinutes[i], i, false);
+            addReminderPreference(category, prefKey, reminderMinutes[i], i, false);
         }
 
         Preference addReminderPref = new Preference(getContext());
         addReminderPref.setTitle(R.string.add_reminder);
         addReminderPref.setIcon(R.drawable.ic_add);
         addReminderPref.setOnPreferenceClickListener(preference -> {
-            addReminderPreference(getResources().getInteger(R.integer.pref_reminder_time_def), reminderMinutes.length, true);
+            addReminderPreference(category, prefKey, getResources().getInteger(R.integer.pref_reminder_time_def), reminderMinutes.length, true);
             return true;
         });
-        remindersCategory.addPreference(addReminderPref);
+        category.addPreference(addReminderPref);
     }
 
-    private void addReminderPreference(int minutes, int index, boolean isNew) {
+    private void addReminderPreference(PreferenceCategory category, String prefKey, int minutes, int index, boolean isNew) {
         if (getContext() == null) return;
 
         ReminderPreferenceCompat reminderPref = new ReminderPreferenceCompat(getContext(), null);
-        reminderPref.setKey("pref_reminder_time_" + index);
+        reminderPref.setKey(prefKey + "_" + index);
         reminderPref.setTitle(getString(R.string.pref_reminder_time) + " " + (index + 1));
         reminderPref.setPersistent(false); // We are handling persistence manually
         reminderPref.setValue(minutes);
@@ -419,61 +457,61 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         if (isNew) {
             reminderPref.setOnPreferenceChangeListener((preference, newValue) -> {
                 // On OK, add to category and setup normal listeners
-                setupReminderListeners(reminderPref);
-                remindersCategory.addPreference(reminderPref);
-                saveReminders();
+                setupReminderListeners(category, prefKey, reminderPref);
+                category.addPreference(reminderPref);
+                saveReminders(category, prefKey);
                 return true;
             });
             reminderPref.performClick(true);
         } else {
-            setupReminderListeners(reminderPref);
-            remindersCategory.addPreference(reminderPref);
+            setupReminderListeners(category, prefKey, reminderPref);
+            category.addPreference(reminderPref);
         }
     }
 
-    private void setupReminderListeners(ReminderPreferenceCompat reminderPref) {
+    private void setupReminderListeners(PreferenceCategory category, String prefKey, ReminderPreferenceCompat reminderPref) {
         reminderPref.setOnPreferenceChangeListener((preference, newValue) -> {
-            saveReminders();
+            saveReminders(category, prefKey);
             return true;
         });
         reminderPref.setOnRemoveListener(preference -> {
-            remindersCategory.removePreference(preference);
-            saveReminders();
+            category.removePreference(preference);
+            saveReminders(category, prefKey);
         });
         reminderPref.setOnCustomLongClickListener(preference -> {
-            showDeleteReminderDialog(reminderPref);
+            showDeleteReminderDialog(category, prefKey, reminderPref);
             return true;
         });
     }
 
-    private void showDeleteReminderDialog(Preference preference) {
+    private void showDeleteReminderDialog(PreferenceCategory category, String prefKey, Preference preference) {
         new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.delete_reminder_title)
                 .setMessage(R.string.delete_reminder_message)
                 .setPositiveButton(R.string.delete, (dialog, which) -> {
-                    remindersCategory.removePreference(preference);
-                    saveReminders();
+                    category.removePreference(preference);
+                    saveReminders(category, prefKey);
                 })
                 .setNegativeButton(android.R.string.cancel, null)
                 .show();
     }
 
-    private void saveReminders() {
+    private void saveReminders(PreferenceCategory category, String prefKey) {
         if (getContext() == null) return;
 
         SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
         if (prefs == null) return;
 
         Set<String> reminderSet = new HashSet<>();
-        for (int i = 0; i < remindersCategory.getPreferenceCount(); i++) {
-            Preference pref = remindersCategory.getPreference(i);
+        for (int i = 0; i < category.getPreferenceCount(); i++) {
+            Preference pref = category.getPreference(i);
             if (pref instanceof ReminderPreferenceCompat) {
                 reminderSet.add(String.valueOf(((ReminderPreferenceCompat) pref).getValue()));
             }
         }
 
-        prefs.edit().putStringSet(getString(R.string.pref_reminders_key), reminderSet).apply();
-        populateReminders(); // Repopulate to reflect changes
+        prefs.edit().putStringSet(prefKey, reminderSet).apply();
+        populateReminders(category, prefKey); // Repopulate to reflect changes
     }
 
     private void updateJubileeYearsSummary() {
@@ -498,6 +536,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
 
         AlertDialog jubileeDialog = new MaterialAlertDialogBuilder(mActivity)
                 .setTitle(R.string.pref_jubilee_years_title)
+                .setMessage(R.string.pref_jubilee_years_description)
                 .setView(dialogView)
                 .setPositiveButton(android.R.string.ok, (d, which) -> {
                     String jubileeYears = jubileeInput.getText().toString();

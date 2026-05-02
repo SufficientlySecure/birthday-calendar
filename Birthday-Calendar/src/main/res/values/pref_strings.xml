@@ -35,9 +35,14 @@
     <string name="pref_disable_permission_monitoring_key" translatable="false">disablePermissionMonitoring</string>
     <string name="pref_name_format_key" translatable="false">nameFormat</string>
 
+    <string name="pref_additional_reminders_group_key" translatable="false">additionalRemindersGroup</string>
+    <string name="pref_additional_reminders_group_def" translatable="false">Early reminders</string>
+    <string name="pref_additional_reminders_key" translatable="false">additionalReminders</string>
+
     <!-- Category Keys -->
     <string name="pref_buy_category_key" translatable="false">pref_buy_category</string>
     <string name="pref_reminders_category_key" translatable="false">pref_reminders_category</string>
+    <string name="pref_additional_reminders_category_key" translatable="false">pref_additional_reminders_category</string>
     <string name="pref_title_category_key" translatable="false">pref_title_category</string>
     <string name="pref_advanced_category_key" translatable="false">pref_advanced_category</string>
 </resources>
