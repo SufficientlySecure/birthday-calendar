@@ -120,14 +120,14 @@
     <string name="item_color_content_description">日历颜色指示器</string>
     <string name="permission_denied">所需权限被拒绝，无法激活 Birthday Adapter。</string>
     <string name="permission_read_contacts_denied">读取联系人的权限被拒绝，无法加载账号。</string>
-    <string name="pref_group_filtering_title">分组筛选</string>
-    <string name="pref_group_filtering_summary">允许按联系人分组筛选账号。</string>
+    <string name="pref_group_filtering_title">群组筛选</string>
+    <string name="pref_group_filtering_summary">允许按联系人群组筛选账号。</string>
     <string name="account_list_description">日历中只会显示所选账号的生日。</string>
     <string name="account_list_loading">正在加载账号…</string>
     <string name="account_list_counters_format">%1$s, %2$s</string>
     <string name="account_list_icon_description">账号图标</string>
-    <string name="account_list_group_button_description">显示分组详情</string>
-    <string name="account_list_no_group">无分组</string>
+    <string name="account_list_group_button_description">显示群组详情</string>
+    <string name="account_list_no_group">无群组</string>
     <plurals name="contacts_count">
         <item quantity="other">%d 位联系人</item>
     </plurals>
@@ -164,10 +164,14 @@
     <string name="premium_feat_reminders_summary">为任何活动设置多个自定义提醒。</string>
     <string name="premium_feat_titles_title">自定义活动标题</string>
     <string name="premium_feat_titles_summary">个性化设置生日和纪念日标题的显示方式。</string>
-    <string name="premium_feat_filtering_title">分组筛选</string>
-    <string name="premium_feat_filtering_summary">选择仅同步您关心的联系人分组。</string>
+    <string name="premium_feat_filtering_title">群组筛选</string>
+    <string name="premium_feat_filtering_summary">选择仅同步您关心的联系人群组。</string>
     <string name="premium_feat_jubilee_title">周年纪念日</string>
     <string name="premium_feat_jubilee_summary">突出显示特殊场合，例如 18 岁或 50 岁生日。</string>
     <string name="pref_sync">4. 同步更改</string>
     <string name="pref_sync_summary">让应用检查新的生日并更新您的日历。</string>
+    <string name="pref_jubilee_years_description">这些年份的活动将用特殊图标突出显示。请输入以英文逗号分隔的年份列表。</string>
+    <string name="pref_additional_reminders_category">群组额外提醒</string>
+    <string name="pref_additional_reminders_group_title">联系人群组名称</string>
+    <string name="pref_additional_reminders_group_description">指定一个联系人群组以接收额外提醒，例如对于那些需要提前寄送礼物的联系人。请确保您选择的联系人是该群组的成员。</string>
 </resources>
