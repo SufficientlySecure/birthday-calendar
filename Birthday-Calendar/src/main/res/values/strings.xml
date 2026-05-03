@@ -114,7 +114,7 @@
     <string name="pref_disable_permission_monitoring_title">Disable permission monitoring</string>
     <string name="pref_disable_permission_monitoring_summary">Prevent the app from losing its permissions when not used for a long time. This is useful if you only use the background sync.</string>
 
-    <string name="pref_additional_reminders_category">Additional Reminders for Group</string>
+    <string name="pref_additional_reminders_category">Additional Group Reminders</string>
     <string name="pref_additional_reminders_group_title">Contact Group Name</string>
     <string name="pref_additional_reminders_group_description">Specify a contact group to receive additional reminders, e. g. for those who need a gift sent early. Ensure your chosen contacts are members of that group.</string>
 
