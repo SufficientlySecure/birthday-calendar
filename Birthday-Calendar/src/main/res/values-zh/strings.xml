@@ -171,7 +171,7 @@
     <string name="pref_sync">4. 同步更改</string>
     <string name="pref_sync_summary">让应用检查新的生日并更新您的日历。</string>
     <string name="pref_jubilee_years_description">这些年份的活动将用特殊图标突出显示。请输入以英文逗号分隔的年份列表。</string>
-    <string name="pref_additional_reminders_category">群组额外提醒</string>
+    <string name="pref_additional_reminders_category">额外群组提醒</string>
     <string name="pref_additional_reminders_group_title">联系人群组名称</string>
     <string name="pref_additional_reminders_group_description">指定一个联系人群组以接收额外提醒，例如对于那些需要提前寄送礼物的联系人。请确保您选择的联系人是该群组的成员。</string>
 </resources>
