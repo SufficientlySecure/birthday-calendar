@@ -301,6 +301,15 @@ public class BirthdayWorker extends Worker {
                         int startYear = currYear - 3;
                         int endYear = currYear + 5;
 
+                        // Determine if contact is in the additional group BEFORE UID calculation
+                        boolean isInAdditionalGroup = false;
+                        if (!TextUtils.isEmpty(additionalGroupName)) {
+                            List<String> groups = contactGroupMembership.get(rawContactId);
+                            if (groups != null && groups.contains(additionalGroupName)) {
+                                isInAdditionalGroup = true;
+                            }
+                        }
+
                         for (int iteratedYear = startYear; iteratedYear <= endYear; iteratedYear++) {
                             if (Thread.currentThread().isInterrupted()) {
                                 throw new OperationCanceledException();
@@ -310,11 +319,13 @@ public class BirthdayWorker extends Worker {
                                 continue; // Don't create events for years before the birth year
                             }
 
-                            // Create a stable, unique ID for the event instance based on raw data
+                            // Create a stable, unique ID for the event instance based on raw data.
+                            // We include additional group state (1 or 0) to ensure replacement if membership changes.
                             String uidCore = eventLookupKey + ":" + eventDateString + ":" + eventType + ":" + displayName.hashCode();
                             if (eventType == ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM && eventCustomLabel != null) {
                                 uidCore += ":" + eventCustomLabel;
                             }
+                            uidCore += ":" + (isInAdditionalGroup ? "1" : "0");
                             String eventUid = uidCore + ":" + iteratedYear;
 
                             // If the event already exists, remove it from the list of existing UIDs and continue
@@ -341,15 +352,6 @@ public class BirthdayWorker extends Worker {
                                 long dtstart = cal.getTimeInMillis();
 
                                 boolean shouldAddReminder = reminderEventTypes.contains(String.valueOf(eventType));
-
-                                // Determine if contact is in the additional group
-                                boolean isInAdditionalGroup = false;
-                                if (!TextUtils.isEmpty(additionalGroupName)) {
-                                    List<String> groups = contactGroupMembership.get(rawContactId);
-                                    if (groups != null && groups.contains(additionalGroupName)) {
-                                        isInAdditionalGroup = true;
-                                    }
-                                }
 
                                 Set<Integer> allMinutes = new TreeSet<>();
                                 if (shouldAddReminder) {
