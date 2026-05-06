@@ -48,6 +48,19 @@ public class PreferencesHelper {
      * Get all reminder minutes from preferences as int array
      */
     public static int[] getAllReminderMinutes(Context context) {
+        return getReminderMinutes(context, context.getString(R.string.pref_reminders_key), 
+                context.getResources().getInteger(R.integer.pref_reminder_time_def));
+    }
+
+    /**
+     * Get additional reminder minutes for a specific group from preferences as int array
+     */
+    public static int[] getAdditionalReminderMinutes(Context context) {
+        return getReminderMinutes(context, context.getString(R.string.pref_additional_reminders_key),
+                context.getResources().getInteger(R.integer.pref_additional_reminder_time_def));
+    }
+
+    private static int[] getReminderMinutes(Context context, String prefKey, int defaultValue) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         if (!isFullVersionUnlocked(context)) {
@@ -56,12 +69,12 @@ public class PreferencesHelper {
         }
 
         // Full version:
-        Set<String> reminderSet = prefs.getStringSet(context.getString(R.string.pref_reminders_key), null);
+        Set<String> reminderSet = prefs.getStringSet(prefKey, null);
 
         // If preferences for reminders have never been saved (e.g., new full user or just upgraded),
         // provide the default reminder as a starting point.
         if (reminderSet == null) {
-            return new int[]{ context.getResources().getInteger(R.integer.pref_reminder_time_def) };
+            return new int[]{ defaultValue };
         }
 
         // If preferences exist but are empty (user deleted all reminders), return empty.
@@ -100,6 +113,12 @@ public class PreferencesHelper {
             result[i] = minutes[i];
         }
         return result;
+    }
+
+    public static String getAdditionalRemindersGroupName(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getString(context.getString(R.string.pref_additional_reminders_group_key), 
+                context.getString(R.string.pref_additional_reminders_group_def));
     }
 
     public static Set<String> getReminderEventTypes(Context context) {

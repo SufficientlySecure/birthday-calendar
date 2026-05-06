@@ -56,7 +56,9 @@ public class MySharedPreferenceChangeListener implements SharedPreferences.OnSha
                 mContext.getString(R.string.pref_jubilee_years_key),
                 mContext.getString(R.string.pref_name_format_key),
                 // mContext.getString(R.string.pref_group_filtering_key),
-                mContext.getString(R.string.pref_reminders_key)
+                mContext.getString(R.string.pref_reminders_key),
+                mContext.getString(R.string.pref_additional_reminders_key),
+                mContext.getString(R.string.pref_additional_reminders_group_key)
         ));
     }
 

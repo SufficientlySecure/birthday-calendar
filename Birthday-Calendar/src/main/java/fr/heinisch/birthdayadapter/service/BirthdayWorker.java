@@ -67,6 +67,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.TreeSet;
 
 import fr.heinisch.birthdayadapter.R;
 import fr.heinisch.birthdayadapter.provider.ProviderHelper;
@@ -254,15 +255,22 @@ public class BirthdayWorker extends Worker {
                 }
 
                 int[] reminderMinutes = PreferencesHelper.getAllReminderMinutes(context);
+                int[] additionalReminderMinutes = PreferencesHelper.getAdditionalReminderMinutes(context);
+                String additionalGroupName = PreferencesHelper.getAdditionalRemindersGroupName(context);
+                Map<String, List<String>> contactGroupMembership = getRawContactGroupTitles(contentResolver);
+
                 Set<String> reminderEventTypes = PreferencesHelper.getReminderEventTypes(context);
-                Log.d(Constants.TAG, "Reminder minutes: " + Arrays.toString(reminderMinutes));
-                boolean hasReminders = reminderMinutes.length > 0;
+                Log.d(Constants.TAG, "Default reminder minutes: " + Arrays.toString(reminderMinutes));
+                if (!TextUtils.isEmpty(additionalGroupName)) {
+                    Log.d(Constants.TAG, "Additional group for reminders: " + additionalGroupName + ", minutes: " + Arrays.toString(additionalReminderMinutes));
+                }
 
                 int eventDateColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
                 int displayNameColumn = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
                 int eventTypeColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE);
                 int eventCustomLabelColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL);
                 int eventLookupKeyColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.LOOKUP_KEY);
+                int rawContactIdColumn = cursor.getColumnIndex(ContactsContract.Data.RAW_CONTACT_ID);
 
                 int backRef = 0;
 
@@ -278,6 +286,7 @@ public class BirthdayWorker extends Worker {
                     int eventType = cursor.getInt(eventTypeColumn);
                     String eventLookupKey = cursor.getString(eventLookupKeyColumn);
                     String eventCustomLabel = cursor.getString(eventCustomLabelColumn);
+                    String rawContactId = cursor.getString(rawContactIdColumn);
 
                     Date eventDate = parseEventDateString(context, eventDateString, displayName);
 
@@ -292,6 +301,15 @@ public class BirthdayWorker extends Worker {
                         int startYear = currYear - 3;
                         int endYear = currYear + 5;
 
+                        // Determine if contact is in the additional group BEFORE UID calculation
+                        boolean isInAdditionalGroup = false;
+                        if (!TextUtils.isEmpty(additionalGroupName)) {
+                            List<String> groups = contactGroupMembership.get(rawContactId);
+                            if (groups != null && groups.contains(additionalGroupName)) {
+                                isInAdditionalGroup = true;
+                            }
+                        }
+
                         for (int iteratedYear = startYear; iteratedYear <= endYear; iteratedYear++) {
                             if (Thread.currentThread().isInterrupted()) {
                                 throw new OperationCanceledException();
@@ -301,11 +319,13 @@ public class BirthdayWorker extends Worker {
                                 continue; // Don't create events for years before the birth year
                             }
 
-                            // Create a stable, unique ID for the event instance based on raw data
+                            // Create a stable, unique ID for the event instance based on raw data.
+                            // We include additional group state (1 or 0) to ensure replacement if membership changes.
                             String uidCore = eventLookupKey + ":" + eventDateString + ":" + eventType + ":" + displayName.hashCode();
                             if (eventType == ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM && eventCustomLabel != null) {
                                 uidCore += ":" + eventCustomLabel;
                             }
+                            uidCore += ":" + (isInAdditionalGroup ? "1" : "0");
                             String eventUid = uidCore + ":" + iteratedYear;
 
                             // If the event already exists, remove it from the list of existing UIDs and continue
@@ -331,13 +351,23 @@ public class BirthdayWorker extends Worker {
                                 cal.set(Calendar.MILLISECOND, 0);
                                 long dtstart = cal.getTimeInMillis();
 
-                                boolean shouldAddReminder = hasReminders && reminderEventTypes.contains(String.valueOf(eventType));
+                                boolean shouldAddReminder = reminderEventTypes.contains(String.valueOf(eventType));
 
-                                Log.v(Constants.TAG, "Adding event: " + title);
-                                operationList.add(insertEvent(context, calendarId, dtstart, title, eventLookupKey, eventUid, shouldAddReminder));
-
+                                Set<Integer> allMinutes = new TreeSet<>();
                                 if (shouldAddReminder) {
-                                    for (int minute : reminderMinutes) {
+                                    for (int m : reminderMinutes) allMinutes.add(m);
+                                    if (isInAdditionalGroup) {
+                                        for (int m : additionalReminderMinutes) allMinutes.add(m);
+                                    }
+                                }
+
+                                boolean hasAnyReminders = !allMinutes.isEmpty();
+
+                                Log.v(Constants.TAG, "Adding event: " + title + " (Reminders: " + allMinutes + ")");
+                                operationList.add(insertEvent(context, calendarId, dtstart, title, eventLookupKey, eventUid, hasAnyReminders));
+
+                                if (hasAnyReminders) {
+                                    for (int minute : allMinutes) {
                                         ContentProviderOperation.Builder builder = ContentProviderOperation
                                                 .newInsert(CalendarHelper.getBirthdayAdapterUri(context, CalendarContract.Reminders.CONTENT_URI));
 
@@ -346,7 +376,7 @@ public class BirthdayWorker extends Worker {
                                         builder.withValue(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
                                         operationList.add(builder.build());
                                     }
-                                    backRef += 1 + reminderMinutes.length;
+                                    backRef += 1 + allMinutes.size();
                                 } else {
                                     backRef += 1;
                                 }
@@ -517,7 +547,8 @@ public class BirthdayWorker extends Worker {
                 ContactsContract.Data.LOOKUP_KEY,
                 ContactsContract.CommonDataKinds.Event.START_DATE,
                 ContactsContract.CommonDataKinds.Event.TYPE,
-                ContactsContract.CommonDataKinds.Event.LABEL
+                ContactsContract.CommonDataKinds.Event.LABEL,
+                ContactsContract.Data.RAW_CONTACT_ID
         });
 
         try (Cursor dataCursor = contentResolver.query(ContactsContract.Data.CONTENT_URI, projection, selection, selectionArgs, null)) {
@@ -587,6 +618,7 @@ public class BirthdayWorker extends Worker {
                     int type = dataCursor.getInt(typeColumn);
                     String label = dataCursor.getString(labelColumn);
                     String startDate = dataCursor.getString(startDateColumn);
+                    String rawContactId = dataCursor.getString(rawContactIdColumn);
 
                     // Prevent adding the same event (birthday, anniversary) for the same contact twice
                     String eventIdentifier = lookupKey + type + label + startDate;
@@ -597,7 +629,8 @@ public class BirthdayWorker extends Worker {
                                 .add(lookupKey)
                                 .add(startDate)
                                 .add(type)
-                                .add(label);
+                                .add(label)
+                                .add(rawContactId);
                     }
                 }
             }

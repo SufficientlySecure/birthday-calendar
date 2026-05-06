@@ -177,4 +177,8 @@
     <string name="premium_feat_jubilee_summary">Hebe besondere Anlässe wie den 18. oder 50. Geburtstag hervor.</string>
     <string name="pref_sync">4. Änderungen synchronisieren</string>
     <string name="pref_sync_summary">Lass die App nach neuen Geburtstagen suchen und deinen Kalender aktualisieren.</string>
+    <string name="pref_jubilee_years_description">Ereignisse für diese Alter werden mit einem speziellen Symbol hervorgehoben. Gib die Werte kommagetrennt ein.</string>
+    <string name="pref_additional_reminders_category">Zusätzliche Gruppenerinnerungen</string>
+    <string name="pref_additional_reminders_group_title">Kontaktgruppenname</string>
+    <string name="pref_additional_reminders_group_description">Gib den Namen einer Kontaktgruppe an, um für deren Mitglieder zusätzliche Erinnerungen zu erhalten. Stelle sicher, dass die entsprechenden Kontakte Mitglieder dieser Gruppe sind.</string>
 </resources>
