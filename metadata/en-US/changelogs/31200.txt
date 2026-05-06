@@ -1,0 +1,5 @@
+3.12
+* Allow additional reminders for a selected contact group
+- Ask for reviews in google play version
+- Add descriptions to input windows
+- Update translations
