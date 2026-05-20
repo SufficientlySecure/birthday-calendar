@@ -1,0 +1,3 @@
+3.12.1
+* Add translation: Indonesian
+- Update dependencies
