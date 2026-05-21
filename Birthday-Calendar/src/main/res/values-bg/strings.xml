@@ -174,4 +174,8 @@
     <string name="premium_feat_jubilee_summary">Подчертаване на специални поводи като 18-ти или 50-ти рожден ден.</string>
     <string name="pref_sync">4. Синхронизиране на промени</string>
     <string name="pref_sync_summary">Приложението обновява календара с нови рождени дни.</string>
+    <string name="pref_jubilee_years_description">Събитията за тези годишнини ще бъдат отбелязани с различна пиктограма. Въведете разделени със запетая годинишнините.</string>
+    <string name="pref_additional_reminders_category">Допълнителни напомняния за групата</string>
+    <string name="pref_additional_reminders_group_title">Име на групата контакти</string>
+    <string name="pref_additional_reminders_group_description">Посочете група контакти, която да получава допълнителни напомняния, например за тези, на които трябва да изпратите подарък по-рано. Уверете се, че избраните контакти са членове на тази група.</string>
 </resources>

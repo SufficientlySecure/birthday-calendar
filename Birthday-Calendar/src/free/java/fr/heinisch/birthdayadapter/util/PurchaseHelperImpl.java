@@ -40,7 +40,6 @@ import com.android.billingclient.api.QueryPurchasesParams;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import fr.heinisch.birthdayadapter.BuildConfig;
 import fr.heinisch.birthdayadapter.util.Log;
@@ -91,11 +90,9 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
                 public void onBillingServiceDisconnected() {
                     Log.w(Constants.TAG, "BillingClient disconnected.");
                     isBillingClientConnecting.set(false);
-                    // Optionally, you could try to reconnect here with a backoff strategy.
                 }
             });
         } else {
-            // You could queue the runnable or simply log that a connection is already in progress.
             Log.d(Constants.TAG, "BillingClient connection already in progress.");
         }
     }
@@ -116,9 +113,9 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
                     .build();
             QueryProductDetailsParams params = QueryProductDetailsParams.newBuilder().setProductList(Collections.singletonList(product)).build();
 
-            billingClient.queryProductDetailsAsync(params, (br, productDetailsResult) -> {
-                List<ProductDetails> productDetailsList = productDetailsResult.getProductDetailsList();
-                if (br.getResponseCode() == BillingClient.BillingResponseCode.OK && productDetailsList != null && !productDetailsList.isEmpty()) {
+            billingClient.queryProductDetailsAsync(params, (billingResult, result) -> {
+                List<ProductDetails> productDetailsList = result.getProductDetailsList();
+                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && productDetailsList != null && !productDetailsList.isEmpty()) {
                     for (ProductDetails productDetails : productDetailsList) {
                         if (productDetails.getProductId().equals(SKU_FULL_VERSION)) {
                             BillingFlowParams.ProductDetailsParams.Builder productDetailsParamsBuilder = BillingFlowParams.ProductDetailsParams.newBuilder()
@@ -150,14 +147,15 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
                     .build();
             QueryProductDetailsParams params = QueryProductDetailsParams.newBuilder().setProductList(Collections.singletonList(product)).build();
 
-            billingClient.queryProductDetailsAsync(params, (br, productDetailsResult) -> {
-                List<ProductDetails> productDetailsList = productDetailsResult.getProductDetailsList();
-                if (br.getResponseCode() == BillingClient.BillingResponseCode.OK && productDetailsList != null && !productDetailsList.isEmpty()) {
+            billingClient.queryProductDetailsAsync(params, (billingResult, result) -> {
+                List<ProductDetails> productDetailsList = result.getProductDetailsList();
+                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && productDetailsList != null && !productDetailsList.isEmpty()) {
                     for (ProductDetails productDetails : productDetailsList) {
                         if (productDetails.getProductId().equals(SKU_FULL_VERSION)) {
                             ProductDetails.OneTimePurchaseOfferDetails offerDetails = productDetails.getOneTimePurchaseOfferDetails();
                             if (offerDetails != null) {
-                                activity.runOnUiThread(() -> callback.onPriceFound(offerDetails.getFormattedPrice()));
+                                String price = offerDetails.getFormattedPrice();
+                                activity.runOnUiThread(() -> callback.onPriceFound(price));
                             }
                             return; // Exit after finding the product
                         }
@@ -179,8 +177,8 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
 
         ensureBillingClient(context.getApplicationContext(), () -> {
             QueryPurchasesParams params = QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build();
-            billingClient.queryPurchasesAsync(params, (br, purchases) -> {
-                if (br.getResponseCode() == BillingClient.BillingResponseCode.OK && purchases != null) {
+            billingClient.queryPurchasesAsync(params, (billingResult, purchases) -> {
+                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchases != null) {
                     for (Purchase purchase : purchases) {
                         if (purchase.getProducts().contains(SKU_FULL_VERSION)) {
                             handlePurchase(context, billingClient, purchase, () -> {});
