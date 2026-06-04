@@ -164,6 +164,49 @@
         font-size: 0.9rem;
         color: #666;
       }
+
+      /* Impressum Styles */
+      .legal-notice-details {
+        max-width: 400px;
+        margin: 1.5rem auto 0 auto;
+        font-size: 0.85rem;
+        color: #666666;
+        text-align: left;
+      }
+
+      .legal-notice-details summary {
+        cursor: pointer;
+        font-weight: 600;
+        color: var(--primary-color);
+        text-align: center;
+        list-style: none;
+      }
+
+      .legal-notice-details summary:hover {
+        color: var(--primary-dark);
+        text-decoration: underline;
+      }
+
+      .legal-notice-details summary::before {
+        content: "→ ";
+        font-size: 0.75rem;
+        display: inline-block;
+        transition: transform 0.2s;
+      }
+
+      .legal-notice-details[open] summary::before {
+        transform: rotate(90deg);
+      }
+
+      .legal-content {
+        margin-top: 1rem;
+        padding-left: 1rem;
+        border-left: 2px solid #e8f5e9;
+      }
+
+      .legal-content p {
+        margin: 0.3rem 0;
+      }
     </style>
     <link rel="intent-filter" href="https://birthdayadapter.heinisch.fr/.well-known/assetlinks.json" />
   </head>
@@ -278,14 +321,11 @@
         <h2>Contribute & Support</h2>
         <ul class="link-list">
           <li>
-            🌐
-            <a
-              href="https://hosted.weblate.org/projects/birthday-calendar/birthday-calendar/"
-              target="_blank"
-              rel="noopener"
-              >Translations</a
+            💻
+            <a href="https://github.com/SufficientlySecure/birthday-calendar" target="_blank" rel="noopener"
+              >Source Code</a
             >
-            – Help translate the app into your native language on Weblate.
+            – Check out the GitHub repository to inspect the code, or contribute to development.
           </li>
           <li>
             🪲
@@ -295,18 +335,42 @@
             – Found a bug or have an idea? Open an issue on GitHub.
           </li>
           <li>
-            💻
-            <a href="https://github.com/SufficientlySecure/birthday-calendar" target="_blank" rel="noopener"
-              >Source Code</a
+            🌐
+            <a href="https://hosted.weblate.org/engage/birthday-adapter/" target="_blank" rel="noopener"
+              >Translations</a
             >
-            – Check out the GitHub repository to inspect the code, or contribute to development.
+            – Help translate the app into your native language on Weblate.
           </li>
         </ul>
+
+        <a href="https://hosted.weblate.org/engage/birthday-adapter/" style="display: flex; justify-content: center">
+          <img
+            src="https://hosted.weblate.org/widget/birthday-adapter/horizontal-auto.svg"
+            width="70%"
+            alt="Translation status"
+          />
+        </a>
       </div>
     </main>
 
     <footer>
-      <p>&copy; 2026 heinisch.fr</p>
+      <!-- Ausklappbare Legal Notice ohne Box -->
+      <details class="legal-notice-details">
+        <summary>Legal Information according to § 5 TMG / § 18 MStV</summary>
+
+        <div class="legal-content">
+          <p style="margin-top: 0.8rem"><strong>Impressum:</strong></p>
+          <p>Matthias Heinisch</p>
+          <p>Keplerstraße 9</p>
+          <p>22765 Hamburg</p>
+          <p>Germany</p>
+
+          <p style="margin-top: 0.8rem"><strong>Contact:</strong></p>
+          <p>Email: birthdayadapter@heinisch.fr</p>
+        </div>
+      </details>
+
+      <p style="margin-top: 2rem">&copy; 2026 heinisch.fr | Hosted on GitHub Pages</p>
     </footer>
   </body>
 </html>
