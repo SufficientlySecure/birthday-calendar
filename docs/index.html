@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Birthday Adapter | Android App</title>
+    <style>
+      :root {
+        --primary-color: #2e7d32; /* Clean Android/F-Droid Green */
+        --primary-dark: #1b5e20;
+        --text-color: #333333;
+        --bg-color: #f4f7f4;
+        --card-bg: #ffffff;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.6;
+        color: var(--text-color);
+        background-color: var(--bg-color);
+        margin: 0;
+        padding: 0;
+      }
+
+      header {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        color: white;
+        text-align: center;
+        padding: 4rem 1rem;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 2.5rem;
+        font-weight: 700;
+      }
+
+      header p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        margin: 0.5rem 0 0 0;
+      }
+
+      main {
+        max-width: 900px;
+        margin: -2rem auto 3rem auto;
+        padding: 0 1rem;
+      }
+
+      .card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+        margin-bottom: 2rem;
+      }
+
+      h2 {
+        color: var(--primary-color);
+        border-bottom: 2px solid #e8f5e9;
+        padding-bottom: 0.5rem;
+        margin-top: 0;
+      }
+
+      .features-list {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      .features-list li {
+        position: relative;
+        padding-left: 1.8rem;
+        margin-bottom: 1.2rem;
+      }
+
+      .features-list li::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: var(--primary-color);
+        font-weight: bold;
+        font-size: 1.1rem;
+      }
+
+      /* Link List Styles */
+      .link-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .link-list li {
+        margin-bottom: 1rem;
+        font-size: 1.05rem;
+      }
+
+      .link-list a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.2s;
+      }
+
+      .link-list a:hover {
+        color: var(--primary-dark);
+        text-decoration: underline;
+      }
+
+      /* Screenshot Gallery */
+      .screenshot-gallery {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        justify-content: center;
+        padding: 10px 0;
+      }
+
+      .screenshot-gallery img {
+        height: 380px;
+        max-width: 100%;
+        width: auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      }
+
+      /* Badge/Image Buttons Grid */
+      .badge-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 25px;
+        justify-content: center;
+        align-items: center;
+        margin: 3.5rem 0;
+      }
+
+      .badge-link {
+        transition:
+          transform 0.2s,
+          filter 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .badge-fdroid img {
+        height: 80px;
+        object-fit: contain;
+      }
+
+      .badge-playstore img {
+        height: 80px;
+        margin: -11px 0;
+        object-fit: contain;
+      }
+
+      .badge-link:hover {
+        transform: scale(1.04);
+        filter: brightness(1.05);
+      }
+
+      footer {
+        text-align: center;
+        padding: 2rem;
+        font-size: 0.9rem;
+        color: #666;
+      }
+    </style>
+    <link rel="intent-filter" href="https://birthdayadapter.heinisch.fr/.well-known/assetlinks.json" />
+  </head>
+  <body>
+    <header>
+      <h1>Birthday Adapter</h1>
+      <p>Integrate birthdays, anniversaries, and other events from your contacts into your Android calendar</p>
+    </header>
+
+    <main>
+      <div class="card">
+        <h2>About the App</h2>
+        <p>
+          <strong>Birthday Adapter</strong> provides birthdays, anniversaries, and other events from your contacts into
+          your Android calendar. Unlike other apps, it integrates with your system calendar, so you can see all your
+          contact dates alongside your other events.
+        </p>
+      </div>
+
+      <div class="badge-container">
+        <a
+          href="https://f-droid.org/packages/org.birthdayadapter/"
+          target="_blank"
+          rel="noopener"
+          class="badge-link badge-fdroid"
+        >
+          <img src="https://f-droid.org/badge/get-it-on.png" height="80" alt="Get it on F-Droid" />
+        </a>
+
+        <a
+          href="https://play.google.com/store/apps/details?id=org.birthdayadapter"
+          target="_blank"
+          rel="noopener"
+          class="badge-link badge-playstore"
+        >
+          <img
+            src="https://github.com/SufficientlySecure/birthday-calendar/blob/main/metadata/en-US/images/GetItGooglePlay.png?raw=true"
+            alt="Get it on Google Play"
+            height="80"
+          />
+        </a>
+      </div>
+      <div class="card">
+        <h2>Screenshots</h2>
+        <div class="screenshot-gallery">
+          <img
+            src="https://github.com/SufficientlySecure/birthday-calendar/blob/main/metadata/en-US/images/phoneScreenshots/01.png?raw=true"
+            alt="App Setup Screenshot"
+          />
+          <img
+            src="https://github.com/SufficientlySecure/birthday-calendar/blob/main/metadata/en-US/images/phoneScreenshots/02.png?raw=true"
+            alt="Event Preview Screenshot"
+          />
+          <img
+            src="https://github.com/SufficientlySecure/birthday-calendar/blob/main/metadata/en-US/images/phoneScreenshots/03.png?raw=true"
+            alt="Calendar View Screenshot"
+          />
+          <img
+            src="https://github.com/SufficientlySecure/birthday-calendar/blob/main/metadata/en-US/images/phoneScreenshots/04.png?raw=true"
+            alt="Filter Screenshot"
+          />
+          <img
+            src="https://github.com/SufficientlySecure/birthday-calendar/blob/main/metadata/en-US/images/phoneScreenshots/05.png?raw=true"
+            alt="Reminders Screenshot"
+          />
+          <img
+            src="https://github.com/SufficientlySecure/birthday-calendar/blob/main/metadata/en-US/images/phoneScreenshots/06.png?raw=true"
+            alt="Custom Label Screenshot"
+          />
+          <img
+            src="https://github.com/SufficientlySecure/birthday-calendar/blob/main/metadata/en-US/images/phoneScreenshots/07.png?raw=true"
+            alt="Jubilee Marker Screenshot"
+          />
+          <img
+            src="https://github.com/SufficientlySecure/birthday-calendar/blob/main/metadata/en-US/images/phoneScreenshots/08.png?raw=true"
+            alt="Dark Mode Screenshot"
+          />
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Features</h2>
+        <ul class="features-list">
+          <li>
+            <strong>Integration:</strong> See your contacts' birthdays directly in your favorite calendar app alongside
+            your daily schedule - no manual lists or double entries required.
+          </li>
+          <li>
+            <strong>Age Display:</strong> With the age automatically being added to every event, you always know which
+            milestone is ahead.
+          </li>
+          <li>
+            <strong>Beyond Birthdays:</strong> Sync any custom-labeled date from your address book - perfect for keeping
+            track of your contacts' anniversaries or their children’s and partners' birthdays.
+          </li>
+          <li><strong>Background Sync:</strong> Your calendar stays in sync with regular updates in the background.</li>
+          <li><strong>Filtering:</strong> Choose which accounts or contact groups you want to see in your calendar.</li>
+          <li><strong>Reminders:</strong> Set as many reminders as you need for your events.</li>
+          <li><strong>Jubilee Markers:</strong> Spot major milestones and big anniversaries.</li>
+          <li>
+            <strong>Customization:</strong> Personalize event titles and choose which event types should trigger a
+            notification.
+          </li>
+          <li>
+            <strong>Personalization:</strong> Use the color picker to style your birthday calendar to match your
+            personal preference.
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Contribute & Support</h2>
+        <ul class="link-list">
+          <li>
+            🌐
+            <a
+              href="https://hosted.weblate.org/projects/birthday-calendar/birthday-calendar/"
+              target="_blank"
+              rel="noopener"
+              >Translations</a
+            >
+            – Help translate the app into your native language on Weblate.
+          </li>
+          <li>
+            🪲
+            <a href="https://github.com/SufficientlySecure/birthday-calendar/issues" target="_blank" rel="noopener"
+              >Issues & Feature Requests</a
+            >
+            – Found a bug or have an idea? Open an issue on GitHub.
+          </li>
+          <li>
+            💻
+            <a href="https://github.com/SufficientlySecure/birthday-calendar" target="_blank" rel="noopener"
+              >Source Code</a
+            >
+            – Check out the GitHub repository to inspect the code, or contribute to development.
+          </li>
+        </ul>
+      </div>
+    </main>
+
+    <footer>
+      <p>&copy; 2026 heinisch.fr</p>
+    </footer>
+  </body>
+</html>

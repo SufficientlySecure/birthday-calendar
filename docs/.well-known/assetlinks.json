@@ -1,0 +1,22 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {"namespace": "android_app",
+      "package_name": "org.birthdayadapter",
+      "sha256_cert_fingerprints": [
+        "B4:D5:00:46:25:9E:B0:C5:CF:0F:6A:2E:BB:F9:DB:46:5E:6E:55:96:2C:36:A5:22:5F:C8:8E:33:E6:FC:3D:46",
+        "59:AA:11:A4:BF:97:58:34:FF:06:2D:40:8F:EE:25:23:C2:26:0C:BB:2C:C8:C0:1F:CD:A0:3E:AD:21:8A:90:7D"
+      ]
+    }
+  },
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "fr.heinisch.birthdayadapter",
+      "sha256_cert_fingerprints": [
+        "70:3E:46:99:37:74:4F:A0:0A:56:0E:B7:32:FA:96:88:BC:63:73:AF:21:E2:46:8E:A0:D2:3F:24:8E:A5:40:BB"
+      ]
+    }
+  }
+]
