@@ -28,6 +28,7 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
+import android.provider.ContactsContract;
 import android.provider.ContactsContract.QuickContact;
 
 /*
@@ -48,15 +49,40 @@ public class ShowContactActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Uri uri = null;
         Bundle extras = getIntent().getExtras();
+        
+        // Handle "Open in App" button from calendar
         if (extras != null && extras.containsKey(CalendarContract.EXTRA_CUSTOM_APP_URI)) {
-            Uri uri = Uri.parse(extras.getString(CalendarContract.EXTRA_CUSTOM_APP_URI));
-            Log.d(Constants.TAG, "Uri: " + uri);
+            uri = Uri.parse(extras.getString(CalendarContract.EXTRA_CUSTOM_APP_URI));
+        } else if (getIntent().getData() != null) {
+            Uri data = getIntent().getData();
+            String lookupKey = null;
 
+            // Handle custom schemes: birthdayadapter://contact/LOOKUP_KEY or androidapp://contact/LOOKUP_KEY
+            if ("birthdayadapter".equals(data.getScheme()) || "androidapp".equals(data.getScheme())) {
+                lookupKey = data.getLastPathSegment();
+            } 
+            // Handle https landing page: https://birthdayadapter.heinisch.fr/contact/index.html?key=LOOKUP_KEY
+            else if ("https".equals(data.getScheme()) || "http".equals(data.getScheme())) {
+                lookupKey = data.getQueryParameter("key");
+                // Fallback for old path-based links
+                if (lookupKey == null) {
+                    lookupKey = data.getLastPathSegment();
+                }
+            }
+
+            if (lookupKey != null && !lookupKey.isEmpty() && !lookupKey.equals("index.html")) {
+                uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
+            }
+        }
+
+        if (uri != null) {
+            Log.d(Constants.TAG, "Showing contact for Uri: " + uri);
             QuickContact.showQuickContact(this, getIntent().getSourceBounds(), uri,
                     QuickContact.MODE_LARGE, null);
         } else {
-            Log.e(Constants.TAG, "getIntent().getData() is null!");
+            Log.e(Constants.TAG, "No valid contact lookup key found in intent!");
         }
 
         finish();

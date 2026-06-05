@@ -321,11 +321,12 @@ public class BirthdayWorker extends Worker {
 
                             // Create a stable, unique ID for the event instance based on raw data.
                             // We include additional group state (1 or 0) to ensure replacement if membership changes.
+                            // Suffix "v2" forces a refresh of previously created events.
                             String uidCore = eventLookupKey + ":" + eventDateString + ":" + eventType + ":" + displayName.hashCode();
                             if (eventType == ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM && eventCustomLabel != null) {
                                 uidCore += ":" + eventCustomLabel;
                             }
-                            uidCore += ":" + (isInAdditionalGroup ? "1" : "0");
+                            uidCore += ":" + (isInAdditionalGroup ? "1" : "0") + ":v2";
                             String eventUid = uidCore + ":" + iteratedYear;
 
                             // If the event already exists, remove it from the list of existing UIDs and continue
@@ -363,8 +364,10 @@ public class BirthdayWorker extends Worker {
 
                                 boolean hasAnyReminders = !allMinutes.isEmpty();
 
+                                String description = "birthdayadapter.heinisch.fr/contact/?key=" + eventLookupKey;
+
                                 Log.v(Constants.TAG, "Adding event: " + title + " (Reminders: " + allMinutes + ")");
-                                operationList.add(insertEvent(context, calendarId, dtstart, title, eventLookupKey, eventUid, hasAnyReminders));
+                                operationList.add(insertEvent(context, calendarId, dtstart, title, description, eventLookupKey, eventUid, hasAnyReminders));
 
                                 if (hasAnyReminders) {
                                     for (int minute : allMinutes) {
@@ -816,7 +819,7 @@ public class BirthdayWorker extends Worker {
     }
 
     private ContentProviderOperation insertEvent(Context context, long calendarId,
-                                                 long dtstart, String title, String lookupKey, String eventUid, boolean hasReminders)
+                                                 long dtstart, String title, String description, String lookupKey, String eventUid, boolean hasReminders)
             throws OperationCanceledException {
         if (Thread.currentThread().isInterrupted()) {
             throw new OperationCanceledException();
@@ -834,6 +837,7 @@ public class BirthdayWorker extends Worker {
 
         builder.withValue(CalendarContract.Events.ALL_DAY, 1);
         builder.withValue(CalendarContract.Events.TITLE, title);
+        builder.withValue(CalendarContract.Events.DESCRIPTION, description);
         builder.withValue(CalendarContract.Events.STATUS, CalendarContract.Events.STATUS_CONFIRMED);
         builder.withValue(CalendarContract.Events.UID_2445, eventUid);
 
