@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Birthday Adapter | Contact Link Help</title>
+    <style>
+      :root {
+        --primary-color: #2e7d32;
+        --primary-dark: #1b5e20;
+        --text-color: #333333;
+        --bg-color: #f4f7f4;
+        --card-bg: #ffffff;
+        --warning-color: #c62828;
+        --privacy-color: #1565c0;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.6;
+        color: var(--text-color);
+        background-color: var(--bg-color);
+        margin: 0;
+        padding: 0;
+      }
+
+      header {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        color: white;
+        text-align: center;
+        padding: 3rem 1rem;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 700;
+      }
+
+      main {
+        max-width: 700px;
+        margin: -1.5rem auto 3rem auto;
+        padding: 0 1rem;
+      }
+
+      .card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+        margin-bottom: 2rem;
+      }
+
+      .warning-box {
+        border-left: 4px solid var(--warning-color);
+        background-color: #ffebee;
+        color: #b71c1c;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1.5rem;
+        font-weight: 500;
+      }
+
+      .privacy-box {
+        border-left: 4px solid var(--privacy-color);
+        background-color: #e3f2fd;
+        color: #0d47a1;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+      }
+
+      h2 {
+        color: var(--primary-color);
+        border-bottom: 2px solid #e8f5e9;
+        padding-bottom: 0.5rem;
+        margin-top: 0;
+        font-size: 1.4rem;
+      }
+
+      ol {
+        padding-left: 1.2rem;
+      }
+
+      li {
+        margin-bottom: 1rem;
+      }
+
+      .btn {
+        display: inline-block;
+        background-color: var(--primary-color);
+        color: white;
+        text-decoration: none;
+        padding: 0.6rem 1.2rem;
+        border-radius: 6px;
+        font-weight: 600;
+        margin-top: 0.5rem;
+        transition: background-color 0.2s;
+      }
+
+      .btn:hover {
+        background-color: var(--primary-dark);
+      }
+
+      footer {
+        text-align: center;
+        padding: 2rem;
+        font-size: 0.9rem;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Birthday Adapter</h1>
+    </header>
+
+    <main>
+      <div class="card">
+        <div class="warning-box">
+          ⚠️ Something went wrong! This link was supposed to open inside the Birthday Adapter app, not in your web
+          browser.
+        </div>
+
+        <div class="privacy-box">
+          🔒 <strong>Your Privacy is 100% Safe:</strong> Birthday Adapter works entirely offline. No contact details,
+          lookup keys, or personal data are ever sent to this website, tracked, or shared over the internet. Everything
+          stays strictly private on your device.
+        </div>
+
+        <h2>Why am I seeing this page?</h2>
+        <p>
+          This URL is a technical shortcut (a placeholder) used by <strong>Birthday Adapter</strong> to link your
+          calendar events directly back to your Android contacts.
+        </p>
+        <p>
+          Because Android didn't redirect this link into the app, it means your system is currently forcing these links
+          to open in the browser instead.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>How to fix this in Android</h2>
+        <p>You can easily restore the direct link functionality by changing your Android system settings:</p>
+
+        <ol>
+          <li>Open your phone's <strong>Settings</strong> app.</li>
+          <li>Go to <strong>Apps</strong> &rarr; <strong>All Apps</strong> (or <em>App Management</em>).</li>
+          <li>Find and select <strong>Birthday Adapter</strong> from the list.</li>
+          <li>Scroll down and tap on <strong>Open by default</strong> (or <em>Supported Links</em>).</li>
+          <li>Make sure the toggle for <strong>Open supported links</strong> is turned <strong>ON</strong>.</li>
+          <li>Ensure that <code>birthdayadapter.heinisch.fr</code> is checked or listed as a supported domain.</li>
+        </ol>
+
+        <p>
+          Once enabled, tapping this link in your calendar will immediately open the correct contact card inside your
+          contacts app instead of loading this website.
+        </p>
+
+        <center>
+          <a href="https://birthdayadapter.heinisch.fr/" class="btn">Go to Main Page</a>
+        </center>
+      </div>
+    </main>
+
+    <footer>
+      <p>&copy; 2026 heinisch.fr | Hosted on GitHub Pages</p>
+    </footer>
+  </body>
+</html>
