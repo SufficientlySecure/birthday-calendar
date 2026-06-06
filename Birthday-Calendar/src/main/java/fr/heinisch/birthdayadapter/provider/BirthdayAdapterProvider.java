@@ -118,7 +118,7 @@ public class BirthdayAdapterProvider extends ContentProvider {
             } else if (match == CONTACT_MAPPING) {
                 // Use insertWithOnConflict to handle UNIQUE constraint on lookup_key
                 rowId = db.insertWithOnConflict(BirthdayAdapterDatabase.TABLE_CONTACT_MAPPING, null, values, SQLiteDatabase.CONFLICT_IGNORE);
-                if (rowId == -1) {
+                if (rowId == -1 && values != null) {
                     // Entry already exists, query for its ID
                     String lookupKey = values.getAsString(BirthdayAdapterContract.ContactMappingColumns.LOOKUP_KEY);
                     try (Cursor cursor = db.query(BirthdayAdapterDatabase.TABLE_CONTACT_MAPPING,
@@ -130,7 +130,9 @@ public class BirthdayAdapterProvider extends ContentProvider {
                         }
                     }
                 }
-                rowUri = BirthdayAdapterContract.ContactMapping.buildUri(Long.toString(rowId));
+                if (rowId != -1) {
+                    rowUri = BirthdayAdapterContract.ContactMapping.buildUri(Long.toString(rowId));
+                }
             } else {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
             }

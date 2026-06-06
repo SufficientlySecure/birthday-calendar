@@ -366,7 +366,7 @@ public class BirthdayWorker extends Worker {
                                 boolean hasAnyReminders = !allMinutes.isEmpty();
 
                                 String shortId = getShortContactId(context, eventLookupKey);
-                                String description = "birthdayadapter.heinisch.fr/contact/?key=" + shortId;
+                                String description = "androidapp.birthdayadapter.heinisch.fr/contact/?key=" + shortId;
 
                                 Log.v(Constants.TAG, "Adding event: " + title + " (Reminders: " + allMinutes + ")");
                                 operationList.add(insertEvent(context, calendarId, dtstart, title, description, eventLookupKey, eventUid, hasAnyReminders));

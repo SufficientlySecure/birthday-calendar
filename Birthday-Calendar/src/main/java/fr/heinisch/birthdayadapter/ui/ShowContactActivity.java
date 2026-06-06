@@ -48,9 +48,6 @@ public class ShowContactActivity extends Activity {
         } else if (getIntent().getData() != null) {
             Uri data = getIntent().getData();
             String key = data.getQueryParameter("key");
-            if (key == null) {
-                key = data.getLastPathSegment();
-            }
 
             if (key != null && !key.isEmpty() && !key.equals("index.html") && !key.equals("contact")) {
                 // Check if it's our internal short ID (numeric)

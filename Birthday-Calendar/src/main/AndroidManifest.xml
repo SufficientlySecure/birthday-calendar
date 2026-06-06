@@ -96,7 +96,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="vnd.android.cursor.item/event" />
             </intent-filter>
-            <!-- https link to be called from event description link -->
+            <!-- links to be called from event description link -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -104,6 +104,7 @@
                 <data android:scheme="http" />
                 <data android:scheme="https" />
                 <data android:host="birthdayadapter.heinisch.fr" />
+                <data android:host="androidapp.birthdayadapter.heinisch.fr" />
                 <data android:pathPrefix="/contact/" />
             </intent-filter>
         </activity>
