@@ -70,6 +70,7 @@ import java.util.TimeZone;
 import java.util.TreeSet;
 
 import fr.heinisch.birthdayadapter.R;
+import fr.heinisch.birthdayadapter.provider.BirthdayAdapterContract;
 import fr.heinisch.birthdayadapter.provider.ProviderHelper;
 import fr.heinisch.birthdayadapter.util.AccountHelper;
 import fr.heinisch.birthdayadapter.util.CalendarHelper;
@@ -364,7 +365,8 @@ public class BirthdayWorker extends Worker {
 
                                 boolean hasAnyReminders = !allMinutes.isEmpty();
 
-                                String description = "birthdayadapter.heinisch.fr/contact/?key=" + eventLookupKey;
+                                String shortId = getShortContactId(context, eventLookupKey);
+                                String description = "birthdayadapter.heinisch.fr/contact/?key=" + shortId;
 
                                 Log.v(Constants.TAG, "Adding event: " + title + " (Reminders: " + allMinutes + ")");
                                 operationList.add(insertEvent(context, calendarId, dtstart, title, description, eventLookupKey, eventUid, hasAnyReminders));
@@ -422,6 +424,19 @@ public class BirthdayWorker extends Worker {
             SharedPreferences syncPrefs = context.getSharedPreferences("sync_status_prefs", Context.MODE_PRIVATE);
             syncPrefs.edit().putLong("last_sync_timestamp", System.currentTimeMillis()).apply();
         }
+    }
+
+    private String getShortContactId(Context context, String lookupKey) {
+        if (TextUtils.isEmpty(lookupKey)) {
+            return "";
+        }
+        ContentValues values = new ContentValues();
+        values.put(BirthdayAdapterContract.ContactMappingColumns.LOOKUP_KEY, lookupKey);
+        Uri uri = context.getContentResolver().insert(BirthdayAdapterContract.ContactMapping.CONTENT_URI, values);
+        if (uri != null) {
+            return uri.getLastPathSegment();
+        }
+        return lookupKey; // Fallback
     }
 
     private void applyBatchOperations(ContentResolver contentResolver, ArrayList<ContentProviderOperation> operationList) {

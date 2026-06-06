@@ -21,28 +21,18 @@
 
 package fr.heinisch.birthdayadapter.ui;
 
+import fr.heinisch.birthdayadapter.provider.BirthdayAdapterContract;
 import fr.heinisch.birthdayadapter.util.Constants;
 import fr.heinisch.birthdayadapter.util.Log;
 
 import android.app.Activity;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.QuickContact;
 
-/*
- * Uri is built in CalendarSyncAdapterService.insertEvent() and looks like Uri
- * contactLookupUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI,
- * lookupKey);
- * 
- * Code related to the button is here:
- * https://github.com/CyanogenMod/android_packages_apps_Calendar
- * /blob/jellybean-stable/src/com/android/calendar/EventInfoFragment.java in
- * updateCustomAppButton()
- * 
- * Label of button can not be set!
- */
 public class ShowContactActivity extends Activity {
 
     @Override
@@ -57,23 +47,21 @@ public class ShowContactActivity extends Activity {
             uri = Uri.parse(extras.getString(CalendarContract.EXTRA_CUSTOM_APP_URI));
         } else if (getIntent().getData() != null) {
             Uri data = getIntent().getData();
-            String lookupKey = null;
-
-            // Handle custom schemes: birthdayadapter://contact/LOOKUP_KEY or androidapp://contact/LOOKUP_KEY
-            if ("birthdayadapter".equals(data.getScheme()) || "androidapp".equals(data.getScheme())) {
-                lookupKey = data.getLastPathSegment();
-            } 
-            // Handle https landing page: https://birthdayadapter.heinisch.fr/contact/index.html?key=LOOKUP_KEY
-            else if ("https".equals(data.getScheme()) || "http".equals(data.getScheme())) {
-                lookupKey = data.getQueryParameter("key");
-                // Fallback for old path-based links
-                if (lookupKey == null) {
-                    lookupKey = data.getLastPathSegment();
-                }
+            String key = data.getQueryParameter("key");
+            if (key == null) {
+                key = data.getLastPathSegment();
             }
 
-            if (lookupKey != null && !lookupKey.isEmpty() && !lookupKey.equals("index.html")) {
-                uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
+            if (key != null && !key.isEmpty() && !key.equals("index.html") && !key.equals("contact")) {
+                // Check if it's our internal short ID (numeric)
+                if (key.matches("\\d+")) {
+                    String resolvedLookupKey = resolveInternalId(key);
+                    if (resolvedLookupKey != null) {
+                        key = resolvedLookupKey;
+                    }
+                }
+                
+                uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, key);
             }
         }
 
@@ -86,6 +74,22 @@ public class ShowContactActivity extends Activity {
         }
 
         finish();
+    }
+
+    /**
+     * Resolves our internal short ID back to the Android Lookup Key
+     */
+    private String resolveInternalId(String id) {
+        Uri uri = BirthdayAdapterContract.ContactMapping.buildUri(id);
+        try (Cursor c = getContentResolver().query(uri, 
+                new String[]{BirthdayAdapterContract.ContactMappingColumns.LOOKUP_KEY}, null, null, null)) {
+            if (c != null && c.moveToFirst()) {
+                return c.getString(0);
+            }
+        } catch (Exception e) {
+            Log.e(Constants.TAG, "Error resolving internal ID: " + id, e);
+        }
+        return null;
     }
 
 }

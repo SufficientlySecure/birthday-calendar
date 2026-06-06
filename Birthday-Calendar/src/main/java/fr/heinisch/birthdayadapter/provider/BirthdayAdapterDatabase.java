@@ -31,17 +31,21 @@ import fr.heinisch.birthdayadapter.util.Log;
 
 public class BirthdayAdapterDatabase extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "birthdayadapter.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
-    public interface Tables {
-        String ACCOUNT_BLACKLIST = "account_blacklist";
-    }
+    // Tabellennamen direkt als Konstanten
+    public static final String TABLE_ACCOUNT_BLACKLIST = "account_blacklist";
+    public static final String TABLE_CONTACT_MAPPING = "contact_mapping";
 
     private static final String CREATE_ACCOUNT_BLACKLIST = "CREATE TABLE IF NOT EXISTS "
-            + Tables.ACCOUNT_BLACKLIST + "(" + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + TABLE_ACCOUNT_BLACKLIST + "(" + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + BirthdayAdapterContract.AccountBlacklistColumns.ACCOUNT_NAME + " TEXT, "
             + BirthdayAdapterContract.AccountBlacklistColumns.ACCOUNT_TYPE + " TEXT, "
             + BirthdayAdapterContract.AccountBlacklistColumns.ACCOUNT_GROUP + " TEXT)";
+
+    private static final String CREATE_CONTACT_MAPPING = "CREATE TABLE IF NOT EXISTS "
+            + TABLE_CONTACT_MAPPING + "(" + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + BirthdayAdapterContract.ContactMappingColumns.LOOKUP_KEY + " TEXT UNIQUE)";
 
     BirthdayAdapterDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -50,8 +54,8 @@ public class BirthdayAdapterDatabase extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         Log.w(Constants.TAG, "Creating database...");
-
         db.execSQL(CREATE_ACCOUNT_BLACKLIST);
+        db.execSQL(CREATE_CONTACT_MAPPING);
     }
 
     @Override
@@ -59,11 +63,11 @@ public class BirthdayAdapterDatabase extends SQLiteOpenHelper {
         Log.w(Constants.TAG, "Upgrading database from version " + oldVersion + " to " + newVersion);
 
         if (oldVersion < 2) {
-            db.execSQL("ALTER TABLE " + Tables.ACCOUNT_BLACKLIST + " ADD COLUMN "
+            db.execSQL("ALTER TABLE " + TABLE_ACCOUNT_BLACKLIST + " ADD COLUMN "
                     + BirthdayAdapterContract.AccountBlacklistColumns.ACCOUNT_GROUP + " TEXT");
-        } else {
-            db.execSQL("DROP TABLE IF EXISTS " + Tables.ACCOUNT_BLACKLIST);
-            onCreate(db);
+        }
+        if (oldVersion < 3) {
+            db.execSQL(CREATE_CONTACT_MAPPING);
         }
     }
 }

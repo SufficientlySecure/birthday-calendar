@@ -44,6 +44,8 @@ public class BirthdayAdapterProvider extends ContentProvider {
 
     private static final int ACCOUNT_BLACKLIST = 100;
     private static final int ACCOUNT_BLACKLIST_ID = 101;
+    private static final int CONTACT_MAPPING = 200;
+    private static final int CONTACT_MAPPING_ID = 201;
 
     /**
      * Build and return a {@link android.content.UriMatcher} that catches all {@link android.net.Uri} variations supported by
@@ -55,6 +57,8 @@ public class BirthdayAdapterProvider extends ContentProvider {
 
         matcher.addURI(authority, BirthdayAdapterContract.PATH_ACCOUNT_BLACKLIST, ACCOUNT_BLACKLIST);
         matcher.addURI(authority, BirthdayAdapterContract.PATH_ACCOUNT_BLACKLIST + "/#", ACCOUNT_BLACKLIST_ID);
+        matcher.addURI(authority, BirthdayAdapterContract.PATH_CONTACT_MAPPING, CONTACT_MAPPING);
+        matcher.addURI(authority, BirthdayAdapterContract.PATH_CONTACT_MAPPING + "/#", CONTACT_MAPPING_ID);
 
         return matcher;
     }
@@ -85,6 +89,10 @@ public class BirthdayAdapterProvider extends ContentProvider {
                 return BirthdayAdapterContract.AccountBlacklist.CONTENT_TYPE;
             case ACCOUNT_BLACKLIST_ID:
                 return BirthdayAdapterContract.AccountBlacklist.CONTENT_ITEM_TYPE;
+            case CONTACT_MAPPING:
+                return BirthdayAdapterContract.ContactMapping.CONTENT_TYPE;
+            case CONTACT_MAPPING_ID:
+                return BirthdayAdapterContract.ContactMapping.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -105,8 +113,24 @@ public class BirthdayAdapterProvider extends ContentProvider {
         try {
             final int match = sUriMatcher.match(uri);
             if (match == ACCOUNT_BLACKLIST) {
-                rowId = db.insertOrThrow(BirthdayAdapterDatabase.Tables.ACCOUNT_BLACKLIST, null, values);
+                rowId = db.insertOrThrow(BirthdayAdapterDatabase.TABLE_ACCOUNT_BLACKLIST, null, values);
                 rowUri = BirthdayAdapterContract.AccountBlacklist.buildUri(Long.toString(rowId));
+            } else if (match == CONTACT_MAPPING) {
+                // Use insertWithOnConflict to handle UNIQUE constraint on lookup_key
+                rowId = db.insertWithOnConflict(BirthdayAdapterDatabase.TABLE_CONTACT_MAPPING, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+                if (rowId == -1) {
+                    // Entry already exists, query for its ID
+                    String lookupKey = values.getAsString(BirthdayAdapterContract.ContactMappingColumns.LOOKUP_KEY);
+                    try (Cursor cursor = db.query(BirthdayAdapterDatabase.TABLE_CONTACT_MAPPING,
+                            new String[]{BaseColumns._ID},
+                            BirthdayAdapterContract.ContactMappingColumns.LOOKUP_KEY + " = ?",
+                            new String[]{lookupKey}, null, null, null)) {
+                        if (cursor != null && cursor.moveToFirst()) {
+                            rowId = cursor.getLong(0);
+                        }
+                    }
+                }
+                rowUri = BirthdayAdapterContract.ContactMapping.buildUri(Long.toString(rowId));
             } else {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
             }
@@ -116,7 +140,7 @@ public class BirthdayAdapterProvider extends ContentProvider {
 
         // notify of changes in db
         final Context context = getContext();
-        if (context != null) {
+        if (context != null && rowUri != null) {
             context.getContentResolver().notifyChange(uri, null);
         }
 
@@ -135,10 +159,23 @@ public class BirthdayAdapterProvider extends ContentProvider {
         SQLiteDatabase db = mBirthdayAdapterDatabase.getReadableDatabase();
 
         final int match = sUriMatcher.match(uri);
-        if (match == ACCOUNT_BLACKLIST) {
-            qb.setTables(BirthdayAdapterDatabase.Tables.ACCOUNT_BLACKLIST);
-        } else {
-            throw new UnsupportedOperationException("Unknown uri: " + uri);
+        switch (match) {
+            case ACCOUNT_BLACKLIST:
+            case ACCOUNT_BLACKLIST_ID:
+                qb.setTables(BirthdayAdapterDatabase.TABLE_ACCOUNT_BLACKLIST);
+                if (match == ACCOUNT_BLACKLIST_ID) {
+                    qb.appendWhere(BaseColumns._ID + "=" + uri.getLastPathSegment());
+                }
+                break;
+            case CONTACT_MAPPING:
+            case CONTACT_MAPPING_ID:
+                qb.setTables(BirthdayAdapterDatabase.TABLE_CONTACT_MAPPING);
+                if (match == CONTACT_MAPPING_ID) {
+                    qb.appendWhere(BaseColumns._ID + "=" + uri.getLastPathSegment());
+                }
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
         Cursor cursor = qb.query(db, projection, selection, selectionArgs, null, null, sortOrder);
@@ -176,11 +213,17 @@ public class BirthdayAdapterProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case ACCOUNT_BLACKLIST:
-                count = db.delete(BirthdayAdapterDatabase.Tables.ACCOUNT_BLACKLIST, selection, selectionArgs);
+                count = db.delete(BirthdayAdapterDatabase.TABLE_ACCOUNT_BLACKLIST, selection, selectionArgs);
                 break;
             case ACCOUNT_BLACKLIST_ID:
-                count = db.delete(BirthdayAdapterDatabase.Tables.ACCOUNT_BLACKLIST, buildDefaultSelection(uri, selection),
+                count = db.delete(BirthdayAdapterDatabase.TABLE_ACCOUNT_BLACKLIST, buildDefaultSelection(uri, selection),
                         selectionArgs);
+                break;
+            case CONTACT_MAPPING:
+                count = db.delete(BirthdayAdapterDatabase.TABLE_CONTACT_MAPPING, selection, selectionArgs);
+                break;
+            case CONTACT_MAPPING_ID:
+                count = db.delete(BirthdayAdapterDatabase.TABLE_CONTACT_MAPPING, buildDefaultSelection(uri, selection), selectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -204,7 +247,7 @@ public class BirthdayAdapterProvider extends ContentProvider {
      * @return The selection string.
      */
     private String buildDefaultSelection(@NonNull Uri uri, @Nullable String selection) {
-        String rowId = uri.getPathSegments().get(1);
+        String rowId = uri.getLastPathSegment();
         String where = "";
         if (!TextUtils.isEmpty(selection)) {
             where = " AND (" + selection + ")";
