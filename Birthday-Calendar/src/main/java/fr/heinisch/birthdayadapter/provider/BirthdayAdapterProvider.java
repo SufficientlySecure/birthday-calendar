@@ -104,7 +104,7 @@ public class BirthdayAdapterProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
-        Log.d(Constants.TAG, "insert(uri=" + uri + ", values=" + values + ")");
+        // Log.d(Constants.TAG, "insert(uri=" + uri + ", values=" + values + ")");
 
         final SQLiteDatabase db = mBirthdayAdapterDatabase.getWritableDatabase();
 

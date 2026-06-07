@@ -44,7 +44,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.SwitchPreferenceCompat;
+import androidx.preference.TwoStatePreference;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
@@ -63,7 +63,7 @@ import fr.heinisch.birthdayadapter.util.SyncStatusManager;
 public class BasePreferenceFragment extends PreferenceFragmentCompat {
     private AccountHelper mAccountHelper;
 
-    private SwitchPreferenceCompat mEnabled;
+    private TwoStatePreference mEnabled;
     private Preference forceSyncPref;
     private SharedPreferences mSyncStatusPrefs;
     private WorkInfo mBirthdaySyncWorkInfo;

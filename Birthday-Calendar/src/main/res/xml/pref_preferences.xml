@@ -72,7 +72,7 @@
     <androidx.preference.PreferenceCategory
         android:key="@string/pref_title_category_key"
         android:title="@string/pref_title">
-        <androidx.preference.CheckBoxPreference
+        <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="@bool/pref_title_enable_def"
             android:key="@string/pref_title_enable_key"
             android:persistent="true"
@@ -158,19 +158,19 @@
             android:title="@string/pref_disable_permission_monitoring_title"
             android:summary="@string/pref_disable_permission_monitoring_summary"
             android:visible="false" />
-        <androidx.preference.CheckBoxPreference
+        <androidx.preference.SwitchPreferenceCompat
             android:key="@string/pref_group_filtering_key"
             android:title="@string/pref_group_filtering_title"
             android:summary="@string/pref_group_filtering_summary"
             android:defaultValue="@bool/pref_group_filtering_def" />
-        <androidx.preference.CheckBoxPreference
+        <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="@bool/pref_prefer_dd_slash_mm_def"
             android:key="@string/pref_prefer_dd_slash_mm_key"
             android:persistent="true"
             android:summary="@string/pref_prefer_dd_slash_mm_summary"
             android:title="@string/pref_prefer_dd_slash_mm"
             android:visible="false" />
-        <androidx.preference.CheckBoxPreference
+        <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="@bool/pref_name_format_def"
             android:key="@string/pref_name_format_key"
             android:persistent="true"
