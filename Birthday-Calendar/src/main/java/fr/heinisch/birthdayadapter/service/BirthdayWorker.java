@@ -366,7 +366,8 @@ public class BirthdayWorker extends Worker {
                                 boolean hasAnyReminders = !allMinutes.isEmpty();
 
                                 String shortId = getShortContactId(context, eventLookupKey);
-                                String description = "androidapp.birthdayadapter.org/contact/?key=" + shortId;
+                                // Ensure the key is URL-encoded if we fall back to the lookupKey
+                                String description = "androidapp.birthdayadapter.org/contact/?key=" + Uri.encode(shortId);
 
                                 Log.v(Constants.TAG, "Adding event: " + title + " (Reminders: " + allMinutes + ")");
                                 operationList.add(insertEvent(context, calendarId, dtstart, title, description, eventLookupKey, eventUid, hasAnyReminders));
@@ -862,8 +863,10 @@ public class BirthdayWorker extends Worker {
 
         if (lookupKey != null) {
             builder.withValue(CalendarContract.Events.CUSTOM_APP_PACKAGE, context.getPackageName());
-            Uri contactLookupUri = Uri.withAppendedPath(
-                    ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
+            // Use appendPath() to ensure the lookupKey is properly encoded if it contains special characters
+            Uri contactLookupUri = ContactsContract.Contacts.CONTENT_LOOKUP_URI.buildUpon()
+                    .appendPath(lookupKey)
+                    .build();
             builder.withValue(CalendarContract.Events.CUSTOM_APP_URI, contactLookupUri.toString());
         }
 

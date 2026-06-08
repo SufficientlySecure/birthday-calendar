@@ -42,40 +42,90 @@ public class ShowContactActivity extends Activity {
         Uri uri = null;
         Bundle extras = getIntent().getExtras();
         
-        // Handle "Open in App" button from calendar
+        // 1. Handle "Open in App" button from calendar
         if (extras != null && extras.containsKey(CalendarContract.EXTRA_CUSTOM_APP_URI)) {
-            uri = Uri.parse(extras.getString(CalendarContract.EXTRA_CUSTOM_APP_URI));
-        } else if (getIntent().getData() != null) {
+            String customAppUri = extras.getString(CalendarContract.EXTRA_CUSTOM_APP_URI);
+            Log.d(Constants.TAG, "Handling EXTRA_CUSTOM_APP_URI: " + customAppUri);
+            if (customAppUri != null) {
+                Uri rawUri = Uri.parse(customAppUri);
+                // If it's a contact lookup URI, try to heal it using our logic
+                if (rawUri.toString().contains(ContactsContract.Contacts.CONTENT_LOOKUP_URI.toString())) {
+                    String lookupKey = rawUri.getLastPathSegment();
+                    uri = resolveContactUri(lookupKey);
+                } else {
+                    uri = rawUri;
+                }
+            }
+        } 
+        // 2. Handle links from event description
+        else if (getIntent().getData() != null) {
             Uri data = getIntent().getData();
+            Log.d(Constants.TAG, "Handling Intent Data: " + data);
             String key = data.getQueryParameter("key");
 
             if (key != null && !key.isEmpty() && !key.equals("index.html") && !key.equals("contact")) {
-                // Check if it's our internal short ID (numeric)
+                // Resolve mapping if it's an internal short ID
                 if (key.matches("\\d+")) {
-                    String resolvedLookupKey = resolveInternalId(key);
-                    if (resolvedLookupKey != null) {
-                        key = resolvedLookupKey;
+                    String resolved = resolveInternalId(key);
+                    if (resolved != null) {
+                        key = resolved;
                     }
                 }
-                
-                uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, key);
+                uri = resolveContactUri(key);
             }
         }
 
         if (uri != null) {
-            Log.d(Constants.TAG, "Showing contact for Uri: " + uri);
-            QuickContact.showQuickContact(this, getIntent().getSourceBounds(), uri,
-                    QuickContact.MODE_LARGE, null);
+            Log.d(Constants.TAG, "Final URI for QuickContact: " + uri);
+            try {
+                QuickContact.showQuickContact(this, getIntent().getSourceBounds(), uri,
+                        QuickContact.MODE_LARGE, null);
+            } catch (Exception e) {
+                Log.e(Constants.TAG, "Error showing QuickContact", e);
+            }
         } else {
-            Log.e(Constants.TAG, "No valid contact lookup key found in intent!");
+            Log.e(Constants.TAG, "No valid contact found!");
         }
 
         finish();
     }
 
     /**
-     * Resolves our internal short ID back to the Android Lookup Key
+     * Tries to find the best possible URI for a contact.
+     * If the direct lookup via Key fails, it performs a fallback search in the Data table.
      */
+    private Uri resolveContactUri(String lookupKey) {
+        Uri baseLookupUri = ContactsContract.Contacts.CONTENT_LOOKUP_URI.buildUpon()
+                .appendPath(lookupKey)
+                .build();
+        
+        // Strategy A: Direct lookup
+        try (Cursor c = getContentResolver().query(baseLookupUri, 
+                new String[]{ContactsContract.Contacts._ID}, null, null, null)) {
+            if (c != null && c.moveToFirst()) {
+                long contactId = c.getLong(0);
+                return ContactsContract.Contacts.getLookupUri(contactId, lookupKey);
+            }
+        } catch (Exception ignored) {}
+
+        // Strategy B: Fallback via Data table (useful for complex/stale keys)
+        Log.d(Constants.TAG, "Direct lookup failed, trying fallback for: " + lookupKey);
+        try (Cursor c = getContentResolver().query(ContactsContract.Data.CONTENT_URI,
+                new String[]{ContactsContract.Data.CONTACT_ID},
+                ContactsContract.Data.LOOKUP_KEY + " = ?",
+                new String[]{lookupKey}, null)) {
+            if (c != null && c.moveToFirst()) {
+                long contactId = c.getLong(0);
+                Log.d(Constants.TAG, "Fallback successful! Found ID: " + contactId);
+                return ContactsContract.Contacts.getLookupUri(contactId, lookupKey);
+            }
+        } catch (Exception e) {
+            Log.e(Constants.TAG, "Fallback failed", e);
+        }
+
+        return baseLookupUri; // Return original as last resort
+    }
+
     private String resolveInternalId(String id) {
         Uri uri = BirthdayAdapterContract.ContactMapping.buildUri(id);
         try (Cursor c = getContentResolver().query(uri, 
@@ -84,9 +134,8 @@ public class ShowContactActivity extends Activity {
                 return c.getString(0);
             }
         } catch (Exception e) {
-            Log.e(Constants.TAG, "Error resolving internal ID: " + id, e);
+            Log.e(Constants.TAG, "Error resolving ID: " + id, e);
         }
         return null;
     }
-
 }
