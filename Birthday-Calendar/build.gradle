@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 28
         targetSdkVersion 36
-        versionCode = 31204
-        versionName = "3.12.4"
+        versionCode = 31300
+        versionName = "3.13"
 
         def gitCommitHashProvider = providers.exec {
             commandLine 'git', 'rev-parse', '--short', 'HEAD'

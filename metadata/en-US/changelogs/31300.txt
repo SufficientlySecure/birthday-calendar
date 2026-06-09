@@ -1,0 +1,6 @@
+3.13
+* Add link to open contact details from calendar events
+* Robustness improvement of purchase helper
+- Clean up main settings page, use switches instead of checkboxes
+- Add github page           
+- Update translations
