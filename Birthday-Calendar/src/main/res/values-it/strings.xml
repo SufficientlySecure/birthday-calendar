@@ -174,4 +174,8 @@
     <string name="premium_feat_filtering_summary">Scegli di sincronizzare solo il gruppo di contatto di cui ti importa.</string>
     <string name="premium_feat_jubilee_title">Compleanni Giubilari</string>
     <string name="premium_feat_jubilee_summary">Evidenzia occasioni speciali come i 18 anni o i 50 anni.</string>
+    <string name="pref_jubilee_years_description">Gli eventi relativi a queste fasce d\'età saranno contrassegnati da un\'icona speciale. Inserisci un elenco di anni separati da virgole.</string>
+    <string name="pref_additional_reminders_category">Promemoria aggiuntivi del gruppo</string>
+    <string name="pref_additional_reminders_group_title">Nome Gruppo Contatti</string>
+    <string name="pref_additional_reminders_group_description">Indica un gruppo di contatti a cui inviare promemoria aggiuntivi, ad esempio per coloro che necessitano di ricevere un regalo in anticipo. Assicurati che i contatti selezionati facciano parte di quel gruppo.</string>
 </resources>

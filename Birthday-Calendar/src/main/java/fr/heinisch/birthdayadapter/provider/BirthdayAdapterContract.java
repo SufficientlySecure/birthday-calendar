@@ -28,10 +28,14 @@ import fr.heinisch.birthdayadapter.BuildConfig;
 
 public class BirthdayAdapterContract {
 
-    interface AccountBlacklistColumns {
+    public interface AccountBlacklistColumns {
         String ACCOUNT_NAME = "account_name";
         String ACCOUNT_TYPE = "account_type";
         String ACCOUNT_GROUP = "account_group";
+    }
+
+    public interface ContactMappingColumns {
+        String LOOKUP_KEY = "lookup_key";
     }
 
     public static final String CONTENT_AUTHORITY = BuildConfig.APPLICATION_ID;
@@ -39,30 +43,32 @@ public class BirthdayAdapterContract {
     private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     public static final String PATH_ACCOUNT_BLACKLIST = "account_blacklist";
+    public static final String PATH_CONTACT_MAPPING = "contact_mapping";
 
     public static class AccountBlacklist implements AccountBlacklistColumns, BaseColumns {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
                 .appendPath(PATH_ACCOUNT_BLACKLIST).build();
 
-        /**
-         * Use if multiple items get returned
-         */
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.birthdayadapter.account_blacklist";
-
-        /**
-         * Use if a single item is returned
-         */
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.birthdayadapter.account";
 
-        /**
-         * Default "ORDER BY" clause.
-         */
         public static final String DEFAULT_SORT = AccountBlacklistColumns.ACCOUNT_TYPE + " ASC";
 
         public static Uri buildUri(String id) {
             return CONTENT_URI.buildUpon().appendPath(id).build();
         }
+    }
 
+    public static class ContactMapping implements ContactMappingColumns, BaseColumns {
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
+                .appendPath(PATH_CONTACT_MAPPING).build();
+
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.birthdayadapter.contact_mapping";
+        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.birthdayadapter.contact_mapping";
+
+        public static Uri buildUri(String id) {
+            return CONTENT_URI.buildUpon().appendPath(id).build();
+        }
     }
 
     private BirthdayAdapterContract() {

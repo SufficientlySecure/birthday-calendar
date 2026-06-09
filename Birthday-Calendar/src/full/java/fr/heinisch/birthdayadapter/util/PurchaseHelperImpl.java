@@ -30,7 +30,7 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
     }
 
     @Override
-    public void queryProductDetails(Activity activity, PriceCallback callback) {
+    public void queryProductDetails(Activity activity, OnPriceFoundCallback callback) {
         // Not used in the full version
     }
 

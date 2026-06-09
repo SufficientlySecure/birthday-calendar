@@ -25,14 +25,14 @@ import android.content.Context;
 
 public interface IPurchaseHelper {
 
-    @FunctionalInterface
-    interface PriceCallback {
+    interface OnPriceFoundCallback {
         void onPriceFound(String price);
+        void onPriceQueryFailed();
     }
 
     void launchBillingFlow(Activity activity);
 
-    void queryProductDetails(Activity activity, PriceCallback callback);
+    void queryProductDetails(Activity activity, OnPriceFoundCallback callback);
 
     void verifyAndRestorePurchases(Context context);
 }
