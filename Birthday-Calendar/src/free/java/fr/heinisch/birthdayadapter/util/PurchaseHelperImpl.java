@@ -37,6 +37,7 @@ import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.QueryProductDetailsParams;
 import com.android.billingclient.api.QueryPurchasesParams;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -49,13 +50,20 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
     private static final String SKU_FULL_VERSION = "full_version";
     private BillingClient billingClient;
     private final AtomicBoolean isBillingClientConnecting = new AtomicBoolean(false);
+    private final List<Runnable> pendingTasks = new ArrayList<>();
 
     private void ensureBillingClient(Context context, Runnable onConnected) {
-        if (billingClient != null && billingClient.isReady()) {
-            if (onConnected != null) {
-                onConnected.run();
+        synchronized (pendingTasks) {
+            if (billingClient != null && billingClient.isReady()) {
+                if (onConnected != null) {
+                    onConnected.run();
+                }
+                return;
             }
-            return;
+
+            if (onConnected != null) {
+                pendingTasks.add(onConnected);
+            }
         }
 
         if (isBillingClientConnecting.compareAndSet(false, true)) {
@@ -76,13 +84,19 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
                 @Override
                 public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
                     isBillingClientConnecting.set(false);
-                    if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                        Log.d(Constants.TAG, "BillingClient setup finished.");
-                        if (onConnected != null) {
-                            onConnected.run();
+                    List<Runnable> tasksToRun;
+                    synchronized (pendingTasks) {
+                        if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                            Log.d(Constants.TAG, "BillingClient setup finished.");
+                            tasksToRun = new ArrayList<>(pendingTasks);
+                        } else {
+                            Log.w(Constants.TAG, "BillingClient setup failed with code: " + billingResult.getResponseCode());
+                            tasksToRun = Collections.emptyList();
                         }
-                    } else {
-                        Log.w(Constants.TAG, "BillingClient setup failed with code: " + billingResult.getResponseCode());
+                        pendingTasks.clear();
+                    }
+                    for (Runnable task : tasksToRun) {
+                        task.run();
                     }
                 }
 
@@ -90,10 +104,13 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
                 public void onBillingServiceDisconnected() {
                     Log.w(Constants.TAG, "BillingClient disconnected.");
                     isBillingClientConnecting.set(false);
+                    synchronized (pendingTasks) {
+                        pendingTasks.clear();
+                    }
                 }
             });
         } else {
-            Log.d(Constants.TAG, "BillingClient connection already in progress.");
+            Log.d(Constants.TAG, "BillingClient connection already in progress. Task added to queue.");
         }
     }
 
@@ -127,7 +144,11 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
                             BillingFlowParams flowParams = BillingFlowParams.newBuilder()
                                     .setProductDetailsParamsList(Collections.singletonList(productDetailsParamsBuilder.build()))
                                     .build();
-                            activity.runOnUiThread(() -> billingClient.launchBillingFlow(activity, flowParams));
+                            activity.runOnUiThread(() -> {
+                                if (!activity.isFinishing() && !activity.isDestroyed()) {
+                                    billingClient.launchBillingFlow(activity, flowParams);
+                                }
+                            });
                             return;
                         }
                     }
@@ -155,7 +176,11 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
                             ProductDetails.OneTimePurchaseOfferDetails offerDetails = productDetails.getOneTimePurchaseOfferDetails();
                             if (offerDetails != null) {
                                 String price = offerDetails.getFormattedPrice();
-                                activity.runOnUiThread(() -> callback.onPriceFound(price));
+                                activity.runOnUiThread(() -> {
+                                    if (!activity.isFinishing() && !activity.isDestroyed()) {
+                                        callback.onPriceFound(price);
+                                    }
+                                });
                             }
                             return; // Exit after finding the product
                         }
@@ -196,10 +221,10 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
         if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
             if (!purchase.isAcknowledged()) {
                 Log.d(Constants.TAG, "handlePurchase: Purchase is new. Acknowledging...");
-                AcknowledgePurchaseParams acknowledgeParams = AcknowledgePurchaseParams.newBuilder()
+                AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
                         .setPurchaseToken(purchase.getPurchaseToken())
                         .build();
-                billingClient.acknowledgePurchase(acknowledgeParams, billingResult -> {
+                billingClient.acknowledgePurchase(acknowledgePurchaseParams, billingResult -> {
                     Log.d(Constants.TAG, "handlePurchase: Acknowledge response: " + billingResult.getResponseCode());
                     if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                         Log.i(Constants.TAG, "handlePurchase: Purchase acknowledged successfully. Unlocking full version.");
@@ -230,8 +255,13 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
         VersionHelper.setFullVersionUnlocked(context, true);
 
         if (context instanceof Activity) {
+            Activity activity = (Activity) context;
             Log.d(Constants.TAG, "unlockFullVersion: Recreating activity to apply changes.");
-            ((Activity) context).runOnUiThread(((Activity) context)::recreate);
+            activity.runOnUiThread(() -> {
+                if (!activity.isFinishing() && !activity.isDestroyed()) {
+                    activity.recreate();
+                }
+            });
         }
     }
 }
