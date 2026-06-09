@@ -144,4 +144,21 @@
     <string name="onboarding_finish_text_samsung_calendar">Để xem ngày sinh nhật trong Lịch Samsung, hãy mở menu, chạm vào \'Quản lý lịch\' và đảm bảo \'Birthday Adapter\' đã được bật.</string>
     <string name="onboarding_finish_text">Bạn cần kích hoạt Birthday Adapter trong cài đặt tài khoản của ứng dụng lịch để xem ngày sinh nhật.</string>
     <string name="pref_contacts">2. Thêm sinh nhật vào danh bạ</string>
+    <string name="no_reminder_set">Chưa đặt lời nhắc nào</string>
+    <string name="remove">Loại bỏ</string>
+    <string name="pref_title_summary_without_age">Hãy nhập {NAME} hoặc {FIRSTNAME} vào ô tên người liên hệ.</string>
+    <string name="pref_title_summary_with_age">Nhập {NAME} hoặc {FIRSTNAME} cho tên người liên hệ và {AGE} cho tuổi.</string>
+    <string name="pref_title_summary_custom_without_age">Hãy nhập {NAME} hoặc {FIRSTNAME} cho tên người liên hệ và {LABEL} cho nhãn tùy chỉnh của sự kiện này.</string>
+    <string name="pref_title_summary_custom_with_age">Nhập {NAME} hoặc {FIRSTNAME} cho tên người liên hệ, {LABEL} cho nhãn tùy chỉnh của sự kiện này và {AGE} cho tuổi.</string>
+    <string name="pref_name_format_summary">Thay đổi cách hiển thị tên từ \"Tên Họ\" thành \"Họ, Tên\"</string>
+    <string name="pref_reminder_event_types_anniversary">Ngày kỷ niệm</string>
+    <string name="pref_disable_permission_monitoring_title">Tắt giám sát quyền</string>
+    <string name="pref_additional_reminders_category">Lời nhắc nhóm bổ sung</string>
+    <string name="notification_channel_description">Thông báo đồng bộ hóa ngày sinh nhật</string>
+    <plurals name="dates_count">
+        <item quantity="other">%d sinh nhật</item>
+    </plurals>
+    <string name="premium_feat_sync_title">Đồng bộ hóa nền thường xuyên</string>
+    <string name="next">Tiếp</string>
+    <string name="onboarding_intro_text">Ứng dụng này đồng bộ hóa ngày sinh nhật, ngày kỷ niệm và các sự kiện khác từ danh bạ của bạn trực tiếp vào lịch Android. Không giống như các ứng dụng khác, nó tích hợp liền mạch với lịch hệ thống của bạn, vì vậy bạn có thể xem tất cả các ngày quan trọng cùng với các sự kiện khác của mình.</string>
 </resources>
