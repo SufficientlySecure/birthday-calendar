@@ -80,8 +80,6 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     private AccountHelper mAccountHelper;
     private Preference colorPref;
     private Preference mJubileeYearsPref;
-    private PreferenceCategory remindersCategory;
-    private PreferenceCategory additionalRemindersCategory;
     private IPurchaseHelper mPurchaseHelper;
     private ReviewHelper mReviewHelper;
     private Set<String> mTitlePrefKeys;
@@ -186,16 +184,28 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         if (getContext() != null && !isFullVersionUnlocked(getContext())) {
             Preference buyFullPref = findPreference(getString(R.string.pref_buy_full_key));
             if (buyFullPref != null && getActivity() != null) {
-                mPurchaseHelper.queryProductDetails(getActivity(), price -> {
-                    if (isAdded() && price != null) {
-                        buyFullPref.setTitle(getString(R.string.buy_premium_for, price));
+                final CharSequence originalTitle = buyFullPref.getTitle();
+
+                mPurchaseHelper.queryProductDetails(getActivity(), new IPurchaseHelper.OnPriceFoundCallback() {
+                    @Override
+                    public void onPriceFound(String price) {
+                        if (isAdded()) {
+                            buyFullPref.setTitle(getString(R.string.buy_premium_for, price));
+                        }
+                    }
+
+                    @Override
+                    public void onPriceQueryFailed() {
+                        if (isAdded()) {
+                            buyFullPref.setTitle(originalTitle);
+                        }
                     }
                 });
             }
         }
 
         if (getContext() != null && isFullVersionUnlocked(getContext())) {
-            remindersCategory = findPreference(getString(R.string.pref_reminders_category_key));
+            PreferenceCategory remindersCategory = findPreference(getString(R.string.pref_reminders_category_key));
             if (remindersCategory != null) {
                 MultiSelectListPreference reminderTypesPref = findPreference(getString(R.string.pref_reminder_event_types));
                 if (reminderTypesPref != null) {
@@ -212,7 +222,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                 populateReminders(remindersCategory, getString(R.string.pref_reminders_key));
             }
 
-            additionalRemindersCategory = findPreference(getString(R.string.pref_additional_reminders_category_key));
+            PreferenceCategory additionalRemindersCategory = findPreference(getString(R.string.pref_additional_reminders_category_key));
             if (additionalRemindersCategory != null) {
                 populateReminders(additionalRemindersCategory, getString(R.string.pref_additional_reminders_key));
             }
