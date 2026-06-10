@@ -103,10 +103,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="http" />
                 <data android:scheme="https" />
-                <data android:host="birthdayadapter.org" />
                 <data android:host="androidapp.birthdayadapter.org" />
-                <data android:host="birthdayadapter.heinisch.fr" />
-                <data android:host="androidapp.birthdayadapter.heinisch.fr" />
                 <data android:pathPrefix="/contact/" />
             </intent-filter>
         </activity>
