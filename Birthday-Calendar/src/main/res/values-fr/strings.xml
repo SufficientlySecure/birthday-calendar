@@ -174,4 +174,8 @@
     <string name="summary_placeholder_firstname">Marie</string>
     <string name="summary_placeholder_lastname">Dupont</string>
     <string name="summary_placeholder_custom_label">Premier rendez-vous</string>
+    <string name="pref_jubilee_years_description">Événements pour ces âges seront mis en évidence par une icône spéciale. Saisissez une liste d\'années séparées par des virgules.</string>
+    <string name="pref_additional_reminders_category">Rappels de groupe additionnels</string>
+    <string name="pref_additional_reminders_group_title">Nom du groupe de contacts</string>
+    <string name="pref_additional_reminders_group_description">Spécifiez un groupe de contacts pour recevoir des rappels supplémentaires, par exemple pour ceux dont le cadeau doit être préparé à l\'avance. Assurez-vous que les contacts choisis sont membres de ce groupe.</string>
 </resources>
