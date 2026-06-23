@@ -87,7 +87,7 @@ android {
 }
 
 dependencies {
-    implementation "androidx.core:core-ktx:1.18.0"
+    implementation "androidx.core:core-ktx:1.19.0"
     implementation "androidx.activity:activity-ktx:1.13.0"
     implementation "androidx.fragment:fragment-ktx:1.8.9"
     implementation 'androidx.appcompat:appcompat:1.7.1'
@@ -99,5 +99,5 @@ dependencies {
     // Google Play specific libraries (Review API and Billing)
     freeImplementation 'com.google.android.play:review:2.0.2'
     freeImplementation 'com.google.android.play:review-ktx:2.0.2'
-    freeImplementation "com.android.billingclient:billing:9.0.0"
+    freeImplementation "com.android.billingclient:billing:9.1.0"
 }
