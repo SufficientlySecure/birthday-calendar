@@ -1,0 +1,4 @@
+3.13.1
+* Add translation: Tamil
+- Update translations: Vietnamese, French
+- Update dependencies
