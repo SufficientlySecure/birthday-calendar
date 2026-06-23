@@ -99,5 +99,5 @@ dependencies {
     // Google Play specific libraries (Review API and Billing)
     freeImplementation 'com.google.android.play:review:2.0.2'
     freeImplementation 'com.google.android.play:review-ktx:2.0.2'
-    freeImplementation "com.android.billingclient:billing:9.0.0"
+    freeImplementation "com.android.billingclient:billing:9.1.0"
 }
