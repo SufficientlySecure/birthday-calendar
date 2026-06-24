@@ -121,6 +121,101 @@
         width: auto;
         border-radius: 8px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .screenshot-gallery img:hover {
+        transform: scale(1.02);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+      }
+
+      /* Pure CSS/JS Lightbox Styles */
+      .lightbox-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.85);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+
+      .lightbox-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .lightbox-content {
+        max-width: 85%;
+        max-height: 85%;
+        border-radius: 8px;
+        box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
+        transform: scale(0.95);
+        transition: transform 0.3s ease;
+        user-select: none;
+      }
+
+      .lightbox-overlay.active .lightbox-content {
+        transform: scale(1);
+      }
+
+      .lightbox-close {
+        position: absolute;
+        top: 20px;
+        right: 25px;
+        color: #ffffff;
+        font-size: 40px;
+        font-weight: 300;
+        cursor: pointer;
+        user-select: none;
+        transition: color 0.2s;
+        line-height: 1;
+        z-index: 1010;
+      }
+
+      .lightbox-close:hover {
+        color: #dddddd;
+      }
+
+      /* Navigation Nav-Buttons */
+      .lightbox-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #ffffff;
+        font-size: 60px;
+        font-weight: 300;
+        cursor: pointer;
+        user-select: none;
+        padding: 0 20px;
+        transition: color 0.2s, opacity 0.2s;
+        z-index: 1010;
+        line-height: 1;
+      }
+
+      .lightbox-nav:hover {
+        color: #dddddd;
+      }
+
+      .lightbox-nav.prev {
+        left: 10px;
+      }
+
+      .lightbox-nav.next {
+        right: 10px;
+      }
+
+      /* Hide arrows when there's no item left/right */
+      .lightbox-nav.disabled {
+        opacity: 0;
+        pointer-events: none;
       }
 
       /* Badge/Image Buttons Grid */
@@ -249,6 +344,37 @@
           </a>
         </div>
       </div>
+
+      <div class="card">
+        <h2>Features</h2>
+        <ul class="features-list">
+          <li>
+            <strong>Integration:</strong> See your contacts' birthdays directly in your favorite calendar app alongside
+            your daily schedule - no manual lists or double entries required.
+          </li>
+          <li>
+            <strong>Age Display:</strong> With the age automatically being added to every event, you always know which
+            milestone is ahead.
+          </li>
+          <li>
+            <strong>Beyond Birthdays:</strong> Sync any custom-labeled date from your address book - perfect for keeping
+            track of your contacts' anniversaries or their children’s and partners' birthdays.
+          </li>
+          <li><strong>Background Sync:</strong> Your calendar stays in sync with regular updates in the background.</li>
+          <li><strong>Filtering:</strong> Choose which accounts or contact groups you want to see in your calendar.</li>
+          <li><strong>Reminders:</strong> Set as many reminders as you need for your events.</li>
+          <li><strong>Jubilee Markers:</strong> Spot major milestones and big anniversaries.</li>
+          <li>
+            <strong>Customization:</strong> Personalize event titles and choose which event types should trigger a
+            notification.
+          </li>
+          <li>
+            <strong>Personalization:</strong> Use the color picker to style your birthday calendar to match your
+            personal preference.
+          </li>
+        </ul>
+      </div>
+
       <div class="card">
         <h2>Screenshots</h2>
         <div class="screenshot-gallery">
@@ -288,36 +414,6 @@
       </div>
 
       <div class="card">
-        <h2>Features</h2>
-        <ul class="features-list">
-          <li>
-            <strong>Integration:</strong> See your contacts' birthdays directly in your favorite calendar app alongside
-            your daily schedule - no manual lists or double entries required.
-          </li>
-          <li>
-            <strong>Age Display:</strong> With the age automatically being added to every event, you always know which
-            milestone is ahead.
-          </li>
-          <li>
-            <strong>Beyond Birthdays:</strong> Sync any custom-labeled date from your address book - perfect for keeping
-            track of your contacts' anniversaries or their children’s and partners' birthdays.
-          </li>
-          <li><strong>Background Sync:</strong> Your calendar stays in sync with regular updates in the background.</li>
-          <li><strong>Filtering:</strong> Choose which accounts or contact groups you want to see in your calendar.</li>
-          <li><strong>Reminders:</strong> Set as many reminders as you need for your events.</li>
-          <li><strong>Jubilee Markers:</strong> Spot major milestones and big anniversaries.</li>
-          <li>
-            <strong>Customization:</strong> Personalize event titles and choose which event types should trigger a
-            notification.
-          </li>
-          <li>
-            <strong>Personalization:</strong> Use the color picker to style your birthday calendar to match your
-            personal preference.
-          </li>
-        </ul>
-      </div>
-
-      <div class="card">
         <h2>Contribute & Support</h2>
         <ul class="link-list">
           <li>
@@ -353,8 +449,14 @@
       </div>
     </main>
 
+    <div class="lightbox-overlay" id="lightbox">
+      <span class="lightbox-close" id="lightboxClose">&times;</span>
+      <span class="lightbox-nav prev" id="lightboxPrev">&#10094;</span>
+      <img class="lightbox-content" id="lightboxImage" src="" alt="Enlarged Screenshot" />
+      <span class="lightbox-nav next" id="lightboxNext">&#10095;</span>
+    </div>
+
     <footer>
-      <!-- Ausklappbare Legal Notice ohne Box -->
       <details class="legal-notice-details">
         <summary>Legal Information according to § 5 TMG / § 18 MStV</summary>
 
@@ -372,5 +474,90 @@
 
       <p style="margin-top: 2rem">&copy; 2026 Matthias Heinisch | Hosted on GitHub Pages</p>
     </footer>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        // Convert NodeList to Array to easily find indices
+        const galleryImages = Array.from(document.querySelectorAll('.screenshot-gallery img'));
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImage = document.getElementById('lightboxImage');
+        const lightboxClose = document.getElementById('lightboxClose');
+        const lightboxPrev = document.getElementById('lightboxPrev');
+        const lightboxNext = document.getElementById('lightboxNext');
+        
+        let currentIndex = -1;
+
+        // Function to update image content and arrow visibility
+        const updateLightbox = (index) => {
+          if (index < 0 || index >= galleryImages.length) return;
+          
+          currentIndex = index;
+          const currentImg = galleryImages[currentIndex];
+          
+          lightboxImage.src = currentImg.src;
+          lightboxImage.alt = currentImg.alt;
+
+          // Toggle visibility of navigation arrows based on boundary positions
+          if (currentIndex === 0) {
+            lightboxPrev.classList.add('disabled');
+          } else {
+            lightboxPrev.classList.remove('disabled');
+          }
+
+          if (currentIndex === galleryImages.length - 1) {
+            lightboxNext.classList.add('disabled');
+          } else {
+            lightboxNext.classList.remove('disabled');
+          }
+        };
+
+        // Open Lightbox on image click
+        galleryImages.forEach((img, index) => {
+          img.addEventListener('click', () => {
+            updateLightbox(index);
+            lightbox.classList.add('active');
+          });
+        });
+
+        // Close Lightbox function
+        const closeBox = () => {
+          lightbox.classList.remove('active');
+          setTimeout(() => { lightboxImage.src = ''; }, 300);
+        };
+
+        // Click actions for UI Controls
+        lightboxClose.addEventListener('click', closeBox);
+        
+        lightboxPrev.addEventListener('click', (e) => {
+          e.stopPropagation(); // Prevents clicking the overlay behind it
+          updateLightbox(currentIndex - 1);
+        });
+
+        lightboxNext.addEventListener('click', (e) => {
+          e.stopPropagation();
+          updateLightbox(currentIndex + 1);
+        });
+
+        // Close if backdrop overlay itself is clicked
+        lightbox.addEventListener('click', (e) => {
+          if (e.target === lightbox) {
+            closeBox();
+          }
+        });
+
+        // Keyboard navigation (Left, Right, Escape)
+        document.addEventListener('keydown', (e) => {
+          if (!lightbox.classList.contains('active')) return;
+
+          if (e.key === 'Escape') {
+            closeBox();
+          } else if (e.key === 'ArrowLeft' && currentIndex > 0) {
+            updateLightbox(currentIndex - 1);
+          } else if (e.key === 'ArrowRight' && currentIndex < galleryImages.length - 1) {
+            updateLightbox(currentIndex + 1);
+          }
+        });
+      });
+    </script>
   </body>
 </html>
