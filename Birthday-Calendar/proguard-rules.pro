@@ -7,6 +7,11 @@
     public <init>(android.content.Context, androidx.work.WorkerParameters);
 }
 
+# Google Play Billing Library
+# Although the library ships with its own rules, adding these explicitly can prevent
+# issues with aggressive optimization (proguard-android-optimize.txt).
+-keep class com.android.billingclient.api.** { *; }
+
 # Add any other rules below. For example, for data classes used with serialization libraries
 # or for custom View classes.
 #

@@ -138,26 +138,22 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
             billingClient.queryProductDetailsAsync(params, (billingResult, result) -> {
                 if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                     List<ProductDetails> productDetailsList = result.getProductDetailsList();
-                    if (!productDetailsList.isEmpty()) {
-                        for (ProductDetails productDetails : productDetailsList) {
-                            if (productDetails.getProductId().equals(SKU_FULL_VERSION)) {
-                                BillingFlowParams.ProductDetailsParams.Builder productDetailsParamsBuilder = BillingFlowParams.ProductDetailsParams.newBuilder()
-                                        .setProductDetails(productDetails);
-                                ProductDetails.OneTimePurchaseOfferDetails offerDetails = productDetails.getOneTimePurchaseOfferDetails();
-                                if (offerDetails != null) {
-                                    assert offerDetails.getOfferToken() != null;
-                                    productDetailsParamsBuilder.setOfferToken(offerDetails.getOfferToken());
+                    for (ProductDetails productDetails : productDetailsList) {
+                        if (productDetails.getProductId().equals(SKU_FULL_VERSION)) {
+                            BillingFlowParams.ProductDetailsParams productDetailsParams = BillingFlowParams.ProductDetailsParams.newBuilder()
+                                    .setProductDetails(productDetails)
+                                    .build();
+
+                            BillingFlowParams flowParams = BillingFlowParams.newBuilder()
+                                    .setProductDetailsParamsList(Collections.singletonList(productDetailsParams))
+                                    .build();
+
+                            activity.runOnUiThread(() -> {
+                                if (!activity.isFinishing() && !activity.isDestroyed()) {
+                                    billingClient.launchBillingFlow(activity, flowParams);
                                 }
-                                BillingFlowParams flowParams = BillingFlowParams.newBuilder()
-                                        .setProductDetailsParamsList(Collections.singletonList(productDetailsParamsBuilder.build()))
-                                        .build();
-                                activity.runOnUiThread(() -> {
-                                    if (!activity.isFinishing() && !activity.isDestroyed()) {
-                                        billingClient.launchBillingFlow(activity, flowParams);
-                                    }
-                                });
-                                return;
-                            }
+                            });
+                            return;
                         }
                     }
                 }
@@ -180,21 +176,19 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
                 boolean priceFound = false;
                 if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                     List<ProductDetails> productDetailsList = result.getProductDetailsList();
-                    if (!productDetailsList.isEmpty()) {
-                        for (ProductDetails productDetails : productDetailsList) {
-                            if (productDetails.getProductId().equals(SKU_FULL_VERSION)) {
-                                ProductDetails.OneTimePurchaseOfferDetails offerDetails = productDetails.getOneTimePurchaseOfferDetails();
-                                if (offerDetails != null) {
-                                    String price = offerDetails.getFormattedPrice();
-                                    priceFound = true;
-                                    activity.runOnUiThread(() -> {
-                                        if (!activity.isFinishing() && !activity.isDestroyed()) {
-                                            callback.onPriceFound(price);
-                                        }
-                                    });
-                                }
-                                break;
+                    for (ProductDetails productDetails : productDetailsList) {
+                        if (productDetails.getProductId().equals(SKU_FULL_VERSION)) {
+                            ProductDetails.OneTimePurchaseOfferDetails offerDetails = productDetails.getOneTimePurchaseOfferDetails();
+                            if (offerDetails != null) {
+                                String price = offerDetails.getFormattedPrice();
+                                priceFound = true;
+                                activity.runOnUiThread(() -> {
+                                    if (!activity.isFinishing() && !activity.isDestroyed()) {
+                                        callback.onPriceFound(price);
+                                    }
+                                });
                             }
+                            break;
                         }
                     }
                 }
