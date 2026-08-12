@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <!-- Hintergrund: Grüner Verlauf -->
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#84bd68" />
+      <stop offset="100%" stop-color="#2d5e4b" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="100" height="100" rx="22" fill="url(#bg)" />
+
+  <!-- Kuchen-Symbol -->
+  <g fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Kerzenflammen -->
+    <path d="M 35 32 C 35 28, 38 25, 38 25 C 38 25, 41 28, 41 32 C 41 34, 39.5 35, 38 35 C 36.5 35, 35 34, 35 32 Z" fill="#ffffff" stroke="none" />
+    <path d="M 47 28 C 47 24, 50 21, 50 21 C 50 21, 53 24, 53 28 C 53 30, 51.5 31, 50 31 C 48.5 31, 47 30, 47 28 Z" fill="#ffffff" stroke="none" />
+    <path d="M 59 32 C 59 28, 62 25, 62 25 C 62 25, 65 28, 65 32 C 65 34, 63.5 35, 62 35 C 60.5 35, 59 34, 59 32 Z" fill="#ffffff" stroke="none" />
+    
+    <!-- Kerzenhalterungen -->
+    <line x1="38" y1="36" x2="38" y2="48" />
+    <line x1="50" y1="32" x2="50" y2="48" />
+    <line x1="62" y1="36" x2="62" y2="48" />
+    
+    <!-- Torte -->
+    <path d="M 25 52 L 75 52 A 4 4 0 0 1 79 56 L 79 72 A 4 4 0 0 1 75 76 L 25 76 A 4 4 0 0 1 21 72 L 21 56 A 4 4 0 0 1 25 52 Z" />
+    <!-- Wellenlinie Gürtel -->
+    <path d="M 21 62 Q 28 57, 35 62 T 49 62 T 63 62 T 79 62" />
+    <!-- Teller/Boden -->
+    <line x1="15" y1="83" x2="85" y2="83" stroke-width="5" />
+  </g>
+</svg>
