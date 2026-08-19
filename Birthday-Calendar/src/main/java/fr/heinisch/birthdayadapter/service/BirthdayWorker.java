@@ -623,7 +623,8 @@ public class BirthdayWorker extends Worker {
                                 }
                             } else {
                                 // Contact has no group, check if "No Group" is blacklisted
-                                if (blacklistedGroups.contains(Constants.GROUP_TITLE_NO_GROUP)) {
+                                if (blacklistedGroups.contains(Constants.GROUP_TITLE_NO_GROUP) ||
+                                        blacklistedGroups.contains(context.getString(R.string.account_list_no_group))) {
                                     isBlacklisted = true;
                                 }
                             }
