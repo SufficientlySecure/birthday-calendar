@@ -69,6 +69,8 @@ public class BaseActivity extends AppCompatActivity {
     public MySharedPreferenceChangeListener mySharedPreferenceChangeListener;
     private ProgressBar mProgressBar;
 
+    private static final int VERSION_CODE_CUSTOM_PREFS_MIGRATION = 31306;
+
     private static final String[] REQUIRED_PERMISSIONS = new String[]{
             Manifest.permission.GET_ACCOUNTS,
             Manifest.permission.READ_CONTACTS,
@@ -170,6 +172,9 @@ public class BaseActivity extends AppCompatActivity {
             long lastSeenVersionCode = prefs.getLong("last_seen_version_code", 0);
             if (currentVersionCode > lastSeenVersionCode) {
                 // This is an update. Check if we need to migrate existing users.
+                if (lastSeenVersionCode < VERSION_CODE_CUSTOM_PREFS_MIGRATION) {
+                    migrateCustomPreferences(prefs);
+                }
                 if (!prefs.getBoolean("has_seen_onboarding", false) && areAllPermissionsGranted()) {
                     // This is an existing user with all permissions. Mark onboarding as seen and enable the adapter.
                     SharedPreferences.Editor editor = prefs.edit();
@@ -188,6 +193,16 @@ public class BaseActivity extends AppCompatActivity {
             }
         } catch (PackageManager.NameNotFoundException e) {
             // This should not happen
+        }
+    }
+
+    private void migrateCustomPreferences(SharedPreferences defaultPrefs) {
+        SharedPreferences customPrefs = getSharedPreferences("preferences", MODE_PRIVATE);
+        if (customPrefs.contains(getString(R.string.pref_enabled_key))) {
+            boolean enabled = customPrefs.getBoolean(getString(R.string.pref_enabled_key), false);
+            defaultPrefs.edit().putBoolean(getString(R.string.pref_enabled_key), enabled).apply();
+            // Clear the old file
+            customPrefs.edit().clear().apply();
         }
     }
 
