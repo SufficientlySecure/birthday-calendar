@@ -1,3 +1,6 @@
+HOWTO*
+metadata/**/unused/
+
 #Android specific
 bin
 gen
@@ -29,3 +32,6 @@ pom.xml.*
 #IntelliJ IDEA
 .idea
 *.iml
+
+# AI Agent temporary artifacts
+.artifacts/
