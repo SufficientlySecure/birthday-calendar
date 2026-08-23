@@ -142,7 +142,7 @@
     <string name="finish">完成</string>
     <string name="ignore">忽略</string>
     <string name="onboarding_intro_title">欢迎使用 Birthday Adapter</string>
-    <string name="onboarding_intro_text">此应用可将联系人中的生日、纪念日和其他活动直接同步到您的 Android 日历中。与其他应用不同，它与您的系统日历无缝集成，因此您可以同时查看所有重要日期和其他活动。</string>
+    <string name="onboarding_intro_text">此应用将您的联系人中的生日、纪念日和其他活动带到您的 Android 日历中。与其他应用不同，它在您的系统中创建一个专用日历，因此您可以在喜欢的日历应用中查看所有联系人日期以及您的日常安排。</string>
     <string name="onboarding_contacts_title">联系人访问权限</string>
     <string name="onboarding_contacts_text">要读取生日信息，应用需要访问您的联系人。</string>
     <string name="onboarding_calendar_title">日历访问权限</string>
