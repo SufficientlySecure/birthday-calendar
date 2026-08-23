@@ -1,3 +1,11 @@
+3.13.7
+* Improve device compatibility
+* Fixed filtering for contacts without group in non-english versions
+- Update build config and dependencies
+- Perform migration checks only for marked upgrades
+- Unify SharedPreferences to Default
+- Rework and harmonize onboarding, f-droid, play-store and website texts
+
 3.13.4
 * Add translation: Czech
 
