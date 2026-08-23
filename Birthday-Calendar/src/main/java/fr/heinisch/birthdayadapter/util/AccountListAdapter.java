@@ -208,7 +208,11 @@ public class AccountListAdapter extends ArrayAdapter<AccountListEntry> {
                         TextView groupTitleView = groupEntryView.findViewById(R.id.group_list_text);
                         TextView groupCountersView = groupEntryView.findViewById(R.id.group_list_counters);
 
-                        groupTitleView.setText(group.getTitle());
+                        String title = group.getTitle();
+                        if (Constants.GROUP_TITLE_NO_GROUP.equals(title)) {
+                            title = getContext().getString(R.string.account_list_no_group);
+                        }
+                        groupTitleView.setText(title);
 
                         String groupContactsStr = getContext().getResources().getQuantityString(R.plurals.contacts_count, group.getContactCount(), group.getContactCount());
                         String groupDatesStr = getContext().getResources().getQuantityString(R.plurals.dates_count, group.getDateCount(), group.getDateCount());

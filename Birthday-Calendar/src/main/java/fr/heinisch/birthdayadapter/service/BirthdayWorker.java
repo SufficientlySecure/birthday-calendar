@@ -525,6 +525,34 @@ public class BirthdayWorker extends Worker {
         return rawContactToGroupTitlesMap;
     }
 
+    private Map<String, Account> getRawContactAccounts(ContentResolver contentResolver) {
+        Map<String, Account> accountsMap = new HashMap<>();
+        final String[] projection = {
+                ContactsContract.RawContacts._ID,
+                ContactsContract.RawContacts.ACCOUNT_NAME,
+                ContactsContract.RawContacts.ACCOUNT_TYPE
+        };
+
+        try (Cursor cursor = contentResolver.query(ContactsContract.RawContacts.CONTENT_URI, projection, null, null, null)) {
+            if (cursor != null) {
+                int idColumn = cursor.getColumnIndex(ContactsContract.RawContacts._ID);
+                int nameColumn = cursor.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_NAME);
+                int typeColumn = cursor.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_TYPE);
+
+                while (cursor.moveToNext()) {
+                    String rawContactId = cursor.getString(idColumn);
+                    String accountName = cursor.getString(nameColumn);
+                    String accountType = cursor.getString(typeColumn);
+
+                    if (!TextUtils.isEmpty(accountName) && !TextUtils.isEmpty(accountType)) {
+                        accountsMap.put(rawContactId, new Account(accountName, accountType));
+                    }
+                }
+            }
+        }
+        return accountsMap;
+    }
+
     private Cursor getContactsEvents(Context context, ContentResolver contentResolver) throws OperationCanceledException {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             Log.e(Constants.TAG, "Missing READ_CONTACTS permission!");
@@ -539,10 +567,13 @@ public class BirthdayWorker extends Worker {
         boolean groupFilteringEnabled = sharedPreferences.getBoolean(context.getString(R.string.pref_group_filtering_key), context.getResources().getBoolean(R.bool.pref_group_filtering_def));
 
         Map<String, List<String>> contactGroupMembership = getRawContactGroupTitles(contentResolver);
+        Map<String, Account> rawContactAccounts = getRawContactAccounts(contentResolver);
         HashMap<Account, HashSet<String>> blacklist = ProviderHelper.getAccountBlacklist(context);
         HashSet<String> addedEventsIdentifiers = new HashSet<>();
 
         // Define the columns we want to fetch in a single query
+        // We exclude ACCOUNT_TYPE and ACCOUNT_NAME because they cause crashes on some devices
+        // when queried from the Data table directly.
         String[] projection = new String[]{
                 BaseColumns._ID,
                 ContactsContract.Data.DISPLAY_NAME,
@@ -550,8 +581,6 @@ public class BirthdayWorker extends Worker {
                 ContactsContract.CommonDataKinds.Event.START_DATE,
                 ContactsContract.CommonDataKinds.Event.TYPE,
                 ContactsContract.CommonDataKinds.Event.LABEL,
-                ContactsContract.RawContacts.ACCOUNT_TYPE,
-                ContactsContract.RawContacts.ACCOUNT_NAME,
                 ContactsContract.Data.RAW_CONTACT_ID
         };
 
@@ -576,8 +605,6 @@ public class BirthdayWorker extends Worker {
                 return resultCursor; // Return an empty cursor
             }
 
-            int accTypeColumn = dataCursor.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_TYPE);
-            int accNameColumn = dataCursor.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_NAME);
             int rawContactIdColumn = dataCursor.getColumnIndex(ContactsContract.Data.RAW_CONTACT_ID);
             int lookupKeyColumn = dataCursor.getColumnIndex(ContactsContract.Data.LOOKUP_KEY);
             int typeColumn = dataCursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE);
@@ -591,13 +618,12 @@ public class BirthdayWorker extends Worker {
                     throw new OperationCanceledException();
                 }
 
-                // Check if the contact's account is in the blacklist
-                String accType = dataCursor.getString(accTypeColumn);
-                String accName = dataCursor.getString(accNameColumn);
+                // Retrieve account info from the pre-fetched map
+                String rawContactId = dataCursor.getString(rawContactIdColumn);
+                Account account = rawContactAccounts.get(rawContactId);
 
                 boolean isBlacklisted = false;
-                if (!TextUtils.isEmpty(accType) && !TextUtils.isEmpty(accName)) {
-                    Account account = new Account(accName, accType);
+                if (account != null) {
                     HashSet<String> blacklistedGroups = blacklist.get(account);
 
                     if (blacklistedGroups != null) {
@@ -606,7 +632,6 @@ public class BirthdayWorker extends Worker {
                             isBlacklisted = true;
                         } else if (groupFilteringEnabled && !blacklistedGroups.isEmpty()) {
                             // If not fully blacklisted, check group-based blacklist (only if feature is enabled)
-                            String rawContactId = dataCursor.getString(rawContactIdColumn);
                             List<String> contactGroups = contactGroupMembership.get(rawContactId);
 
                             if (contactGroups != null && !contactGroups.isEmpty()) {
@@ -623,7 +648,8 @@ public class BirthdayWorker extends Worker {
                                 }
                             } else {
                                 // Contact has no group, check if "No Group" is blacklisted
-                                if (blacklistedGroups.contains(Constants.GROUP_TITLE_NO_GROUP)) {
+                                if (blacklistedGroups.contains(Constants.GROUP_TITLE_NO_GROUP) ||
+                                        blacklistedGroups.contains(context.getString(R.string.account_list_no_group))) {
                                     isBlacklisted = true;
                                 }
                             }
@@ -637,7 +663,6 @@ public class BirthdayWorker extends Worker {
                     int type = dataCursor.getInt(typeColumn);
                     String label = dataCursor.getString(labelColumn);
                     String startDate = dataCursor.getString(startDateColumn);
-                    String rawContactId = dataCursor.getString(rawContactIdColumn);
 
                     // Prevent adding the same event (birthday, anniversary) for the same contact twice
                     String eventIdentifier = lookupKey + type + label + startDate;

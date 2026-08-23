@@ -1,15 +1,16 @@
-Birthday Adapter provides birthdays, anniversaries, and other events from your contacts into your Android calendar. Unlike other apps, it integrates with your system calendar, so you can see all your contact dates alongside your other events.
+Birthday Adapter brings birthdays, anniversaries, and other events from your contacts to your Android calendars. Unlike other apps, it creates a dedicated calendar within your system, so you can view all your contact dates alongside your daily schedule in your favorite calendar app.
 
 FEATURES
-* Integration: See your contacts' birthdays directly in your favorite calendar app alongside your daily schedule - no manual lists or double entries required.
+* Address Book Based: Store birthdays directly in your contacts - no manual lists to maintain or duplicate entries to manage.
+* Filtering: Choose which accounts or contact groups you want to see in your calendar.
+* Integration: See your contacts' birthdays directly in your favorite calendar app, organized in a separate calendar that you can show, hide, or view alongside your daily schedule whenever you want.
 * Age Display: With the age automatically being added to every event, you always know which milestone is ahead.
 * Beyond Birthdays: Sync any custom-labeled date from your address book - perfect for keeping track of your contacts' anniversaries or their children’s and partners' birthdays.
-* Background Sync: Your calendar stays in sync with regular updates in the background.
-* Filtering: Choose which accounts or contact groups you want to see in your calendar.
 * Reminders: Set as many reminders as you need for your events.
 * Jubilee Markers: Spot major milestones and big anniversaries.
-* Customization: Personalize event titles and choose which event types should trigger a notification.
+* Customization: Tailor event titles to your liking and choose which event types should trigger a notification.
 * Personalization: Use the color picker to style your birthday calendar to match your personal preference.
+* Background Sync: Your calendar stays in sync with regular updates in the background.
 
 PROBLEMS
 If you have problems with this app, please report them on the following website:

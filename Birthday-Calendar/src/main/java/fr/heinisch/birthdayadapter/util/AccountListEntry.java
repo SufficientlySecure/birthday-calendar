@@ -26,10 +26,12 @@ import android.accounts.AuthenticatorDescription;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.drawable.Drawable;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,17 +59,16 @@ public class AccountListEntry {
         PackageManager pm = context.getPackageManager();
         label = description.packageName;
         try {
-            label = pm.getResourcesForApplication(description.packageName).getString(
-                    description.labelId);
-        } catch (NotFoundException | NameNotFoundException e) {
+            Resources res = pm.getResourcesForApplication(description.packageName);
+            label = res.getString(description.labelId);
+            try {
+                icon = ResourcesCompat.getDrawable(res, description.iconId, context.getTheme());
+            } catch (Resources.NotFoundException e) {
+                Log.e(Constants.TAG, "Error retrieving icon!", e);
+                icon = null;
+            }
+        } catch (NameNotFoundException e) {
             Log.e(Constants.TAG, "Error retrieving label!", e);
-        }
-
-        try {
-            icon = pm.getDrawable(description.packageName, description.iconId, null);
-        } catch (Exception e) {
-            Log.e(Constants.TAG, "Error retrieving icon!", e);
-            icon = null;
         }
     }
 

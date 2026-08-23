@@ -1,14 +1,15 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
+plugins {
+    id 'com.android.application'
+}
 
 android {
-    compileSdkVersion 36
+    compileSdk 37
 
     defaultConfig {
-        minSdkVersion 28
-        targetSdkVersion 36
-        versionCode = 31304
-        versionName = "3.13.4"
+        minSdk 28
+        targetSdk 37
+        versionCode = 31305
+        versionName = "3.13.5"
 
         def gitCommitHashProvider = providers.exec {
             commandLine 'git', 'rev-parse', '--short', 'HEAD'
@@ -64,13 +65,13 @@ android {
 
     flavorDimensions += "version"
     productFlavors {
-        create("full") {
+        register("full") {
             dimension = "version"
             applicationId = "org.birthdayadapter"
             buildConfigField("boolean", "FULL_VERSION", "true")
             buildConfigField("boolean", "GOOGLE_PLAY_VERSION", "false")
         }
-        create("free") {
+        register("free") {
             dimension = "version"
             applicationId = "fr.heinisch.birthdayadapter"
             buildConfigField("boolean", "FULL_VERSION", "false")
@@ -87,13 +88,12 @@ android {
 }
 
 dependencies {
-    implementation "androidx.core:core-ktx:1.18.0"
+    implementation "androidx.core:core-ktx:1.19.0"
     implementation "androidx.activity:activity-ktx:1.13.0"
-    implementation "androidx.fragment:fragment-ktx:1.8.9"
-    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation "androidx.fragment:fragment-ktx:1.9.0"
+    implementation 'androidx.appcompat:appcompat:1.8.0'
     implementation 'com.google.android.material:material:1.14.0'
     implementation 'androidx.preference:preference-ktx:1.2.1'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "androidx.work:work-runtime-ktx:2.11.2"
     
     // Google Play specific libraries (Review API and Billing)

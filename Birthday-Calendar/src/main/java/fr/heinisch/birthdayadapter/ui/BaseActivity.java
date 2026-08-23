@@ -69,6 +69,9 @@ public class BaseActivity extends AppCompatActivity {
     public MySharedPreferenceChangeListener mySharedPreferenceChangeListener;
     private ProgressBar mProgressBar;
 
+    private static final int VERSION_CODE_CUSTOM_PREFS_MIGRATION = 31306;
+    private static final int VERSION_CODE_ONBOARDING_MIGRATION = 43;
+
     private static final String[] REQUIRED_PERMISSIONS = new String[]{
             Manifest.permission.GET_ACCOUNTS,
             Manifest.permission.READ_CONTACTS,
@@ -169,18 +172,12 @@ public class BaseActivity extends AppCompatActivity {
             currentVersionCode = pInfo.getLongVersionCode();
             long lastSeenVersionCode = prefs.getLong("last_seen_version_code", 0);
             if (currentVersionCode > lastSeenVersionCode) {
-                // This is an update. Check if we need to migrate existing users.
-                if (!prefs.getBoolean("has_seen_onboarding", false) && areAllPermissionsGranted()) {
-                    // This is an existing user with all permissions. Mark onboarding as seen and enable the adapter.
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putBoolean("has_seen_onboarding", true);
-                    editor.putBoolean(getString(R.string.pref_enabled_key), true);
-                    editor.apply();
-
-                    // Activate the account in the background
-                    AccountHelper accountHelper = new AccountHelper(this);
-                    ExecutorService executor = newSingleThreadExecutor();
-                    executor.execute(accountHelper::addAccountAndSync);
+                // This is an update. Check migrations.
+                if (lastSeenVersionCode < VERSION_CODE_CUSTOM_PREFS_MIGRATION) {
+                    migrateCustomPreferences(prefs);
+                }
+                if (lastSeenVersionCode < VERSION_CODE_ONBOARDING_MIGRATION) {
+                    migrateOnboardingState(prefs);
                 }
 
                 // Update the last seen version code
@@ -188,6 +185,44 @@ public class BaseActivity extends AppCompatActivity {
             }
         } catch (PackageManager.NameNotFoundException e) {
             // This should not happen
+        }
+    }
+
+    /**
+     * Migrates settings from the legacy "preferences" file to the default SharedPreferences.
+     * This is needed because older versions of the app incorrectly stored some settings in a custom file.
+     * After migration, the legacy file is cleared.
+     *
+     * @param defaultPrefs The default SharedPreferences to migrate to.
+     */
+    private void migrateCustomPreferences(SharedPreferences defaultPrefs) {
+        SharedPreferences customPrefs = getSharedPreferences("preferences", MODE_PRIVATE);
+        if (customPrefs.contains(getString(R.string.pref_enabled_key))) {
+            boolean enabled = customPrefs.getBoolean(getString(R.string.pref_enabled_key), false);
+            defaultPrefs.edit().putBoolean(getString(R.string.pref_enabled_key), enabled).apply();
+            // Clear the old file
+            customPrefs.edit().clear().apply();
+        }
+    }
+
+    /**
+     * Ensures that existing users who have already granted all necessary permissions
+     * do not see the onboarding screen after its introduction.
+     *
+     * @param prefs The default SharedPreferences.
+     */
+    private void migrateOnboardingState(SharedPreferences prefs) {
+        if (!prefs.getBoolean("has_seen_onboarding", false) && areAllPermissionsGranted()) {
+            // This is an existing user with all permissions. Mark onboarding as seen and enable the adapter.
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("has_seen_onboarding", true);
+            editor.putBoolean(getString(R.string.pref_enabled_key), true);
+            editor.apply();
+
+            // Activate the account in the background
+            AccountHelper accountHelper = new AccountHelper(this);
+            ExecutorService executor = newSingleThreadExecutor();
+            executor.execute(accountHelper::addAccountAndSync);
         }
     }
 

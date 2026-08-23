@@ -177,7 +177,7 @@
     <string name="finish">Finish</string>
     <string name="ignore">Ignore</string>
     <string name="onboarding_intro_title">Welcome to Birthday Adapter</string>
-    <string name="onboarding_intro_text">This app syncs birthdays, anniversaries, and other events from your contacts directly into your Android calendar. Unlike other apps, it integrates seamlessly with your system calendar, so you can see all your important dates alongside your other events.</string>
+    <string name="onboarding_intro_text">This app brings birthdays, anniversaries, and other events from your contacts to your Android calendars. Unlike other apps, it creates a dedicated calendar within your system, so you can view all your contact dates alongside your daily schedule in your favorite calendar app.</string>
     <string name="onboarding_contacts_title">Contacts Access</string>
     <string name="onboarding_contacts_text">To read birthdays, the app needs access to your contacts.</string>
     <string name="onboarding_calendar_title">Calendar Access</string>

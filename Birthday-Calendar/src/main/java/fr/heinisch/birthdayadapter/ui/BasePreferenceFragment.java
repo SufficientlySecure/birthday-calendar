@@ -135,7 +135,6 @@ public class BasePreferenceFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
-        getPreferenceManager().setSharedPreferencesName(Constants.PREFS_NAME);
         addPreferencesFromResource(R.xml.base_preferences);
     }
 

@@ -1,84 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <androidx.preference.PreferenceCategory android:title="@string/pref_general">
+    <androidx.preference.PreferenceCategory
+        android:key="pref_general_category"
+        android:title="@string/pref_general"
+        >
         <androidx.preference.Preference
             android:key="@string/pref_color_key"
             android:persistent="true"
-            android:title="@string/pref_color" />
+            android:title="@string/pref_color"
+             />
     </androidx.preference.PreferenceCategory>
-
     <androidx.preference.PreferenceCategory
         android:key="@string/pref_buy_category_key"
-        android:title="@string/pref_buy">
+        android:title="@string/pref_buy"
+        >
         <androidx.preference.Preference
-            app:icon="@drawable/ic_star"
+            android:icon="@drawable/ic_star"
             android:key="@string/pref_buy_full_key"
             android:summary="@string/pref_buy_full_summary"
             android:title="@string/pref_buy_full" />
-
         <androidx.preference.Preference
+            android:key="pref_premium_feat_sync"
             android:persistent="false"
             android:selectable="false"
-            app:title="@string/premium_feat_sync_title"
-            app:summary="@string/premium_feat_sync_summary" />
+            android:summary="@string/premium_feat_sync_summary"
+            android:title="@string/premium_feat_sync_title"
+             />
         <androidx.preference.Preference
+            android:key="pref_premium_feat_reminders"
             android:persistent="false"
             android:selectable="false"
-            app:title="@string/premium_feat_reminders_title"
-            app:summary="@string/premium_feat_reminders_summary" />
+            android:summary="@string/premium_feat_reminders_summary"
+            android:title="@string/premium_feat_reminders_title"
+             />
         <androidx.preference.Preference
+            android:key="pref_premium_feat_titles"
             android:persistent="false"
             android:selectable="false"
-            app:title="@string/premium_feat_titles_title"
-            app:summary="@string/premium_feat_titles_summary" />
+            android:summary="@string/premium_feat_titles_summary"
+            android:title="@string/premium_feat_titles_title"
+             />
         <androidx.preference.Preference
+            android:key="pref_premium_feat_filtering"
             android:persistent="false"
             android:selectable="false"
-            app:title="@string/premium_feat_filtering_title"
-            app:summary="@string/premium_feat_filtering_summary" />
+            android:summary="@string/premium_feat_filtering_summary"
+            android:title="@string/premium_feat_filtering_title"
+             />
         <androidx.preference.Preference
+            android:key="pref_premium_feat_jubilee"
             android:persistent="false"
             android:selectable="false"
-            app:title="@string/premium_feat_jubilee_title"
-            app:summary="@string/premium_feat_jubilee_summary" />
-
+            android:summary="@string/premium_feat_jubilee_summary"
+            android:title="@string/premium_feat_jubilee_title"
+             />
     </androidx.preference.PreferenceCategory>
-
     <androidx.preference.PreferenceCategory
         android:key="@string/pref_reminders_category_key"
-        android:title="@string/pref_reminders">
-        <MultiSelectListPreference
+        android:title="@string/pref_reminders"
+        >
+        <androidx.preference.MultiSelectListPreference
             android:key="@string/pref_reminder_event_types"
             android:title="@string/pref_events_with_reminders"
             android:entries="@array/pref_reminder_event_types_entries"
             android:entryValues="@array/pref_reminder_event_types_values"
-            android:defaultValue="@array/pref_reminder_event_types_default_values" />
+            android:defaultValue="@array/pref_reminder_event_types_default_values"
+             />
     </androidx.preference.PreferenceCategory>
-
     <androidx.preference.PreferenceCategory
         android:key="@string/pref_additional_reminders_category_key"
-        android:title="@string/pref_additional_reminders_category">
+        android:title="@string/pref_additional_reminders_category"
+        >
         <androidx.preference.EditTextPreference
             android:key="@string/pref_additional_reminders_group_key"
             android:title="@string/pref_additional_reminders_group_title"
             android:dialogTitle="@string/pref_additional_reminders_group_title"
             android:dialogMessage="@string/pref_additional_reminders_group_description"
             android:defaultValue="@string/pref_additional_reminders_group_def"
-            app:useSimpleSummaryProvider="true" />
+            app:useSimpleSummaryProvider="true"
+             />
     </androidx.preference.PreferenceCategory>
-
     <androidx.preference.PreferenceCategory
         android:key="@string/pref_title_category_key"
-        android:title="@string/pref_title">
+        android:title="@string/pref_title"
+        >
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="@bool/pref_title_enable_def"
             android:key="@string/pref_title_enable_key"
             android:persistent="true"
             android:summary="@string/pref_title_enable_summary"
-            android:title="@string/pref_title_enable" />
-
+            android:title="@string/pref_title_enable"
+             />
         <androidx.preference.EditTextPreference
             android:defaultValue="@string/event_title_birthday_without_age"
             android:dependency="@string/pref_title_enable_key"
@@ -86,7 +99,8 @@
             android:dialogTitle="@string/pref_title_birthday_without_age"
             android:key="@string/pref_title_birthday_without_age_key"
             android:persistent="true"
-            android:title="@string/pref_title_birthday_without_age" />
+            android:title="@string/pref_title_birthday_without_age"
+             />
         <androidx.preference.EditTextPreference
             android:defaultValue="@string/event_title_birthday_with_age"
             android:dependency="@string/pref_title_enable_key"
@@ -94,7 +108,8 @@
             android:dialogTitle="@string/pref_title_birthday_with_age"
             android:key="@string/pref_title_birthday_with_age_key"
             android:persistent="true"
-            android:title="@string/pref_title_birthday_with_age" />
+            android:title="@string/pref_title_birthday_with_age"
+             />
         <androidx.preference.EditTextPreference
             android:defaultValue="@string/event_title_anniversary_without_age"
             android:dependency="@string/pref_title_enable_key"
@@ -102,7 +117,8 @@
             android:dialogTitle="@string/pref_title_anniversary_without_age"
             android:key="@string/pref_title_anniversary_without_age_key"
             android:persistent="true"
-            android:title="@string/pref_title_anniversary_without_age" />
+            android:title="@string/pref_title_anniversary_without_age"
+             />
         <androidx.preference.EditTextPreference
             android:defaultValue="@string/event_title_anniversary_with_age"
             android:dependency="@string/pref_title_enable_key"
@@ -110,7 +126,8 @@
             android:dialogTitle="@string/pref_title_anniversary_with_age"
             android:key="@string/pref_title_anniversary_with_age_key"
             android:persistent="true"
-            android:title="@string/pref_title_anniversary_with_age" />
+            android:title="@string/pref_title_anniversary_with_age"
+             />
         <androidx.preference.EditTextPreference
             android:defaultValue="@string/event_title_other_without_age"
             android:dependency="@string/pref_title_enable_key"
@@ -118,7 +135,8 @@
             android:dialogTitle="@string/pref_title_other_without_age"
             android:key="@string/pref_title_other_without_age_key"
             android:persistent="true"
-            android:title="@string/pref_title_other_without_age" />
+            android:title="@string/pref_title_other_without_age"
+             />
         <androidx.preference.EditTextPreference
             android:defaultValue="@string/event_title_other_with_age"
             android:dependency="@string/pref_title_enable_key"
@@ -126,7 +144,8 @@
             android:dialogTitle="@string/pref_title_other_with_age"
             android:key="@string/pref_title_other_with_age_key"
             android:persistent="true"
-            android:title="@string/pref_title_other_with_age" />
+            android:title="@string/pref_title_other_with_age"
+             />
         <androidx.preference.EditTextPreference
             android:defaultValue="@string/event_title_custom_without_age"
             android:dependency="@string/pref_title_enable_key"
@@ -134,7 +153,8 @@
             android:dialogTitle="@string/pref_title_custom_without_age"
             android:key="@string/pref_title_custom_without_age_key"
             android:persistent="true"
-            android:title="@string/pref_title_custom_without_age" />
+            android:title="@string/pref_title_custom_without_age"
+             />
         <androidx.preference.EditTextPreference
             android:defaultValue="@string/event_title_custom_with_age"
             android:dependency="@string/pref_title_enable_key"
@@ -142,40 +162,45 @@
             android:dialogTitle="@string/pref_title_custom_with_age"
             android:key="@string/pref_title_custom_with_age_key"
             android:persistent="true"
-            android:title="@string/pref_title_custom_with_age" />
-        <Preference
+            android:title="@string/pref_title_custom_with_age"
+             />
+        <androidx.preference.Preference
             android:key="@string/pref_jubilee_years_key"
             android:persistent="true"
             android:summary="@string/pref_jubilee_years_def"
-            android:title="@string/pref_jubilee_years_title" />
+            android:title="@string/pref_jubilee_years_title"
+             />
     </androidx.preference.PreferenceCategory>
-
     <androidx.preference.PreferenceCategory
         android:key="@string/pref_advanced_category_key"
-        android:title="@string/pref_advanced_category">
+        android:title="@string/pref_advanced_category"
+        >
         <androidx.preference.Preference
             android:key="@string/pref_disable_permission_monitoring_key"
             android:title="@string/pref_disable_permission_monitoring_title"
             android:summary="@string/pref_disable_permission_monitoring_summary"
-            android:visible="false" />
+            android:visible="false"
+             />
         <androidx.preference.SwitchPreferenceCompat
             android:key="@string/pref_group_filtering_key"
             android:title="@string/pref_group_filtering_title"
             android:summary="@string/pref_group_filtering_summary"
-            android:defaultValue="@bool/pref_group_filtering_def" />
+            android:defaultValue="@bool/pref_group_filtering_def"
+             />
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="@bool/pref_prefer_dd_slash_mm_def"
             android:key="@string/pref_prefer_dd_slash_mm_key"
             android:persistent="true"
             android:summary="@string/pref_prefer_dd_slash_mm_summary"
             android:title="@string/pref_prefer_dd_slash_mm"
-            android:visible="false" />
+            android:visible="false"
+             />
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="@bool/pref_name_format_def"
             android:key="@string/pref_name_format_key"
             android:persistent="true"
             android:summary="@string/pref_name_format_summary"
-            android:title="@string/pref_name_format_title" />
+            android:title="@string/pref_name_format_title"
+             />
     </androidx.preference.PreferenceCategory>
-
 </androidx.preference.PreferenceScreen>

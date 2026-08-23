@@ -32,8 +32,6 @@ public class Constants {
         return context.getString(R.string.app_name);
     }
 
-    public static final String PREFS_NAME = "preferences";
-
     public static final int SYNC_INTERVAL_DAYS = 5;
 
     public static final String GROUP_TITLE_NO_GROUP = "NO_GROUP";

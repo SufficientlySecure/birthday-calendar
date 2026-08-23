@@ -6,19 +6,21 @@
         <item name="colorOnPrimary">@android:color/white</item>
         <item name="colorPrimaryContainer">#4c8e03</item>
         <item name="colorOnPrimaryContainer">@android:color/white</item>
-        
+
         <!-- Secondary / Accent colors -->
         <item name="colorSecondary">@color/colorAccent</item>
         <item name="colorOnSecondary">@android:color/white</item>
 
         <!-- Standard M3 Surface colors -->
         <item name="colorSurface">?attr/colorSurfaceContainerLowest</item>
-        <item name="colorOnSurface">?android:attr/textColorPrimary</item>
-        
+        <item name="colorOnSurface">?attr/colorOnSurfaceVariant</item>
+
         <!-- System bars (Edge-to-Edge handles this, but we set a fallback) -->
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
+
+    <style name="MyMaterialTheme" parent="MyMaterialTheme.Base" />
 
     <style name="Theme.App.Transparent" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
