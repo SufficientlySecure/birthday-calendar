@@ -149,7 +149,7 @@
     <string name="finish">Fertig</string>
     <string name="ignore">Ignorieren</string>
     <string name="onboarding_intro_title">Willkommen bei Birthday Adapter</string>
-    <string name="onboarding_intro_text">Diese App synchronisiert Geburtstage, Jahrestage und andere Ereignisse aus deinen Kontakten direkt mit deinem Android-Kalender. Im Gegensatz zu anderen Apps lässt sie sich nahtlos in deinen Systemkalender integrieren, sodass du alle wichtigen Termine zusammen mit deinen anderen Ereignissen sehen kannst.</string>
+    <string name="onboarding_intro_text">Diese App bringt Geburtstage, Jahrestage und andere Ereignisse aus deinen Kontakten in deine Android-Kalender. Im Unterschied zu anderen Apps erstellt sie einen eigenen Kalender im System, wodurch du alle Kontakt-Termine zusammen mit deinen persönlichen Ereignissen in deiner bevorzugten Kalender-App sehen kannst.</string>
     <string name="onboarding_contacts_title">Zugriff auf Kontakte</string>
     <string name="onboarding_contacts_text">Um Geburtstage lesen zu können, benötigt die App Zugriff auf deine Kontakte.</string>
     <string name="onboarding_calendar_title">Zugriff auf Kalender</string>
@@ -181,4 +181,7 @@
     <string name="pref_additional_reminders_category">Zusätzliche Gruppenerinnerungen</string>
     <string name="pref_additional_reminders_group_title">Kontaktgruppenname</string>
     <string name="pref_additional_reminders_group_description">Gib den Namen einer Kontaktgruppe an, um für deren Mitglieder zusätzliche Erinnerungen zu erhalten. Stelle sicher, dass die entsprechenden Kontakte Mitglieder dieser Gruppe sind.</string>
+    <string name="error_no_network">Kein Internet, bitte Verbindung prüfen.</string>
+    <string name="error_billing_unavailable">Google Play ist nicht erreichbar, bitte später versuchen.</string>
+    <string name="error_acknowledge_failed">Bitte die App neu starten, um den Kauf zu aktivieren.</string>
 </resources>
