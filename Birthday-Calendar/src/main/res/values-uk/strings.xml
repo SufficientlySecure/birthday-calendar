@@ -149,7 +149,7 @@
     <string name="finish">Кінець</string>
     <string name="ignore">Ігнорувати</string>
     <string name="onboarding_intro_title">Вітаємо в Birthday Adapter</string>
-    <string name="onboarding_intro_text">Цей застосунок синхронізує дні народження, річниці, та інші події з ваших контактів прямо у ваш Android календар. На відміну від інших застосунків, цей синхронізується напряму з календарем системи, щоб ви бачили всі важливі дати та інші події.</string>
+    <string name="onboarding_intro_text">Цей застосунок переносить дні народження, річниці, та інші події з ваших контактів у ваші Android календарі. На відміну від інших застосунків, цей створює окремий календар у вашій системі, ви зможете переглядати всі дати ваших контактів поряд з щоденним розпорядком у вашій улюбленій програмі календаря.</string>
     <string name="onboarding_contacts_title">Доступ до контактів</string>
     <string name="onboarding_contacts_text">Для перегляду днів народження застосунку потрібен доступ до ваших контактів</string>
     <string name="onboarding_calendar_title">Доступ до календаря</string>
