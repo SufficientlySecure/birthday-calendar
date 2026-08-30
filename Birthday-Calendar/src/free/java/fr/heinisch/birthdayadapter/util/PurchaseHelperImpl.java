@@ -24,6 +24,9 @@ import static fr.heinisch.birthdayadapter.util.VersionHelper.isFullVersionUnlock
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -45,29 +48,40 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import fr.heinisch.birthdayadapter.BuildConfig;
+import fr.heinisch.birthdayadapter.R;
 
 public class PurchaseHelperImpl implements IPurchaseHelper {
 
     private static final String SKU_FULL_VERSION = "full_version";
     private BillingClient billingClient;
     private final AtomicBoolean isBillingClientConnecting = new AtomicBoolean(false);
+    private final AtomicBoolean isSilentConnection = new AtomicBoolean(true);
     private final List<Runnable> pendingTasks = new ArrayList<>();
 
-    private void ensureBillingClient(Context context, Runnable onConnected) {
+    private void ensureBillingClient(Context context, boolean silent, Runnable onConnected) {
+        boolean alreadyConnected = false;
         synchronized (pendingTasks) {
             if (billingClient != null && billingClient.isReady()) {
+                alreadyConnected = true;
+            } else {
                 if (onConnected != null) {
-                    onConnected.run();
+                    pendingTasks.add(onConnected);
                 }
-                return;
-            }
-
-            if (onConnected != null) {
-                pendingTasks.add(onConnected);
+                if (!silent) {
+                    isSilentConnection.set(false);
+                }
             }
         }
 
+        if (alreadyConnected) {
+            if (onConnected != null) {
+                onConnected.run();
+            }
+            return;
+        }
+
         if (isBillingClientConnecting.compareAndSet(false, true)) {
+            isSilentConnection.set(silent);
             Context appContext = context.getApplicationContext();
 
             PurchasesUpdatedListener listener = (billingResult, purchases) -> {
@@ -77,6 +91,7 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
                     }
                 } else if (billingResult.getResponseCode() != BillingClient.BillingResponseCode.USER_CANCELED) {
                     Log.w(Constants.TAG, "Purchases updated with error: " + billingResult.getResponseCode() + " - " + billingResult.getDebugMessage());
+                    showError(appContext, billingResult);
                 }
             };
 
@@ -89,14 +104,18 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
                 @Override
                 public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
                     isBillingClientConnecting.set(false);
-                    List<Runnable> tasksToRun;
+                    boolean wasSilent = isSilentConnection.getAndSet(true);
+
+                    List<Runnable> tasksToRun = new ArrayList<>();
                     synchronized (pendingTasks) {
                         if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                             Log.d(Constants.TAG, "BillingClient setup finished.");
-                            tasksToRun = new ArrayList<>(pendingTasks);
+                            tasksToRun.addAll(pendingTasks);
                         } else {
                             Log.w(Constants.TAG, "BillingClient setup failed: " + billingResult.getResponseCode() + " - " + billingResult.getDebugMessage());
-                            tasksToRun = Collections.emptyList();
+                            if (!wasSilent) {
+                                showError(appContext, billingResult);
+                            }
                         }
                         pendingTasks.clear();
                     }
@@ -109,6 +128,7 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
                 public void onBillingServiceDisconnected() {
                     Log.w(Constants.TAG, "BillingClient disconnected.");
                     isBillingClientConnecting.set(false);
+                    isSilentConnection.set(true);
                     synchronized (pendingTasks) {
                         pendingTasks.clear();
                     }
@@ -128,7 +148,7 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
             return;
         }
 
-        ensureBillingClient(activity, () -> {
+        ensureBillingClient(activity, false, () -> {
             QueryProductDetailsParams.Product product = QueryProductDetailsParams.Product.newBuilder()
                     .setProductId(SKU_FULL_VERSION)
                     .setProductType(BillingClient.ProductType.INAPP)
@@ -158,6 +178,7 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
                     }
                 }
                 Log.e(Constants.TAG, "Product details query failed: " + billingResult.getResponseCode() + " - " + billingResult.getDebugMessage());
+                showError(activity, billingResult);
             });
         });
     }
@@ -165,7 +186,7 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
     @Override
     public void queryProductDetails(Activity activity, OnPriceFoundCallback callback) {
         Log.d(Constants.TAG, "queryProductDetails called.");
-        ensureBillingClient(activity, () -> {
+        ensureBillingClient(activity, true, () -> {
             QueryProductDetailsParams.Product product = QueryProductDetailsParams.Product.newBuilder()
                     .setProductId(SKU_FULL_VERSION)
                     .setProductType(BillingClient.ProductType.INAPP)
@@ -212,7 +233,7 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
             return;
         }
 
-        ensureBillingClient(context.getApplicationContext(), () -> {
+        ensureBillingClient(context.getApplicationContext(), true, () -> {
             QueryPurchasesParams params = QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build();
             billingClient.queryPurchasesAsync(params, (billingResult, purchases) -> {
                 if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
@@ -243,6 +264,7 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
                         unlockFullVersion(context);
                     } else {
                         Log.e(Constants.TAG, "handlePurchase: Error acknowledging purchase: " + billingResult.getResponseCode() + " - " + billingResult.getDebugMessage());
+                        showError(context, billingResult, context.getString(R.string.error_acknowledge_failed));
                     }
                     onFinishedListener.run();
                 });
@@ -255,6 +277,32 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
             Log.w(Constants.TAG, "handlePurchase: Purchase is not in PURCHASED state (state: " + purchase.getPurchaseState() + ").");
             onFinishedListener.run();
         }
+    }
+
+    private void showError(Context context, BillingResult billingResult) {
+        showError(context, billingResult, null);
+    }
+
+    private void showError(Context context, BillingResult billingResult, String customMessage) {
+        int responseCode = billingResult.getResponseCode();
+        String message = customMessage;
+        if (message == null) {
+            if (responseCode == BillingClient.BillingResponseCode.NETWORK_ERROR) {
+                message = context.getString(R.string.error_no_network);
+            } else if (responseCode == BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE ||
+                    responseCode == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE) {
+                message = context.getString(R.string.error_billing_unavailable);
+            } else {
+                message = billingResult.getDebugMessage();
+            }
+        }
+
+        if (message == null || message.isEmpty()) {
+            message = "Billing Error (Code: " + responseCode + ")";
+        }
+
+        final String finalMessage = message;
+        new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(context, finalMessage, Toast.LENGTH_LONG).show());
     }
 
     private void unlockFullVersion(Context context) {

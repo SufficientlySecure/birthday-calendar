@@ -172,6 +172,11 @@
     <string name="premium_feat_jubilee_title">Jubilee Birthdays</string>
     <string name="premium_feat_jubilee_summary">Highlight special occasions like the 18th or 50th birthday.</string>
 
+    <!-- Billing Errors -->
+    <string name="error_no_network">No internet, please check the connection.</string>
+    <string name="error_billing_unavailable">Google Play is unavailable, please try again later.</string>
+    <string name="error_acknowledge_failed">Please restart the app to activate your purchase.</string>
+
     <!-- Onboarding -->
     <string name="next">Next</string>
     <string name="finish">Finish</string>

@@ -1,6 +1,6 @@
 # Subproject specific ignores
 build/
-free/
-full/
+/free/
+/full/
 
 # Most things are handled by the root .gitignore
