@@ -165,16 +165,14 @@ public class OnboardingActivity extends AppCompatActivity {
     }
 
     private void activateAdapterIfNeeded() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean isEnabled = prefs.getBoolean(getString(R.string.pref_enabled_key), false);
-
-        if (isEnabled) {
+        AccountHelper accountHelper = new AccountHelper(this);
+        if (accountHelper.isAccountActivated()) {
             return;
         }
 
-        AccountHelper accountHelper = new AccountHelper(this);
         executorService.execute(accountHelper::addAccountAndSync);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.edit().putBoolean(getString(R.string.pref_enabled_key), true).apply();
     }
 
