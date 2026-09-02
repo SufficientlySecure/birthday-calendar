@@ -51,11 +51,11 @@
     <string name="pref_title_anniversary_with_age">Річниця з віком</string>
     <string name="pref_title_other_without_age">Інша подія</string>
     <string name="pref_title_other_with_age">Інша подія з віком</string>
-    <string name="pref_title_custom_without_age">Звичай</string>
-    <string name="pref_title_custom_with_age">Звичай з віком</string>
+    <string name="pref_title_custom_without_age">Традиція</string>
+    <string name="pref_title_custom_with_age">Традиція з віком</string>
     <string name="pref_advanced_category">Додаткові параметри</string>
-    <string name="pref_prefer_dd_slash_mm">Формат дати dd/MM/yyyy</string>
-    <string name="pref_prefer_dd_slash_mm_summary">Віддає перевагу dd/MM/yyyy над MM/dd/yyyy при аналізі формату дати</string>
+    <string name="pref_prefer_dd_slash_mm">Бажаний формат дати dd/MM/yyyy</string>
+    <string name="pref_prefer_dd_slash_mm_summary">Надавати перевагу формату dd/MM/yyyy над MM/dd/yyyy при підтягуванні дат</string>
     <string name="pref_advanced">Додаткові параметри</string>
     <string name="pref_reminder_event_types_birthday">Дні народження</string>
     <!-- Adapter Screen -->
@@ -178,4 +178,7 @@
     <string name="premium_feat_jubilee_summary">Виділяти особливі події, як то 18й чи 50й день народження.</string>
     <string name="onboarding_permission_denied">Дозвіл не надано. Застосунок може працювати неочікувано.</string>
     <string name="pref_disable_permission_monitoring_summary">Зберігає застосунок від втрати дозволі, якщо довго не використовується. Корисно, якщо використовується тільки для фонової синхронізації.</string>
+    <string name="error_no_network">Інтернет недоступний, перевірте з\'єднання.</string>
+    <string name="error_billing_unavailable">Google Play недоступний, будь ласка спробуйте пізніше.</string>
+    <string name="error_acknowledge_failed">Будь ласка, перезапустіть программу для активації покупки.</string>
 </resources>
