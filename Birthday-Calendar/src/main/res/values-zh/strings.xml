@@ -174,4 +174,7 @@
     <string name="pref_additional_reminders_category">额外群组提醒</string>
     <string name="pref_additional_reminders_group_title">联系人群组名称</string>
     <string name="pref_additional_reminders_group_description">指定一个联系人群组以接收额外提醒，例如对于那些需要提前寄送礼物的联系人。请确保您选择的联系人是该群组的成员。</string>
+    <string name="error_no_network">没有互联网，请检查连接。</string>
+    <string name="error_billing_unavailable">Google Play 不可用，请稍后重试。</string>
+    <string name="error_acknowledge_failed">请重启应用以激活您的购买。</string>
 </resources>
