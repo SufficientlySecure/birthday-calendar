@@ -178,4 +178,7 @@
     <string name="pref_additional_reminders_category">Допълнителни напомняния за групата</string>
     <string name="pref_additional_reminders_group_title">Име на групата контакти</string>
     <string name="pref_additional_reminders_group_description">Посочете група контакти, която да получава допълнителни напомняния, например за тези, на които трябва да изпратите подарък по-рано. Уверете се, че избраните контакти са членове на тази група.</string>
+    <string name="error_no_network">Няма връзка с интернет.</string>
+    <string name="error_billing_unavailable">Магазинът Google Play е недостъпен. Опитайте по-късно.</string>
+    <string name="error_acknowledge_failed">За да активирате покупката рестартирайте приложението.</string>
 </resources>
