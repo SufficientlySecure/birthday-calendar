@@ -143,7 +143,7 @@
     <string name="finish">Dokončit</string>
     <string name="ignore">Ignorovat</string>
     <string name="onboarding_intro_title">Vítejte v aplikaci Birthday Adapter</string>
-    <string name="onboarding_intro_text">Tato aplikace synchronizuje narozeniny, výročí a další události z vašich kontaktů přímo do kalendáře Androidu. Na rozdíl od jiných aplikací se bez problémů integruje se systémovým kalendářem, takže vedle ostatních událostí uvidíte všechna důležitá data.</string>
+    <string name="onboarding_intro_text">Tato aplikace přenáší narozeniny, výročí a další události z vašich kontaktů do vašich kalendářů v Androidu. Na rozdíl od jiných aplikací vytváří ve vašem systému samostatný kalendář, takže si v oblíbené aplikaci kalendáře můžete vedle denního programu zobrazit všechna data z kontaktů.</string>
     <string name="onboarding_contacts_title">Přístup ke kontaktům</string>
     <string name="onboarding_contacts_text">Aplikace potřebuje pro čtení narozenin přístup ke kontaktům.</string>
     <string name="onboarding_calendar_title">Přístup ke kalendáři</string>
@@ -161,4 +161,7 @@
     <string name="summary_placeholder_firstname">Jana</string>
     <string name="summary_placeholder_lastname">Nováková</string>
     <string name="summary_placeholder_custom_label">První schůzka</string>
+    <string name="error_no_network">Není k dispozici připojení k internetu. Zkontrolujte připojení.</string>
+    <string name="error_billing_unavailable">Google Play není k dispozici. Zkuste to prosím později.</string>
+    <string name="error_acknowledge_failed">Restartujte aplikaci, aby se nákup aktivoval.</string>
 </resources>
