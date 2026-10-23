@@ -61,14 +61,14 @@
     <!-- Adapter Screen -->
     <string name="pref_account_header">Configurações</string>
     <string name="pref_account_settings">Configurar o Birthday Adapter</string>
-    <string name="account_list_empty">Nenhuma conta</string>
+    <string name="account_list_empty">Nenhuma conta encontrada</string>
     <!--Free Version -->
     <string name="pref_buy">Compre a versão completa!</string>
     <string name="pref_buy_full">Abrir o Google Play para comprar a versão completa...</string>
     <string name="event_title_birthday_with_age">{NAME}: Aniversário ({AGE})</string>
     <string name="event_title_birthday_without_age">{NAME}: Aniversário</string>
-    <string name="event_title_anniversary_with_age">{NAME}: Aniversário ({AGE})</string>
-    <string name="event_title_anniversary_without_age">{NAME}: Aniversário</string>
+    <string name="event_title_anniversary_with_age">{NAME}: Data comemorativa ({AGE})</string>
+    <string name="event_title_anniversary_without_age">{NAME}: Data comemorativa</string>
     <string name="event_title_other_with_age">{NAME}: Outro Evento ({AGE})</string>
     <string name="event_title_other_without_age">{NAME}: Outro Evento</string>
     <string name="event_title_custom_with_age">{NAME}: {LABEL} ({AGE})</string>
@@ -126,4 +126,56 @@
     <string name="permission_read_contacts_denied">Acesso aos contatos negado. Não foi possível carregar as contas.</string>
     <string name="pref_group_filtering_title">Filtro de Grupos</string>
     <string name="pref_group_filtering_summary">Permitir filtrar suas contas por grupos de contatos.</string>
+    <string name="account_list_description">Somente os aniversários das contas selecionadas serão exibidos no seu calendário.</string>
+    <string name="account_list_loading">Carregando contas...</string>
+    <string name="account_list_counters_format">%1$s, %2$s</string>
+    <string name="account_list_icon_description">Ícone da conta</string>
+    <string name="account_list_group_button_description">Mostrar detalhes do grupo</string>
+    <string name="account_list_no_group">Sem grupo</string>
+    <plurals name="contacts_count">
+        <item quantity="one">%d contato</item>
+        <item quantity="many">%d contatos</item>
+        <item quantity="other">%d contatos</item>
+    </plurals>
+    <plurals name="dates_count">
+        <item quantity="one">%d aniversário</item>
+        <item quantity="many">%d aniversários</item>
+        <item quantity="other">%d aniversários</item>
+    </plurals>
+    <string name="pref_buy_full_summary">Obter acesso a todas as funcionalidades premium</string>
+    <string name="buy_premium_for">Comprar premium por %s</string>
+    <string name="premium_feat_sync_title">Sincronização regular em segundo plano</string>
+    <string name="premium_feat_sync_summary">Garanta que seu calendário esteja sempre atualizado automaticamente.</string>
+    <string name="premium_feat_reminders_title">Lembretes personalizados</string>
+    <string name="premium_feat_reminders_summary">Configure vários lembretes personalizados para qualquer evento.</string>
+    <string name="premium_feat_titles_title">Títulos de eventos personalizados</string>
+    <string name="premium_feat_titles_summary">Personalize a forma como os títulos de aniversário de pessoas e eventos aparecem.</string>
+    <string name="premium_feat_filtering_title">Filtros de grupo</string>
+    <string name="premium_feat_filtering_summary">Escolha sincronizar apenas os grupos de contatos que lhe interessam.</string>
+    <string name="premium_feat_jubilee_title">Jubileus (aniversários)</string>
+    <string name="premium_feat_jubilee_summary">Dê destaque a ocasiões especiais, como o aniversário de 18 ou 50 anos.</string>
+    <string name="error_no_network">Sem internet. Por favor, verifique sua conexão.</string>
+    <string name="error_billing_unavailable">O Google Play está indisponível, por favor, tente novamente mais tarde.</string>
+    <string name="error_acknowledge_failed">Por favor, reinicie o aplicativo para ativar sua licença.</string>
+    <string name="next">Próximo</string>
+    <string name="finish">Finalizar</string>
+    <string name="ignore">Ignorar</string>
+    <string name="onboarding_intro_title">Bem vindo ao Birthday Adapter</string>
+    <string name="onboarding_intro_text">Este aplicativo traz aniversários, datas comemorativas e outros eventos dos seus contatos para os seus calendários do Android. Diferentemente de outros aplicativos, ele cria um calendário dedicado dentro do seu sistema, assim, você pode visualizar todas as suas datas de contato junto com sua agenda diária no seu aplicativo de calendário favorito.</string>
+    <string name="onboarding_contacts_title">Acesso aos contatos</string>
+    <string name="onboarding_contacts_text">Para ler as datas de aniversário, o aplicativo precisa acessar seus contatos.</string>
+    <string name="onboarding_calendar_title">Acesso ao calendário</string>
+    <string name="onboarding_calendar_text">Para criar eventos de aniversário, o aplicativo precisa acessar seu calendário.</string>
+    <string name="onboarding_finish_title">Ativar</string>
+    <string name="onboarding_finish_text">Você precisa ativar o Birthday Adapter nas configurações da sua conta no aplicativo de calendário para visualizar os aniversários.</string>
+    <string name="onboarding_finish_warning_title">Permissões ausentes</string>
+    <string name="onboarding_finish_warning_text">Algumas permissões não foram concedidas. O Birthday Adapter não pode ser ativado. Você pode conceder as permissões posteriormente reiniciando o aplicativo.</string>
+    <string name="onboarding_grant_permission">Permitir acesso</string>
+    <string name="onboarding_permission_denied">Acesso negado. O aplicativo pode não funcionar como esperado.</string>
+    <string name="onboarding_finish_text_google_calendar">Para visualizar os aniversários no Google Agenda, abra o menu e acesse Configurações. Toque em \"Gerenciar contas\" e verifique se o \"Birthday Adapter\" está ativado.</string>
+    <string name="onboarding_finish_text_samsung_calendar">Para visualizar os aniversários no Calendário Samsung, abra o menu, toque em \"Gerenciar calendários\" e certifique-se de que o \"Birthday Adapter\" esteja ativado.</string>
+    <string name="restart_onboarding">Reiniciar</string>
+    <string name="summary_placeholder_firstname">Maria</string>
+    <string name="summary_placeholder_lastname">da Silva</string>
+    <string name="summary_placeholder_custom_label">Primeira data</string>
 </resources>
