@@ -124,4 +124,6 @@
     <string name="item_color_content_description">Indicador de cor do calendário</string>
     <string name="permission_denied">As permissões necessárias foram negadas. O adaptador não pode ser ativado.</string>
     <string name="permission_read_contacts_denied">Acesso aos contatos negado. Não foi possível carregar as contas.</string>
+    <string name="pref_group_filtering_title">Filtro de Grupos</string>
+    <string name="pref_group_filtering_summary">Permitir filtrar suas contas por grupos de contatos.</string>
 </resources>
