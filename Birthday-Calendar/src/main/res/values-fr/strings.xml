@@ -178,4 +178,7 @@
     <string name="pref_additional_reminders_category">Rappels de groupe additionnels</string>
     <string name="pref_additional_reminders_group_title">Nom du groupe de contacts</string>
     <string name="pref_additional_reminders_group_description">Spécifiez un groupe de contacts pour recevoir des rappels supplémentaires, par exemple pour ceux dont le cadeau doit être préparé à l\'avance. Assurez-vous que les contacts choisis sont membres de ce groupe.</string>
+    <string name="error_no_network">Hors ligne. Vérifiez votre connexion Internet.</string>
+    <string name="error_billing_unavailable">Google Play est indisponible, veuillez réessayer plus tard.</string>
+    <string name="error_acknowledge_failed">Veuillez redémarrer l\'application pour activer votre achat.</string>
 </resources>
