@@ -88,13 +88,13 @@ android {
 }
 
 dependencies {
-    implementation "androidx.core:core-ktx:1.19.0"
+    implementation "androidx.core:core-ktx:1.19.1"
     implementation "androidx.activity:activity-ktx:1.13.0"
-    implementation "androidx.fragment:fragment-ktx:1.9.0"
+    implementation "androidx.fragment:fragment-ktx:1.9.1"
     implementation 'androidx.appcompat:appcompat:1.8.0'
     implementation 'com.google.android.material:material:1.14.0'
     implementation 'androidx.preference:preference-ktx:1.2.1'
-    implementation "androidx.work:work-runtime-ktx:2.11.2"
+    implementation "androidx.work:work-runtime-ktx:2.12.0"
     
     // Google Play specific libraries (Review API and Billing)
     freeImplementation 'com.google.android.play:review:2.0.2'

@@ -104,6 +104,15 @@ public class BaseActivity extends AppCompatActivity {
             return;
         }
 
+        // Ensure account is active if enabled in preferences (e.g. after restore)
+        if (prefs.getBoolean(getString(R.string.pref_enabled_key), false)) {
+            AccountHelper accountHelper = new AccountHelper(this);
+            if (!accountHelper.isAccountActivated() && areAllPermissionsGranted()) {
+                ExecutorService executor = newSingleThreadExecutor();
+                executor.execute(accountHelper::addAccountAndSync);
+            }
+        }
+
         // Set default values from XML before any UI is created
         PreferenceManager.setDefaultValues(this, R.xml.pref_preferences, false);
 

@@ -146,7 +146,7 @@
     <string name="finish">Готово</string>
     <string name="ignore">Пренебрегване</string>
     <string name="onboarding_intro_title">Здравейте от Адапторът за рождени дни</string>
-    <string name="onboarding_intro_text">Приложението синхронизира рождени дни, годишнини и други събития от вашите контакти директно в календара на устройството. За разлика от други приложения, то се интегрира безпроблемно с календара на вашата система, така че можете да виждате всички важни дати заедно с другите събития.</string>
+    <string name="onboarding_intro_text">Приложението прави достъпни рождени дни, годишнини и други събития от вашите контакти в календара на устройството. За разлика от други приложения, то създава отделен системен календар, така че можете да виждате всички дати от контактите заедно с дневния график в предпочитаното приложение за календар.</string>
     <string name="onboarding_contacts_title">Достъп до контактите</string>
     <string name="onboarding_contacts_text">За да вземе рождените дни, приложението се нуждае от достъп до контактите.</string>
     <string name="onboarding_calendar_title">Достъп до календара</string>
@@ -178,4 +178,7 @@
     <string name="pref_additional_reminders_category">Допълнителни напомняния за групата</string>
     <string name="pref_additional_reminders_group_title">Име на групата контакти</string>
     <string name="pref_additional_reminders_group_description">Посочете група контакти, която да получава допълнителни напомняния, например за тези, на които трябва да изпратите подарък по-рано. Уверете се, че избраните контакти са членове на тази група.</string>
+    <string name="error_no_network">Няма връзка с интернет.</string>
+    <string name="error_billing_unavailable">Магазинът Google Play е недостъпен. Опитайте по-късно.</string>
+    <string name="error_acknowledge_failed">За да активирате покупката рестартирайте приложението.</string>
 </resources>
