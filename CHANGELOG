@@ -1,3 +1,9 @@
+3.13.8
+* Add translation: Brazilian Portuguese
+- Ensure calendar account creation when app has been uninstalled and is restored
+- Update translations
+- Update dependencies
+
 3.13.7
 * Improve device compatibility
 * Fixed filtering for contacts without group in non-english versions

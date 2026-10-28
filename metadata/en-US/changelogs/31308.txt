@@ -1,0 +1,5 @@
+3.13.8
+* Add translation: Brazilian Portuguese
+- Ensure calendar account creation when app has been uninstalled and is restored
+- Update translations
+- Update dependencies
