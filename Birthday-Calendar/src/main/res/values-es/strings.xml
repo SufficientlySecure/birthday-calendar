@@ -158,7 +158,7 @@
         <item quantity="many">%d cumpleaños</item>
         <item quantity="other">%d cumpleaños</item>
     </plurals>
-    <string name="onboarding_intro_text">Esta aplicación sincroniza cumpleaños, aniversarios y otros eventos de tus contactos directamente en tu calendario de Android. A diferencia de otras aplicaciones, se integra a la perfección con el calendario de tu sistema, para que puedas ver todas tus fechas importantes junto con tus otros eventos.</string>
+    <string name="onboarding_intro_text">Esta aplicación trae cumpleaños, aniversarios y otros eventos de tus contactos a tus calendarios de Android. A diferencia de otras aplicaciones, crea un calendario dedicado dentro de su sistema, por tanto puedes ver todas tus fechas del contacto importantes junto con tus planificaciones del día en su app del calendario favorito.</string>
     <string name="onboarding_contacts_title">Acceso a contactos</string>
     <string name="restart_onboarding">Reanudar</string>
     <string name="summary_placeholder_firstname">Juan</string>
@@ -176,4 +176,7 @@
     <string name="onboarding_finish_text_google_calendar">Para ver los cumpleaños en Google Calendar, abre el menú y ve a Configuración. Pulsa \"Gestionar cuenta\" y asegúrate de que \"Birthday Adapter\" esté activado.</string>
     <string name="onboarding_finish_text_samsung_calendar">Para ver los cumpleaños en el Calendario de Samsung, abre el menú, pulsa \"Gestionar calendarios\" y asegúrate de que la opción \"Birthday Adapter\" esté activada.</string>
     <string name="onboarding_finish_text_fossify_calendar">Para ver los cumpleaños en Fossify Calendar, abre la configuración y asegúrate de que la opción \"Activar sincronización CalDAV\" esté activada. A continuación, selecciona \"Gestionar calendarios sincronizados\" y asegúrate de que \"Birthday Adapter\" esté habilitado.</string>
+    <string name="error_no_network">Sin Internet, compruebe la conexión.</string>
+    <string name="error_billing_unavailable">Google Play no está disponible, inténtelo más tarde.</string>
+    <string name="error_acknowledge_failed">Reinicie la app para activar su adquisición.</string>
 </resources>
