@@ -131,7 +131,7 @@
     <string name="premium_feat_titles_summary">Personaliza cómo aparecen los títulos de eventos de cumpleaños y aniversario.</string>
     <string name="premium_feat_filtering_title">Filtros de grupo</string>
     <string name="premium_feat_filtering_summary">Elige sincronizar sólo los grupos de contacto que te importan.</string>
-    <string name="premium_feat_jubilee_title">Jubileos (Aniversarios)</string>
+    <string name="premium_feat_jubilee_title">Jubileos (Cumpleaños)</string>
     <string name="premium_feat_jubilee_summary">Recuerda ocasiones especiales como el 18º o el 50º cumpleaños.</string>
     <string name="next">Siguiente</string>
     <string name="finish">Finalizar</string>
