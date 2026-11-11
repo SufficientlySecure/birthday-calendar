@@ -168,7 +168,7 @@
     <string name="summary_placeholder_custom_label">Перше побачення</string>
     <string name="event_title_custom_with_age">{NAME}: {LABEL} ({AGE})</string>
     <string name="event_title_custom_without_age">{NAME}: {LABEL}</string>
-    <string name="pref_title_enable_summary">Персоналізуйте назву записів, окремими форматами коли відомий чи не відомий рік.</string>
+    <string name="pref_title_enable_summary">Персоналізуйте назву записів окремими форматами, яколи вам відомий, або ні, рік події.</string>
     <string name="pref_title_summary_custom_without_age">Введіть {NAME} чи {FIRSTNAME} для запису контакту, та {LABEL} для власної мітки події.</string>
     <string name="pref_title_summary_custom_with_age">Введіть {NAME} чи {FIRSTNAME} для запису контакту, {LABEL} для власної мітки події, та {AGE} для віку.</string>
     <string name="pref_name_format_summary">Змінити відображення імені з \"Ім\'я Прізвище\" на \"Прізвище, Ім\'я\"</string>
