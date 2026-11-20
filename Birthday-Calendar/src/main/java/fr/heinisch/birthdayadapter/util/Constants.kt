@@ -19,20 +19,18 @@
  *
  */
 
-package fr.heinisch.birthdayadapter.util;
+package fr.heinisch.birthdayadapter.util
 
-import android.content.Context;
+import android.content.Context
+import fr.heinisch.birthdayadapter.R
 
-import fr.heinisch.birthdayadapter.R;
+object Constants {
+    const val TAG = "Birthday Adapter"
+    const val SYNC_INTERVAL_DAYS = 5
+    const val GROUP_TITLE_NO_GROUP = "NO_GROUP"
 
-public class Constants {
-    public static final String TAG = "Birthday Adapter";
-
-    public static String getAccountName(Context context) {
-        return context.getString(R.string.app_name);
+    @JvmStatic
+    fun getAccountName(context: Context): String {
+        return context.getString(R.string.app_name)
     }
-
-    public static final int SYNC_INTERVAL_DAYS = 5;
-
-    public static final String GROUP_TITLE_NO_GROUP = "NO_GROUP";
 }

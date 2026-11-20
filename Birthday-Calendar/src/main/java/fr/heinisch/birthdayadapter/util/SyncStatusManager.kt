@@ -18,32 +18,28 @@
  *
  */
 
-package fr.heinisch.birthdayadapter.util;
+package fr.heinisch.birthdayadapter.util
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
-public class SyncStatusManager {
+class SyncStatusManager private constructor() {
+    private val mIsSyncing = MutableLiveData<Boolean>()
 
-    private static SyncStatusManager sInstance;
-    private final MutableLiveData<Boolean> mIsSyncing = new MutableLiveData<>();
+    fun isSyncing(): LiveData<Boolean> = mIsSyncing
 
-    private SyncStatusManager() {
-        // private constructor for singleton
+    fun setSyncing(isSyncing: Boolean) {
+        mIsSyncing.postValue(isSyncing)
     }
 
-    public static synchronized SyncStatusManager getInstance() {
-        if (sInstance == null) {
-            sInstance = new SyncStatusManager();
+    companion object {
+        @Volatile
+        private var sInstance: SyncStatusManager? = null
+
+        @JvmStatic
+        @Synchronized
+        fun getInstance(): SyncStatusManager {
+            return sInstance ?: SyncStatusManager().also { sInstance = it }
         }
-        return sInstance;
-    }
-
-    public LiveData<Boolean> isSyncing() {
-        return mIsSyncing;
-    }
-
-    public void setSyncing(boolean isSyncing) {
-        mIsSyncing.postValue(isSyncing);
     }
 }
