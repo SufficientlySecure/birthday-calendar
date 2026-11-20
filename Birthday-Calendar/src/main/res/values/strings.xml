@@ -101,6 +101,7 @@
     <string name="pref_title_summary_custom_without_age">Insert {NAME} or {FIRSTNAME} for the contact\'s name, and {LABEL} for the custom label of this event.</string>
     <string name="pref_title_summary_custom_with_age">Insert {NAME} or {FIRSTNAME} for the contact\'s name, {LABEL} for the custom label of this event, and {AGE} for the age.</string>
     <string name="pref_advanced_category">Advanced Settings</string>
+    <string name="pref_background_category">Background Usage</string>
     <string name="pref_prefer_dd_slash_mm">Prefer dd/MM/yyyy format</string>
     <string name="pref_prefer_dd_slash_mm_summary">Prefer dd/MM/yyyy to MM/dd/yyyy when parsing date formats</string>
     <string name="pref_name_format_title">Show last name first</string>
@@ -113,6 +114,8 @@
     <string name="pref_reminder_event_types_custom">Custom events</string>
     <string name="pref_disable_permission_monitoring_title">Disable permission monitoring</string>
     <string name="pref_disable_permission_monitoring_summary">Prevent the app from losing its permissions when not used for a long time. This is useful if you only use the background sync.</string>
+    <string name="pref_ignore_battery_optimizations_title">Allow background usage</string>
+    <string name="pref_ignore_battery_optimizations_summary">Allow the app to run in the background for regular synchronization without battery restrictions.</string>
 
     <string name="pref_additional_reminders_category">Additional Group Reminders</string>
     <string name="pref_additional_reminders_group_title">Contact Group Name</string>

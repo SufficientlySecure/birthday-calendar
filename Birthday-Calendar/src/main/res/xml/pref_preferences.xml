@@ -175,12 +175,6 @@
         android:key="@string/pref_advanced_category_key"
         android:title="@string/pref_advanced_category"
         >
-        <androidx.preference.Preference
-            android:key="@string/pref_disable_permission_monitoring_key"
-            android:title="@string/pref_disable_permission_monitoring_title"
-            android:summary="@string/pref_disable_permission_monitoring_summary"
-            android:visible="false"
-             />
         <androidx.preference.SwitchPreferenceCompat
             android:key="@string/pref_group_filtering_key"
             android:title="@string/pref_group_filtering_title"
@@ -201,6 +195,23 @@
             android:persistent="true"
             android:summary="@string/pref_name_format_summary"
             android:title="@string/pref_name_format_title"
+             />
+    </androidx.preference.PreferenceCategory>
+    <androidx.preference.PreferenceCategory
+        android:key="@string/pref_background_category_key"
+        android:title="@string/pref_background_category"
+        >
+        <androidx.preference.Preference
+            android:key="@string/pref_ignore_battery_optimizations_key"
+            android:title="@string/pref_ignore_battery_optimizations_title"
+            android:summary="@string/pref_ignore_battery_optimizations_summary"
+            android:visible="false"
+             />
+        <androidx.preference.Preference
+            android:key="@string/pref_disable_permission_monitoring_key"
+            android:title="@string/pref_disable_permission_monitoring_title"
+            android:summary="@string/pref_disable_permission_monitoring_summary"
+            android:visible="false"
              />
     </androidx.preference.PreferenceCategory>
 </androidx.preference.PreferenceScreen>

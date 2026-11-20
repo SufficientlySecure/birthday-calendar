@@ -33,6 +33,7 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -151,6 +152,10 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                 preferDdSlashMm.setVisible(false);
             }
         }
+        PreferenceCategory backgroundCategory = findPreference(getString(R.string.pref_background_category_key));
+        if (backgroundCategory != null) {
+            backgroundCategory.setVisible(isFullVersion);
+        }
         PreferenceCategory buyCategory = findPreference(getString(R.string.pref_buy_category_key));
         if (buyCategory != null) {
             buyCategory.setVisible(!isFullVersion);
@@ -251,6 +256,25 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
                 });
             }
 
+            Preference ignoreBatteryOptimizationsPref = findPreference(getString(R.string.pref_ignore_battery_optimizations_key));
+            if (ignoreBatteryOptimizationsPref != null) {
+                ignoreBatteryOptimizationsPref.setOnPreferenceClickListener(preference -> {
+                    if (!isAdded()) {
+                        return true;
+                    }
+                    Context context = requireContext();
+                    Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                    intent.setData(Uri.parse("package:" + context.getPackageName()));
+                    try {
+                        startActivity(intent);
+                    } catch (android.content.ActivityNotFoundException e) {
+                        Intent fallbackIntent = new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+                        startActivity(fallbackIntent);
+                    }
+                    return true;
+                });
+            }
+
             Preference disablePermissionMonitoringPref = findPreference(getString(R.string.pref_disable_permission_monitoring_key));
             if (disablePermissionMonitoringPref != null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -289,7 +313,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
             });
         }
 
-        updatePermissionMonitoringPrefVisibility();
+        updateBackgroundPreferencesVisibility();
 
         // Trigger review dialog when reaching the bottom of the list
         RecyclerView recyclerView = getListView();
@@ -723,7 +747,7 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
     public void onResume() {
         super.onResume();
         PreferenceManager.getDefaultSharedPreferences(requireContext()).registerOnSharedPreferenceChangeListener(mSettingsListener);
-        updatePermissionMonitoringPrefVisibility();
+        updateBackgroundPreferencesVisibility();
     }
 
     @Override
@@ -732,17 +756,32 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
         PreferenceManager.getDefaultSharedPreferences(requireContext()).unregisterOnSharedPreferenceChangeListener(mSettingsListener);
     }
 
-    private void updatePermissionMonitoringPrefVisibility() {
-        Preference disablePermissionMonitoringPref = findPreference(getString(R.string.pref_disable_permission_monitoring_key));
-        if (disablePermissionMonitoringPref == null) {
-            return;
-        }
-
+    private void updateBackgroundPreferencesVisibility() {
         if (getContext() == null || !isFullVersionUnlocked(getContext())) {
-            // advanced settings are not visible in free version, no need to check
             return;
         }
 
+        Preference ignoreBatteryOptimizationsPref = findPreference(getString(R.string.pref_ignore_battery_optimizations_key));
+        Preference disablePermissionMonitoringPref = findPreference(getString(R.string.pref_disable_permission_monitoring_key));
+
+        if (ignoreBatteryOptimizationsPref == null || disablePermissionMonitoringPref == null) {
+            return;
+        }
+
+        boolean isIgnoringBatteryOptimizations = false;
+        try {
+            PowerManager powerManager = (PowerManager) requireContext().getSystemService(Context.POWER_SERVICE);
+            if (powerManager != null) {
+                isIgnoringBatteryOptimizations = powerManager.isIgnoringBatteryOptimizations(requireContext().getPackageName());
+            }
+        } catch (Exception e) {
+            // ignore
+        }
+
+        // Show battery optimization preference if not ignored
+        ignoreBatteryOptimizationsPref.setVisible(!isIgnoringBatteryOptimizations);
+
+        // Show permission auto-revoke preference independently if on Android R+ and not whitelisted
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             try {
                 boolean isWhitelisted = requireContext().getPackageManager().isAutoRevokeWhitelisted();
@@ -752,6 +791,11 @@ public class ExtendedPreferencesFragment extends PreferenceFragmentCompat {
             }
         } else {
             disablePermissionMonitoringPref.setVisible(false);
+        }
+
+        PreferenceCategory backgroundCategory = findPreference(getString(R.string.pref_background_category_key));
+        if (backgroundCategory != null) {
+            backgroundCategory.setVisible(ignoreBatteryOptimizationsPref.isVisible() || disablePermissionMonitoringPref.isVisible());
         }
     }
 }
