@@ -184,4 +184,7 @@
     <string name="error_no_network">Kein Internet, bitte Verbindung prüfen.</string>
     <string name="error_billing_unavailable">Google Play ist nicht erreichbar, bitte später versuchen.</string>
     <string name="error_acknowledge_failed">Bitte die App neu starten, um den Kauf zu aktivieren.</string>
+    <string name="pref_background_category">Hintergrundnutzung</string>
+    <string name="pref_ignore_battery_optimizations_title">Hintergrundnutzung erlauben</string>
+    <string name="pref_ignore_battery_optimizations_summary">Erlaube der App uneingeschränkte Hintergrundnutzung für regelmäßige Synchronisationen.</string>
 </resources>
