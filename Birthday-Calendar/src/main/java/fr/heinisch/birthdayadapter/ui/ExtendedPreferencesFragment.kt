@@ -21,28 +21,33 @@
 
 package fr.heinisch.birthdayadapter.ui
 
+import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.Color as AndroidColor
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
+import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.ExperimentalFoundationApi
+import android.widget.TimePicker as ViewTimePicker
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -52,8 +57,12 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -62,9 +71,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -72,6 +83,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -79,13 +91,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.edit
+import androidx.core.graphics.toColorInt
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.preference.PreferenceManager
 import fr.heinisch.birthdayadapter.R
 import fr.heinisch.birthdayadapter.util.PreferencesHelper
 import fr.heinisch.birthdayadapter.util.PurchaseHelperFactory
 import fr.heinisch.birthdayadapter.util.VersionHelper
+import kotlin.math.abs
 import java.util.regex.Pattern
 
 class ExtendedPreferencesFragment : Fragment() {
@@ -124,8 +143,43 @@ private fun ExtendedPreferencesScreen() {
     val isFullVersion = remember(context) { VersionHelper.isFullVersionUnlocked(context) }
     val purchaseHelper = remember { PurchaseHelperFactory.create() }
 
+    // Lifecycle observer for updating background optimization checks when resuming app
+    val lifecycleOwner = LocalLifecycleOwner.current
+    var resumeTrigger by remember { mutableIntStateOf(0) }
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                resumeTrigger++
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    var isIgnoringBattery by remember { mutableStateOf(false) }
+    var isAutoRevokeWhitelisted by remember { mutableStateOf(true) }
+
+    DisposableEffect(resumeTrigger, context) {
+        try {
+            val pm = context.getSystemService(Context.POWER_SERVICE) as? PowerManager
+            if (pm != null) {
+                isIgnoringBattery = pm.isIgnoringBatteryOptimizations(context.packageName)
+            }
+        } catch (_: Exception) {}
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                isAutoRevokeWhitelisted = context.packageManager.isAutoRevokeWhitelisted
+            } catch (_: Exception) {}
+        }
+        onDispose {}
+    }
+
     // States for preferences
-    var currentColor by remember { mutableStateOf(PreferencesHelper.getColor(context)) }
+    var currentColor by remember { mutableIntStateOf(PreferencesHelper.getColor(context)) }
     var groupFiltering by remember {
         mutableStateOf(prefs.getBoolean(context.getString(R.string.pref_group_filtering_key), true))
     }
@@ -140,8 +194,8 @@ private fun ExtendedPreferencesScreen() {
     }
 
     // Reminder event types
-    val eventTypeValues = context.resources.getStringArray(R.array.pref_reminder_event_types_values)
-    val eventTypeEntries = context.resources.getStringArray(R.array.pref_reminder_event_types_entries)
+    val eventTypeValues = context.resources.getStringArray(R.array.pref_reminder_event_types_values).toList()
+    val eventTypeEntries = context.resources.getStringArray(R.array.pref_reminder_event_types_entries).toList()
     val defaultReminderTypes = context.resources.getStringArray(R.array.pref_reminder_event_types_default_values).toSet()
     var reminderTypes by remember {
         mutableStateOf(prefs.getStringSet(context.getString(R.string.pref_reminder_event_types), defaultReminderTypes) ?: defaultReminderTypes)
@@ -304,8 +358,8 @@ private fun ExtendedPreferencesScreen() {
                 onClick = {
                     activeDialog = DialogConfig.MultiSelect(
                         title = context.getString(R.string.pref_events_with_reminders),
-                        entries = eventTypeEntries.map { it as CharSequence }.toTypedArray(),
-                        entryValues = eventTypeValues.map { it as CharSequence }.toTypedArray(),
+                        entries = eventTypeEntries,
+                        entryValues = eventTypeValues,
                         initialValues = reminderTypes,
                         onSave = { newValues ->
                             prefs.edit { putStringSet(context.getString(R.string.pref_reminder_event_types), newValues) }
@@ -315,33 +369,31 @@ private fun ExtendedPreferencesScreen() {
                 }
             )
 
-            // Dynamic Reminders List
+            // Dynamic Reminders List (Long Click supported to delete)
             reminderMinutesList.forEachIndexed { index, minutes ->
                 val summaryStr = ReminderPreferenceCompat.getSummary(context, minutes)
                 ClickablePreferenceItem(
                     title = "${context.getString(R.string.pref_reminder_time)} ${index + 1}",
                     summary = summaryStr,
                     onClick = {
-                        val reminderPref = ReminderPreferenceCompat(context, null).apply {
-                            setValue(minutes)
-                            setOnRemoveListener {
+                        activeDialog = DialogConfig.ReminderTime(
+                            title = "${context.getString(R.string.pref_reminder_time)} ${index + 1}",
+                            initialMinutes = minutes,
+                            onSave = { newMinutes ->
+                                val updated = reminderMinutesList.toMutableList()
+                                updated[index] = newMinutes
+                                reminderMinutesList = updated
+                                val set = updated.map { it.toString() }.toSet()
+                                prefs.edit { putStringSet(context.getString(R.string.pref_reminders_key), set) }
+                            },
+                            onDelete = {
                                 val updated = reminderMinutesList.toMutableList()
                                 updated.removeAt(index)
                                 reminderMinutesList = updated
                                 val set = updated.map { it.toString() }.toSet()
                                 prefs.edit { putStringSet(context.getString(R.string.pref_reminders_key), set) }
                             }
-                            setOnPreferenceChangeListener { _, newValue ->
-                                val newMin = newValue as Int
-                                val updated = reminderMinutesList.toMutableList()
-                                updated[index] = newMin
-                                reminderMinutesList = updated
-                                val set = updated.map { it.toString() }.toSet()
-                                prefs.edit { putStringSet(context.getString(R.string.pref_reminders_key), set) }
-                                true
-                            }
-                        }
-                        reminderPref.performClick(false)
+                        )
                     },
                     onLongClick = {
                         activeDialog = DialogConfig.ConfirmDeleteReminder(
@@ -362,19 +414,18 @@ private fun ExtendedPreferencesScreen() {
                 summary = "",
                 iconRes = R.drawable.ic_add,
                 onClick = {
-                    val reminderPref = ReminderPreferenceCompat(context, null).apply {
-                        setValue(context.resources.getInteger(R.integer.pref_reminder_time_def))
-                        setOnPreferenceChangeListener { _, newValue ->
-                            val newMin = newValue as Int
+                    activeDialog = DialogConfig.ReminderTime(
+                        title = context.getString(R.string.add_reminder),
+                        initialMinutes = context.resources.getInteger(R.integer.pref_reminder_time_def),
+                        onSave = { newMinutes ->
                             val updated = reminderMinutesList.toMutableList()
-                            updated.add(newMin)
+                            updated.add(newMinutes)
                             reminderMinutesList = updated
                             val set = updated.map { it.toString() }.toSet()
                             prefs.edit { putStringSet(context.getString(R.string.pref_reminders_key), set) }
-                            true
-                        }
-                    }
-                    reminderPref.performClick(true)
+                        },
+                        onDelete = null
+                    )
                 }
             )
 
@@ -404,26 +455,24 @@ private fun ExtendedPreferencesScreen() {
                     title = "${context.getString(R.string.pref_reminder_time)} ${index + 1}",
                     summary = summaryStr,
                     onClick = {
-                        val reminderPref = ReminderPreferenceCompat(context, null).apply {
-                            setValue(minutes)
-                            setOnRemoveListener {
+                        activeDialog = DialogConfig.ReminderTime(
+                            title = "${context.getString(R.string.pref_reminder_time)} ${index + 1}",
+                            initialMinutes = minutes,
+                            onSave = { newMinutes ->
+                                val updated = additionalReminderMinutesList.toMutableList()
+                                updated[index] = newMinutes
+                                additionalReminderMinutesList = updated
+                                val set = updated.map { it.toString() }.toSet()
+                                prefs.edit { putStringSet(context.getString(R.string.pref_additional_reminders_key), set) }
+                            },
+                            onDelete = {
                                 val updated = additionalReminderMinutesList.toMutableList()
                                 updated.removeAt(index)
                                 additionalReminderMinutesList = updated
                                 val set = updated.map { it.toString() }.toSet()
                                 prefs.edit { putStringSet(context.getString(R.string.pref_additional_reminders_key), set) }
                             }
-                            setOnPreferenceChangeListener { _, newValue ->
-                                val newMin = newValue as Int
-                                val updated = additionalReminderMinutesList.toMutableList()
-                                updated[index] = newMin
-                                additionalReminderMinutesList = updated
-                                val set = updated.map { it.toString() }.toSet()
-                                prefs.edit { putStringSet(context.getString(R.string.pref_additional_reminders_key), set) }
-                                true
-                            }
-                        }
-                        reminderPref.performClick(false)
+                        )
                     },
                     onLongClick = {
                         activeDialog = DialogConfig.ConfirmDeleteReminder(
@@ -444,19 +493,18 @@ private fun ExtendedPreferencesScreen() {
                 summary = "",
                 iconRes = R.drawable.ic_add,
                 onClick = {
-                    val reminderPref = ReminderPreferenceCompat(context, null).apply {
-                        setValue(context.resources.getInteger(R.integer.pref_additional_reminder_time_def))
-                        setOnPreferenceChangeListener { _, newValue ->
-                            val newMin = newValue as Int
+                    activeDialog = DialogConfig.ReminderTime(
+                        title = context.getString(R.string.add_reminder),
+                        initialMinutes = context.resources.getInteger(R.integer.pref_additional_reminder_time_def),
+                        onSave = { newMinutes ->
                             val updated = additionalReminderMinutesList.toMutableList()
-                            updated.add(newMin)
+                            updated.add(newMinutes)
                             additionalReminderMinutesList = updated
                             val set = updated.map { it.toString() }.toSet()
                             prefs.edit { putStringSet(context.getString(R.string.pref_additional_reminders_key), set) }
-                            true
-                        }
-                    }
-                    reminderPref.performClick(true)
+                        },
+                        onDelete = null
+                    )
                 }
             )
 
@@ -554,21 +602,6 @@ private fun ExtendedPreferencesScreen() {
 
         // Background Category
         if (isFullVersion) {
-            var isIgnoringBattery = false
-            try {
-                val pm = context.getSystemService(Context.POWER_SERVICE) as? PowerManager
-                if (pm != null) {
-                    isIgnoringBattery = pm.isIgnoringBatteryOptimizations(context.packageName)
-                }
-            } catch (_: Exception) {}
-
-            var isAutoRevokeWhitelisted = true
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                try {
-                    isAutoRevokeWhitelisted = context.packageManager.isAutoRevokeWhitelisted()
-                } catch (_: Exception) {}
-            }
-
             if (!isIgnoringBattery || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !isAutoRevokeWhitelisted)) {
                 HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
                 PreferenceCategoryHeader(title = stringResource(R.string.pref_background_category))
@@ -580,7 +613,7 @@ private fun ExtendedPreferencesScreen() {
                         onClick = {
                             try {
                                 val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
-                                    data = Uri.parse("package:" + context.packageName)
+                                    data = ("package:" + context.packageName).toUri()
                                 }
                                 context.startActivity(intent)
                             } catch (_: Exception) {
@@ -600,7 +633,7 @@ private fun ExtendedPreferencesScreen() {
                         onClick = {
                             try {
                                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                                    data = Uri.parse("package:" + context.packageName)
+                                    data = ("package:" + context.packageName).toUri()
                                 }
                                 context.startActivity(intent)
                             } catch (_: Exception) {}
@@ -685,6 +718,98 @@ private fun ExtendedPreferencesScreen() {
                 dismissButton = {
                     TextButton(onClick = { activeDialog = null }) {
                         Text(stringResource(android.R.string.cancel))
+                    }
+                }
+            )
+        }
+
+        is DialogConfig.ReminderTime -> {
+            val oneDayMinutes = 24 * 60
+            var day = (dialog.initialMinutes + oneDayMinutes) / oneDayMinutes
+            if (dialog.initialMinutes % oneDayMinutes == 0) day--
+            val dayBaseValues = intArrayOf(0, 1, 2, 3, 5, 7, 10, 14)
+            val dayOptions = context.resources.getStringArray(R.array.pref_reminder_time_drop_down)
+            var initialDayIndex = 0
+            for (i in dayBaseValues.indices) {
+                if (day == dayBaseValues[i]) {
+                    initialDayIndex = i
+                    break
+                }
+            }
+            val timeFromMinutes = abs(dialog.initialMinutes - (day * oneDayMinutes))
+            val initHour = timeFromMinutes / 60
+            val initMinute = timeFromMinutes % 60
+
+            var selectedDayIndex by remember(dialog) { mutableIntStateOf(initialDayIndex) }
+            var hour by remember(dialog) { mutableIntStateOf(initHour) }
+            var minute by remember(dialog) { mutableIntStateOf(initMinute) }
+
+            AlertDialog(
+                onDismissRequest = { activeDialog = null },
+                text = {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .verticalScroll(rememberScrollState()),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        DropdownSelector(
+                            selectedValue = dayOptions.getOrElse(selectedDayIndex) { dayOptions[0] },
+                            options = dayOptions,
+                            onOptionSelected = { idx ->
+                                selectedDayIndex = idx
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // Stable Android Framework TimePicker View (Zero experimental Compose APIs!)
+                        AndroidView(
+                            factory = { ctx ->
+                                ViewTimePicker(ctx).apply {
+                                    setIs24HourView(DateFormat.is24HourFormat(ctx))
+                                    @Suppress("DEPRECATION")
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                        this.hour = initHour
+                                        this.minute = initMinute
+                                    } else {
+                                        currentHour = initHour
+                                        currentMinute = initMinute
+                                    }
+                                    setOnTimeChangedListener { _, h, m ->
+                                        hour = h
+                                        minute = m
+                                    }
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = {
+                        val selectedDayValue = dayBaseValues[selectedDayIndex]
+                        val minutes = (selectedDayValue * oneDayMinutes) - (hour * 60) - minute
+                        dialog.onSave(minutes)
+                        activeDialog = null
+                    }) {
+                        Text(stringResource(android.R.string.ok))
+                    }
+                },
+                dismissButton = {
+                    Row {
+                        if (dialog.onDelete != null) {
+                            TextButton(onClick = {
+                                dialog.onDelete.invoke()
+                                activeDialog = null
+                            }) {
+                                Text(stringResource(R.string.delete), color = MaterialTheme.colorScheme.error)
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                        }
+                        TextButton(onClick = { activeDialog = null }) {
+                            Text(stringResource(android.R.string.cancel))
+                        }
                     }
                 }
             )
@@ -816,7 +941,7 @@ private fun ExtendedPreferencesScreen() {
                             onValueChange = {
                                 hexText = it
                                 parseError = try {
-                                    AndroidColor.parseColor(it)
+                                    it.toColorInt()
                                     false
                                 } catch (_: Exception) {
                                     true
@@ -839,7 +964,7 @@ private fun ExtendedPreferencesScreen() {
                     TextButton(
                         onClick = {
                             try {
-                                val color = AndroidColor.parseColor(hexText)
+                                val color = hexText.toColorInt()
                                 dialog.onColorSelected(color)
                             } catch (_: Exception) {}
                         },
@@ -873,10 +998,17 @@ private sealed class DialogConfig {
         val onConfirm: () -> Unit
     ) : DialogConfig()
 
+    data class ReminderTime(
+        val title: String,
+        val initialMinutes: Int,
+        val onSave: (Int) -> Unit,
+        val onDelete: (() -> Unit)?
+    ) : DialogConfig()
+
     data class MultiSelect(
         val title: String,
-        val entries: Array<CharSequence>,
-        val entryValues: Array<CharSequence>,
+        val entries: List<CharSequence>,
+        val entryValues: List<CharSequence>,
         val initialValues: Set<String>,
         val onSave: (Set<String>) -> Unit
     ) : DialogConfig()
@@ -941,7 +1073,55 @@ private fun SwitchPreferenceItem(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun DropdownSelector(
+    selectedValue: String,
+    options: Array<String>,
+    onOptionSelected: (Int) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Surface(
+        onClick = { expanded = true },
+        shape = MaterialTheme.shapes.extraSmall,
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = selectedValue,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Icon(
+                imageVector = Icons.Default.ArrowDropDown,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                options.forEachIndexed { index, option ->
+                    DropdownMenuItem(
+                        text = { Text(option) },
+                        onClick = {
+                            onOptionSelected(index)
+                            expanded = false
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
 @Composable
 private fun ClickablePreferenceItem(
     title: String,
@@ -951,45 +1131,84 @@ private fun ClickablePreferenceItem(
     onClick: () -> Unit,
     onLongClick: (() -> Unit)? = null
 ) {
-    Surface(
-        onClick = onClick,
-        color = Color.Transparent
-    ) {
-        Row(
+    if (onLongClick != null) {
+        val interactionSource = remember { MutableInteractionSource() }
+        Surface(
+            color = Color.Transparent,
             modifier = Modifier
                 .fillMaxWidth()
-                .combinedClickable(
-                    onClick = onClick,
-                    onLongClick = onLongClick
+                .clickable(
+                    interactionSource = interactionSource,
+                    indication = ripple(),
+                    onClick = {}
                 )
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            if (iconCustom != null) {
-                iconCustom()
-                Spacer(modifier = Modifier.width(16.dp))
-            } else if (iconRes != 0) {
-                Icon(
-                    painter = painterResource(id = iconRes),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.size(24.dp)
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-            }
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                if (summary.isNotEmpty()) {
-                    Text(
-                        text = summary,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                .pointerInput(onClick, onLongClick) {
+                    detectTapGestures(
+                        onPress = { offset ->
+                            val press = PressInteraction.Press(offset)
+                            interactionSource.emit(press)
+                            val released = tryAwaitRelease()
+                            if (released) {
+                                interactionSource.emit(PressInteraction.Release(press))
+                            } else {
+                                interactionSource.emit(PressInteraction.Cancel(press))
+                            }
+                        },
+                        onTap = { onClick() },
+                        onLongPress = { onLongClick() }
                     )
                 }
+        ) {
+            PreferenceItemContent(title, summary, iconRes, iconCustom)
+        }
+    } else {
+        Surface(
+            onClick = onClick,
+            color = Color.Transparent,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            PreferenceItemContent(title, summary, iconRes, iconCustom)
+        }
+    }
+}
+
+@Composable
+private fun PreferenceItemContent(
+    title: String,
+    summary: String,
+    iconRes: Int = 0,
+    iconCustom: @Composable (() -> Unit)? = null
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (iconCustom != null) {
+            iconCustom()
+            Spacer(modifier = Modifier.width(16.dp))
+        } else if (iconRes != 0) {
+            Icon(
+                painter = painterResource(id = iconRes),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+        }
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            if (summary.isNotEmpty()) {
+                Text(
+                    text = summary,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
     }
