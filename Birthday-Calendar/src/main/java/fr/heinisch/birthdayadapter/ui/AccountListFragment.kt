@@ -204,9 +204,9 @@ class AccountListFragment : Fragment(),
         val blacklist = HashMap<Account, HashSet<String?>>()
         for (entry in currentEntries) {
             val blacklistedGroups = HashSet<String?>()
-            for (group in entry.groups) {
-                if (!group.isSelected) {
-                    blacklistedGroups.add(group.title)
+            for ((title, _, _, isSelected) in entry.groups) {
+                if (!isSelected) {
+                    blacklistedGroups.add(title)
                 }
             }
 

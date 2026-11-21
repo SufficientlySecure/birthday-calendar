@@ -30,6 +30,7 @@ import android.view.View
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -159,7 +160,9 @@ class BaseActivity : AppCompatActivity() {
                 if (lastSeenVersionCode < VERSION_CODE_ONBOARDING_MIGRATION) {
                     migrateOnboardingState(prefs)
                 }
-                prefs.edit().putLong("last_seen_version_code", currentVersionCode).apply()
+                prefs.edit {
+                    putLong("last_seen_version_code", currentVersionCode)
+                }
             }
         } catch (_: PackageManager.NameNotFoundException) {
         }
@@ -169,17 +172,21 @@ class BaseActivity : AppCompatActivity() {
         val customPrefs = getSharedPreferences("preferences", MODE_PRIVATE)
         if (customPrefs.contains(getString(R.string.pref_enabled_key))) {
             val enabled = customPrefs.getBoolean(getString(R.string.pref_enabled_key), false)
-            defaultPrefs.edit().putBoolean(getString(R.string.pref_enabled_key), enabled).apply()
-            customPrefs.edit().clear().apply()
+            defaultPrefs.edit {
+                putBoolean(getString(R.string.pref_enabled_key), enabled)
+            }
+            customPrefs.edit {
+                clear()
+            }
         }
     }
 
     private fun migrateOnboardingState(prefs: SharedPreferences) {
         if (!prefs.getBoolean("has_seen_onboarding", false) && areAllPermissionsGranted()) {
-            prefs.edit()
-                .putBoolean("has_seen_onboarding", true)
-                .putBoolean(getString(R.string.pref_enabled_key), true)
-                .apply()
+            prefs.edit {
+                putBoolean("has_seen_onboarding", true)
+                putBoolean(getString(R.string.pref_enabled_key), true)
+            }
 
             val accountHelper = AccountHelper(this)
             Executors.newSingleThreadExecutor().execute { accountHelper.addAccountAndSync() }
@@ -227,7 +234,9 @@ class BaseActivity : AppCompatActivity() {
         if (prefs.getStringSet(getString(R.string.pref_reminders_key), null) == null) {
             val reminderSet = HashSet<String>()
             reminderSet.add(resources.getInteger(R.integer.pref_reminder_time_def).toString())
-            prefs.edit().putStringSet(getString(R.string.pref_reminders_key), reminderSet).apply()
+            prefs.edit {
+                putStringSet(getString(R.string.pref_reminders_key), reminderSet)
+            }
         }
     }
 }

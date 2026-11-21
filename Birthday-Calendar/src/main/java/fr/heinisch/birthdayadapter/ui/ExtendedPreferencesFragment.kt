@@ -79,6 +79,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import fr.heinisch.birthdayadapter.R
@@ -265,7 +266,7 @@ private fun ExtendedPreferencesScreen() {
             onClick = {
                 activeDialog = DialogConfig.ColorPicker(
                     onColorSelected = { color ->
-                        prefs.edit().putInt(context.getString(R.string.pref_color_key), color).apply()
+                        prefs.edit { putInt(context.getString(R.string.pref_color_key), color) }
                         currentColor = color
                         activeDialog = null
                     },
@@ -273,7 +274,7 @@ private fun ExtendedPreferencesScreen() {
                         activeDialog = DialogConfig.HexInput(
                             initialColor = currentColor,
                             onColorSelected = { color ->
-                                prefs.edit().putInt(context.getString(R.string.pref_color_key), color).apply()
+                                prefs.edit { putInt(context.getString(R.string.pref_color_key), color) }
                                 currentColor = color
                                 activeDialog = null
                             }
@@ -307,7 +308,7 @@ private fun ExtendedPreferencesScreen() {
                         entryValues = eventTypeValues.map { it as CharSequence }.toTypedArray(),
                         initialValues = reminderTypes,
                         onSave = { newValues ->
-                            prefs.edit().putStringSet(context.getString(R.string.pref_reminder_event_types), newValues).apply()
+                            prefs.edit { putStringSet(context.getString(R.string.pref_reminder_event_types), newValues) }
                             reminderTypes = newValues
                         }
                     )
@@ -328,7 +329,7 @@ private fun ExtendedPreferencesScreen() {
                                 updated.removeAt(index)
                                 reminderMinutesList = updated
                                 val set = updated.map { it.toString() }.toSet()
-                                prefs.edit().putStringSet(context.getString(R.string.pref_reminders_key), set).apply()
+                                prefs.edit { putStringSet(context.getString(R.string.pref_reminders_key), set) }
                             }
                             setOnPreferenceChangeListener { _, newValue ->
                                 val newMin = newValue as Int
@@ -336,7 +337,7 @@ private fun ExtendedPreferencesScreen() {
                                 updated[index] = newMin
                                 reminderMinutesList = updated
                                 val set = updated.map { it.toString() }.toSet()
-                                prefs.edit().putStringSet(context.getString(R.string.pref_reminders_key), set).apply()
+                                prefs.edit { putStringSet(context.getString(R.string.pref_reminders_key), set) }
                                 true
                             }
                         }
@@ -349,7 +350,7 @@ private fun ExtendedPreferencesScreen() {
                                 updated.removeAt(index)
                                 reminderMinutesList = updated
                                 val set = updated.map { it.toString() }.toSet()
-                                prefs.edit().putStringSet(context.getString(R.string.pref_reminders_key), set).apply()
+                                prefs.edit { putStringSet(context.getString(R.string.pref_reminders_key), set) }
                             }
                         )
                     }
@@ -369,7 +370,7 @@ private fun ExtendedPreferencesScreen() {
                             updated.add(newMin)
                             reminderMinutesList = updated
                             val set = updated.map { it.toString() }.toSet()
-                            prefs.edit().putStringSet(context.getString(R.string.pref_reminders_key), set).apply()
+                            prefs.edit { putStringSet(context.getString(R.string.pref_reminders_key), set) }
                             true
                         }
                     }
@@ -391,7 +392,7 @@ private fun ExtendedPreferencesScreen() {
                         message = context.getString(R.string.pref_additional_reminders_group_description),
                         initialValue = additionalRemindersGroup,
                         onSave = { newValue ->
-                            prefs.edit().putString(key, newValue).apply()
+                            prefs.edit { putString(key, newValue) }
                         }
                     )
                 }
@@ -410,7 +411,7 @@ private fun ExtendedPreferencesScreen() {
                                 updated.removeAt(index)
                                 additionalReminderMinutesList = updated
                                 val set = updated.map { it.toString() }.toSet()
-                                prefs.edit().putStringSet(context.getString(R.string.pref_additional_reminders_key), set).apply()
+                                prefs.edit { putStringSet(context.getString(R.string.pref_additional_reminders_key), set) }
                             }
                             setOnPreferenceChangeListener { _, newValue ->
                                 val newMin = newValue as Int
@@ -418,7 +419,7 @@ private fun ExtendedPreferencesScreen() {
                                 updated[index] = newMin
                                 additionalReminderMinutesList = updated
                                 val set = updated.map { it.toString() }.toSet()
-                                prefs.edit().putStringSet(context.getString(R.string.pref_additional_reminders_key), set).apply()
+                                prefs.edit { putStringSet(context.getString(R.string.pref_additional_reminders_key), set) }
                                 true
                             }
                         }
@@ -431,7 +432,7 @@ private fun ExtendedPreferencesScreen() {
                                 updated.removeAt(index)
                                 additionalReminderMinutesList = updated
                                 val set = updated.map { it.toString() }.toSet()
-                                prefs.edit().putStringSet(context.getString(R.string.pref_additional_reminders_key), set).apply()
+                                prefs.edit { putStringSet(context.getString(R.string.pref_additional_reminders_key), set) }
                             }
                         )
                     }
@@ -451,7 +452,7 @@ private fun ExtendedPreferencesScreen() {
                             updated.add(newMin)
                             additionalReminderMinutesList = updated
                             val set = updated.map { it.toString() }.toSet()
-                            prefs.edit().putStringSet(context.getString(R.string.pref_additional_reminders_key), set).apply()
+                            prefs.edit { putStringSet(context.getString(R.string.pref_additional_reminders_key), set) }
                             true
                         }
                     }
@@ -469,7 +470,7 @@ private fun ExtendedPreferencesScreen() {
                 checked = titleEnable,
                 onCheckedChange = { checked ->
                     titleEnable = checked
-                    prefs.edit().putBoolean(context.getString(R.string.pref_title_enable_key), checked).apply()
+                    prefs.edit { putBoolean(context.getString(R.string.pref_title_enable_key), checked) }
                 }
             )
 
@@ -499,7 +500,7 @@ private fun ExtendedPreferencesScreen() {
                                 message = prefMsg,
                                 initialValue = currentValue,
                                 onSave = { newValue ->
-                                    prefs.edit().putString(prefKey, newValue).apply()
+                                    prefs.edit { putString(prefKey, newValue) }
                                 }
                             )
                         }
@@ -520,7 +521,7 @@ private fun ExtendedPreferencesScreen() {
                             text.isEmpty() || Pattern.matches("^[1-9][0-9]*(?:\\s*,\\s*[1-9][0-9]*)*$", text.trim())
                         },
                         onSave = { newValue ->
-                            prefs.edit().putString(key, newValue).apply()
+                            prefs.edit { putString(key, newValue) }
                         }
                     )
                 }
@@ -537,7 +538,7 @@ private fun ExtendedPreferencesScreen() {
             checked = groupFiltering,
             onCheckedChange = { checked ->
                 groupFiltering = checked
-                prefs.edit().putBoolean(context.getString(R.string.pref_group_filtering_key), checked).apply()
+                prefs.edit { putBoolean(context.getString(R.string.pref_group_filtering_key), checked) }
             }
         )
 
@@ -547,7 +548,7 @@ private fun ExtendedPreferencesScreen() {
             checked = nameFormat,
             onCheckedChange = { checked ->
                 nameFormat = checked
-                prefs.edit().putBoolean(context.getString(R.string.pref_name_format_key), checked).apply()
+                prefs.edit { putBoolean(context.getString(R.string.pref_name_format_key), checked) }
             }
         )
 

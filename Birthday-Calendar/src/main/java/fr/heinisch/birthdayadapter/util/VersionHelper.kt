@@ -21,6 +21,7 @@
 package fr.heinisch.birthdayadapter.util
 
 import android.content.Context
+import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import fr.heinisch.birthdayadapter.BuildConfig
 
@@ -53,6 +54,8 @@ object VersionHelper {
     @JvmStatic
     fun setFullVersionUnlocked(context: Context, purchased: Boolean) {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        prefs.edit().putBoolean(PREF_FULL_VERSION_PURCHASED, purchased).apply()
+        prefs.edit {
+            putBoolean(PREF_FULL_VERSION_PURCHASED, purchased)
+        }
     }
 }
