@@ -70,33 +70,6 @@ import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import fr.heinisch.birthdayadapter.R
 
-@Composable
-fun BirthdayAdapterTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false,
-    content: @Composable () -> Unit
-) {
-    val context = LocalContext.current
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-        darkTheme -> darkColorScheme(
-            primary = colorResource(R.color.colorPrimary),
-            secondary = colorResource(R.color.colorAccent),
-        )
-        else -> lightColorScheme(
-            primary = colorResource(R.color.colorPrimary),
-            secondary = colorResource(R.color.colorAccent),
-        )
-    }
-
-    MaterialTheme(
-        colorScheme = colorScheme,
-        content = content
-    )
-}
-
 class HelpFragment : Fragment() {
 
     override fun onCreateView(
