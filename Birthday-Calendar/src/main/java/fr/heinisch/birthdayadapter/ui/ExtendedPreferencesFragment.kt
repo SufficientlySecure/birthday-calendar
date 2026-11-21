@@ -24,741 +24,972 @@ package fr.heinisch.birthdayadapter.ui
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.Color
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.OvalShape
+import android.graphics.Color as AndroidColor
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
-import android.text.Editable
-import android.text.TextUtils
-import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
-import androidx.preference.EditTextPreference
-import androidx.preference.MultiSelectListPreference
-import androidx.preference.Preference
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceFragmentCompat
+import android.view.ViewGroup
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.textfield.TextInputLayout
 import fr.heinisch.birthdayadapter.R
-import fr.heinisch.birthdayadapter.util.AccountHelper
-import fr.heinisch.birthdayadapter.util.IPurchaseHelper
 import fr.heinisch.birthdayadapter.util.PreferencesHelper
 import fr.heinisch.birthdayadapter.util.PurchaseHelperFactory
-import fr.heinisch.birthdayadapter.util.ReviewHelper
-import fr.heinisch.birthdayadapter.util.ReviewHelperFactory
 import fr.heinisch.birthdayadapter.util.VersionHelper
-import fr.heinisch.birthdayadapter.util.VersionHelper.isFullVersionUnlocked
-import java.util.Arrays
-import java.util.HashSet
-import java.util.Objects
 import java.util.regex.Pattern
 
-class ExtendedPreferencesFragment : PreferenceFragmentCompat() {
+class ExtendedPreferencesFragment : Fragment() {
 
-    var mActivity: BaseActivity? = null
-    private lateinit var mAccountHelper: AccountHelper
-    private var colorPref: Preference? = null
-    private var mJubileeYearsPref: Preference? = null
-    private lateinit var mPurchaseHelper: IPurchaseHelper
-    private lateinit var mReviewHelper: ReviewHelper
-    private var mTitlePrefKeys: Set<String>? = null
-
-    private val mSettingsListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-        if (key == null || activity == null) {
-            return@OnSharedPreferenceChangeListener
-        }
-
-        // Handle purchase change
-        if (key == VersionHelper.PREF_FULL_VERSION_PURCHASED) {
-            activity?.recreate()
-            return@OnSharedPreferenceChangeListener
-        }
-
-        // Handle title summary updates
-        if (mTitlePrefKeys != null && mTitlePrefKeys!!.contains(key)) {
-            val pref = findPreference<Preference>(key)
-            if (pref != null) {
-                val newValue = sharedPreferences.getString(key, "") ?: ""
-                updateTitlePreferenceSummary(pref, newValue)
-            }
-        }
-
-        if (key == getString(R.string.pref_name_format_key)) {
-            // Update all title preference summaries when the name format changes
-            mTitlePrefKeys?.let { keys ->
-                for (titleKey in keys) {
-                    val pref = findPreference<Preference>(titleKey)
-                    if (pref is EditTextPreference) {
-                        val value = pref.text ?: ""
-                        updateTitlePreferenceSummary(pref, value)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                BirthdayAdapterTheme {
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        ExtendedPreferencesScreen()
                     }
                 }
             }
         }
     }
+}
 
-    private val baseColors = intArrayOf(
-        0xfff44336.toInt(), 0xffe91e63.toInt(), 0xff9c27b0.toInt(), 0xff673ab7.toInt(), 0xff3f51b5.toInt(), 0xff2196f3.toInt(), 0xff03a9f4.toInt(), 0xff00bcd4.toInt(),
-        0xff009688.toInt(), 0xff4caf50.toInt(), 0xff8bc34a.toInt(), 0xffcddc39.toInt(), 0xffffeb3b.toInt(), 0xffffc107.toInt(), 0xffff9800.toInt(), 0xffff5722.toInt(),
-        0xff795548.toInt(), 0xff9e9e9e.toInt(), 0xff607d8b.toInt()
+private val baseColors = intArrayOf(
+    0xfff44336.toInt(), 0xffe91e63.toInt(), 0xff9c27b0.toInt(), 0xff673ab7.toInt(), 0xff3f51b5.toInt(), 0xff2196f3.toInt(), 0xff03a9f4.toInt(), 0xff00bcd4.toInt(),
+    0xff009688.toInt(), 0xff4caf50.toInt(), 0xff8bc34a.toInt(), 0xffcddc39.toInt(), 0xffffeb3b.toInt(), 0xffffc107.toInt(), 0xffff9800.toInt(), 0xffff5722.toInt(),
+    0xff795548.toInt(), 0xff9e9e9e.toInt(), 0xff607d8b.toInt()
+)
+
+@Composable
+private fun ExtendedPreferencesScreen() {
+    val context = LocalContext.current
+    val prefs = remember(context) { PreferenceManager.getDefaultSharedPreferences(context) }
+    val isFullVersion = remember(context) { VersionHelper.isFullVersionUnlocked(context) }
+    val purchaseHelper = remember { PurchaseHelperFactory.create() }
+
+    // States for preferences
+    var currentColor by remember { mutableStateOf(PreferencesHelper.getColor(context)) }
+    var groupFiltering by remember {
+        mutableStateOf(prefs.getBoolean(context.getString(R.string.pref_group_filtering_key), true))
+    }
+    var nameFormat by remember {
+        mutableStateOf(prefs.getBoolean(context.getString(R.string.pref_name_format_key), true))
+    }
+    var titleEnable by remember {
+        mutableStateOf(prefs.getBoolean(context.getString(R.string.pref_title_enable_key), false))
+    }
+    var jubileeYears by remember {
+        mutableStateOf(PreferencesHelper.getJubileeYears(context) ?: "")
+    }
+
+    // Reminder event types
+    val eventTypeValues = context.resources.getStringArray(R.array.pref_reminder_event_types_values)
+    val eventTypeEntries = context.resources.getStringArray(R.array.pref_reminder_event_types_entries)
+    val defaultReminderTypes = context.resources.getStringArray(R.array.pref_reminder_event_types_default_values).toSet()
+    var reminderTypes by remember {
+        mutableStateOf(prefs.getStringSet(context.getString(R.string.pref_reminder_event_types), defaultReminderTypes) ?: defaultReminderTypes)
+    }
+
+    // Reminder minutes lists
+    var reminderMinutesList by remember {
+        mutableStateOf(PreferencesHelper.getAllReminderMinutes(context).toList())
+    }
+    var additionalReminderMinutesList by remember {
+        mutableStateOf(PreferencesHelper.getAdditionalReminderMinutes(context).toList())
+    }
+
+    // Additional reminders group name
+    var additionalRemindersGroup by remember {
+        mutableStateOf(prefs.getString(context.getString(R.string.pref_additional_reminders_group_key), "") ?: "")
+    }
+
+    // Title formats (Triple of keyRes, titleRes, dialogMessageRes)
+    val titleConfigs = listOf(
+        Triple(R.string.pref_title_birthday_without_age_key, R.string.pref_title_birthday_without_age, R.string.pref_title_summary_without_age),
+        Triple(R.string.pref_title_birthday_with_age_key, R.string.pref_title_birthday_with_age, R.string.pref_title_summary_with_age),
+        Triple(R.string.pref_title_anniversary_without_age_key, R.string.pref_title_anniversary_without_age, R.string.pref_title_summary_without_age),
+        Triple(R.string.pref_title_anniversary_with_age_key, R.string.pref_title_anniversary_with_age, R.string.pref_title_summary_with_age),
+        Triple(R.string.pref_title_other_without_age_key, R.string.pref_title_other_without_age, R.string.pref_title_summary_without_age),
+        Triple(R.string.pref_title_other_with_age_key, R.string.pref_title_other_with_age, R.string.pref_title_summary_with_age),
+        Triple(R.string.pref_title_custom_without_age_key, R.string.pref_title_custom_without_age, R.string.pref_title_summary_custom_without_age),
+        Triple(R.string.pref_title_custom_with_age_key, R.string.pref_title_custom_with_age, R.string.pref_title_summary_custom_with_age)
     )
 
-    override fun onCreatePreferences(bundle: Bundle?, s: String?) {
-        // Use the default shared preferences to ensure consistency across the app.
-        addPreferencesFromResource(R.xml.pref_preferences)
-
-        val isFullVersion = isFullVersionUnlocked(requireContext())
-
-        val remindersCategory = findPreference<PreferenceCategory>(getString(R.string.pref_reminders_category_key))
-        remindersCategory?.isVisible = isFullVersion
-
-        val additionalRemindersCategory = findPreference<PreferenceCategory>(getString(R.string.pref_additional_reminders_category_key))
-        additionalRemindersCategory?.isVisible = isFullVersion
-
-        val titleCategory = findPreference<PreferenceCategory>(getString(R.string.pref_title_category_key))
-        titleCategory?.isVisible = isFullVersion
-
-        val advancedCategory = findPreference<PreferenceCategory>(getString(R.string.pref_advanced_category_key))
-        advancedCategory?.isVisible = isFullVersion
-        val preferDdSlashMm = findPreference<Preference>(getString(R.string.pref_prefer_dd_slash_mm_key))
-        preferDdSlashMm?.isVisible = false
-
-        val backgroundCategory = findPreference<PreferenceCategory>(getString(R.string.pref_background_category_key))
-        backgroundCategory?.isVisible = isFullVersion
-
-        val buyCategory = findPreference<PreferenceCategory>(getString(R.string.pref_buy_category_key))
-        buyCategory?.isVisible = !isFullVersion
-
-        val buyFullPref = findPreference<Preference>(getString(R.string.pref_buy_full_key))
-        buyFullPref?.setOnPreferenceClickListener {
-            activity?.let { act ->
-                mPurchaseHelper.launchBillingFlow(act)
-            }
-            true
-        }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val activity = activity
-        if (activity is BaseActivity) {
-            mActivity = activity
-        } else {
-            return
-        }
-
-        mAccountHelper = AccountHelper(mActivity!!)
-        mPurchaseHelper = PurchaseHelperFactory.create()
-        mReviewHelper = ReviewHelperFactory.create()
-
-        if (context != null && !isFullVersionUnlocked(requireContext())) {
-            val buyFullPref = findPreference<Preference>(getString(R.string.pref_buy_full_key))
-            if (buyFullPref != null && activity != null) {
-                val originalTitle = buyFullPref.title
-
-                mPurchaseHelper.queryProductDetails(requireActivity(), object : IPurchaseHelper.OnPriceFoundCallback {
-                    override fun onPriceFound(price: String) {
-                        if (isAdded) {
-                            buyFullPref.title = getString(R.string.buy_premium_for, price)
-                        }
-                    }
-
-                    override fun onPriceQueryFailed() {
-                        if (isAdded) {
-                            buyFullPref.title = originalTitle
-                        }
-                    }
-                })
-            }
-        }
-
-        if (context != null && isFullVersionUnlocked(requireContext())) {
-            val remindersCategory = findPreference<PreferenceCategory>(getString(R.string.pref_reminders_category_key))
-            if (remindersCategory != null) {
-                val reminderTypesPref = findPreference<MultiSelectListPreference>(getString(R.string.pref_reminder_event_types))
-                if (reminderTypesPref != null) {
-                    updateReminderEventTypesSummary(reminderTypesPref)
-                    reminderTypesPref.setOnPreferenceChangeListener { preference, newValue ->
-                        mAccountHelper.triggerFullResync()
-                        @Suppress("UNCHECKED_CAST")
-                        val values = newValue as Set<String>
-                        updateReminderEventTypesSummary(reminderTypesPref, values)
-                        true
-                    }
+    var titleValues by remember {
+        mutableStateOf(
+            titleConfigs.associate { (keyRes, _, _) ->
+                val key = context.getString(keyRes)
+                val defaultVal = when (keyRes) {
+                    R.string.pref_title_birthday_without_age_key -> context.getString(R.string.event_title_birthday_without_age)
+                    R.string.pref_title_birthday_with_age_key -> context.getString(R.string.event_title_birthday_with_age)
+                    R.string.pref_title_anniversary_without_age_key -> context.getString(R.string.event_title_anniversary_without_age)
+                    R.string.pref_title_anniversary_with_age_key -> context.getString(R.string.event_title_anniversary_with_age)
+                    R.string.pref_title_other_without_age_key -> context.getString(R.string.event_title_other_without_age)
+                    R.string.pref_title_other_with_age_key -> context.getString(R.string.event_title_other_with_age)
+                    R.string.pref_title_custom_without_age_key -> context.getString(R.string.event_title_custom_without_age)
+                    else -> context.getString(R.string.event_title_custom_with_age)
                 }
-                populateReminders(remindersCategory, getString(R.string.pref_reminders_key))
-            }
-
-            val additionalRemindersCategory = findPreference<PreferenceCategory>(getString(R.string.pref_additional_reminders_category_key))
-            if (additionalRemindersCategory != null) {
-                populateReminders(additionalRemindersCategory, getString(R.string.pref_additional_reminders_key))
-            }
-
-            mTitlePrefKeys = HashSet(
-                listOf(
-                    getString(R.string.pref_title_birthday_without_age_key),
-                    getString(R.string.pref_title_birthday_with_age_key),
-                    getString(R.string.pref_title_anniversary_without_age_key),
-                    getString(R.string.pref_title_anniversary_with_age_key),
-                    getString(R.string.pref_title_other_without_age_key),
-                    getString(R.string.pref_title_other_with_age_key),
-                    getString(R.string.pref_title_custom_without_age_key),
-                    getString(R.string.pref_title_custom_with_age_key)
-                )
-            )
-
-            // Title preferences
-            for (key in mTitlePrefKeys!!) {
-                setupTitlePreference(key)
-            }
-
-            mJubileeYearsPref = findPreference(getString(R.string.pref_jubilee_years_key))
-            mJubileeYearsPref?.setOnPreferenceClickListener {
-                showJubileeYearsInputDialog()
-                true
-            }
-
-            val ignoreBatteryOptimizationsPref = findPreference<Preference>(getString(R.string.pref_ignore_battery_optimizations_key))
-            ignoreBatteryOptimizationsPref?.setOnPreferenceClickListener {
-                if (!isAdded) {
-                    return@setOnPreferenceClickListener true
-                }
-                val context = requireContext()
-                val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
-                    data = Uri.parse("package:" + context.packageName)
-                }
-                try {
-                    startActivity(intent)
-                } catch (e: android.content.ActivityNotFoundException) {
-                    val fallbackIntent = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
-                    startActivity(fallbackIntent)
-                }
-                true
-            }
-
-            val disablePermissionMonitoringPref = findPreference<Preference>(getString(R.string.pref_disable_permission_monitoring_key))
-            if (disablePermissionMonitoringPref != null) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    disablePermissionMonitoringPref.setOnPreferenceClickListener {
-                        if (!isAdded) {
-                            return@setOnPreferenceClickListener true
-                        }
-                        val context = requireContext()
-                        val intent: Intent
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                            intent = Intent(Intent.ACTION_AUTO_REVOKE_PERMISSIONS).apply {
-                                data = Uri.parse("package:" + context.packageName)
-                            }
-                        } else {
-                            intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                                data = Uri.parse("package:" + context.packageName)
-                            }
-                        }
-                        try {
-                            startActivity(intent)
-                        } catch (e: android.content.ActivityNotFoundException) {
-                            val fallbackIntent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                                data = Uri.parse("package:" + context.packageName)
-                            }
-                            startActivity(fallbackIntent)
-                        }
-                        true
-                    }
-                }
-            }
-        }
-
-        colorPref = findPreference(getString(R.string.pref_color_key))
-        if (colorPref != null) {
-            updateColorPreferenceIcon()
-            colorPref?.setOnPreferenceClickListener {
-                showColorPickerDialog()
-                true
-            }
-        }
-
-        updateBackgroundPreferencesVisibility()
-
-        // Trigger review dialog when reaching the bottom of the list
-        val recyclerView = listView
-        recyclerView?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                // Check if the user can scroll further down
-                if (!recyclerView.canScrollVertically(1)) {
-                    activity?.let { act ->
-                        mReviewHelper.maybeShowReviewDialog(act)
-                    }
-                }
-            }
-        })
-    }
-
-    private fun setupTitlePreference(key: String) {
-        val preference = findPreference<EditTextPreference>(key)
-        if (preference != null) {
-            updateTitlePreferenceSummary(preference, preference.text ?: "")
-        }
-    }
-
-    override fun onDisplayPreferenceDialog(preference: Preference) {
-        if (mTitlePrefKeys != null && mTitlePrefKeys!!.contains(preference.key)) {
-            showTitleInputDialog(preference as EditTextPreference)
-        } else if (getString(R.string.pref_reminder_event_types) == preference.key) {
-            showMultiSelectListDialog(preference as MultiSelectListPreference)
-        } else if (getString(R.string.pref_additional_reminders_group_key) == preference.key) {
-            showGroupInputDialog(preference as EditTextPreference)
-        } else {
-            super.onDisplayPreferenceDialog(preference)
-        }
-    }
-
-    private fun showTitleInputDialog(preference: EditTextPreference) {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_preference_input, null)
-        val textInput = dialogView.findViewById<EditText>(R.id.textInput)
-
-        textInput.setText(preference.text)
-
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(preference.dialogTitle)
-            .setMessage(preference.dialogMessage)
-            .setView(dialogView)
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                val newValue = textInput.text.toString()
-                preference.text = newValue
-                updateTitlePreferenceSummary(preference, newValue)
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
-    }
-
-    private fun showGroupInputDialog(preference: EditTextPreference) {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_preference_input, null)
-        val textInput = dialogView.findViewById<EditText>(R.id.textInput)
-
-        textInput.setText(preference.text)
-
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(preference.dialogTitle)
-            .setMessage(preference.dialogMessage)
-            .setView(dialogView)
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                val newValue = textInput.text.toString()
-                if (preference.callChangeListener(newValue)) {
-                    preference.text = newValue
-                }
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
-    }
-
-    private fun showMultiSelectListDialog(preference: MultiSelectListPreference) {
-        val entries = preference.entries
-        val entryValues = preference.entryValues
-        val values = preference.values
-        val checkedItems = BooleanArray(entryValues.size)
-        val newValues = HashSet(values)
-
-        for (i in entryValues.indices) {
-            checkedItems[i] = values.contains(entryValues[i].toString())
-        }
-
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(preference.title)
-            .setMultiChoiceItems(entries, checkedItems) { _, which, isChecked ->
-                if (isChecked) {
-                    newValues.add(entryValues[which].toString())
-                } else {
-                    newValues.remove(entryValues[which].toString())
-                }
-            }
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                if (preference.callChangeListener(newValues)) {
-                    preference.values = newValues
-                    updateReminderEventTypesSummary(preference, newValues)
-                }
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
-    }
-
-    private fun updateTitlePreferenceSummary(preference: Preference, newValue: Any) {
-        val template = newValue as? String ?: return
-        val useLastNameFirst = PreferencesHelper.getUseLastNameFirst(requireContext())
-        val firstName = getString(R.string.summary_placeholder_firstname)
-        val lastName = getString(R.string.summary_placeholder_lastname)
-        val name = if (useLastNameFirst) "$lastName, $firstName" else "$firstName $lastName"
-
-        val summary = template.replace("{NAME}", name)
-            .replace("{FIRSTNAME}", firstName)
-            .replace("{AGE}", "42")
-            .replace("{LABEL}", getString(R.string.summary_placeholder_custom_label))
-        preference.summary = summary
-    }
-
-    private fun updateReminderEventTypesSummary(preference: MultiSelectListPreference) {
-        updateReminderEventTypesSummary(preference, preference.values)
-    }
-
-    private fun updateReminderEventTypesSummary(preference: MultiSelectListPreference, values: Set<String>) {
-        if (context == null) return
-
-        if (values.isEmpty()) {
-            preference.setSummary(R.string.no_events_selected)
-            return
-        }
-
-        val selectedEntries = ArrayList<String>()
-        val entries = preference.entries
-        val entryValues = preference.entryValues
-
-        if (entries != null && entryValues != null) {
-            for (i in entryValues.indices) {
-                if (values.contains(entryValues[i].toString())) {
-                    selectedEntries.add(entries[i].toString())
-                }
-            }
-        }
-
-        preference.summary = TextUtils.join(", ", selectedEntries)
-    }
-
-    private fun populateReminders(category: PreferenceCategory, prefKey: String) {
-        val ctx = context ?: return
-
-        val prefsToKeep = ArrayList<Preference>()
-        for (i in 0 until category.preferenceCount) {
-            val pref = category.getPreference(i)
-            // Keep existing static preferences like event types or the group name
-            if (pref is MultiSelectListPreference || pref is EditTextPreference) {
-                prefsToKeep.add(pref)
-            }
-        }
-
-        category.removeAll()
-
-        for (pref in prefsToKeep) {
-            category.addPreference(pref)
-        }
-
-        val reminderMinutes: IntArray = if (prefKey == getString(R.string.pref_reminders_key)) {
-            PreferencesHelper.getAllReminderMinutes(ctx)
-        } else {
-            PreferencesHelper.getAdditionalReminderMinutes(ctx)
-        }
-
-        for (i in reminderMinutes.indices) {
-            addReminderPreference(category, prefKey, reminderMinutes[i], i, false)
-        }
-
-        val addReminderPref = Preference(ctx).apply {
-            setTitle(R.string.add_reminder)
-            setIcon(R.drawable.ic_add)
-            setOnPreferenceClickListener {
-                addReminderPreference(category, prefKey, resources.getInteger(R.integer.pref_reminder_time_def), reminderMinutes.size, true)
-                true
-            }
-        }
-        category.addPreference(addReminderPref)
-    }
-
-    private fun addReminderPreference(category: PreferenceCategory, prefKey: String, minutes: Int, index: Int, isNew: Boolean) {
-        val ctx = context ?: return
-
-        val reminderPref = ReminderPreferenceCompat(ctx, null).apply {
-            key = "${prefKey}_$index"
-            title = "${getString(R.string.pref_reminder_time)} ${index + 1}"
-            isPersistent = false // We are handling persistence manually
-            setValue(minutes)
-        }
-
-        if (isNew) {
-            reminderPref.setOnPreferenceChangeListener { _, _ ->
-                // On OK, add to category and setup normal listeners
-                setupReminderListeners(category, prefKey, reminderPref)
-                category.addPreference(reminderPref)
-                saveReminders(category, prefKey)
-                true
-            }
-            reminderPref.performClick(true)
-        } else {
-            setupReminderListeners(category, prefKey, reminderPref)
-            category.addPreference(reminderPref)
-        }
-    }
-
-    private fun setupReminderListeners(category: PreferenceCategory, prefKey: String, reminderPref: ReminderPreferenceCompat) {
-        reminderPref.setOnPreferenceChangeListener { _, _ ->
-            saveReminders(category, prefKey)
-            true
-        }
-        reminderPref.setOnRemoveListener { preference ->
-            category.removePreference(preference)
-            saveReminders(category, prefKey)
-        }
-        reminderPref.setOnCustomLongClickListener {
-            showDeleteReminderDialog(category, prefKey, reminderPref)
-            true
-        }
-    }
-
-    private fun showDeleteReminderDialog(category: PreferenceCategory, prefKey: String, preference: Preference) {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.delete_reminder_title)
-            .setMessage(R.string.delete_reminder_message)
-            .setPositiveButton(R.string.delete) { _, _ ->
-                category.removePreference(preference)
-                saveReminders(category, prefKey)
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
-    }
-
-    private fun saveReminders(category: PreferenceCategory, prefKey: String) {
-        val prefs = preferenceManager.sharedPreferences ?: return
-
-        val reminderSet = HashSet<String>()
-        for (i in 0 until category.preferenceCount) {
-            val pref = category.getPreference(i)
-            if (pref is ReminderPreferenceCompat) {
-                reminderSet.add(pref.getValue().toString())
-            }
-        }
-
-        prefs.edit().putStringSet(prefKey, reminderSet).apply()
-        populateReminders(category, prefKey) // Repopulate to reflect changes
-    }
-
-    private fun updateJubileeYearsSummary() {
-        if (mJubileeYearsPref != null && mActivity != null) {
-            val jubileeYears = PreferencesHelper.getJubileeYears(mActivity!!)
-            mJubileeYearsPref?.summary = jubileeYears
-        }
-    }
-
-    private fun isValidJubileeYears(value: String): Boolean {
-        if (TextUtils.isEmpty(value)) return true // allow empty
-        return Pattern.matches("^[1-9][0-9]*(?:\\s*,\\s*[1-9][0-9]*)*$", value.trim())
-    }
-
-    private fun showJubileeYearsInputDialog() {
-        val act = mActivity ?: return
-        val dialogView = layoutInflater.inflate(R.layout.dialog_jubilee_input, null)
-        val jubileeInput = dialogView.findViewById<EditText>(R.id.jubileeInput)
-        val jubileeInputLayout = dialogView.findViewById<TextInputLayout>(R.id.jubileeInputLayout)
-
-        val currentJubileeYears = PreferencesHelper.getJubileeYears(act)
-        jubileeInput.setText(currentJubileeYears)
-
-        val jubileeDialog = MaterialAlertDialogBuilder(act)
-            .setTitle(R.string.pref_jubilee_years_title)
-            .setMessage(R.string.pref_jubilee_years_description)
-            .setView(dialogView)
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                val jubileeYears = jubileeInput.text.toString()
-                saveJubileeYears(jubileeYears)
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .create()
-
-        jubileeDialog.show()
-
-        val positiveButton = jubileeDialog.getButton(AlertDialog.BUTTON_POSITIVE)
-        positiveButton.isEnabled = isValidJubileeYears(currentJubileeYears ?: "")
-
-        jubileeInput.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val text = s?.toString() ?: ""
-                if (isValidJubileeYears(text)) {
-                    positiveButton.isEnabled = true
-                    jubileeInputLayout?.error = null
-                } else {
-                    positiveButton.isEnabled = false
-                    jubileeInputLayout?.error = getString(R.string.invalid_format)
-                }
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-        })
-    }
-
-    private fun saveJubileeYears(jubileeYears: String) {
-        val editor = preferenceManager.sharedPreferences!!.edit()
-        editor.putString(getString(R.string.pref_jubilee_years_key), jubileeYears)
-        editor.apply()
-        updateJubileeYearsSummary()
-    }
-
-    private fun showColorPickerDialog() {
-        val act = mActivity ?: return
-        val dialogView = layoutInflater.inflate(R.layout.dialog_color_picker, null)
-        val recyclerView = dialogView.findViewById<RecyclerView>(R.id.colorPicker)
-
-        val colorDialog = MaterialAlertDialogBuilder(act)
-            .setTitle(R.string.pref_color)
-            .setView(dialogView)
-            .create()
-
-        val allColors = Arrays.copyOf(baseColors, baseColors.size + 1)
-        allColors[baseColors.size] = ColorPickerAdapter.CUSTOM_COLOR
-
-        val numColumns = 4
-        val adapter = ColorPickerAdapter(allColors, numColumns,
-            { color ->
-                saveColor(color)
-                colorDialog.dismiss()
-            },
-            {
-                colorDialog.dismiss()
-                showHexInputDialog()
+                key to (prefs.getString(key, defaultVal) ?: defaultVal)
             }
         )
-        recyclerView.layoutManager = GridLayoutManager(act, numColumns)
-        recyclerView.adapter = adapter
-
-        colorDialog.show()
     }
 
-    private fun showHexInputDialog() {
-        val act = mActivity ?: return
-        val dialogView = layoutInflater.inflate(R.layout.dialog_hex_input, null)
-        val hexInput = dialogView.findViewById<EditText>(R.id.hexInput)
-        val hexInputLayout = dialogView.findViewById<TextInputLayout>(R.id.hexInputLayout)
+    // Dialog state
+    var activeDialog by remember { mutableStateOf<DialogConfig?>(null) }
 
-        val currentColor = PreferencesHelper.getColor(act)
-        hexInput.setText(String.format("#%06X", (0xFFFFFF and currentColor)))
-
-        val hexDialog = MaterialAlertDialogBuilder(act)
-            .setTitle(R.string.hex_color_title)
-            .setView(dialogView)
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                val hex = hexInput.text.toString()
-                try {
-                    val color = Color.parseColor(hex)
-                    saveColor(color)
-                } catch (e: IllegalArgumentException) {
-                    // Invalid color, do nothing or show error
+    DisposableEffect(prefs) {
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+            when (key) {
+                context.getString(R.string.pref_group_filtering_key) -> groupFiltering = sharedPreferences.getBoolean(key, true)
+                context.getString(R.string.pref_name_format_key) -> nameFormat = sharedPreferences.getBoolean(key, true)
+                context.getString(R.string.pref_title_enable_key) -> titleEnable = sharedPreferences.getBoolean(key, false)
+                context.getString(R.string.pref_jubilee_years_key) -> jubileeYears = PreferencesHelper.getJubileeYears(context) ?: ""
+                context.getString(R.string.pref_color_key) -> currentColor = PreferencesHelper.getColor(context)
+                context.getString(R.string.pref_reminders_key) -> reminderMinutesList = PreferencesHelper.getAllReminderMinutes(context).toList()
+                context.getString(R.string.pref_additional_reminders_key) -> additionalReminderMinutesList = PreferencesHelper.getAdditionalReminderMinutes(context).toList()
+                context.getString(R.string.pref_reminder_event_types) -> {
+                    reminderTypes = sharedPreferences.getStringSet(key, defaultReminderTypes) ?: defaultReminderTypes
+                }
+                context.getString(R.string.pref_additional_reminders_group_key) -> {
+                    additionalRemindersGroup = sharedPreferences.getString(key, "") ?: ""
+                }
+                else -> {
+                    titleConfigs.forEach { (keyRes, _, _) ->
+                        val k = context.getString(keyRes)
+                        if (key == k) {
+                            val defaultVal = context.getString(R.string.event_title_birthday_without_age)
+                            titleValues = titleValues + (k to (sharedPreferences.getString(k, defaultVal) ?: defaultVal))
+                        }
+                    }
                 }
             }
-            .setNegativeButton(android.R.string.cancel, null)
-            .create()
+        }
+        prefs.registerOnSharedPreferenceChangeListener(listener)
+        onDispose {
+            prefs.unregisterOnSharedPreferenceChangeListener(listener)
+        }
+    }
 
-        hexDialog.show()
-
-        val positiveButton = hexDialog.getButton(AlertDialog.BUTTON_POSITIVE)
-        positiveButton.isEnabled = true
-
-        hexInput.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val text = s?.toString() ?: ""
-                if (text.isEmpty()) {
-                    positiveButton.isEnabled = false
-                    hexInputLayout?.error = null
-                    return
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(bottom = 24.dp)
+    ) {
+        // Buy Section (if free version)
+        if (!isFullVersion) {
+            PreferenceCategoryHeader(title = stringResource(R.string.pref_buy))
+            ClickablePreferenceItem(
+                title = stringResource(R.string.pref_buy_full),
+                summary = stringResource(R.string.pref_buy_full_summary),
+                iconRes = R.drawable.ic_star,
+                onClick = {
+                    val act = context as? BaseActivity
+                    if (act != null) {
+                        purchaseHelper.launchBillingFlow(act)
+                    }
                 }
-                try {
-                    Color.parseColor(text)
-                    positiveButton.isEnabled = true
-                    hexInputLayout?.error = null
-                } catch (e: IllegalArgumentException) {
-                    positiveButton.isEnabled = false
-                    hexInputLayout?.error = getString(R.string.invalid_format)
+            )
+            HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+        }
+
+        // General Category (Color Picker)
+        PreferenceCategoryHeader(title = stringResource(R.string.pref_general))
+        ClickablePreferenceItem(
+            title = stringResource(R.string.pref_color),
+            summary = String.format("#%06X", (0xFFFFFF and currentColor)),
+            iconCustom = {
+                Box(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clip(CircleShape)
+                        .background(Color(currentColor))
+                )
+            },
+            onClick = {
+                activeDialog = DialogConfig.ColorPicker(
+                    onColorSelected = { color ->
+                        prefs.edit().putInt(context.getString(R.string.pref_color_key), color).apply()
+                        currentColor = color
+                        activeDialog = null
+                    },
+                    onOpenHex = {
+                        activeDialog = DialogConfig.HexInput(
+                            initialColor = currentColor,
+                            onColorSelected = { color ->
+                                prefs.edit().putInt(context.getString(R.string.pref_color_key), color).apply()
+                                currentColor = color
+                                activeDialog = null
+                            }
+                        )
+                    }
+                )
+            }
+        )
+
+        HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+
+        // Reminders Category (if full version)
+        if (isFullVersion) {
+            PreferenceCategoryHeader(title = stringResource(R.string.pref_reminders))
+            val selectedReminderEntries = eventTypeEntries.indices
+                .filter { reminderTypes.contains(eventTypeValues[it].toString()) }
+                .map { eventTypeEntries[it] }
+            val reminderSummary = if (selectedReminderEntries.isEmpty()) {
+                stringResource(R.string.no_events_selected)
+            } else {
+                selectedReminderEntries.joinToString(", ")
+            }
+
+            ClickablePreferenceItem(
+                title = stringResource(R.string.pref_events_with_reminders),
+                summary = reminderSummary,
+                onClick = {
+                    activeDialog = DialogConfig.MultiSelect(
+                        title = context.getString(R.string.pref_events_with_reminders),
+                        entries = eventTypeEntries.map { it as CharSequence }.toTypedArray(),
+                        entryValues = eventTypeValues.map { it as CharSequence }.toTypedArray(),
+                        initialValues = reminderTypes,
+                        onSave = { newValues ->
+                            prefs.edit().putStringSet(context.getString(R.string.pref_reminder_event_types), newValues).apply()
+                            reminderTypes = newValues
+                        }
+                    )
+                }
+            )
+
+            // Dynamic Reminders List
+            reminderMinutesList.forEachIndexed { index, minutes ->
+                val summaryStr = ReminderPreferenceCompat.getSummary(context, minutes)
+                ClickablePreferenceItem(
+                    title = "${context.getString(R.string.pref_reminder_time)} ${index + 1}",
+                    summary = summaryStr,
+                    onClick = {
+                        val reminderPref = ReminderPreferenceCompat(context, null).apply {
+                            setValue(minutes)
+                            setOnRemoveListener {
+                                val updated = reminderMinutesList.toMutableList()
+                                updated.removeAt(index)
+                                reminderMinutesList = updated
+                                val set = updated.map { it.toString() }.toSet()
+                                prefs.edit().putStringSet(context.getString(R.string.pref_reminders_key), set).apply()
+                            }
+                            setOnPreferenceChangeListener { _, newValue ->
+                                val newMin = newValue as Int
+                                val updated = reminderMinutesList.toMutableList()
+                                updated[index] = newMin
+                                reminderMinutesList = updated
+                                val set = updated.map { it.toString() }.toSet()
+                                prefs.edit().putStringSet(context.getString(R.string.pref_reminders_key), set).apply()
+                                true
+                            }
+                        }
+                        reminderPref.performClick(false)
+                    },
+                    onLongClick = {
+                        activeDialog = DialogConfig.ConfirmDeleteReminder(
+                            onConfirm = {
+                                val updated = reminderMinutesList.toMutableList()
+                                updated.removeAt(index)
+                                reminderMinutesList = updated
+                                val set = updated.map { it.toString() }.toSet()
+                                prefs.edit().putStringSet(context.getString(R.string.pref_reminders_key), set).apply()
+                            }
+                        )
+                    }
+                )
+            }
+
+            ClickablePreferenceItem(
+                title = stringResource(R.string.add_reminder),
+                summary = "",
+                iconRes = R.drawable.ic_add,
+                onClick = {
+                    val reminderPref = ReminderPreferenceCompat(context, null).apply {
+                        setValue(context.resources.getInteger(R.integer.pref_reminder_time_def))
+                        setOnPreferenceChangeListener { _, newValue ->
+                            val newMin = newValue as Int
+                            val updated = reminderMinutesList.toMutableList()
+                            updated.add(newMin)
+                            reminderMinutesList = updated
+                            val set = updated.map { it.toString() }.toSet()
+                            prefs.edit().putStringSet(context.getString(R.string.pref_reminders_key), set).apply()
+                            true
+                        }
+                    }
+                    reminderPref.performClick(true)
+                }
+            )
+
+            HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+
+            // Additional Reminders Category
+            PreferenceCategoryHeader(title = stringResource(R.string.pref_additional_reminders_category))
+            ClickablePreferenceItem(
+                title = stringResource(R.string.pref_additional_reminders_group_title),
+                summary = additionalRemindersGroup.ifEmpty { stringResource(R.string.pref_additional_reminders_group_def) },
+                onClick = {
+                    val key = context.getString(R.string.pref_additional_reminders_group_key)
+                    activeDialog = DialogConfig.EditText(
+                        title = context.getString(R.string.pref_additional_reminders_group_title),
+                        message = context.getString(R.string.pref_additional_reminders_group_description),
+                        initialValue = additionalRemindersGroup,
+                        onSave = { newValue ->
+                            prefs.edit().putString(key, newValue).apply()
+                        }
+                    )
+                }
+            )
+
+            additionalReminderMinutesList.forEachIndexed { index, minutes ->
+                val summaryStr = ReminderPreferenceCompat.getSummary(context, minutes)
+                ClickablePreferenceItem(
+                    title = "${context.getString(R.string.pref_reminder_time)} ${index + 1}",
+                    summary = summaryStr,
+                    onClick = {
+                        val reminderPref = ReminderPreferenceCompat(context, null).apply {
+                            setValue(minutes)
+                            setOnRemoveListener {
+                                val updated = additionalReminderMinutesList.toMutableList()
+                                updated.removeAt(index)
+                                additionalReminderMinutesList = updated
+                                val set = updated.map { it.toString() }.toSet()
+                                prefs.edit().putStringSet(context.getString(R.string.pref_additional_reminders_key), set).apply()
+                            }
+                            setOnPreferenceChangeListener { _, newValue ->
+                                val newMin = newValue as Int
+                                val updated = additionalReminderMinutesList.toMutableList()
+                                updated[index] = newMin
+                                additionalReminderMinutesList = updated
+                                val set = updated.map { it.toString() }.toSet()
+                                prefs.edit().putStringSet(context.getString(R.string.pref_additional_reminders_key), set).apply()
+                                true
+                            }
+                        }
+                        reminderPref.performClick(false)
+                    },
+                    onLongClick = {
+                        activeDialog = DialogConfig.ConfirmDeleteReminder(
+                            onConfirm = {
+                                val updated = additionalReminderMinutesList.toMutableList()
+                                updated.removeAt(index)
+                                additionalReminderMinutesList = updated
+                                val set = updated.map { it.toString() }.toSet()
+                                prefs.edit().putStringSet(context.getString(R.string.pref_additional_reminders_key), set).apply()
+                            }
+                        )
+                    }
+                )
+            }
+
+            ClickablePreferenceItem(
+                title = stringResource(R.string.add_reminder),
+                summary = "",
+                iconRes = R.drawable.ic_add,
+                onClick = {
+                    val reminderPref = ReminderPreferenceCompat(context, null).apply {
+                        setValue(context.resources.getInteger(R.integer.pref_additional_reminder_time_def))
+                        setOnPreferenceChangeListener { _, newValue ->
+                            val newMin = newValue as Int
+                            val updated = additionalReminderMinutesList.toMutableList()
+                            updated.add(newMin)
+                            additionalReminderMinutesList = updated
+                            val set = updated.map { it.toString() }.toSet()
+                            prefs.edit().putStringSet(context.getString(R.string.pref_additional_reminders_key), set).apply()
+                            true
+                        }
+                    }
+                    reminderPref.performClick(true)
+                }
+            )
+
+            HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+
+            // Title Category
+            PreferenceCategoryHeader(title = stringResource(R.string.pref_title))
+            SwitchPreferenceItem(
+                title = stringResource(R.string.pref_title_enable),
+                summary = stringResource(R.string.pref_title_enable_summary),
+                checked = titleEnable,
+                onCheckedChange = { checked ->
+                    titleEnable = checked
+                    prefs.edit().putBoolean(context.getString(R.string.pref_title_enable_key), checked).apply()
+                }
+            )
+
+            if (titleEnable) {
+                titleConfigs.forEach { (keyRes, titleRes, msgRes) ->
+                    val prefKey = context.getString(keyRes)
+                    val prefTitle = stringResource(titleRes)
+                    val prefMsg = stringResource(msgRes)
+                    val currentValue = titleValues[prefKey] ?: ""
+
+                    val useLastNameFirst = PreferencesHelper.getUseLastNameFirst(context)
+                    val firstName = stringResource(R.string.summary_placeholder_firstname)
+                    val lastName = stringResource(R.string.summary_placeholder_lastname)
+                    val placeholderName = if (useLastNameFirst) "$lastName, $firstName" else "$firstName $lastName"
+                    val formattedSummary = currentValue
+                        .replace("{NAME}", placeholderName)
+                        .replace("{FIRSTNAME}", firstName)
+                        .replace("{AGE}", "42")
+                        .replace("{LABEL}", stringResource(R.string.summary_placeholder_custom_label))
+
+                    ClickablePreferenceItem(
+                        title = prefTitle,
+                        summary = formattedSummary,
+                        onClick = {
+                            activeDialog = DialogConfig.EditText(
+                                title = prefTitle,
+                                message = prefMsg,
+                                initialValue = currentValue,
+                                onSave = { newValue ->
+                                    prefs.edit().putString(prefKey, newValue).apply()
+                                }
+                            )
+                        }
+                    )
                 }
             }
 
-            override fun afterTextChanged(s: Editable?) {}
-        })
-    }
+            ClickablePreferenceItem(
+                title = stringResource(R.string.pref_jubilee_years_title),
+                summary = jubileeYears,
+                onClick = {
+                    val key = context.getString(R.string.pref_jubilee_years_key)
+                    activeDialog = DialogConfig.EditText(
+                        title = context.getString(R.string.pref_jubilee_years_title),
+                        message = context.getString(R.string.pref_jubilee_years_description),
+                        initialValue = jubileeYears,
+                        validator = { text ->
+                            text.isEmpty() || Pattern.matches("^[1-9][0-9]*(?:\\s*,\\s*[1-9][0-9]*)*$", text.trim())
+                        },
+                        onSave = { newValue ->
+                            prefs.edit().putString(key, newValue).apply()
+                        }
+                    )
+                }
+            )
 
-    private fun saveColor(color: Int) {
-        val editor = preferenceManager.sharedPreferences!!.edit()
-        editor.putInt(getString(R.string.pref_color_key), color)
-        editor.apply()
-        updateColorPreferenceIcon()
-    }
-
-    private fun updateColorPreferenceIcon() {
-        if (colorPref != null && mActivity != null) {
-            val color = PreferencesHelper.getColor(mActivity!!)
-            colorPref?.icon = createColorDrawable(color)
-        }
-    }
-
-    private fun createColorDrawable(color: Int): Drawable {
-        val coloredCircle = ShapeDrawable(OvalShape()).apply {
-            paint.color = color
-            intrinsicWidth = 72
-            intrinsicHeight = 72
-        }
-        return coloredCircle
-    }
-
-    override fun onResume() {
-        super.onResume()
-        PreferenceManager.getDefaultSharedPreferences(requireContext()).registerOnSharedPreferenceChangeListener(mSettingsListener)
-        updateBackgroundPreferencesVisibility()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        PreferenceManager.getDefaultSharedPreferences(requireContext()).unregisterOnSharedPreferenceChangeListener(mSettingsListener)
-    }
-
-    private fun updateBackgroundPreferencesVisibility() {
-        val ctx = context
-        if (ctx == null || !isFullVersionUnlocked(ctx)) {
-            return
+            HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
         }
 
-        val ignoreBatteryOptimizationsPref = findPreference<Preference>(getString(R.string.pref_ignore_battery_optimizations_key))
-        val disablePermissionMonitoringPref = findPreference<Preference>(getString(R.string.pref_disable_permission_monitoring_key))
-
-        if (ignoreBatteryOptimizationsPref == null || disablePermissionMonitoringPref == null) {
-            return
-        }
-
-        var isIgnoringBatteryOptimizations = false
-        try {
-            val powerManager = ctx.getSystemService(Context.POWER_SERVICE) as? PowerManager
-            if (powerManager != null) {
-                isIgnoringBatteryOptimizations = powerManager.isIgnoringBatteryOptimizations(ctx.packageName)
+        // Advanced Category
+        PreferenceCategoryHeader(title = stringResource(R.string.pref_advanced_category))
+        SwitchPreferenceItem(
+            title = stringResource(R.string.pref_group_filtering_title),
+            summary = stringResource(R.string.pref_group_filtering_summary),
+            checked = groupFiltering,
+            onCheckedChange = { checked ->
+                groupFiltering = checked
+                prefs.edit().putBoolean(context.getString(R.string.pref_group_filtering_key), checked).apply()
             }
-        } catch (e: Exception) {
-            // ignore
-        }
+        )
 
-        // Show battery optimization preference if not ignored
-        ignoreBatteryOptimizationsPref.isVisible = !isIgnoringBatteryOptimizations
+        SwitchPreferenceItem(
+            title = stringResource(R.string.pref_name_format_title),
+            summary = stringResource(R.string.pref_name_format_summary),
+            checked = nameFormat,
+            onCheckedChange = { checked ->
+                nameFormat = checked
+                prefs.edit().putBoolean(context.getString(R.string.pref_name_format_key), checked).apply()
+            }
+        )
 
-        // Show permission auto-revoke preference independently if on Android R+ and not whitelisted
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        // Background Category
+        if (isFullVersion) {
+            var isIgnoringBattery = false
             try {
-                val isWhitelisted = ctx.packageManager.isAutoRevokeWhitelisted()
-                disablePermissionMonitoringPref.isVisible = !isWhitelisted
-            } catch (e: Exception) {
-                disablePermissionMonitoringPref.setVisible(false)
+                val pm = context.getSystemService(Context.POWER_SERVICE) as? PowerManager
+                if (pm != null) {
+                    isIgnoringBattery = pm.isIgnoringBatteryOptimizations(context.packageName)
+                }
+            } catch (_: Exception) {}
+
+            var isAutoRevokeWhitelisted = true
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                try {
+                    isAutoRevokeWhitelisted = context.packageManager.isAutoRevokeWhitelisted()
+                } catch (_: Exception) {}
             }
-        } else {
-            disablePermissionMonitoringPref.setVisible(false)
+
+            if (!isIgnoringBattery || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !isAutoRevokeWhitelisted)) {
+                HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+                PreferenceCategoryHeader(title = stringResource(R.string.pref_background_category))
+
+                if (!isIgnoringBattery) {
+                    ClickablePreferenceItem(
+                        title = stringResource(R.string.pref_ignore_battery_optimizations_title),
+                        summary = stringResource(R.string.pref_ignore_battery_optimizations_summary),
+                        onClick = {
+                            try {
+                                val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+                                    data = Uri.parse("package:" + context.packageName)
+                                }
+                                context.startActivity(intent)
+                            } catch (_: Exception) {
+                                try {
+                                    val fallback = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+                                    context.startActivity(fallback)
+                                } catch (_: Exception) {}
+                            }
+                        }
+                    )
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !isAutoRevokeWhitelisted) {
+                    ClickablePreferenceItem(
+                        title = stringResource(R.string.pref_disable_permission_monitoring_title),
+                        summary = stringResource(R.string.pref_disable_permission_monitoring_summary),
+                        onClick = {
+                            try {
+                                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                    data = Uri.parse("package:" + context.packageName)
+                                }
+                                context.startActivity(intent)
+                            } catch (_: Exception) {}
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+    // Active Dialog handling
+    when (val dialog = activeDialog) {
+        is DialogConfig.EditText -> {
+            var textVal by remember(dialog) { mutableStateOf(dialog.initialValue) }
+            var isError by remember(dialog) { mutableStateOf(false) }
+
+            AlertDialog(
+                onDismissRequest = { activeDialog = null },
+                title = { Text(text = dialog.title) },
+                text = {
+                    Column {
+                        if (dialog.message.isNotEmpty()) {
+                            Text(
+                                text = dialog.message,
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            )
+                        }
+                        OutlinedTextField(
+                            value = textVal,
+                            onValueChange = {
+                                textVal = it
+                                isError = dialog.validator != null && !dialog.validator(it)
+                            },
+                            isError = isError,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        if (isError) {
+                            Text(
+                                text = stringResource(R.string.invalid_format),
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier.padding(top = 4.dp)
+                            )
+                        }
+                    }
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            if (!isError) {
+                                dialog.onSave(textVal)
+                                activeDialog = null
+                            }
+                        },
+                        enabled = !isError
+                    ) {
+                        Text(stringResource(android.R.string.ok))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { activeDialog = null }) {
+                        Text(stringResource(android.R.string.cancel))
+                    }
+                }
+            )
         }
 
-        val backgroundCategory = findPreference<PreferenceCategory>(getString(R.string.pref_background_category_key))
-        backgroundCategory?.isVisible = ignoreBatteryOptimizationsPref.isVisible || disablePermissionMonitoringPref.isVisible
+        is DialogConfig.ConfirmDeleteReminder -> {
+            AlertDialog(
+                onDismissRequest = { activeDialog = null },
+                title = { Text(text = stringResource(R.string.delete_reminder_title)) },
+                text = { Text(text = stringResource(R.string.delete_reminder_message)) },
+                confirmButton = {
+                    TextButton(onClick = {
+                        dialog.onConfirm()
+                        activeDialog = null
+                    }) {
+                        Text(stringResource(R.string.delete), color = MaterialTheme.colorScheme.error)
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { activeDialog = null }) {
+                        Text(stringResource(android.R.string.cancel))
+                    }
+                }
+            )
+        }
+
+        is DialogConfig.MultiSelect -> {
+            var selectedValues by remember(dialog) { mutableStateOf(dialog.initialValues) }
+
+            AlertDialog(
+                onDismissRequest = { activeDialog = null },
+                title = { Text(text = dialog.title) },
+                text = {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        dialog.entryValues.indices.forEach { i ->
+                            val value = dialog.entryValues[i].toString()
+                            val entryLabel = dialog.entries[i].toString()
+                            val isChecked = selectedValues.contains(value)
+
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        selectedValues = if (isChecked) {
+                                            selectedValues - value
+                                        } else {
+                                            selectedValues + value
+                                        }
+                                    }
+                                    .padding(vertical = 8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Checkbox(
+                                    checked = isChecked,
+                                    onCheckedChange = { checked ->
+                                        selectedValues = if (checked) {
+                                            selectedValues + value
+                                        } else {
+                                            selectedValues - value
+                                        }
+                                    }
+                                )
+                                Spacer(modifier = Modifier.width(12.dp))
+                                Text(
+                                    text = entryLabel,
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                            }
+                        }
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = {
+                        dialog.onSave(selectedValues)
+                        activeDialog = null
+                    }) {
+                        Text(stringResource(android.R.string.ok))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { activeDialog = null }) {
+                        Text(stringResource(android.R.string.cancel))
+                    }
+                }
+            )
+        }
+
+        is DialogConfig.ColorPicker -> {
+            AlertDialog(
+                onDismissRequest = { activeDialog = null },
+                title = { Text(text = stringResource(R.string.pref_color)) },
+                text = {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(4),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        items(baseColors.toList()) { colorInt ->
+                            Box(
+                                modifier = Modifier
+                                    .size(48.dp)
+                                    .padding(4.dp)
+                                    .clip(CircleShape)
+                                    .background(Color(colorInt))
+                                    .clickable {
+                                        dialog.onColorSelected(colorInt)
+                                    }
+                            )
+                        }
+                        item {
+                            Surface(
+                                onClick = dialog.onOpenHex,
+                                modifier = Modifier
+                                    .size(48.dp)
+                                    .padding(4.dp),
+                                shape = CircleShape,
+                                color = MaterialTheme.colorScheme.surfaceVariant
+                            ) {
+                                Box(contentAlignment = Alignment.Center) {
+                                    Text(text = "HEX", style = MaterialTheme.typography.labelSmall)
+                                }
+                            }
+                        }
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = { activeDialog = null }) {
+                        Text(stringResource(android.R.string.cancel))
+                    }
+                }
+            )
+        }
+
+        is DialogConfig.HexInput -> {
+            var hexText by remember(dialog) {
+                mutableStateOf(String.format("#%06X", (0xFFFFFF and dialog.initialColor)))
+            }
+            var parseError by remember { mutableStateOf(false) }
+
+            AlertDialog(
+                onDismissRequest = { activeDialog = null },
+                title = { Text(text = stringResource(R.string.hex_color_title)) },
+                text = {
+                    Column {
+                        OutlinedTextField(
+                            value = hexText,
+                            onValueChange = {
+                                hexText = it
+                                parseError = try {
+                                    AndroidColor.parseColor(it)
+                                    false
+                                } catch (_: Exception) {
+                                    true
+                                }
+                            },
+                            isError = parseError,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        if (parseError) {
+                            Text(
+                                text = stringResource(R.string.invalid_format),
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier.padding(top = 4.dp)
+                            )
+                        }
+                    }
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            try {
+                                val color = AndroidColor.parseColor(hexText)
+                                dialog.onColorSelected(color)
+                            } catch (_: Exception) {}
+                        },
+                        enabled = !parseError
+                    ) {
+                        Text(stringResource(android.R.string.ok))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { activeDialog = null }) {
+                        Text(stringResource(android.R.string.cancel))
+                    }
+                }
+            )
+        }
+
+        null -> {}
+    }
+}
+
+private sealed class DialogConfig {
+    data class EditText(
+        val title: String,
+        val message: String,
+        val initialValue: String,
+        val validator: ((String) -> Boolean)? = null,
+        val onSave: (String) -> Unit
+    ) : DialogConfig()
+
+    data class ConfirmDeleteReminder(
+        val onConfirm: () -> Unit
+    ) : DialogConfig()
+
+    data class MultiSelect(
+        val title: String,
+        val entries: Array<CharSequence>,
+        val entryValues: Array<CharSequence>,
+        val initialValues: Set<String>,
+        val onSave: (Set<String>) -> Unit
+    ) : DialogConfig()
+
+    data class ColorPicker(
+        val onColorSelected: (Int) -> Unit,
+        val onOpenHex: () -> Unit
+    ) : DialogConfig()
+
+    data class HexInput(
+        val initialColor: Int,
+        val onColorSelected: (Int) -> Unit
+    ) : DialogConfig()
+}
+
+@Composable
+private fun PreferenceCategoryHeader(title: String) {
+    Text(
+        text = title,
+        style = MaterialTheme.typography.labelLarge,
+        color = MaterialTheme.colorScheme.primary,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 4.dp)
+    )
+}
+
+@Composable
+private fun SwitchPreferenceItem(
+    title: String,
+    summary: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    Surface(
+        onClick = { onCheckedChange(!checked) },
+        color = Color.Transparent
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = summary,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Switch(
+                checked = checked,
+                onCheckedChange = onCheckedChange
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun ClickablePreferenceItem(
+    title: String,
+    summary: String,
+    iconRes: Int = 0,
+    iconCustom: @Composable (() -> Unit)? = null,
+    onClick: () -> Unit,
+    onLongClick: (() -> Unit)? = null
+) {
+    Surface(
+        onClick = onClick,
+        color = Color.Transparent
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .combinedClickable(
+                    onClick = onClick,
+                    onLongClick = onLongClick
+                )
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (iconCustom != null) {
+                iconCustom()
+                Spacer(modifier = Modifier.width(16.dp))
+            } else if (iconRes != 0) {
+                Icon(
+                    painter = painterResource(id = iconRes),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+            }
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                if (summary.isNotEmpty()) {
+                    Text(
+                        text = summary,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
     }
 }
