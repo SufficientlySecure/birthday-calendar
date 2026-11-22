@@ -59,6 +59,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
@@ -319,6 +320,7 @@ private fun ExtendedPreferencesScreen() {
             },
             onClick = {
                 activeDialog = DialogConfig.ColorPicker(
+                    initialColor = currentColor,
                     onColorSelected = { color ->
                         prefs.edit { putInt(context.getString(R.string.pref_color_key), color) }
                         currentColor = color
@@ -890,6 +892,13 @@ private fun ExtendedPreferencesScreen() {
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         items(baseColors.toList()) { colorInt ->
+                            val isSelected = (colorInt and 0xFFFFFF) == (dialog.initialColor and 0xFFFFFF)
+                            val r = (colorInt shr 16) and 0xFF
+                            val g = (colorInt shr 8) and 0xFF
+                            val b = colorInt and 0xFF
+                            val brightness = (r * 299 + g * 587 + b * 114) / 1000
+                            val checkColor = if (brightness > 160) Color.Black else Color.White
+
                             Box(
                                 modifier = Modifier
                                     .size(48.dp)
@@ -898,8 +907,18 @@ private fun ExtendedPreferencesScreen() {
                                     .background(Color(colorInt))
                                     .clickable {
                                         dialog.onColorSelected(colorInt)
-                                    }
-                            )
+                                    },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                if (isSelected) {
+                                    Icon(
+                                        imageVector = Icons.Default.Check,
+                                        contentDescription = "Selected",
+                                        tint = checkColor,
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                }
+                            }
                         }
                         item {
                             Surface(
@@ -1014,6 +1033,7 @@ private sealed class DialogConfig {
     ) : DialogConfig()
 
     data class ColorPicker(
+        val initialColor: Int,
         val onColorSelected: (Int) -> Unit,
         val onOpenHex: () -> Unit
     ) : DialogConfig()
