@@ -14,8 +14,9 @@ ant.properties
 *.apk
 tmp
 
-#Gradle
+#Gradle & Kotlin
 .gradle
+.kotlin
 build
 gradle.properties
 
