@@ -177,4 +177,7 @@
     <string name="error_no_network">没有互联网，请检查连接。</string>
     <string name="error_billing_unavailable">Google Play 不可用，请稍后重试。</string>
     <string name="error_acknowledge_failed">请重启应用以激活您的购买。</string>
+    <string name="pref_background_category">后台使用</string>
+    <string name="pref_ignore_battery_optimizations_title">允许后台使用</string>
+    <string name="pref_ignore_battery_optimizations_summary">允许应用在后台运行以进行定期同步，且不受电池优化的限制。</string>
 </resources>

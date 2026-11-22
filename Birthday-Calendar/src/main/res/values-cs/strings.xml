@@ -164,4 +164,7 @@
     <string name="error_no_network">Není k dispozici připojení k internetu. Zkontrolujte připojení.</string>
     <string name="error_billing_unavailable">Google Play není k dispozici. Zkuste to prosím později.</string>
     <string name="error_acknowledge_failed">Restartujte aplikaci, aby se nákup aktivoval.</string>
+    <string name="pref_background_category">Činnost na pozadí</string>
+    <string name="pref_ignore_battery_optimizations_title">Povolit činnost na pozadí</string>
+    <string name="pref_ignore_battery_optimizations_summary">Umožnit aplikaci pracovat na pozadí bez omezení baterie pro pravidelnou synchronizaci.</string>
 </resources>
