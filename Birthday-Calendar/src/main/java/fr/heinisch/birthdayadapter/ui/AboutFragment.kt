@@ -21,8 +21,11 @@
 
 package fr.heinisch.birthdayadapter.ui
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.graphics.Typeface
+import android.os.Build
 import android.os.Bundle
 import android.text.Spanned
 import android.text.style.RelativeSizeSpan
@@ -75,7 +78,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import fr.heinisch.birthdayadapter.BuildConfig
@@ -134,7 +136,13 @@ fun AboutScreen(
             .verticalScroll(scrollState)
             .padding(24.dp),
     ) {
+        val appName = stringResource(R.string.app_name)
         Card(
+            onClick = {
+                val textToCopy = "$appName $versionText"
+                val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                clipboard.setPrimaryClip(ClipData.newPlainText("App Version", textToCopy))
+            },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(24.dp),
             colors = CardDefaults.cardColors(
