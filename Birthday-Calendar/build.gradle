@@ -29,6 +29,9 @@ android {
             shrinkResources = false
         }
         release {
+            ndk {
+                debugSymbolLevel 'FULL'
+            }
             minifyEnabled = true
             shrinkResources = true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
