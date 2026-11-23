@@ -288,22 +288,6 @@ private fun ExtendedPreferencesScreen() {
             .verticalScroll(rememberScrollState())
             .padding(bottom = 24.dp)
     ) {
-        // Buy Section (if free version)
-        if (!isFullVersion) {
-            PreferenceCategoryHeader(title = stringResource(R.string.pref_buy))
-            ClickablePreferenceItem(
-                title = stringResource(R.string.pref_buy_full),
-                summary = stringResource(R.string.pref_buy_full_summary),
-                iconRes = R.drawable.ic_star,
-                onClick = {
-                    val act = context as? BaseActivity
-                    if (act != null) {
-                        purchaseHelper.launchBillingFlow(act)
-                    }
-                }
-            )
-            HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
-        }
 
         // General Category (Color Picker)
         PreferenceCategoryHeader(title = stringResource(R.string.pref_general))
@@ -577,30 +561,30 @@ private fun ExtendedPreferencesScreen() {
                 }
             )
 
+            // Advanced Category
+            PreferenceCategoryHeader(title = stringResource(R.string.pref_advanced_category))
+            SwitchPreferenceItem(
+                title = stringResource(R.string.pref_group_filtering_title),
+                summary = stringResource(R.string.pref_group_filtering_summary),
+                checked = groupFiltering,
+                onCheckedChange = { checked ->
+                    groupFiltering = checked
+                    prefs.edit { putBoolean(context.getString(R.string.pref_group_filtering_key), checked) }
+                }
+            )
+
+            SwitchPreferenceItem(
+                title = stringResource(R.string.pref_name_format_title),
+                summary = stringResource(R.string.pref_name_format_summary),
+                checked = nameFormat,
+                onCheckedChange = { checked ->
+                    nameFormat = checked
+                    prefs.edit { putBoolean(context.getString(R.string.pref_name_format_key), checked) }
+                }
+            )
+
             HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
         }
-
-        // Advanced Category
-        PreferenceCategoryHeader(title = stringResource(R.string.pref_advanced_category))
-        SwitchPreferenceItem(
-            title = stringResource(R.string.pref_group_filtering_title),
-            summary = stringResource(R.string.pref_group_filtering_summary),
-            checked = groupFiltering,
-            onCheckedChange = { checked ->
-                groupFiltering = checked
-                prefs.edit { putBoolean(context.getString(R.string.pref_group_filtering_key), checked) }
-            }
-        )
-
-        SwitchPreferenceItem(
-            title = stringResource(R.string.pref_name_format_title),
-            summary = stringResource(R.string.pref_name_format_summary),
-            checked = nameFormat,
-            onCheckedChange = { checked ->
-                nameFormat = checked
-                prefs.edit { putBoolean(context.getString(R.string.pref_name_format_key), checked) }
-            }
-        )
 
         // Background Category
         if (isFullVersion) {
@@ -642,6 +626,38 @@ private fun ExtendedPreferencesScreen() {
                         }
                     )
                 }
+            }
+        }
+
+        // Buy Section (if free version)
+        if (!isFullVersion) {
+            PreferenceCategoryHeader(title = stringResource(R.string.pref_buy))
+            ClickablePreferenceItem(
+                title = stringResource(R.string.pref_buy_full),
+                summary = stringResource(R.string.pref_buy_full_summary),
+                iconRes = R.drawable.ic_star,
+                onClick = {
+                    val act = context as? BaseActivity
+                    if (act != null) {
+                        purchaseHelper.launchBillingFlow(act)
+                    }
+                }
+            )
+
+            val premiumFeatures = listOf(
+                Pair(R.string.premium_feat_sync_title, R.string.premium_feat_sync_summary),
+                Pair(R.string.premium_feat_reminders_title, R.string.premium_feat_reminders_summary),
+                Pair(R.string.premium_feat_titles_title, R.string.premium_feat_titles_summary),
+                Pair(R.string.premium_feat_filtering_title, R.string.premium_feat_filtering_summary),
+                Pair(R.string.premium_feat_jubilee_title, R.string.premium_feat_jubilee_summary)
+            )
+
+            premiumFeatures.forEach { (titleRes, summaryRes) ->
+                PreferenceItem(
+                    title = stringResource(titleRes),
+                    summary = stringResource(summaryRes),
+                    iconCustom = { Box(modifier = Modifier.size(24.dp)) }
+                )
             }
         }
     }
@@ -1139,6 +1155,21 @@ private fun DropdownSelector(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun PreferenceItem(
+    title: String,
+    summary: String,
+    iconRes: Int = 0,
+    iconCustom: @Composable (() -> Unit)? = null
+) {
+    Surface(
+        color = Color.Transparent,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        PreferenceItemContent(title, summary, iconRes, iconCustom)
     }
 }
 
