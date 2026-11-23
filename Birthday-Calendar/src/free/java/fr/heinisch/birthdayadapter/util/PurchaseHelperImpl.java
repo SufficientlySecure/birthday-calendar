@@ -53,6 +53,7 @@ import fr.heinisch.birthdayadapter.R;
 public class PurchaseHelperImpl implements IPurchaseHelper {
 
     private static final String SKU_FULL_VERSION = "full_version";
+    private static volatile String cachedPrice = null;
     private BillingClient billingClient;
     private final AtomicBoolean isBillingClientConnecting = new AtomicBoolean(false);
     private final AtomicBoolean isSilentConnection = new AtomicBoolean(true);
@@ -185,6 +186,11 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
 
     @Override
     public void queryProductDetails(Activity activity, OnPriceFoundCallback callback) {
+        if (cachedPrice != null) {
+            Log.d(Constants.TAG, "queryProductDetails: Returning cached price " + cachedPrice);
+            callback.onPriceFound(cachedPrice);
+            return;
+        }
         Log.d(Constants.TAG, "queryProductDetails called.");
         ensureBillingClient(activity, true, () -> {
             QueryProductDetailsParams.Product product = QueryProductDetailsParams.Product.newBuilder()
@@ -202,6 +208,7 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
                             ProductDetails.OneTimePurchaseOfferDetails offerDetails = productDetails.getOneTimePurchaseOfferDetails();
                             if (offerDetails != null) {
                                 String price = offerDetails.getFormattedPrice();
+                                cachedPrice = price;
                                 priceFound = true;
                                 activity.runOnUiThread(() -> {
                                     if (!activity.isFinishing() && !activity.isDestroyed()) {

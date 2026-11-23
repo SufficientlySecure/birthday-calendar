@@ -21,8 +21,10 @@
 
 package fr.heinisch.birthdayadapter.ui
 
+import android.app.Activity
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
@@ -75,6 +77,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -102,6 +105,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.preference.PreferenceManager
 import fr.heinisch.birthdayadapter.R
+import fr.heinisch.birthdayadapter.util.IPurchaseHelper
 import fr.heinisch.birthdayadapter.util.PreferencesHelper
 import fr.heinisch.birthdayadapter.util.PurchaseHelperFactory
 import fr.heinisch.birthdayadapter.util.VersionHelper
@@ -143,6 +147,24 @@ private fun ExtendedPreferencesScreen() {
     val prefs = remember(context) { PreferenceManager.getDefaultSharedPreferences(context) }
     val isFullVersion = remember(context) { VersionHelper.isFullVersionUnlocked(context) }
     val purchaseHelper = remember { PurchaseHelperFactory.create() }
+    var buyTitle by remember { mutableStateOf(context.getString(R.string.pref_buy_full)) }
+
+    LaunchedEffect(isFullVersion, context) {
+        if (!isFullVersion) {
+            val activity = context.findActivity()
+            if (activity != null) {
+                purchaseHelper.queryProductDetails(activity, object : IPurchaseHelper.OnPriceFoundCallback {
+                    override fun onPriceFound(price: String) {
+                        buyTitle = context.getString(R.string.buy_premium_for, price)
+                    }
+
+                    override fun onPriceQueryFailed() {
+                        // Keep default title
+                    }
+                })
+            }
+        }
+    }
 
     // Lifecycle observer for updating background optimization checks when resuming app
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -632,11 +654,11 @@ private fun ExtendedPreferencesScreen() {
             HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
             PreferenceCategoryHeader(title = stringResource(R.string.pref_buy))
             ClickablePreferenceItem(
-                title = stringResource(R.string.pref_buy_full),
+                title = buyTitle,
                 summary = stringResource(R.string.pref_buy_full_summary),
                 iconRes = R.drawable.ic_star,
                 onClick = {
-                    val act = context as? BaseActivity
+                    val act = context.findActivity()
                     if (act != null) {
                         purchaseHelper.launchBillingFlow(act)
                     }
@@ -1263,3 +1285,13 @@ private fun PreferenceItemContent(
         }
     }
 }
+
+private fun Context.findActivity(): Activity? {
+    var ctx = this
+    while (ctx is ContextWrapper) {
+        if (ctx is Activity) return ctx
+        ctx = ctx.baseContext
+    }
+    return null
+}
+
