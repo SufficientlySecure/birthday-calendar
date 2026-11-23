@@ -324,10 +324,9 @@ private fun ExtendedPreferencesScreen() {
             }
         )
 
-        HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
-
         // Reminders Category (if full version)
         if (isFullVersion) {
+            HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
             PreferenceCategoryHeader(title = stringResource(R.string.pref_reminders))
             val selectedReminderEntries = eventTypeEntries.indices
                 .filter { reminderTypes.contains(eventTypeValues[it].toString()) }
@@ -562,6 +561,7 @@ private fun ExtendedPreferencesScreen() {
             )
 
             // Advanced Category
+            HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
             PreferenceCategoryHeader(title = stringResource(R.string.pref_advanced_category))
             SwitchPreferenceItem(
                 title = stringResource(R.string.pref_group_filtering_title),
@@ -582,8 +582,6 @@ private fun ExtendedPreferencesScreen() {
                     prefs.edit { putBoolean(context.getString(R.string.pref_name_format_key), checked) }
                 }
             )
-
-            HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
         }
 
         // Background Category
@@ -631,6 +629,7 @@ private fun ExtendedPreferencesScreen() {
 
         // Buy Section (if free version)
         if (!isFullVersion) {
+            HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
             PreferenceCategoryHeader(title = stringResource(R.string.pref_buy))
             ClickablePreferenceItem(
                 title = stringResource(R.string.pref_buy_full),
