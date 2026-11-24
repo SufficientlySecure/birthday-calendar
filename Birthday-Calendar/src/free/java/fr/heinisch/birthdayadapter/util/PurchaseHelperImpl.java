@@ -42,6 +42,7 @@ import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.QueryProductDetailsParams;
 import com.android.billingclient.api.QueryPurchasesParams;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -58,8 +59,12 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
     private final AtomicBoolean isBillingClientConnecting = new AtomicBoolean(false);
     private final AtomicBoolean isSilentConnection = new AtomicBoolean(true);
     private final List<Runnable> pendingTasks = new ArrayList<>();
+    private WeakReference<Activity> currentActivityRef = new WeakReference<>(null);
 
     private void ensureBillingClient(Context context, boolean silent, Runnable onConnected) {
+        if (context instanceof Activity) {
+            currentActivityRef = new WeakReference<>((Activity) context);
+        }
         boolean alreadyConnected = false;
         synchronized (pendingTasks) {
             if (billingClient != null && billingClient.isReady()) {
@@ -86,13 +91,16 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
             Context appContext = context.getApplicationContext();
 
             PurchasesUpdatedListener listener = (billingResult, purchases) -> {
+                Activity currentActivity = currentActivityRef.get();
+                Context targetContext = (currentActivity != null && !currentActivity.isFinishing() && !currentActivity.isDestroyed())
+                        ? currentActivity : appContext;
                 if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchases != null) {
                     for (Purchase purchase : purchases) {
-                        handlePurchase(appContext, billingClient, purchase, () -> {});
+                        handlePurchase(targetContext, billingClient, purchase, () -> {});
                     }
                 } else if (billingResult.getResponseCode() != BillingClient.BillingResponseCode.USER_CANCELED) {
                     Log.w(Constants.TAG, "Purchases updated with error: " + billingResult.getResponseCode() + " - " + billingResult.getDebugMessage());
-                    showError(appContext, billingResult);
+                    showError(targetContext, billingResult);
                 }
             };
 
@@ -144,6 +152,7 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
     @Override
     public void launchBillingFlow(Activity activity) {
         Log.d(Constants.TAG, "launchBillingFlow called.");
+        currentActivityRef = new WeakReference<>(activity);
         if (!BuildConfig.GOOGLE_PLAY_VERSION) {
             Log.d(Constants.TAG, "Billing flow aborted: GOOGLE_PLAY_VERSION is false.");
             return;
@@ -186,6 +195,7 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
 
     @Override
     public void queryProductDetails(Activity activity, OnPriceFoundCallback callback) {
+        currentActivityRef = new WeakReference<>(activity);
         if (cachedPrice != null) {
             Log.d(Constants.TAG, "queryProductDetails: Returning cached price " + cachedPrice);
             callback.onPriceFound(cachedPrice);
@@ -321,12 +331,19 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
         Log.i(Constants.TAG, "unlockFullVersion: Setting full version to purchased.");
         VersionHelper.setFullVersionUnlocked(context, true);
 
+        Activity activity = null;
         if (context instanceof Activity) {
-            Activity activity = (Activity) context;
+            activity = (Activity) context;
+        } else if (currentActivityRef != null && currentActivityRef.get() != null) {
+            activity = currentActivityRef.get();
+        }
+
+        if (activity != null) {
+            final Activity act = activity;
             Log.d(Constants.TAG, "unlockFullVersion: Recreating activity to apply changes.");
-            activity.runOnUiThread(() -> {
-                if (!activity.isFinishing() && !activity.isDestroyed()) {
-                    activity.recreate();
+            act.runOnUiThread(() -> {
+                if (!act.isFinishing() && !act.isDestroyed()) {
+                    act.recreate();
                 }
             });
         }

@@ -145,7 +145,7 @@ private val baseColors = intArrayOf(
 private fun ExtendedPreferencesScreen() {
     val context = LocalContext.current
     val prefs = remember(context) { PreferenceManager.getDefaultSharedPreferences(context) }
-    val isFullVersion = remember(context) { VersionHelper.isFullVersionUnlocked(context) }
+    var isFullVersion by remember { mutableStateOf(VersionHelper.isFullVersionUnlocked(context)) }
     val purchaseHelper = remember { PurchaseHelperFactory.create() }
     var buyTitle by remember { mutableStateOf(context.getString(R.string.pref_buy_full)) }
 
@@ -274,6 +274,11 @@ private fun ExtendedPreferencesScreen() {
     DisposableEffect(prefs) {
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
             when (key) {
+                VersionHelper.PREF_FULL_VERSION_PURCHASED -> {
+                    if (!isFullVersion) {
+                        isFullVersion = VersionHelper.isFullVersionUnlocked(context)
+                    }
+                }
                 context.getString(R.string.pref_group_filtering_key) -> groupFiltering = sharedPreferences.getBoolean(key, true)
                 context.getString(R.string.pref_name_format_key) -> nameFormat = sharedPreferences.getBoolean(key, true)
                 context.getString(R.string.pref_title_enable_key) -> titleEnable = sharedPreferences.getBoolean(key, false)
