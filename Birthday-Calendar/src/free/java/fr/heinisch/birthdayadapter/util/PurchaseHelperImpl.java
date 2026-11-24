@@ -302,20 +302,19 @@ public class PurchaseHelperImpl implements IPurchaseHelper {
 
     private void showError(Context context, BillingResult billingResult, String customMessage) {
         int responseCode = billingResult.getResponseCode();
+        Log.e(Constants.TAG, "Billing error - Code: " + responseCode + ", Debug: " + billingResult.getDebugMessage());
+
         String message = customMessage;
         if (message == null) {
             if (responseCode == BillingClient.BillingResponseCode.NETWORK_ERROR) {
                 message = context.getString(R.string.error_no_network);
             } else if (responseCode == BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE ||
+                    responseCode == BillingClient.BillingResponseCode.SERVICE_DISCONNECTED ||
                     responseCode == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE) {
                 message = context.getString(R.string.error_billing_unavailable);
             } else {
-                message = billingResult.getDebugMessage();
+                return;
             }
-        }
-
-        if (message == null || message.isEmpty()) {
-            message = "Billing Error (Code: " + responseCode + ")";
         }
 
         final String finalMessage = message;
