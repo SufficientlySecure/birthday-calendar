@@ -59,9 +59,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
@@ -973,7 +970,7 @@ private fun ExtendedPreferencesScreen() {
                             ) {
                                 if (isSelected) {
                                     Icon(
-                                        imageVector = Icons.Default.Check,
+                                        painter = painterResource(R.drawable.ic_check),
                                         contentDescription = "Selected",
                                         tint = checkColor,
                                         modifier = Modifier.size(24.dp)
@@ -1181,7 +1178,7 @@ private fun DropdownSelector(
                 color = MaterialTheme.colorScheme.onSurface
             )
             Icon(
-                imageVector = Icons.Default.ArrowDropDown,
+                painter = painterResource(R.drawable.ic_arrow_drop_down),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )

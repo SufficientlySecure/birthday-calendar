@@ -43,11 +43,10 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.SecondaryScrollableTabRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -326,19 +325,17 @@ private fun MainScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            ScrollableTabRow(
+            SecondaryScrollableTabRow(
                 selectedTabIndex = selectedTabIndex,
                 edgePadding = 0.dp,
                 containerColor = MaterialTheme.colorScheme.surface,
                 contentColor = MaterialTheme.colorScheme.onSurface,
-                indicator = { tabPositions ->
-                    if (selectedTabIndex < tabPositions.size) {
-                        TabRowDefaults.SecondaryIndicator(
-                            modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                            height = 3.dp,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
+                indicator = {
+                    TabRowDefaults.SecondaryIndicator(
+                        modifier = Modifier.tabIndicatorOffset(selectedTabIndex),
+                        height = 3.dp,
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 },
                 modifier = Modifier
                     .fillMaxWidth()
