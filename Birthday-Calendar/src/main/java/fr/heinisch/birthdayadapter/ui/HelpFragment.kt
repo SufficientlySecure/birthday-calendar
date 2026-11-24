@@ -51,7 +51,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.AnnotatedString
@@ -97,10 +97,10 @@ class HelpFragment : Fragment() {
 fun HelpScreen(
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
-    val htmlText = remember(context) {
+    val resources = LocalResources.current
+    val htmlText = remember(resources) {
         try {
-            context.resources.openRawResource(R.raw.help).use { inputStream ->
+            resources.openRawResource(R.raw.help).use { inputStream ->
                 inputStream.bufferedReader().use { it.readText() }
             }
         } catch (_: Exception) {

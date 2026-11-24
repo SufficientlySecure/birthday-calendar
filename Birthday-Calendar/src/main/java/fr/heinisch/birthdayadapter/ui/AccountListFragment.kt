@@ -67,9 +67,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.style.TextAlign
@@ -352,7 +352,6 @@ private fun AccountItemRow(
     onToggleSelection: () -> Unit,
     onOpenGroupDialog: () -> Unit
 ) {
-    val context = LocalContext.current
     val hasNoDates = entry.dateCount == 0
 
     val primaryTextColor = if (hasNoDates) {
@@ -367,15 +366,9 @@ private fun AccountItemRow(
         MaterialTheme.colorScheme.onSurfaceVariant
     }
 
-    val contactsStr = remember(entry.contactCount) {
-        context.resources.getQuantityString(R.plurals.contacts_count, entry.contactCount, entry.contactCount)
-    }
-    val datesStr = remember(entry.dateCount) {
-        context.resources.getQuantityString(R.plurals.dates_count, entry.dateCount, entry.dateCount)
-    }
-    val countersSummary = remember(contactsStr, datesStr) {
-        context.getString(R.string.account_list_counters_format, contactsStr, datesStr)
-    }
+    val contactsStr = pluralStringResource(R.plurals.contacts_count, entry.contactCount, entry.contactCount)
+    val datesStr = pluralStringResource(R.plurals.dates_count, entry.dateCount, entry.dateCount)
+    val countersSummary = stringResource(R.string.account_list_counters_format, contactsStr, datesStr)
 
     val isAccountSelected = !entry.isNotSelected
     val hasDeselectedGroups = remember(entry.groups, entry.isNotSelected, refreshTrigger) {
@@ -455,7 +448,6 @@ private fun GroupSelectionDialog(
     onDismiss: () -> Unit,
     onConfirmed: () -> Unit
 ) {
-    val context = LocalContext.current
     val groups = remember(entry) { entry.groups }
     var groupStates by remember(entry) {
         mutableStateOf(groups.map { it.isSelected })
@@ -483,13 +475,13 @@ private fun GroupSelectionDialog(
                         group.title
                     }
 
-                    val groupContactsStr = context.resources.getQuantityString(
+                    val groupContactsStr = pluralStringResource(
                         R.plurals.contacts_count, group.contactCount, group.contactCount
                     )
-                    val groupDatesStr = context.resources.getQuantityString(
+                    val groupDatesStr = pluralStringResource(
                         R.plurals.dates_count, group.dateCount, group.dateCount
                     )
-                    val groupCounters = context.getString(
+                    val groupCounters = stringResource(
                         R.string.account_list_counters_format, groupContactsStr, groupDatesStr
                     )
 

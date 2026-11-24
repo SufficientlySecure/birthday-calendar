@@ -22,12 +22,10 @@
 package fr.heinisch.birthdayadapter.ui
 
 import android.app.Activity
-import android.app.TimePickerDialog
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.content.SharedPreferences
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
@@ -88,8 +86,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -143,10 +143,11 @@ private val baseColors = intArrayOf(
 @Composable
 private fun ExtendedPreferencesScreen() {
     val context = LocalContext.current
+    val resources = LocalResources.current
     val prefs = remember(context) { PreferenceManager.getDefaultSharedPreferences(context) }
     var isFullVersion by remember { mutableStateOf(VersionHelper.isFullVersionUnlocked(context)) }
     val purchaseHelper = remember { PurchaseHelperFactory.create() }
-    var buyTitle by remember { mutableStateOf(context.getString(R.string.pref_buy_full)) }
+    var buyPrice by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(isFullVersion, context) {
         if (!isFullVersion) {
@@ -154,7 +155,7 @@ private fun ExtendedPreferencesScreen() {
             if (activity != null) {
                 purchaseHelper.queryProductDetails(activity, object : IPurchaseHelper.OnPriceFoundCallback {
                     override fun onPriceFound(price: String) {
-                        buyTitle = context.getString(R.string.buy_premium_for, price)
+                        buyPrice = price
                     }
 
                     override fun onPriceQueryFailed() {
@@ -203,24 +204,24 @@ private fun ExtendedPreferencesScreen() {
     // States for preferences
     var currentColor by remember { mutableIntStateOf(PreferencesHelper.getColor(context)) }
     var groupFiltering by remember {
-        mutableStateOf(prefs.getBoolean(context.getString(R.string.pref_group_filtering_key), true))
+        mutableStateOf(prefs.getBoolean(resources.getString(R.string.pref_group_filtering_key), true))
     }
     var nameFormat by remember {
-        mutableStateOf(prefs.getBoolean(context.getString(R.string.pref_name_format_key), true))
+        mutableStateOf(prefs.getBoolean(resources.getString(R.string.pref_name_format_key), true))
     }
     var titleEnable by remember {
-        mutableStateOf(prefs.getBoolean(context.getString(R.string.pref_title_enable_key), false))
+        mutableStateOf(prefs.getBoolean(resources.getString(R.string.pref_title_enable_key), false))
     }
     var jubileeYears by remember {
         mutableStateOf(PreferencesHelper.getJubileeYears(context) ?: "")
     }
 
     // Reminder event types
-    val eventTypeValues = context.resources.getStringArray(R.array.pref_reminder_event_types_values).toList()
-    val eventTypeEntries = context.resources.getStringArray(R.array.pref_reminder_event_types_entries).toList()
-    val defaultReminderTypes = context.resources.getStringArray(R.array.pref_reminder_event_types_default_values).toSet()
+    val eventTypeValues = stringArrayResource(R.array.pref_reminder_event_types_values).toList()
+    val eventTypeEntries = stringArrayResource(R.array.pref_reminder_event_types_entries).toList()
+    val defaultReminderTypes = stringArrayResource(R.array.pref_reminder_event_types_default_values).toSet()
     var reminderTypes by remember {
-        mutableStateOf(prefs.getStringSet(context.getString(R.string.pref_reminder_event_types), defaultReminderTypes) ?: defaultReminderTypes)
+        mutableStateOf(prefs.getStringSet(resources.getString(R.string.pref_reminder_event_types), defaultReminderTypes) ?: defaultReminderTypes)
     }
 
     // Reminder minutes lists
@@ -233,7 +234,7 @@ private fun ExtendedPreferencesScreen() {
 
     // Additional reminders group name
     var additionalRemindersGroup by remember {
-        mutableStateOf(prefs.getString(context.getString(R.string.pref_additional_reminders_group_key), "") ?: "")
+        mutableStateOf(prefs.getString(resources.getString(R.string.pref_additional_reminders_group_key), "") ?: "")
     }
 
     // Title formats (Triple of keyRes, titleRes, dialogMessageRes)
@@ -251,16 +252,16 @@ private fun ExtendedPreferencesScreen() {
     var titleValues by remember {
         mutableStateOf(
             titleConfigs.associate { (keyRes, _, _) ->
-                val key = context.getString(keyRes)
+                val key = resources.getString(keyRes)
                 val defaultVal = when (keyRes) {
-                    R.string.pref_title_birthday_without_age_key -> context.getString(R.string.event_title_birthday_without_age)
-                    R.string.pref_title_birthday_with_age_key -> context.getString(R.string.event_title_birthday_with_age)
-                    R.string.pref_title_anniversary_without_age_key -> context.getString(R.string.event_title_anniversary_without_age)
-                    R.string.pref_title_anniversary_with_age_key -> context.getString(R.string.event_title_anniversary_with_age)
-                    R.string.pref_title_other_without_age_key -> context.getString(R.string.event_title_other_without_age)
-                    R.string.pref_title_other_with_age_key -> context.getString(R.string.event_title_other_with_age)
-                    R.string.pref_title_custom_without_age_key -> context.getString(R.string.event_title_custom_without_age)
-                    else -> context.getString(R.string.event_title_custom_with_age)
+                    R.string.pref_title_birthday_without_age_key -> resources.getString(R.string.event_title_birthday_without_age)
+                    R.string.pref_title_birthday_with_age_key -> resources.getString(R.string.event_title_birthday_with_age)
+                    R.string.pref_title_anniversary_without_age_key -> resources.getString(R.string.event_title_anniversary_without_age)
+                    R.string.pref_title_anniversary_with_age_key -> resources.getString(R.string.event_title_anniversary_with_age)
+                    R.string.pref_title_other_without_age_key -> resources.getString(R.string.event_title_other_without_age)
+                    R.string.pref_title_other_with_age_key -> resources.getString(R.string.event_title_other_with_age)
+                    R.string.pref_title_custom_without_age_key -> resources.getString(R.string.event_title_custom_without_age)
+                    else -> resources.getString(R.string.event_title_custom_with_age)
                 }
                 key to (prefs.getString(key, defaultVal) ?: defaultVal)
             }
@@ -270,7 +271,7 @@ private fun ExtendedPreferencesScreen() {
     // Dialog state
     var activeDialog by remember { mutableStateOf<DialogConfig?>(null) }
 
-    DisposableEffect(prefs) {
+    DisposableEffect(prefs, resources) {
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
             when (key) {
                 VersionHelper.PREF_FULL_VERSION_PURCHASED -> {
@@ -278,24 +279,24 @@ private fun ExtendedPreferencesScreen() {
                         isFullVersion = VersionHelper.isFullVersionUnlocked(context)
                     }
                 }
-                context.getString(R.string.pref_group_filtering_key) -> groupFiltering = sharedPreferences.getBoolean(key, true)
-                context.getString(R.string.pref_name_format_key) -> nameFormat = sharedPreferences.getBoolean(key, true)
-                context.getString(R.string.pref_title_enable_key) -> titleEnable = sharedPreferences.getBoolean(key, false)
-                context.getString(R.string.pref_jubilee_years_key) -> jubileeYears = PreferencesHelper.getJubileeYears(context) ?: ""
-                context.getString(R.string.pref_color_key) -> currentColor = PreferencesHelper.getColor(context)
-                context.getString(R.string.pref_reminders_key) -> reminderMinutesList = PreferencesHelper.getAllReminderMinutes(context).toList()
-                context.getString(R.string.pref_additional_reminders_key) -> additionalReminderMinutesList = PreferencesHelper.getAdditionalReminderMinutes(context).toList()
-                context.getString(R.string.pref_reminder_event_types) -> {
+                resources.getString(R.string.pref_group_filtering_key) -> groupFiltering = sharedPreferences.getBoolean(key, true)
+                resources.getString(R.string.pref_name_format_key) -> nameFormat = sharedPreferences.getBoolean(key, true)
+                resources.getString(R.string.pref_title_enable_key) -> titleEnable = sharedPreferences.getBoolean(key, false)
+                resources.getString(R.string.pref_jubilee_years_key) -> jubileeYears = PreferencesHelper.getJubileeYears(context) ?: ""
+                resources.getString(R.string.pref_color_key) -> currentColor = PreferencesHelper.getColor(context)
+                resources.getString(R.string.pref_reminders_key) -> reminderMinutesList = PreferencesHelper.getAllReminderMinutes(context).toList()
+                resources.getString(R.string.pref_additional_reminders_key) -> additionalReminderMinutesList = PreferencesHelper.getAdditionalReminderMinutes(context).toList()
+                resources.getString(R.string.pref_reminder_event_types) -> {
                     reminderTypes = sharedPreferences.getStringSet(key, defaultReminderTypes) ?: defaultReminderTypes
                 }
-                context.getString(R.string.pref_additional_reminders_group_key) -> {
+                resources.getString(R.string.pref_additional_reminders_group_key) -> {
                     additionalRemindersGroup = sharedPreferences.getString(key, "") ?: ""
                 }
                 else -> {
                     titleConfigs.forEach { (keyRes, _, _) ->
-                        val k = context.getString(keyRes)
+                        val k = resources.getString(keyRes)
                         if (key == k) {
-                            val defaultVal = context.getString(R.string.event_title_birthday_without_age)
+                            val defaultVal = resources.getString(R.string.event_title_birthday_without_age)
                             titleValues = titleValues + (k to (sharedPreferences.getString(k, defaultVal) ?: defaultVal))
                         }
                     }
@@ -349,7 +350,7 @@ private fun ExtendedPreferencesScreen() {
                 activeDialog = DialogConfig.ColorPicker(
                     initialColor = currentColor,
                     onColorSelected = { color ->
-                        prefs.edit { putInt(context.getString(R.string.pref_color_key), color) }
+                        prefs.edit { putInt(resources.getString(R.string.pref_color_key), color) }
                         currentColor = color
                         activeDialog = null
                     },
@@ -357,7 +358,7 @@ private fun ExtendedPreferencesScreen() {
                         activeDialog = DialogConfig.HexInput(
                             initialColor = currentColor,
                             onColorSelected = { color ->
-                                prefs.edit { putInt(context.getString(R.string.pref_color_key), color) }
+                                prefs.edit { putInt(resources.getString(R.string.pref_color_key), color) }
                                 currentColor = color
                                 activeDialog = null
                             }
@@ -372,7 +373,7 @@ private fun ExtendedPreferencesScreen() {
             HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
             PreferenceCategoryHeader(title = stringResource(R.string.pref_reminders))
             val selectedReminderEntries = eventTypeEntries.indices
-                .filter { reminderTypes.contains(eventTypeValues[it].toString()) }
+                .filter { reminderTypes.contains(eventTypeValues[it]) }
                 .map { eventTypeEntries[it] }
             val reminderSummary = if (selectedReminderEntries.isEmpty()) {
                 stringResource(R.string.no_events_selected)
@@ -385,12 +386,12 @@ private fun ExtendedPreferencesScreen() {
                 summary = reminderSummary,
                 onClick = {
                     activeDialog = DialogConfig.MultiSelect(
-                        title = context.getString(R.string.pref_events_with_reminders),
+                        title = resources.getString(R.string.pref_events_with_reminders),
                         entries = eventTypeEntries,
                         entryValues = eventTypeValues,
                         initialValues = reminderTypes,
                         onSave = { newValues ->
-                            prefs.edit { putStringSet(context.getString(R.string.pref_reminder_event_types), newValues) }
+                            prefs.edit { putStringSet(resources.getString(R.string.pref_reminder_event_types), newValues) }
                             reminderTypes = newValues
                         }
                     )
@@ -400,26 +401,27 @@ private fun ExtendedPreferencesScreen() {
             // Dynamic Reminders List (Long Click supported to delete)
             reminderMinutesList.forEachIndexed { index, minutes ->
                 val summaryStr = ReminderPreferenceCompat.getSummary(context, minutes)
+                val reminderTitle = "${stringResource(R.string.pref_reminder_time)} ${index + 1}"
                 ClickablePreferenceItem(
-                    title = "${context.getString(R.string.pref_reminder_time)} ${index + 1}",
+                    title = reminderTitle,
                     summary = summaryStr,
                     onClick = {
                         activeDialog = DialogConfig.ReminderTime(
-                            title = "${context.getString(R.string.pref_reminder_time)} ${index + 1}",
+                            title = reminderTitle,
                             initialMinutes = minutes,
                             onSave = { newMinutes ->
                                 val updated = reminderMinutesList.toMutableList()
                                 updated[index] = newMinutes
                                 reminderMinutesList = updated
                                 val set = updated.map { it.toString() }.toSet()
-                                prefs.edit { putStringSet(context.getString(R.string.pref_reminders_key), set) }
+                                prefs.edit { putStringSet(resources.getString(R.string.pref_reminders_key), set) }
                             },
                             onDelete = {
                                 val updated = reminderMinutesList.toMutableList()
                                 updated.removeAt(index)
                                 reminderMinutesList = updated
                                 val set = updated.map { it.toString() }.toSet()
-                                prefs.edit { putStringSet(context.getString(R.string.pref_reminders_key), set) }
+                                prefs.edit { putStringSet(resources.getString(R.string.pref_reminders_key), set) }
                             }
                         )
                     },
@@ -430,7 +432,7 @@ private fun ExtendedPreferencesScreen() {
                                 updated.removeAt(index)
                                 reminderMinutesList = updated
                                 val set = updated.map { it.toString() }.toSet()
-                                prefs.edit { putStringSet(context.getString(R.string.pref_reminders_key), set) }
+                                prefs.edit { putStringSet(resources.getString(R.string.pref_reminders_key), set) }
                             }
                         )
                     }
@@ -443,14 +445,14 @@ private fun ExtendedPreferencesScreen() {
                 iconRes = R.drawable.ic_add,
                 onClick = {
                     activeDialog = DialogConfig.ReminderTime(
-                        title = context.getString(R.string.add_reminder),
-                        initialMinutes = context.resources.getInteger(R.integer.pref_reminder_time_def),
+                        title = resources.getString(R.string.add_reminder),
+                        initialMinutes = resources.getInteger(R.integer.pref_reminder_time_def),
                         onSave = { newMinutes ->
                             val updated = reminderMinutesList.toMutableList()
                             updated.add(newMinutes)
                             reminderMinutesList = updated
                             val set = updated.map { it.toString() }.toSet()
-                            prefs.edit { putStringSet(context.getString(R.string.pref_reminders_key), set) }
+                            prefs.edit { putStringSet(resources.getString(R.string.pref_reminders_key), set) }
                         },
                         onDelete = null
                     )
@@ -465,10 +467,10 @@ private fun ExtendedPreferencesScreen() {
                 title = stringResource(R.string.pref_additional_reminders_group_title),
                 summary = additionalRemindersGroup.ifEmpty { stringResource(R.string.pref_additional_reminders_group_def) },
                 onClick = {
-                    val key = context.getString(R.string.pref_additional_reminders_group_key)
+                    val key = resources.getString(R.string.pref_additional_reminders_group_key)
                     activeDialog = DialogConfig.EditText(
-                        title = context.getString(R.string.pref_additional_reminders_group_title),
-                        message = context.getString(R.string.pref_additional_reminders_group_description),
+                        title = resources.getString(R.string.pref_additional_reminders_group_title),
+                        message = resources.getString(R.string.pref_additional_reminders_group_description),
                         initialValue = additionalRemindersGroup,
                         onSave = { newValue ->
                             prefs.edit { putString(key, newValue) }
@@ -479,26 +481,27 @@ private fun ExtendedPreferencesScreen() {
 
             additionalReminderMinutesList.forEachIndexed { index, minutes ->
                 val summaryStr = ReminderPreferenceCompat.getSummary(context, minutes)
+                val reminderTitle = "${stringResource(R.string.pref_reminder_time)} ${index + 1}"
                 ClickablePreferenceItem(
-                    title = "${context.getString(R.string.pref_reminder_time)} ${index + 1}",
+                    title = reminderTitle,
                     summary = summaryStr,
                     onClick = {
                         activeDialog = DialogConfig.ReminderTime(
-                            title = "${context.getString(R.string.pref_reminder_time)} ${index + 1}",
+                            title = reminderTitle,
                             initialMinutes = minutes,
                             onSave = { newMinutes ->
                                 val updated = additionalReminderMinutesList.toMutableList()
                                 updated[index] = newMinutes
                                 additionalReminderMinutesList = updated
                                 val set = updated.map { it.toString() }.toSet()
-                                prefs.edit { putStringSet(context.getString(R.string.pref_additional_reminders_key), set) }
+                                prefs.edit { putStringSet(resources.getString(R.string.pref_additional_reminders_key), set) }
                             },
                             onDelete = {
                                 val updated = additionalReminderMinutesList.toMutableList()
                                 updated.removeAt(index)
                                 additionalReminderMinutesList = updated
                                 val set = updated.map { it.toString() }.toSet()
-                                prefs.edit { putStringSet(context.getString(R.string.pref_additional_reminders_key), set) }
+                                prefs.edit { putStringSet(resources.getString(R.string.pref_additional_reminders_key), set) }
                             }
                         )
                     },
@@ -509,7 +512,7 @@ private fun ExtendedPreferencesScreen() {
                                 updated.removeAt(index)
                                 additionalReminderMinutesList = updated
                                 val set = updated.map { it.toString() }.toSet()
-                                prefs.edit { putStringSet(context.getString(R.string.pref_additional_reminders_key), set) }
+                                prefs.edit { putStringSet(resources.getString(R.string.pref_additional_reminders_key), set) }
                             }
                         )
                     }
@@ -522,14 +525,14 @@ private fun ExtendedPreferencesScreen() {
                 iconRes = R.drawable.ic_add,
                 onClick = {
                     activeDialog = DialogConfig.ReminderTime(
-                        title = context.getString(R.string.add_reminder),
-                        initialMinutes = context.resources.getInteger(R.integer.pref_additional_reminder_time_def),
+                        title = resources.getString(R.string.add_reminder),
+                        initialMinutes = resources.getInteger(R.integer.pref_additional_reminder_time_def),
                         onSave = { newMinutes ->
                             val updated = additionalReminderMinutesList.toMutableList()
                             updated.add(newMinutes)
                             additionalReminderMinutesList = updated
                             val set = updated.map { it.toString() }.toSet()
-                            prefs.edit { putStringSet(context.getString(R.string.pref_additional_reminders_key), set) }
+                            prefs.edit { putStringSet(resources.getString(R.string.pref_additional_reminders_key), set) }
                         },
                         onDelete = null
                     )
@@ -546,13 +549,13 @@ private fun ExtendedPreferencesScreen() {
                 checked = titleEnable,
                 onCheckedChange = { checked ->
                     titleEnable = checked
-                    prefs.edit { putBoolean(context.getString(R.string.pref_title_enable_key), checked) }
+                    prefs.edit { putBoolean(resources.getString(R.string.pref_title_enable_key), checked) }
                 }
             )
 
             if (titleEnable) {
                 titleConfigs.forEach { (keyRes, titleRes, msgRes) ->
-                    val prefKey = context.getString(keyRes)
+                    val prefKey = resources.getString(keyRes)
                     val prefTitle = stringResource(titleRes)
                     val prefMsg = stringResource(msgRes)
                     val currentValue = titleValues[prefKey] ?: ""
@@ -588,10 +591,10 @@ private fun ExtendedPreferencesScreen() {
                 title = stringResource(R.string.pref_jubilee_years_title),
                 summary = jubileeYears,
                 onClick = {
-                    val key = context.getString(R.string.pref_jubilee_years_key)
+                    val key = resources.getString(R.string.pref_jubilee_years_key)
                     activeDialog = DialogConfig.EditText(
-                        title = context.getString(R.string.pref_jubilee_years_title),
-                        message = context.getString(R.string.pref_jubilee_years_description),
+                        title = resources.getString(R.string.pref_jubilee_years_title),
+                        message = resources.getString(R.string.pref_jubilee_years_description),
                         initialValue = jubileeYears,
                         validator = { text ->
                             text.isEmpty() || Pattern.matches("^[1-9][0-9]*(?:\\s*,\\s*[1-9][0-9]*)*$", text.trim())
@@ -612,7 +615,7 @@ private fun ExtendedPreferencesScreen() {
                 checked = groupFiltering,
                 onCheckedChange = { checked ->
                     groupFiltering = checked
-                    prefs.edit { putBoolean(context.getString(R.string.pref_group_filtering_key), checked) }
+                    prefs.edit { putBoolean(resources.getString(R.string.pref_group_filtering_key), checked) }
                 }
             )
 
@@ -622,7 +625,7 @@ private fun ExtendedPreferencesScreen() {
                 checked = nameFormat,
                 onCheckedChange = { checked ->
                     nameFormat = checked
-                    prefs.edit { putBoolean(context.getString(R.string.pref_name_format_key), checked) }
+                    prefs.edit { putBoolean(resources.getString(R.string.pref_name_format_key), checked) }
                 }
             )
         }
@@ -674,6 +677,8 @@ private fun ExtendedPreferencesScreen() {
         if (!isFullVersion) {
             HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
             PreferenceCategoryHeader(title = stringResource(R.string.pref_buy))
+            val buyTitle = buyPrice?.let { stringResource(R.string.buy_premium_for, it) }
+                ?: stringResource(R.string.pref_buy_full)
             ClickablePreferenceItem(
                 title = buyTitle,
                 summary = stringResource(R.string.pref_buy_full_summary),
@@ -788,7 +793,7 @@ private fun ExtendedPreferencesScreen() {
             var day = (dialog.initialMinutes + oneDayMinutes) / oneDayMinutes
             if (dialog.initialMinutes % oneDayMinutes == 0) day--
             val dayBaseValues = intArrayOf(0, 1, 2, 3, 5, 7, 10, 14)
-            val dayOptions = context.resources.getStringArray(R.array.pref_reminder_time_drop_down)
+            val dayOptions = stringArrayResource(R.array.pref_reminder_time_drop_down)
             var initialDayIndex = 0
             for (i in dayBaseValues.indices) {
                 if (day == dayBaseValues[i]) {
@@ -829,13 +834,8 @@ private fun ExtendedPreferencesScreen() {
                                 ViewTimePicker(ctx).apply {
                                     setIs24HourView(DateFormat.is24HourFormat(ctx))
                                     @Suppress("DEPRECATION")
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                        this.hour = initHour
-                                        this.minute = initMinute
-                                    } else {
-                                        currentHour = initHour
-                                        currentMinute = initMinute
-                                    }
+                                    this.hour = initHour
+                                    this.minute = initMinute
                                     setOnTimeChangedListener { _, h, m ->
                                         hour = h
                                         minute = m

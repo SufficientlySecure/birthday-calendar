@@ -62,6 +62,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -111,10 +112,11 @@ fun AboutScreen(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val versionText = remember(context) { getVersionText(context) }
-    val htmlText = remember(context) {
+    val resources = LocalResources.current
+    val versionText = remember(context, resources) { getVersionText(context) }
+    val htmlText = remember(resources) {
         try {
-            context.resources.openRawResource(R.raw.about).use { inputStream ->
+            resources.openRawResource(R.raw.about).use { inputStream ->
                 inputStream.bufferedReader().use { it.readText() }
             }
         } catch (_: Exception) {
