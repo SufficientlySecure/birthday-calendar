@@ -83,6 +83,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -108,6 +109,7 @@ import fr.heinisch.birthdayadapter.R
 import fr.heinisch.birthdayadapter.util.IPurchaseHelper
 import fr.heinisch.birthdayadapter.util.PreferencesHelper
 import fr.heinisch.birthdayadapter.util.PurchaseHelperFactory
+import fr.heinisch.birthdayadapter.util.ReviewHelperFactory
 import fr.heinisch.birthdayadapter.util.VersionHelper
 import kotlin.math.abs
 import java.util.regex.Pattern
@@ -309,10 +311,27 @@ private fun ExtendedPreferencesScreen() {
         }
     }
 
+    val reviewHelper = remember { ReviewHelperFactory.create() }
+    val scrollState = rememberScrollState()
+
+    LaunchedEffect(scrollState, isFullVersion) {
+        if (isFullVersion) {
+            snapshotFlow { scrollState.value >= scrollState.maxValue && scrollState.maxValue > 0 }
+                .collect { isAtBottom ->
+                    if (isAtBottom) {
+                        val activity = context.findActivity()
+                        if (activity != null) {
+                            reviewHelper.maybeShowReviewDialog(activity)
+                        }
+                    }
+                }
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(scrollState)
             .padding(bottom = 24.dp)
     ) {
 
