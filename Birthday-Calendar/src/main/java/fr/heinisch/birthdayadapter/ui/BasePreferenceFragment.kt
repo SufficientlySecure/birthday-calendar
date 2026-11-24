@@ -87,12 +87,13 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.seconds
 
 private val REQUIRED_PERMISSIONS = arrayOf(
     Manifest.permission.GET_ACCOUNTS,
     Manifest.permission.READ_CONTACTS,
     Manifest.permission.READ_CALENDAR,
-    Manifest.permission.WRITE_CALENDAR
+    Manifest.permission.WRITE_CALENDAR,
 )
 
 class BasePreferenceFragment : Fragment() {
@@ -108,7 +109,7 @@ class BasePreferenceFragment : Fragment() {
                 BirthdayAdapterTheme {
                     Surface(
                         modifier = Modifier.fillMaxSize(),
-                        color = MaterialTheme.colorScheme.background
+                        color = MaterialTheme.colorScheme.background,
                     ) {
                         BasePreferenceScreen(lifecycleOwner = viewLifecycleOwner)
                     }
@@ -139,7 +140,7 @@ private fun BasePreferenceScreen(lifecycleOwner: LifecycleOwner) {
     DisposableEffect(lifecycleOwner) {
         val liveData = WorkManager.getInstance(context).getWorkInfosForUniqueWorkLiveData("periodic_sync")
         val observer = androidx.lifecycle.Observer<List<WorkInfo>> { list ->
-            workInfo = list?.firstOrNull()
+            workInfo = list.firstOrNull()
         }
         liveData.observe(lifecycleOwner, observer)
         onDispose {
@@ -151,7 +152,7 @@ private fun BasePreferenceScreen(lifecycleOwner: LifecycleOwner) {
     LaunchedEffect(Unit) {
         while (isActive) {
             currentTime = System.currentTimeMillis()
-            delay(60_000L)
+            delay(60.seconds)
         }
     }
 
@@ -230,18 +231,17 @@ private fun BasePreferenceScreen(lifecycleOwner: LifecycleOwner) {
             title = stringResource(R.string.pref_enable_switch),
             summary = stringResource(R.string.pref_enable_summary),
             iconRes = R.drawable.ic_cake,
-            checked = isEnabled,
-            onCheckedChange = { checked ->
-                if (checked) {
-                    checkAndRequestPermissions()
-                } else {
-                    isEnabled = false
-                    coroutineScope.launch(Dispatchers.IO) {
-                        accountHelper.removeAccount()
-                    }
+            checked = isEnabled
+        ) { checked ->
+            if (checked) {
+                checkAndRequestPermissions()
+            } else {
+                isEnabled = false
+                coroutineScope.launch(Dispatchers.IO) {
+                    accountHelper.removeAccount()
                 }
             }
-        )
+        }
 
         HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
 
@@ -283,7 +283,7 @@ private fun BasePreferenceScreen(lifecycleOwner: LifecycleOwner) {
             summary = syncSummary,
             iconRes = R.drawable.ic_sync,
             onClick = {
-                SyncStatusManager.getInstance().setSyncing(true)
+                SyncStatusManager.getInstance().setSyncing(isSyncing = true)
                 accountHelper.differentialSync()
             }
         )
@@ -305,12 +305,12 @@ private fun buildSyncSummary(
         )
     }
 
-    if (isAccountActivated && workInfo != null) {
+    if ((isAccountActivated && workInfo != null)) {
         val nextRun = workInfo.nextScheduleTimeMillis
         val now = System.currentTimeMillis()
         val sanityThreshold = now + TimeUnit.DAYS.toMillis(Constants.SYNC_INTERVAL_DAYS.toLong() * 2)
 
-        if (nextRun > now && nextRun < sanityThreshold) {
+        if (nextRun in (now + 1)..<sanityThreshold) {
             summary += "\n" + context.getString(
                 R.string.next_sync,
                 DateUtils.getRelativeTimeSpanString(nextRun, now, DateUtils.MINUTE_IN_MILLIS)
