@@ -181,4 +181,7 @@
     <string name="error_no_network">Інтернет недоступний, перевірте з\'єднання.</string>
     <string name="error_billing_unavailable">Google Play недоступний, будь ласка спробуйте пізніше.</string>
     <string name="error_acknowledge_failed">Будь ласка, перезапустіть программу для активації покупки.</string>
+    <string name="pref_background_category">Фонова робота</string>
+    <string name="pref_ignore_battery_optimizations_title">Дозволити фонову роботу</string>
+    <string name="pref_ignore_battery_optimizations_summary">Дозволити застосунку працювати нафоні для регулярної синхронізації, без обмежень споживання заряду.</string>
 </resources>
