@@ -21,6 +21,7 @@
 
 package fr.heinisch.birthdayadapter.ui
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
@@ -140,6 +141,7 @@ private val baseColors = intArrayOf(
     0xff795548.toInt(), 0xff9e9e9e.toInt(), 0xff607d8b.toInt()
 )
 
+@SuppressLint("BatteryLife")
 @Composable
 private fun ExtendedPreferencesScreen() {
     val context = LocalContext.current
@@ -642,6 +644,8 @@ private fun ExtendedPreferencesScreen() {
                         summary = stringResource(R.string.pref_ignore_battery_optimizations_summary),
                         onClick = {
                             try {
+                                // Suppress BatteryLife lint warning: required for reliable background birthday syncing if only used in background
+                                @SuppressLint("BatteryLife")
                                 val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
                                     data = ("package:" + context.packageName).toUri()
                                 }
@@ -806,8 +810,8 @@ private fun ExtendedPreferencesScreen() {
             val initMinute = timeFromMinutes % 60
 
             var selectedDayIndex by remember(dialog) { mutableIntStateOf(initialDayIndex) }
-            var hour by remember(dialog) { mutableIntStateOf(initHour) }
-            var minute by remember(dialog) { mutableIntStateOf(initMinute) }
+            var selectedHour by remember(dialog) { mutableIntStateOf(initHour) }
+            var selectedMinute by remember(dialog) { mutableIntStateOf(initMinute) }
 
             AlertDialog(
                 onDismissRequest = { activeDialog = null },
@@ -828,17 +832,19 @@ private fun ExtendedPreferencesScreen() {
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        // Stable Android Framework TimePicker View (Zero experimental Compose APIs!)
+                        // Android TimePicker View
                         AndroidView(
                             factory = { ctx ->
                                 ViewTimePicker(ctx).apply {
-                                    setIs24HourView(DateFormat.is24HourFormat(ctx))
+                                    // Suppress deprecation warning for setIs24HourView, which is required
+                                    // for backward compatibility on older Android versions below API 23.
                                     @Suppress("DEPRECATION")
-                                    this.hour = initHour
-                                    this.minute = initMinute
+                                    setIs24HourView(DateFormat.is24HourFormat(ctx))
+                                    setHour(initHour)
+                                    setMinute(initMinute)
                                     setOnTimeChangedListener { _, h, m ->
-                                        hour = h
-                                        minute = m
+                                        selectedHour = h
+                                        selectedMinute = m
                                     }
                                 }
                             },
@@ -849,7 +855,7 @@ private fun ExtendedPreferencesScreen() {
                 confirmButton = {
                     TextButton(onClick = {
                         val selectedDayValue = dayBaseValues[selectedDayIndex]
-                        val minutes = (selectedDayValue * oneDayMinutes) - (hour * 60) - minute
+                        val minutes = (selectedDayValue * oneDayMinutes) - (selectedHour * 60) - selectedMinute
                         dialog.onSave(minutes)
                         activeDialog = null
                     }) {
